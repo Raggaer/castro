@@ -9,7 +9,7 @@ import (
 var (
 	l          = logging.MustGetLogger("castro")
 	utilFormat = logging.MustStringFormatter(
-		`%{color}%{time:15:04:05} - %{color:reset}%{message}`,
+		`%{color}%{time:15:04:05} - %{level:.5s}:%{color:reset} %{message}`,
 	)
 )
 

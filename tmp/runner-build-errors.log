@@ -1,2 +1,0 @@
-# github.com/raggaer/castro/app
-app\app.go:7: imported and not used: "github.com/lunny/log"
