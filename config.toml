@@ -1,2 +1,6 @@
 Port = 8080
 
+[Database]
+Username = "root"
+Password = "admin"
+Name = "castro"

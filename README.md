@@ -1,1 +1,3 @@
-![alt text](http://1.1m.yt/CrMEecy.png "Logo Title Text 1")
+# Castro
+
+High performance Open Tibia automatic account creator written in **Go**
