@@ -1,11 +1,12 @@
 package database
 
-// TFS struct that defines a dialect for
-// the forgotten server
 type TFS struct {
 }
 
-// Name returns the current dialect name
 func (t TFS) Name() string {
 	return "the forgotten server"
+}
+
+func (t TFS) Version() string {
+	return "0.1 alpha-preview"
 }

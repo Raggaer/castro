@@ -23,15 +23,6 @@ var (
 
 // Start the main execution point for Castro
 func Start() {
-
-	///////
-
-	tfs := database.TFS{}
-	database.SetDialect(tfs)
-	util.Logger.Info(tfs.Name())
-
-	///////
-
 	// Load the configration file
 	file, err := ioutil.ReadFile("config.toml")
 	if err != nil {
@@ -46,6 +37,10 @@ func Start() {
 		util.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
 	defer DB.Close()
+
+	// Load database dialect
+	database.SetDialect(database.TFS{})
+	util.Logger.Infof("Using database dialect %v - %v", database.CurrentDialect.Name(), database.CurrentDialect.Version())
 
 	// Create the http router instance
 	mux := httprouter.New()
