@@ -1,6 +1,8 @@
 Port = 8080
+Datapack = ""
 
 [Database]
+
 Username = "root"
 Password = "admin"
 Name = "castro"

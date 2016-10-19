@@ -1,4 +1,4 @@
-package database
+package dialect
 
 // Dialect interface used to define new
 // database dialects
@@ -10,11 +10,11 @@ type Dialect interface {
 	Version() string
 }
 
-// CurrentDialect holds the runtime dialect
-var CurrentDialect Dialect
+// Current holds the runtime dialect
+var Current Dialect
 
 // SetDialect defines the dialect to use during
 // runtime
 func SetDialect(d Dialect) {
-	CurrentDialect = d
+	Current = d
 }

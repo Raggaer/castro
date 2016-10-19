@@ -8,6 +8,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/dialect"
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
 )
@@ -17,7 +18,7 @@ var (
 	// configuration file
 	Config = &util.Config{}
 
-	// DB is the main handle for the database
+	// DB main database handle
 	DB *gorm.DB
 )
 
@@ -38,9 +39,9 @@ func Start() {
 	}
 	defer DB.Close()
 
-	// Load database dialect
-	database.SetDialect(database.TFS{})
-	util.Logger.Infof("Using database dialect %v - %v", database.CurrentDialect.Name(), database.CurrentDialect.Version())
+	// Load applicattion dialect
+	dialect.SetDialect(dialect.TFS{})
+	util.Logger.Infof("Using dialect: %v - %v", dialect.Current.Name(), dialect.Current.Version())
 
 	// Create the http router instance
 	mux := httprouter.New()

@@ -1,4 +1,4 @@
-package database
+package dialect
 
 type TFS struct {
 }
