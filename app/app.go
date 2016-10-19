@@ -9,6 +9,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/dialect"
+	"github.com/raggaer/castro/app/dialect/tfs"
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
 )
@@ -40,8 +41,10 @@ func Start() {
 	defer DB.Close()
 
 	// Load applicattion dialect
-	dialect.SetDialect(dialect.TFS{})
+	dialect.SetDialect(tfs.TFS{})
 	util.Logger.Infof("Using dialect: %v - %v", dialect.Current.Name(), dialect.Current.Version())
+
+	// Load all the misc stuff
 
 	// Create the http router instance
 	mux := httprouter.New()
