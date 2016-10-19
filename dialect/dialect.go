@@ -11,6 +11,16 @@ type Dialect interface {
 
 	// LoadStages parses the stages xml file
 	LoadStages() error
+
+	// GetStages returns the server stages
+	GetStages() []Stage
+}
+
+// Stage struct used for server stages
+type Stage struct {
+	From       int
+	To         int
+	Multiplier int
 }
 
 // Current holds the runtime dialect

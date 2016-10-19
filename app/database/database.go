@@ -9,6 +9,9 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+// DB holds the main database handle
+var DB *gorm.DB
+
 // Open creates a new connection to a MySQL database
 // with the given credentials
 func Open(username, password, db string) (*gorm.DB, error) {

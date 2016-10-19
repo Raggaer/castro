@@ -5,22 +5,12 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/jinzhu/gorm"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/database"
-	"github.com/raggaer/castro/app/dialect"
-	"github.com/raggaer/castro/app/dialect/tfs"
 	"github.com/raggaer/castro/app/util"
+	"github.com/raggaer/castro/dialect"
+	"github.com/raggaer/castro/dialect/tfs"
 	"github.com/urfave/negroni"
-)
-
-var (
-	// Config variable to hold the main
-	// configuration file
-	Config = &util.Config{}
-
-	// DB main database handle
-	DB *gorm.DB
 )
 
 // Start the main execution point for Castro
@@ -30,21 +20,24 @@ func Start() {
 	if err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
-	if err = util.LoadConfig(string(file), Config); err != nil {
+	if err = util.LoadConfig(string(file), util.Config); err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
 
 	// Connect to the MySQL database
-	if DB, err = database.Open(Config.Database.Username, Config.Database.Password, Config.Database.Name); err != nil {
+	if database.DB, err = database.Open(util.Config.Database.Username, util.Config.Database.Password, util.Config.Database.Name); err != nil {
 		util.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
-	defer DB.Close()
+	defer database.DB.Close()
 
 	// Load applicattion dialect
-	dialect.SetDialect(tfs.TFS{})
+	dialect.SetDialect(&tfs.TFS{})
 	util.Logger.Infof("Using dialect: %v - %v", dialect.Current.Name(), dialect.Current.Version())
 
-	// Load all the misc stuff
+	// Load server stages
+	if err := dialect.Current.LoadStages(); err != nil {
+		util.Logger.Fatalf("Cannot load server stages: %v", err)
+	}
 
 	// Create the http router instance
 	mux := httprouter.New()
@@ -56,9 +49,9 @@ func Start() {
 	// Tell negroni to use our http router
 	n.UseHandler(mux)
 
-	util.Logger.Infof("Starting Castro http server on port :%v", Config.Port)
+	util.Logger.Infof("Starting Castro http server on port :%v", util.Config.Port)
 
-	if err := http.ListenAndServe(fmt.Sprintf(":%v", Config.Port), n); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", util.Config.Port), n); err != nil {
 		// This should only happen when a port is
 		// already in use
 		util.Logger.Fatalf("Cannot start Castro http server: %v", err)

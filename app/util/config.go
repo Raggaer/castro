@@ -10,11 +10,19 @@ type Database struct {
 	Name     string
 }
 
-// Config struct used for the main Castro
+// Configuration struct used for the main Castro
 // config file TOML file
-type Config struct {
+type Configuration struct {
 	Port     int
+	Datapack string
 	Database Database
+}
+
+// Config holds the main configuration file
+var Config *Configuration
+
+func init() {
+	Config = &Configuration{}
 }
 
 // LoadConfig loads the configuration file to
