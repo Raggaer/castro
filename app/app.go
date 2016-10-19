@@ -23,6 +23,15 @@ var (
 
 // Start the main execution point for Castro
 func Start() {
+
+	///////
+
+	tfs := database.TFS{}
+	database.SetDialect(tfs)
+	util.Logger.Info(tfs.Name())
+
+	///////
+
 	// Load the configration file
 	file, err := ioutil.ReadFile("config.toml")
 	if err != nil {
