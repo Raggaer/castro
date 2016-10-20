@@ -21,7 +21,7 @@ func Start() {
 	}
 
 	// Load templates
-	if err := util.LoadTemplates(util.Template); err != nil {
+	if err := util.LoadTemplates(&util.Template); err != nil {
 		util.Logger.Fatalf("Cannot load templates: %v", err)
 	}
 

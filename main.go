@@ -6,6 +6,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app"
+	"github.com/raggaer/castro/app/controllers"
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
 )
@@ -13,13 +14,14 @@ import (
 func main() {
 	// Declare our new http router
 	router := httprouter.New()
+	router.GET("/", controllers.Home)
+	router.GET("/public/*filepath", serveStatic)
 
 	// Create the middleware negroini instance with
 	// some prefredined basics
 	n := negroni.New(
 		negroni.NewLogger(),
 		negroni.NewRecovery(),
-		negroni.NewStatic(http.Dir("public/")),
 	)
 
 	// Tell negroni to use our http router

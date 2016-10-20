@@ -17,7 +17,7 @@ var Template tmpl
 
 // LoadTemplates parses and loads all template into
 // the given variable
-func LoadTemplates(t tmpl) error {
+func LoadTemplates(t *tmpl) error {
 	// Declare new template castro
 	t.tmpl = template.New("castro")
 
@@ -44,7 +44,7 @@ func (t tmpl) Render(wr io.Writer, name string, args interface{}) error {
 	if Config.IsDev() {
 
 		// Reload all templates
-		if err := LoadTemplates(t); err != nil {
+		if err := LoadTemplates(&t); err != nil {
 			return err
 		}
 	}
