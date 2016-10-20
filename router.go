@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -60,6 +61,9 @@ func serveStatic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		w.Write([]byte(err.Error()))
 		return
 	}
+
+	// Set content length
+	w.Header().Add("Content-Length", strconv.Itoa(len(final)))
 
 	// Serve asset
 	w.Write(final)
