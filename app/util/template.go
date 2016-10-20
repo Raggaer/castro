@@ -1,11 +1,11 @@
 package util
 
 import (
+	"html/template"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
-	"text/template"
 )
 
 type tmpl struct {

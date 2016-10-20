@@ -2,7 +2,6 @@ package tfs
 
 import (
 	"io/ioutil"
-	"log"
 
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/castro/dialect"
@@ -26,11 +25,11 @@ func (t TFS) Version() string {
 
 // LoadStages loads server xml stages
 func (t *TFS) LoadStages() error {
-	file, err := ioutil.ReadFile(util.Config.Datapack + "/data/xml/stages.xml")
+	_, err := ioutil.ReadFile(util.Config.Datapack + "/data/xml/stages.xml")
 	if err != nil {
 		return err
 	}
-	log.Println(file)
+	//log.Println(file)
 	return nil
 }
 
