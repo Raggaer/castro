@@ -13,6 +13,7 @@ type Database struct {
 // Configuration struct used for the main Castro
 // config file TOML file
 type Configuration struct {
+	Mode     string
 	Port     int
 	Datapack string
 	Database Database
@@ -32,4 +33,10 @@ func LoadConfig(data string, dest interface{}) error {
 		return err
 	}
 	return nil
+}
+
+// IsDev checks if castro is running on
+// development mode
+func (c Configuration) IsDev() bool {
+	return c.Mode == "dev"
 }
