@@ -14,7 +14,7 @@ import (
 )
 
 // Start the main execution point for Castro
-func Start() {
+func Start() *httprouter.Router {
 	// Load the configration file
 	file, err := ioutil.ReadFile("config.toml")
 	if err != nil {
@@ -22,6 +22,11 @@ func Start() {
 	}
 	if err = util.LoadConfig(string(file), util.Config); err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
+	}
+
+	// Load templates
+	if err := util.LoadTemplates(util.Template); err != nil {
+		util.Logger.Fatalf("Cannot load templates: %v", err)
 	}
 
 	// Connect to the MySQL database
@@ -56,4 +61,6 @@ func Start() {
 		// already in use
 		util.Logger.Fatalf("Cannot start Castro http server: %v", err)
 	}
+
+	return mux
 }
