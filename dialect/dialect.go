@@ -3,6 +3,10 @@ package dialect
 // Dialect interface used to define new
 // database dialects
 type Dialect interface {
+	// Start function called when a dialect is choosen
+	// useful to load stuff
+	Start() error
+
 	// Name returns the dialect name
 	Name() string
 

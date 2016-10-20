@@ -35,6 +35,11 @@ func Start() {
 	dialect.SetDialect(&tfs.TFS{})
 	util.Logger.Infof("Using dialect: %v - %v", dialect.Current.Name(), dialect.Current.Version())
 
+	// Run dialect start function
+	if err := dialect.Current.Start(); err != nil {
+		util.Logger.Fatal(err)
+	}
+
 	// Load server stages
 	if err := dialect.Current.LoadStages(); err != nil {
 		util.Logger.Fatalf("Cannot load server stages: %v", err)

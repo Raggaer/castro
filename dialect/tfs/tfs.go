@@ -23,6 +23,10 @@ func (t TFS) Version() string {
 	return "0.1 alpha-preview"
 }
 
+func (t TFS) Start() error {
+	return nil
+}
+
 // LoadStages loads server xml stages
 func (t *TFS) LoadStages() error {
 	_, err := ioutil.ReadFile(util.Config.Datapack + "/data/xml/stages.xml")
