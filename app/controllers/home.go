@@ -7,6 +7,9 @@ import (
 	"github.com/raggaer/castro/app/util"
 )
 
+// Home is the main aac homepage
 func Home(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	util.Template.Render(w, "test.html", nil)
+	if err := util.Template.Render(w, "home.html", nil); err != nil {
+		util.Logger.Fatal(err)
+	}
 }
