@@ -25,7 +25,7 @@ type Configuration struct {
 	Datapack string
 	Database database
 	Cookies  cookie
-	Extra    map[string]interface{}
+	Custom   map[string]interface{}
 }
 
 // Config holds the main configuration file

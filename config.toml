@@ -13,7 +13,7 @@ Name = "castro"
 Name = "castro"
 MaxAge = 100000
 
-[Extra]
+[Custom]
 
 hello = "test"
 alvaro = 12
