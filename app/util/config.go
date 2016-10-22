@@ -39,6 +39,7 @@ type Configuration struct {
 	Mode     string
 	Port     int
 	Datapack string
+	Dialect  string
 	Database database
 	Cookies  cookie
 	Cache    cache

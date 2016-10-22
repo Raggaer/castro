@@ -22,7 +22,7 @@ func LoadTemplates(t *tmpl) error {
 	t.tmpl = template.New("castro")
 
 	// Walk over the views directory
-	err := filepath.Walk("views", func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk("views/"+Config.Dialect+"/", func(path string, info os.FileInfo, err error) error {
 
 		// Check if file has .html extesnion
 		if strings.HasSuffix(info.Name(), ".html") {

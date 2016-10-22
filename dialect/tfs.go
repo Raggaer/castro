@@ -1,16 +1,20 @@
-package tfs
+package dialect
 
 import (
 	"io/ioutil"
 
 	"github.com/raggaer/castro/app/util"
-	"github.com/raggaer/castro/dialect"
 )
 
 // TFS struct that defines a dialect for
 // the forgotten server
 type TFS struct {
-	stages []dialect.Stage
+	stages []Stage
+}
+
+// Registers the TFS dialect
+func init() {
+	List.Register("tfs", &TFS{})
 }
 
 // Name shows the dialect name
@@ -20,9 +24,11 @@ func (t TFS) Name() string {
 
 // Version shows the dialect version
 func (t TFS) Version() string {
-	return "0.1 alpha-preview"
+	return "1.2"
 }
 
+// Start executes all the needed stuff for the dialect
+// to work correctly
 func (t TFS) Start() error {
 	return nil
 }
@@ -37,6 +43,6 @@ func (t *TFS) LoadStages() error {
 	return nil
 }
 
-func (t TFS) GetStages() []dialect.Stage {
+func (t TFS) GetStages() []Stage {
 	return t.stages
 }

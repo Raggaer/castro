@@ -7,7 +7,6 @@ import (
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/castro/dialect"
-	"github.com/raggaer/castro/dialect/tfs"
 )
 
 // Start the main execution point for Castro
@@ -38,7 +37,13 @@ func Start() {
 	defer database.DB.Close()
 
 	// Load applicattion dialect
-	dialect.SetDialect(&tfs.TFS{})
+	d, err := dialect.List.Get(util.Config.Dialect)
+	if err != nil {
+		util.Logger.Fatal(err)
+	}
+
+	// Set applicattion dialect
+	dialect.SetDialect(d)
 	util.Logger.Infof("Using dialect: %v - %v", dialect.Current.Name(), dialect.Current.Version())
 
 	// Run dialect start function

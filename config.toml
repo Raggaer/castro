@@ -1,6 +1,7 @@
 Mode = "dev"
 Port = 8080
 Datapack = "G:/TFS"
+Dialect = "tfs"
 
 [Database]
 
