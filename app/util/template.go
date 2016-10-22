@@ -3,9 +3,11 @@ package util
 import (
 	"html/template"
 	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type tmpl struct {
@@ -35,6 +37,39 @@ func LoadTemplates(t *tmpl) error {
 	})
 
 	return err
+}
+
+func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name string, args map[string]interface{}) {
+	// Check if app is running on dev mode
+	if Config.IsDev() {
+
+		// Reload all templates
+		if err := LoadTemplates(&t); err != nil {
+			Logger.Error(err)
+			return
+		}
+	}
+
+	// Check if args is a valid map
+	if args == nil {
+		args = map[string]interface{}{}
+	}
+
+	// Load microtime from the microtimeHandler
+	microtime, ok := req.Context().Value("microtime").(time.Time)
+	if !ok {
+		w.WriteHeader(500)
+		w.Write([]byte("Cannot read microtime value"))
+		return
+	}
+
+	// Set microtime value
+	args["microtime"] = time.Since(microtime)
+
+	// Render template and log error
+	if err := t.tmpl.ExecuteTemplate(w, name, args); err != nil {
+		Logger.Error(err)
+	}
 }
 
 // Render executes the given template. if the app is running

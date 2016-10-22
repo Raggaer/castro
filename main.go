@@ -27,6 +27,7 @@ func main() {
 	// Create the middleware negroini instance with
 	// some middlewares
 	n := negroni.New(
+		newMicrotimeHandler(),
 		negroni.NewLogger(),
 		negroni.NewRecovery(),
 		newCookieHandler(

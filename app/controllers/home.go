@@ -9,7 +9,5 @@ import (
 
 // Home is the main aac homepage
 func Home(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	if err := util.Template.Render(w, "home.html", nil); err != nil {
-		util.Logger.Fatal(err)
-	}
+	util.Template.RenderTemplate(w, r, "home.html", nil)
 }

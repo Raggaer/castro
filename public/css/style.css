@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+    font: 1em/1.2 "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
+}
+
+a {
+    color: #4D98F8;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.container {
+    margin: 0px auto;
+    width: 50%;
+}
+
+header {
+    margin: 0px;
+    padding: 20px;
+    background-color: #555;
+    color: white;
+}
+
+header > .container > h1 {
+    font-size: 27px;
+}
+
+nav {
+    background-color: black;
+    color: white;
+}
+
+nav > .container > ul {
+    margin: 0px;
+    list-style: none;
+    padding: 15px;
+}
+
+nav > .container > ul > li {
+    display: inline;
+    padding: 15px;
+}
+
+nav > .container > ul > li > a {
+    text-decoration: none;
+    color: white;
+}
+
+nav > .container > ul > li:hover {
+    background-color: white;
+}
+
+nav > .container > ul > li:hover > a {
+    color: black;
+}
+
+body > .container {
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+footer {
+    background-color: black;
+    color: white;
+    padding: 15px;
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+    header > .container > h1 {
+        font-size: 20px;
+    }
+    .container {
+        width: 100%;
+    }
+    nav > .container > ul {
+        padding: 2px;
+    }
+    nav > .container > ul > li {
+        display: block;
+    }
+}
