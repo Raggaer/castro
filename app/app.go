@@ -3,6 +3,7 @@ package app
 import (
 	"io/ioutil"
 
+	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/castro/dialect"
@@ -19,6 +20,9 @@ func Start() {
 	if err = util.LoadConfig(string(file), util.Config); err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
+
+	// Create the cache instance
+	util.Cache = cache.New(util.Config.Cache.Default.Duration, util.Config.Cache.Purge.Duration)
 
 	// Load templates
 	if err := util.LoadTemplates(&util.Template); err != nil {

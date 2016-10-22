@@ -34,7 +34,7 @@ func main() {
 	// Run main app entry point
 	app.Start()
 
-	util.Logger.Infof("Starting Castro http server on port :%v", util.Config.Custom)
+	util.Logger.Infof("Starting Castro http server on port :%v", util.Config.Port)
 
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", util.Config.Port), n); err != nil {
 		// This should only happen when a port is

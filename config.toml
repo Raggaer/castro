@@ -13,6 +13,10 @@ Name = "castro"
 Name = "castro"
 MaxAge = 100000
 
+[Cache]
+Default = "5m"
+Purge = "1m"
+
 [Custom]
 
 hello = "test"
