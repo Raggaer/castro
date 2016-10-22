@@ -1,6 +1,6 @@
 package util
 
-import c "github.com/revel/revel/cache"
+import c "github.com/patrickmn/go-cache"
 
 // Cache variable that holds the main cache instance
 // of the applicattion

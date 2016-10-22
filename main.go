@@ -12,6 +12,13 @@ import (
 )
 
 func main() {
+	// Show credits and applicattion name
+	fmt.Println(`
+			Castro - Open Tibia automatic account creator
+
+			Developed by Raggaer
+	`)
+
 	// Declare our new http router
 	router := httprouter.New()
 	router.GET("/", controllers.Home)
@@ -34,6 +41,7 @@ func main() {
 	// Run main app entry point
 	app.Start()
 
+	// Show running port
 	util.Logger.Infof("Starting Castro http server on port :%v", util.Config.Port)
 
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", util.Config.Port), n); err != nil {

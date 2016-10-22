@@ -21,7 +21,9 @@ func Start() {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
 
-	// Create the cache instance
+	// Create a new cache instance with the given options
+	// first parametter is the default item duration on the cache
+	// second parametter is the tick time to purge all dead cache items
 	util.Cache = cache.New(util.Config.Cache.Default.Duration, util.Config.Cache.Purge.Duration)
 
 	// Load templates
