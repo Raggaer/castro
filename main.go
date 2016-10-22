@@ -22,6 +22,10 @@ func main() {
 	n := negroni.New(
 		negroni.NewLogger(),
 		negroni.NewRecovery(),
+		newCookieHandler(
+			10000,
+			"castro",
+		),
 	)
 
 	// Tell negroni to use our http router
