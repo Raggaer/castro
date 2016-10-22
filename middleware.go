@@ -1,10 +1,6 @@
 package main
 
-import (
-	"net/http"
-
-	"github.com/raggaer/castro/app/util"
-)
+import "net/http"
 
 // cookieHandler used to make sure all requests
 // contain a castro specific cookie
@@ -38,6 +34,6 @@ func (c *cookieHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next
 		http.SetCookie(w, &newCookie)
 	}
 
-	util.Logger.Info(cookie)
+	// Execute next handler
 	next(w, req)
 }

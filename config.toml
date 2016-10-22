@@ -7,3 +7,13 @@ Datapack = "G:/TFS"
 Username = "root"
 Password = "admin"
 Name = "castro"
+
+[Cookies]
+
+Name = "castro"
+MaxAge = 100000
+
+[Extra]
+
+hello = "test"
+alvaro = 12

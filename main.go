@@ -18,7 +18,7 @@ func main() {
 	router.GET("/public/*filepath", serveStatic)
 
 	// Create the middleware negroini instance with
-	// some prefredined basics
+	// some middlewares
 	n := negroni.New(
 		negroni.NewLogger(),
 		negroni.NewRecovery(),

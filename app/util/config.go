@@ -2,12 +2,19 @@ package util
 
 import "github.com/BurntSushi/toml"
 
-// Database struct used for the config file
+// database struct used for the config file
 // database credentials
-type Database struct {
+type database struct {
 	Username string
 	Password string
 	Name     string
+}
+
+// cookie struct used for the cookies
+// configuration options
+type cookie struct {
+	Name   string
+	MaxAge int
 }
 
 // Configuration struct used for the main Castro
@@ -16,7 +23,9 @@ type Configuration struct {
 	Mode     string
 	Port     int
 	Datapack string
-	Database Database
+	Database database
+	Cookies  cookie
+	Extra    map[string]interface{}
 }
 
 // Config holds the main configuration file
