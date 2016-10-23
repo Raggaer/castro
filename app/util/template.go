@@ -17,12 +17,16 @@ type tmpl struct {
 // Template holds all the app templates
 var Template tmpl
 
+// NewTemplate creates and returns a new tmpl instance
+func NewTemplate(name string) tmpl {
+	return tmpl{
+		tmpl: template.New(name),
+	}
+}
+
 // LoadTemplates parses and loads all template into
 // the given variable
 func LoadTemplates(t *tmpl) error {
-	// Declare new template castro
-	t.tmpl = template.New("castro")
-
 	// Walk over the views directory
 	err := filepath.Walk("views/"+Config.Dialect+"/", func(path string, info os.FileInfo, err error) error {
 
@@ -37,6 +41,10 @@ func LoadTemplates(t *tmpl) error {
 	})
 
 	return err
+}
+
+func (t *tmpl) FuncMap(f template.FuncMap) {
+	t.tmpl.Funcs(f)
 }
 
 func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name string, args map[string]interface{}) {

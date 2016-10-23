@@ -1,6 +1,7 @@
 package app
 
 import (
+	"html/template"
 	"io/ioutil"
 
 	"github.com/patrickmn/go-cache"
@@ -24,6 +25,12 @@ func Start() {
 	// first parametter is the default item duration on the cache
 	// second parametter is the tick time to purge all dead cache items
 	util.Cache = cache.New(util.Config.Cache.Default.Duration, util.Config.Cache.Purge.Duration)
+
+	// Create applicattion template
+	util.Template = util.NewTemplate("castro")
+
+	// Set template functions
+	util.Template.FuncMap(templateFuncs())
 
 	// Load templates
 	if err := util.LoadTemplates(&util.Template); err != nil {
@@ -54,5 +61,16 @@ func Start() {
 	// Load server stages
 	if err := dialect.Current.LoadStages(); err != nil {
 		util.Logger.Fatalf("Cannot load server stages: %v", err)
+	}
+}
+
+func templateFuncs() template.FuncMap {
+	return template.FuncMap{
+		"isDev": func() bool {
+			return util.Config.IsDev()
+		},
+		"currentDialect": func() string {
+			return dialect.Current.Name()
+		},
 	}
 }

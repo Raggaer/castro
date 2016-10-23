@@ -66,6 +66,10 @@ footer {
     font-size: 13px;
 }
 
+aside {
+    display: inline-block;
+}
+
 @media (max-width: 600px) {
     header > .container > h1 {
         font-size: 20px;
