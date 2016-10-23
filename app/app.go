@@ -7,7 +7,6 @@ import (
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
-	"github.com/raggaer/castro/dialect"
 )
 
 // Start the main execution point for Castro
@@ -42,35 +41,12 @@ func Start() {
 		util.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
 	defer database.DB.Close()
-
-	// Load applicattion dialect
-	d, err := dialect.List.Get(util.Config.Dialect)
-	if err != nil {
-		util.Logger.Fatal(err)
-	}
-
-	// Set applicattion dialect
-	dialect.SetDialect(d)
-	util.Logger.Infof("Using dialect: %v - %v", dialect.Current.Name(), dialect.Current.Version())
-
-	// Run dialect start function
-	if err := dialect.Current.Start(); err != nil {
-		util.Logger.Fatal(err)
-	}
-
-	// Load server stages
-	if err := dialect.Current.LoadStages(); err != nil {
-		util.Logger.Fatalf("Cannot load server stages: %v", err)
-	}
 }
 
 func templateFuncs() template.FuncMap {
 	return template.FuncMap{
 		"isDev": func() bool {
 			return util.Config.IsDev()
-		},
-		"currentDialect": func() string {
-			return dialect.Current.Name()
 		},
 	}
 }
