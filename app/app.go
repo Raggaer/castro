@@ -6,8 +6,8 @@ import (
 
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
-	"github.com/raggaer/universe/models"
 )
 
 // Start the main execution point for Castro

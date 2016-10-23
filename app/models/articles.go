@@ -7,7 +7,7 @@ import "time"
 type Article struct {
 	ID        int64
 	Title     string
-	Text      string
+	Text      string `gorm:"type:text"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
