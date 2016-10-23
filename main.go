@@ -37,11 +37,17 @@ func main() {
 		),
 	)
 
-	// Tell negroni to use our http router
-	n.UseHandler(router)
-
 	// Run main app entry point
 	app.Start()
+
+	// Disable httprouter not found handler
+	router.HandleMethodNotAllowed = false
+
+	// Use custom not found handler
+	router.NotFound = newNotFoundHandler()
+
+	// Tell negroni to use our http router
+	n.UseHandler(router)
 
 	// Close database handle when the main function ends
 	defer database.DB.Close()

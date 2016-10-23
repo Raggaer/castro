@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"html/template"
 	"io/ioutil"
 
@@ -31,6 +32,7 @@ func Start() {
 
 	// Set template functions
 	util.Template.FuncMap(templateFuncs())
+	util.FuncMap = templateFuncs()
 
 	// Load templates
 	if err := util.LoadTemplates(&util.Template); err != nil {
@@ -52,6 +54,13 @@ func templateFuncs() template.FuncMap {
 	return template.FuncMap{
 		"isDev": func() bool {
 			return util.Config.IsDev()
+		},
+		"url": func(args ...interface{}) string {
+			url := ""
+			for _, arg := range args {
+				url = url + fmt.Sprintf("%v", arg)
+			}
+			return url
 		},
 	}
 }

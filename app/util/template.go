@@ -14,8 +14,13 @@ type tmpl struct {
 	tmpl *template.Template
 }
 
-// Template holds all the app templates
-var Template tmpl
+var (
+	// Template holds all the app templates
+	Template tmpl
+
+	// FuncMap holds the main FuncMap definition
+	FuncMap template.FuncMap
+)
 
 // NewTemplate creates and returns a new tmpl instance
 func NewTemplate(name string) tmpl {
@@ -50,6 +55,12 @@ func (t *tmpl) FuncMap(f template.FuncMap) {
 func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name string, args map[string]interface{}) {
 	// Check if app is running on dev mode
 	if Config.IsDev() {
+
+		// Create new template
+		t = NewTemplate("castro")
+
+		// Set template FuncMap
+		t.tmpl.Funcs(FuncMap)
 
 		// Reload all templates
 		if err := LoadTemplates(&t); err != nil {

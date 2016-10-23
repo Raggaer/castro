@@ -7,6 +7,9 @@ import (
 	"golang.org/x/net/context"
 )
 
+type notFoundHandler struct {
+}
+
 // cookieHandler used to make sure all requests
 // contain a castro specific cookie
 type cookieHandler struct {
@@ -17,6 +20,12 @@ type cookieHandler struct {
 // microtimeHandler used to record all requests
 // time spent
 type microtimeHandler struct {
+}
+
+// newNotFoundHandler creates and returns a new notFoundHandler
+// instance
+func newNotFoundHandler() *notFoundHandler {
+	return &notFoundHandler{}
 }
 
 // newCookieHandler creates and returns a new cookieHandler
@@ -32,6 +41,12 @@ func newCookieHandler(duration int, name string) *cookieHandler {
 // instance with the given format
 func newMicrotimeHandler() *microtimeHandler {
 	return &microtimeHandler{}
+}
+
+// ServeHTTP makes notFoundHandler compatible with httprouter
+func (c *notFoundHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	w.WriteHeader(404)
+	w.Write([]byte("Page was not found"))
 }
 
 // ServeHTTP makes cookieHandler compatible with negroni
