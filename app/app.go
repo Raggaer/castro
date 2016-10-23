@@ -8,6 +8,7 @@ import (
 
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 )
@@ -21,6 +22,11 @@ func Start() {
 	}
 	if err = util.LoadConfig(string(file), util.Config); err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
+	}
+
+	// Load the lua configration file
+	if err := lua.LoadConfig(util.Config.Datapack, lua.Config); err != nil {
+		util.Logger.Fatalf("Cannot read lua configuration file: %v", err)
 	}
 
 	// Create a new cache instance with the given options

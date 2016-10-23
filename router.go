@@ -25,7 +25,7 @@ func serveStatic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Check if file needs to be refreshed
-	if time.Since(stats.ModTime()) > time.Minute || util.Config.IsDev() {
+	if time.Since(stats.ModTime()) > time.Minute*4 || util.Config.IsDev() {
 		if err := gzipCompress("public/" + ps.ByName("filepath")); err != nil {
 			w.WriteHeader(500)
 			w.Write([]byte(err.Error()))
