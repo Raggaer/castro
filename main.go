@@ -7,6 +7,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app"
 	"github.com/raggaer/castro/app/controllers"
+	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
 )
@@ -41,6 +42,9 @@ func main() {
 
 	// Run main app entry point
 	app.Start()
+
+	// Close database handle when the main function ends
+	defer database.DB.Close()
 
 	// Show running port
 	util.Logger.Infof("Starting Castro http server on port :%v", util.Config.Port)

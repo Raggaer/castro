@@ -7,6 +7,7 @@ import (
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
+	"github.com/raggaer/universe/models"
 )
 
 // Start the main execution point for Castro
@@ -40,7 +41,11 @@ func Start() {
 	if database.DB, err = database.Open(util.Config.Database.Username, util.Config.Database.Password, util.Config.Database.Name); err != nil {
 		util.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
-	defer database.DB.Close()
+
+	// Migrate database models
+	if err := database.DB.AutoMigrate(&models.Article{}).Error; err != nil {
+		util.Logger.Fatalf("Cannot migrate database models: %v", err)
+	}
 }
 
 func templateFuncs() template.FuncMap {
