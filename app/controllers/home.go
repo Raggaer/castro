@@ -13,14 +13,14 @@ import (
 // Home is the main aac homepage
 func Home(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Articles per page
-	perPage := 1
+	perPage := 4
 
 	// Get page param
 	page := ps.ByName("page")
 
 	if page == "" {
 		// Load articles with the page 0
-		articles, max, err := getArticles(0, 1)
+		articles, max, err := getArticles(0, perPage)
 		if err != nil {
 			util.Logger.Error(err)
 			return
@@ -45,7 +45,7 @@ func Home(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Get article list for the given page
-	articles, max, err := getArticles(pageNumber, 1)
+	articles, max, err := getArticles(pageNumber, perPage)
 	if err != nil {
 		util.Logger.Error(err)
 		return

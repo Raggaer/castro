@@ -1,8 +1,10 @@
 {{ template "header.html" }}
     {{ range $index, $element := .articles }}
     {{ $createdAt := $element.CreatedAt.Format "Jan 2, 2006 at 3:04pm" }}
+    <article>
     <h3>{{ $element.Title }} - <small>Posted {{ $createdAt }}</small></h3>
     <p>{{ $element.Text }}</p>
+    </article>
     {{ end}}
     {{ pagination .page .max "/page/%v" }}
 {{ template "footer.html" . }} 
