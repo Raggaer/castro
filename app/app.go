@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"strconv"
 
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
@@ -61,6 +62,18 @@ func templateFuncs() template.FuncMap {
 				url = url + fmt.Sprintf("%v", arg)
 			}
 			return url
+		},
+		"pagination": func(current, limit int, url string) template.HTML {
+			list := `<div class="pagination"><ul>`
+			for i := 0; i < limit; i++ {
+				if i != current {
+					list += `<li><a href="` + fmt.Sprintf(url, i) + `">` + strconv.Itoa(i) + `</a></li>`
+				} else {
+					list += `<li class="current"><a href="` + fmt.Sprintf(url, i) + `">` + strconv.Itoa(i) + `</a></li>`
+				}
+			}
+			list += `</ul></div>`
+			return template.HTML(list)
 		},
 	}
 }

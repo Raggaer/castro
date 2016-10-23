@@ -70,6 +70,29 @@ aside {
     display: inline-block;
 }
 
+.pagination > ul {
+    display: inline-block;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.pagination > ul > li {
+    float: left;
+    padding: 6px;
+    margin: 10px;
+    font-size: 13.5px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    border: 1px solid black;
+}
+
+.pagination > ul > li.current {
+    background-color: white;
+    color: black;
+}
+
 @media (max-width: 1200px) {
     .container {
         width: 100%;

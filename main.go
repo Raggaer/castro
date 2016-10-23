@@ -23,13 +23,13 @@ func main() {
 	// Declare our new http router
 	router := httprouter.New()
 	router.GET("/", controllers.Home)
+	router.GET("/page/:page", controllers.Home)
 	router.GET("/public/*filepath", serveStatic)
 
 	// Create the middleware negroini instance with
 	// some middlewares
 	n := negroni.New(
 		newMicrotimeHandler(),
-		negroni.NewLogger(),
 		negroni.NewRecovery(),
 		newCookieHandler(
 			10000,
@@ -39,6 +39,11 @@ func main() {
 
 	// Run main app entry point
 	app.Start()
+
+	// Use negroni logger only in development mode
+	if util.Config.IsDev() {
+		n.Use(negroni.NewLogger())
+	}
 
 	// Disable httprouter not found handler
 	router.HandleMethodNotAllowed = false

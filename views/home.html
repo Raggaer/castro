@@ -4,4 +4,5 @@
     <h3>{{ $element.Title }} - <small>Posted {{ $createdAt }}</small></h3>
     <p>{{ $element.Text }}</p>
     {{ end}}
+    {{ pagination .page .max "/page/%v" }}
 {{ template "footer.html" . }} 
