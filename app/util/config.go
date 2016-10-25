@@ -38,6 +38,7 @@ type duration struct {
 type Configuration struct {
 	Mode     string
 	Port     int
+	URL      string
 	Datapack string
 	Dialect  string
 	Database database

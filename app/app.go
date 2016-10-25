@@ -63,7 +63,7 @@ func templateFuncs() template.FuncMap {
 			return util.Config.IsDev()
 		},
 		"url": func(args ...interface{}) string {
-			url := ""
+			url := fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port)
 			for _, arg := range args {
 				url = url + fmt.Sprintf("%v", arg)
 			}
