@@ -47,7 +47,7 @@ func Start() {
 	}
 
 	// Connect to the MySQL database
-	if database.DB, err = database.Open(util.Config.Database.Username, util.Config.Database.Password, util.Config.Database.Name); err != nil {
+	if database.DB, err = database.Open(lua.Config.MySQLUser, lua.Config.MySQLPass, lua.Config.MySQLDatabase); err != nil {
 		util.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
 

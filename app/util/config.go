@@ -6,14 +6,6 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-// database struct used for the config file
-// database credentials
-type database struct {
-	Username string
-	Password string
-	Name     string
-}
-
 // cookie struct used for the cookies
 // configuration options
 type cookie struct {
@@ -40,8 +32,6 @@ type Configuration struct {
 	Port     int
 	URL      string
 	Datapack string
-	Dialect  string
-	Database database
 	Cookies  cookie
 	Cache    cache
 	Custom   map[string]interface{}
