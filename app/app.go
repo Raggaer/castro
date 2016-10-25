@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"strconv"
+	"time"
 
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
@@ -32,7 +33,7 @@ func Start() {
 	// Create a new cache instance with the given options
 	// first parametter is the default item duration on the cache
 	// second parametter is the tick time to purge all dead cache items
-	util.Cache = cache.New(util.Config.Cache.Default.Duration, util.Config.Cache.Purge.Duration)
+	util.Cache = cache.New(time.Duration(util.Config.Cache.Default), time.Duration(util.Config.Cache.Purge))
 
 	// Create applicattion template
 	util.Template = util.NewTemplate("castro")

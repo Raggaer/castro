@@ -1,28 +1,19 @@
 package util
 
-import (
-	"time"
+import "github.com/BurntSushi/toml"
 
-	"github.com/BurntSushi/toml"
-)
-
-// cookie struct used for the cookies
+// CookieConfig struct used for the cookies
 // configuration options
-type cookie struct {
+type CookieConfig struct {
 	Name   string
 	MaxAge int
 }
 
-// cache struct used for the cache
+// CacheConfig struct used for the cache
 // configuration options
-type cache struct {
-	Default duration
-	Purge   duration
-}
-
-// duration struct used for time.Duration conversion
-type duration struct {
-	time.Duration
+type CacheConfig struct {
+	Default int
+	Purge   int
 }
 
 // Configuration struct used for the main Castro
@@ -32,8 +23,8 @@ type Configuration struct {
 	Port     int
 	URL      string
 	Datapack string
-	Cookies  cookie
-	Cache    cache
+	Cookies  CookieConfig
+	Cache    CacheConfig
 	Custom   map[string]interface{}
 }
 
@@ -42,13 +33,6 @@ var Config *Configuration
 
 func init() {
 	Config = &Configuration{}
-}
-
-// UnmarshalText converts byte array to time.Duration
-func (d *duration) UnmarshalText(text []byte) error {
-	var err error
-	d.Duration, err = time.ParseDuration(string(text))
-	return err
 }
 
 // LoadConfig loads the configuration file to

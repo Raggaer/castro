@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app"
 	"github.com/raggaer/castro/app/controllers"
@@ -26,7 +29,33 @@ func main() {
 	router.GET("/page/:page", controllers.Home)
 	router.GET("/public/*filepath", serveStatic)
 
-	// Create the middleware negroini instance with
+	// Check if Castro is installed
+	if !isInstalled() {
+		configFile, err := os.Create("config.toml")
+		if err != nil {
+			util.Logger.Fatalf("Cannot create config.toml file: %v", err)
+		}
+		defer configFile.Close()
+		if err := toml.NewEncoder(configFile).Encode(util.Configuration{
+			Mode:     "dev",
+			Port:     8080,
+			URL:      "http://localhost",
+			Datapack: "/",
+			Cookies: util.CookieConfig{
+				Name:   "castro",
+				MaxAge: 1000000,
+			},
+			Cache: util.CacheConfig{
+				Default: int(time.Minute) * 5,
+				Purge:   int(time.Minute),
+			},
+			Custom: make(map[string]interface{}),
+		}); err != nil {
+			util.Logger.Fatalf("Cannot encode config.toml file: %v", err)
+		}
+	}
+
+	// Create the middleware negroni instance with
 	// some middlewares
 	n := negroni.New(
 		newMicrotimeHandler(),
