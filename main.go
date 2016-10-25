@@ -29,13 +29,18 @@ func main() {
 	router.GET("/page/:page", controllers.Home)
 	router.GET("/public/*filepath", serveStatic)
 
-	// Check if Castro is installed
+	// Check if Castro is installed if not we create the
+	// config file on runtime
 	if !isInstalled() {
+
+		// Create configuration file handle
 		configFile, err := os.Create("config.toml")
 		if err != nil {
 			util.Logger.Fatalf("Cannot create config.toml file: %v", err)
 		}
 		defer configFile.Close()
+
+		// Encode the given configuration struct into the file
 		if err := toml.NewEncoder(configFile).Encode(util.Configuration{
 			Mode:     "dev",
 			Port:     8080,
