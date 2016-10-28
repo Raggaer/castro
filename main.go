@@ -34,6 +34,11 @@ func main() {
 		if err := createConfigFile("config.toml"); err != nil {
 			util.Logger.Fatalf("Cannot create %v file: %v", "config.toml", err)
 		}
+
+		util.Logger.Info("Config.toml file is now installed. Edit Datapack field to your server location\nCastro will now exit")
+
+		// Exit app
+		return
 	}
 
 	// Create the middleware negroni instance with

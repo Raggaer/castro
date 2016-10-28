@@ -32,14 +32,20 @@ func GetStructVariables(src interface{}, L *lua.LState) error {
 			// Determine what type of variable is and
 			// set the field
 			switch variable.Type() {
+
+			// Variable is integer
 			case lua.LTNumber:
 				n, err := strconv.ParseInt(variable.String(), 10, 64)
 				if err != nil {
 					return err
 				}
 				field.SetInt(n)
+
+			// Variable is boolean
 			case lua.LTBool:
 				field.SetBool(lua.LVAsBool(variable))
+
+			// Variable is string
 			case lua.LTString:
 				field.SetString(variable.String())
 			}
