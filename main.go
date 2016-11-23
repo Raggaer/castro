@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	// Show credits and applicattion name
+	// Show credits and application name
 	fmt.Println(`
 			Castro - Open Tibia automatic account creator
 
@@ -23,6 +23,7 @@ func main() {
 	// Declare our new http router
 	router := httprouter.New()
 	router.GET("/", controllers.Home)
+	router.GET("/subtopic/:page", controllers.LuaPage)
 	router.GET("/page/:page", controllers.Home)
 	router.GET("/public/*filepath", serveStatic)
 
