@@ -1,3 +1,4 @@
 tmp/
 *.gzip
 *.toml
+.idea/
