@@ -10,9 +10,9 @@ import (
 
 // LuaPage executes the given lua page
 func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	luaState := lua.NewState(r, w, ps)
-	defer luaState.L.Close()
-	if err := luaState.L.DoFile("pages/" + ps.ByName("page") + ".lual"); err != nil {
+	luaState := lua.Pool.Get()
+	defer lua.Pool.Put(luaState)
+	if err := luaState.DoFile("pages/" + ps.ByName("page") + ".lua"); err != nil {
 		util.Logger.Error(err.Error())
 	}
 }
