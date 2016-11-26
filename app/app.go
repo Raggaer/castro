@@ -16,7 +16,7 @@ import (
 
 // Start the main execution point for Castro
 func Start() {
-	// Load the configration file
+	// Load the configuration file
 	file, err := ioutil.ReadFile("config.toml")
 	if err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
@@ -25,17 +25,17 @@ func Start() {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
 
-	// Load the lua configration file
+	// Load the lua configuration file
 	if err := lua.LoadConfig(util.Config.Datapack, lua.Config); err != nil {
 		util.Logger.Fatalf("Cannot read lua configuration file: %v", err)
 	}
 
 	// Create a new cache instance with the given options
-	// first parametter is the default item duration on the cache
-	// second parametter is the tick time to purge all dead cache items
+	// first parameter is the default item duration on the cache
+	// second parameter is the tick time to purge all dead cache items
 	util.Cache = cache.New(time.Duration(util.Config.Cache.Default), time.Duration(util.Config.Cache.Purge))
 
-	// Create applicattion template
+	// Create application template
 	util.Template = util.NewTemplate("castro")
 
 	// Set template functions

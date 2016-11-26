@@ -22,9 +22,7 @@ func main() {
 
 	// Declare our new http router
 	router := httprouter.New()
-	router.GET("/", controllers.Home)
 	router.GET("/subtopic/:page", controllers.LuaPage)
-	router.GET("/page/:page", controllers.Home)
 	router.GET("/public/*filepath", serveStatic)
 
 	// Check if Castro is installed if not we create the
