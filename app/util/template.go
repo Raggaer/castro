@@ -52,7 +52,7 @@ func (t *tmpl) FuncMap(f template.FuncMap) {
 	t.tmpl.Funcs(f)
 }
 
-func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name string, args map[string]interface{}) {
+func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name string, args map[interface{}]interface{}) {
 	// Check if app is running on dev mode
 	if Config.IsDev() {
 
@@ -71,7 +71,7 @@ func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 
 	// Check if args is a valid map
 	if args == nil {
-		args = map[string]interface{}{}
+		args = map[interface{}]interface{}{}
 	}
 
 	// Load microtime from the microtimeHandler

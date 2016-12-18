@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"net/http"
-
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
+
+	glua "github.com/yuin/gopher-lua"
 )
 
 // LuaPage executes the given lua page
@@ -24,6 +25,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 	templateName := luaState.GetGlobal(lua.TemplateVarName).String()
 	if templateName != "" {
-		util.Template.RenderTemplate(w, r, templateName, nil)
+		args := lua.TableToMap(
+			luaState.GetGlobal(lua.TemplateArgsVarName).(*glua.LTable),
+		)
+		util.Template.RenderTemplate(w, r, templateName, args)
 	}
 }

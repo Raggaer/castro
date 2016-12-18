@@ -54,3 +54,18 @@ func GetStructVariables(src interface{}, L *lua.LState) error {
 	}
 	return nil
 }
+
+// TableToMap converts a LUA table to a Go map
+func TableToMap(table *lua.LTable) map[interface{}]interface{} {
+	m := make(map[interface{}]interface{})
+	table.ForEach(func(i lua.LValue, v lua.LValue) {
+		switch v.Type() {
+		case lua.LTTable:
+			n := TableToMap(v.(*lua.LTable))
+			m[i.String()] = n
+		default:
+			m[i.String()] = v.String()
+		}
+	})
+	return m
+}
