@@ -48,10 +48,16 @@ func (p *luaStatePool) Put(state *glua.LState) {
 
 // New creates and returns a lua state
 func (p *luaStatePool) New() *glua.LState {
-	// Create and return a new lua state
-	return glua.NewState(
+	// Create a new lua state
+	luaState := glua.NewState(
 		glua.Options{
 			IncludeGoStackTrace: true,
 		},
 	)
+
+	// Set lua state methods
+	luaState.SetGlobal(TemplateFuncName, luaState.NewFunction(RenderTemplate))
+
+	// Return the lua state
+	return luaState
 }

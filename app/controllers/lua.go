@@ -22,4 +22,8 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		w.WriteHeader(400)
 		w.Write([]byte("Cannot execute the given subtopic"))
 	}
+	templateName := luaState.GetGlobal(lua.TemplateVarName).String()
+	if templateName != "" {
+		util.Template.RenderTemplate(w, r, templateName, nil)
+	}
 }

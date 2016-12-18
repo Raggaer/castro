@@ -1,1 +1,1 @@
-print("eeeeeeeeeee");
+renderTemplate("home.html")
