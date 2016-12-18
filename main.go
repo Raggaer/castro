@@ -74,7 +74,7 @@ func main() {
 	// Show running port
 	util.Logger.Infof("Starting Castro http server on port :%v", util.Config.Port)
 
-	if err := http.ListenAndServe(fmt.Sprintf(":%v", util.Config.Port), n); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port), n); err != nil {
 		// This should only happen when a port is
 		// already in use
 		util.Logger.Fatalf("Cannot start Castro http server: %v", err)

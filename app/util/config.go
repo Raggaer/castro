@@ -16,6 +16,14 @@ type CacheConfig struct {
 	Purge   int
 }
 
+// SSLConfig struct used for the ssl
+// configuration options
+type SSLConfig struct {
+	Enabled bool
+	Cert string
+	Key string
+}
+
 // Configuration struct used for the main Castro
 // config file TOML file
 type Configuration struct {
@@ -23,6 +31,7 @@ type Configuration struct {
 	Port     int
 	URL      string
 	Datapack string
+	SSL      SSLConfig
 	Cookies  CookieConfig
 	Cache    CacheConfig
 	Custom   map[string]interface{}
@@ -38,6 +47,7 @@ func init() {
 // LoadConfig loads the configuration file to
 // the given interface pointer
 func LoadConfig(data string, dest interface{}) error {
+	// Decode the given file to the given interface
 	if _, err := toml.Decode(data, dest); err != nil {
 		return err
 	}

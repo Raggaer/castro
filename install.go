@@ -25,7 +25,7 @@ func createConfigFile(name string) error {
 	return toml.NewEncoder(configFile).Encode(util.Configuration{
 		Mode:     "dev",
 		Port:     8080,
-		URL:      "http://localhost",
+		URL:      "localhost",
 		Datapack: "/",
 		Cookies: util.CookieConfig{
 			Name:   "castro",
@@ -34,6 +34,9 @@ func createConfigFile(name string) error {
 		Cache: util.CacheConfig{
 			Default: int(time.Minute) * 5,
 			Purge:   int(time.Minute),
+		},
+		SSL: util.SSLConfig{
+			Enabled: false,
 		},
 		Custom: make(map[string]interface{}),
 	})
