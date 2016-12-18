@@ -70,6 +70,13 @@ footer {
     font-size: 13px;
 }
 
+footer a {
+    color: black;
+    padding: 4.3px;
+    background-color: #F9C513;
+    margin-bottom: 9px;
+}
+
 aside {
     display: inline-block;
 }

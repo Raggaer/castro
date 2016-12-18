@@ -35,7 +35,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	redirectLocation := luaState.GetGlobal(lua.RedirectVarName).String()
 
 	// If user needs to be redirected
-	if redirectLocation != "" {
+	if redirectLocation != "" && redirectLocation != "nil" {
 
 		// Redirect user to the location
 		http.Redirect(w, r, redirectLocation, 302)
@@ -48,7 +48,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	templateName := luaState.GetGlobal(lua.TemplateVarName).String()
 
 	// If there is a template to be rendered
-	if templateName != "" {
+	if templateName != "" && templateName != "nil" {
 
 		// Get template arguments
 		globalArgs := luaState.GetGlobal(lua.TemplateArgsVarName)

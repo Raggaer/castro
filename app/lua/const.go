@@ -4,6 +4,6 @@ const (
 	RedirectFuncName = "redirect"
 	RedirectVarName = "_redirect"
 	TemplateArgsVarName = "_args"
-	TemplateFuncName = "renderTemplate"
+	TemplateFuncName = "render"
 	TemplateVarName = "_template"
 )

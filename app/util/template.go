@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"fmt"
 )
 
 type tmpl struct {
@@ -83,7 +84,7 @@ func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 	}
 
 	// Set microtime value
-	args["microtime"] = time.Since(microtime)
+	args["microtime"] = fmt.Sprintf("%9.4f seconds", time.Since(microtime).Seconds())
 
 	// Render template and log error
 	if err := t.tmpl.ExecuteTemplate(w, name, args); err != nil {
