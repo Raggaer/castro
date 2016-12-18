@@ -63,12 +63,12 @@ func templateFuncs() template.FuncMap {
 		"isDev": func() bool {
 			return util.Config.IsDev()
 		},
-		"url": func(args ...interface{}) string {
+		"url": func(args ...interface{}) template.URL {
 			url := fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port)
 			for _, arg := range args {
-				url = url + fmt.Sprintf("%v", arg)
+				url = url + fmt.Sprintf("/%v", arg)
 			}
-			return url
+			return template.URL(url)
 		},
 		"pagination": func(current, limit int, url string) template.HTML {
 			list := `<div class="pagination"><ul>`

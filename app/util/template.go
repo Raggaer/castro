@@ -86,6 +86,9 @@ func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 	// Set microtime value
 	args["microtime"] = fmt.Sprintf("%9.4f seconds", time.Since(microtime).Seconds())
 
+	// Set HTTP method
+	args["_http_method"] = req.Method
+
 	// Render template and log error
 	if err := t.tmpl.ExecuteTemplate(w, name, args); err != nil {
 		Logger.Error(err)
