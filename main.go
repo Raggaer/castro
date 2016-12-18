@@ -22,6 +22,9 @@ func main() {
 
 	// Declare our new http router
 	router := httprouter.New()
+	router.GET("/", controllers.LuaPage)
+	router.POST("/", controllers.LuaPage)
+	router.POST("/subtopic/:page", controllers.LuaPage)
 	router.GET("/subtopic/:page", controllers.LuaPage)
 	router.GET("/public/*filepath", serveStatic)
 

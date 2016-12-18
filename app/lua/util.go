@@ -5,6 +5,9 @@ import (
 	"strconv"
 
 	"github.com/yuin/gopher-lua"
+	"net/url"
+	"strings"
+	"log"
 )
 
 // GetStructVariables loads all the global variables
@@ -68,4 +71,17 @@ func TableToMap(table *lua.LTable) map[interface{}]interface{} {
 		}
 	})
 	return m
+}
+
+// URLValuesToTable converts a map[string][]string to a LUA table
+func URLValuesToTable(m url.Values) *lua.LTable {
+	t := lua.LTable{}
+	for i, v := range m {
+		log.Println(i, v)
+		t.RawSetString(
+			i,
+			lua.LString(strings.Join(v, ", ")),
+		)
+	}
+	return &t
 }

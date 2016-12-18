@@ -17,8 +17,40 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Defer the state put method
 	defer lua.Pool.Put(luaState)
 
+	// Set some lua state values
+	luaState.SetGlobal(
+		lua.HTTPMethodName,
+		glua.LString(r.Method),
+	)
+
+	// If method is POST convert all the values
+	// to a LUA table
+	if r.Method == http.MethodPost {
+
+		// Parse form to limit maximum number of bytes
+		if err := r.ParseForm(); err != nil {
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		// Set POST values as LUA table
+		luaState.SetGlobal(
+			lua.PostValuesName,
+			lua.URLValuesToTable(r.PostForm),
+		)
+	}
+
+	// Set LUA file name
+	pageName := ps.ByName("page")
+
+	// If there is no subtopic request index
+	if pageName == "" {
+		pageName = "index"
+	}
+
 	// Execute the requested page
-	if err := luaState.DoFile("pages/" + ps.ByName("page") + ".lua"); err != nil {
+	if err := luaState.DoFile("pages/" + pageName + ".lua"); err != nil {
 
 		// If AAC is running on development mode log error
 		if util.Config.IsDev() {
@@ -27,7 +59,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			w.Write([]byte(err.Error()))
 			return
 		}
-		w.WriteHeader(400)
+		w.WriteHeader(500)
 		w.Write([]byte("Cannot execute the given subtopic"))
 	}
 
