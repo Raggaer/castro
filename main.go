@@ -74,9 +74,21 @@ func main() {
 	// Show running port
 	util.Logger.Infof("Starting Castro http server on port :%v", util.Config.Port)
 
-	if err := http.ListenAndServe(fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port), n); err != nil {
-		// This should only happen when a port is
-		// already in use
-		util.Logger.Fatalf("Cannot start Castro http server: %v", err)
+	// Check if Castro should run on SSL mode
+	if util.Config.SSL.Enabled {
+		if err := http.ListenAndServeTLS(
+			fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port),
+			util.Config.SSL.Cert,
+			util.Config.SSL.Key,
+			n,
+		); err != nil {
+			util.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
+		}
+	} else {
+		if err := http.ListenAndServe(fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port), n); err != nil {
+			// This should only happen when a port is
+			// already in use
+			util.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
+		}
 	}
 }
