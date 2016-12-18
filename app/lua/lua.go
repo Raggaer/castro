@@ -57,6 +57,7 @@ func (p *luaStatePool) New() *glua.LState {
 
 	// Set lua state methods
 	luaState.SetGlobal(TemplateFuncName, luaState.NewFunction(RenderTemplate))
+	luaState.SetGlobal(RedirectFuncName, luaState.NewFunction(Redirect))
 
 	// Return the lua state
 	return luaState

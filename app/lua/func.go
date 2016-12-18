@@ -31,3 +31,16 @@ func RenderTemplate(L *glua.LState) int {
 	// Dont return anything to LUA
 	return 0
 }
+
+// Redirect sets the _redirect lua variable
+// to later redirect the user to the desired location
+func Redirect(L *glua.LState) int {
+	// Set the redirect value
+	L.SetGlobal(
+		RedirectVarName,
+		L.Get(1),
+	)
+
+	// Dont return anything to LUA
+	return 0
+}

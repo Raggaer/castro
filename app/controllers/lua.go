@@ -31,6 +31,19 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		w.Write([]byte("Cannot execute the given subtopic"))
 	}
 
+	// Get redirect location
+	redirectLocation := luaState.GetGlobal(lua.RedirectVarName).String()
+
+	// If user needs to be redirected
+	if redirectLocation != "" {
+
+		// Redirect user to the location
+		http.Redirect(w, r, redirectLocation, 302)
+
+		// Stop execution
+		return
+	}
+
 	// Get template name to render
 	templateName := luaState.GetGlobal(lua.TemplateVarName).String()
 

@@ -1,1 +1,1 @@
-renderTemplate("home.html", nil)
+redirect("/hola")
