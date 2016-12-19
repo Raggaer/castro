@@ -42,6 +42,30 @@ func (p *luaStatePool) Put(state *glua.LState) {
 	p.m.Lock()
 	defer p.m.Unlock()
 
+	// Remove POST values
+	state.SetGlobal(
+		PostValuesName,
+		glua.LNil,
+	)
+
+	// Remove redirect location
+	state.SetGlobal(
+		RedirectVarName,
+		glua.LNil,
+	)
+
+	// Remove template name
+	state.SetGlobal(
+		TemplateVarName,
+		glua.LNil,
+	)
+
+	// Remove template args
+	state.SetGlobal(
+		TemplateArgsVarName,
+		glua.LNil,
+	)
+
 	// Append to the pool
 	p.saved = append(p.saved, state)
 }

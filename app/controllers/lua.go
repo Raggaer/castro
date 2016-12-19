@@ -50,7 +50,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Execute the requested page
-	if err := luaState.DoFile("pages/" + pageName + ".lua"); err != nil {
+	if err := luaState.DoFile("pages/" + pageName + "/" + r.Method + ".lua"); err != nil {
 
 		// If AAC is running on development mode log error
 		if util.Config.IsDev() {

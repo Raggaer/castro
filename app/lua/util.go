@@ -7,7 +7,6 @@ import (
 	"github.com/yuin/gopher-lua"
 	"net/url"
 	"strings"
-	"log"
 )
 
 // GetStructVariables loads all the global variables
@@ -15,7 +14,7 @@ import (
 func GetStructVariables(src interface{}, L *lua.LState) error {
 	v := reflect.ValueOf(src).Elem()
 
-	// Lopp all struct fields
+	// Loop all struct fields
 	for i := 0; i < v.NumField(); i++ {
 		field := v.Field(i)
 		fieldTag := v.Type().Field(i)
@@ -77,7 +76,6 @@ func TableToMap(table *lua.LTable) map[interface{}]interface{} {
 func URLValuesToTable(m url.Values) *lua.LTable {
 	t := lua.LTable{}
 	for i, v := range m {
-		log.Println(i, v)
 		t.RawSetString(
 			i,
 			lua.LString(strings.Join(v, ", ")),
