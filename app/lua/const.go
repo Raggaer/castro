@@ -1,6 +1,7 @@
 package lua
 
 const (
+	ConfigMetaTableName = "config"
 	HTTPMetaTableName = "http"
 	HTTPMetaTableMethodName = "method"
 	HTTPResponseWriterName = "_w"

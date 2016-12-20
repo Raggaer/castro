@@ -1,6 +1,9 @@
 package lua
 
-import "github.com/yuin/gopher-lua"
+import (
+	"github.com/yuin/gopher-lua"
+	"reflect"
+)
 
 // Config holds the current lua configuration file
 var Config = &Configuration{}
@@ -84,4 +87,24 @@ func LoadConfig(path string, dest *Configuration) error {
 		return err
 	}
 	return GetStructVariables(dest, L)
+}
+
+func GetConfigValueString(L *lua.LState) int {
+	// Get value of Config struct
+	r := reflect.ValueOf(Config)
+
+	// Get field by its name
+	f := reflect.Indirect(r).FieldByName(L.ToString(2))
+
+	switch f.Kind() {
+	case reflect.String:
+		L.Push(lua.LString(f.String()))
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		L.Push(lua.LNumber(f.Int()))
+	case  reflect.Bool:
+		L.Push(lua.LBool(f.Bool()))
+	}
+
+
+	return 1
 }

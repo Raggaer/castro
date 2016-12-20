@@ -14,6 +14,9 @@ var (
 		"redirect": lua.Redirect,
 		"render": lua.RenderTemplate,
 	}
+	configMethods = map[string]glua.LGFunction{
+		"getString": lua.GetConfigValueString,
+	}
 )
 
 // LuaPage executes the given lua page
@@ -24,16 +27,31 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Defer the state put method
 	defer lua.Pool.Put(luaState)
 
+	// Create and set Config metatable
+	configMetaTable := luaState.NewTypeMetatable(lua.ConfigMetaTableName)
+	luaState.SetGlobal(lua.ConfigMetaTableName, configMetaTable)
+
+	// Set all Config metatable functions
+	luaState.SetFuncs(configMetaTable, configMethods)
+
 	// Create and set HTTP metatable
 	httpMetaTable := luaState.NewTypeMetatable(lua.HTTPMetaTableName)
 	luaState.SetGlobal(lua.HTTPMetaTableName, httpMetaTable)
+
+	// Set HTTP method field
 	luaState.SetField(httpMetaTable, lua.HTTPMetaTableMethodName, glua.LString(r.Method))
+
+	// Set HTTP response writer field
 	httpW := luaState.NewUserData()
 	httpW.Value = w
 	luaState.SetField(httpMetaTable, lua.HTTPResponseWriterName, httpW)
+
+	// Set HTTP request field
 	httpR := luaState.NewUserData()
 	httpR.Value = r
 	luaState.SetField(httpMetaTable, lua.HTTPRequestName, httpR)
+
+	// Set all HTTP metatable functions
 	luaState.SetFuncs(httpMetaTable, httpMethods)
 
 	// Check if request is POST

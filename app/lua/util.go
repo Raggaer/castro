@@ -57,7 +57,7 @@ func GetStructVariables(src interface{}, L *lua.LState) error {
 	return nil
 }
 
-// TableToMap converts a LUA table to a Go map
+// TableToMap converts a LUA table to a Go map[interface{}]interface{}
 func TableToMap(table *lua.LTable) map[interface{}]interface{} {
 	m := make(map[interface{}]interface{})
 	table.ForEach(func(i lua.LValue, v lua.LValue) {
@@ -75,7 +75,11 @@ func TableToMap(table *lua.LTable) map[interface{}]interface{} {
 // URLValuesToTable converts a map[string][]string to a LUA table
 func URLValuesToTable(m url.Values) *lua.LTable {
 	t := lua.LTable{}
+
+	// Loop the map
 	for i, v := range m {
+
+		// Set the table fields
 		t.RawSetString(
 			i,
 			lua.LString(strings.Join(v, ", ")),

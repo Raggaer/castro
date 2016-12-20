@@ -79,6 +79,8 @@ func main() {
 
 	// Check if Castro should run on SSL mode
 	if util.Config.SSL.Enabled {
+
+		// If SSL is enabled listen with cert and key
 		if err := http.ListenAndServeTLS(
 			fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port),
 			util.Config.SSL.Cert,
