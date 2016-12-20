@@ -32,7 +32,7 @@ func RenderTemplate(L *glua.LState) int {
 	if tableValue.Type() == glua.LTTable {
 
 		// Render template with args
-		util.Template.RenderTemplate(w, req, L.ToString(2), TableToMap(L.ToTable(3)))
+		util.Template.RenderTemplate(w, req, L.ToString(2), TableToMap(tableValue.(*glua.LTable)))
 
 		return 0
 	}

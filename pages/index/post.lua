@@ -1,1 +1,1 @@
-print("POST")
+print(http.post_values["name"])
