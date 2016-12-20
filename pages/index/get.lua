@@ -1,1 +1,1 @@
-print(http:redirect())
+http:render("home.html")

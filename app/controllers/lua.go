@@ -12,6 +12,7 @@ import (
 var (
 	httpMethods = map[string]glua.LGFunction{
 		"redirect": lua.Redirect,
+		"render": lua.RenderTemplate,
 	}
 )
 
