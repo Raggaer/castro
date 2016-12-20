@@ -2,6 +2,8 @@ package lua
 
 import (
 	glua "github.com/yuin/gopher-lua"
+	"log"
+	"net/http"
 )
 
 // RenderTemplate sets the _template lua variable
@@ -32,14 +34,17 @@ func RenderTemplate(L *glua.LState) int {
 	return 0
 }
 
-// Redirect sets the _redirect lua variable
-// to later redirect the user to the desired location
+// Redirect redirects the user to the given
+// location with a 302 header
 func Redirect(L *glua.LState) int {
-	// Set the redirect value
-	L.SetGlobal(
-		RedirectVarName,
-		L.Get(1),
-	)
+	// Get HTTP metatable
+	metatable := L.GetTypeMetatable(HTTPMetaTableName)
+
+	// Get HTTP request field
+	req := L.GetField(metatable, HTTPRequestName).(*glua.LUserData).Value.(*http.Request)
+
+	log.Println(req.Method)
+
 
 	// Dont return anything to LUA
 	return 0

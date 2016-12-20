@@ -42,29 +42,8 @@ func (p *luaStatePool) Put(state *glua.LState) {
 	p.m.Lock()
 	defer p.m.Unlock()
 
-	// Remove POST values
-	state.SetGlobal(
-		PostValuesName,
-		glua.LNil,
-	)
-
-	// Remove redirect location
-	state.SetGlobal(
-		RedirectVarName,
-		glua.LNil,
-	)
-
-	// Remove template name
-	state.SetGlobal(
-		TemplateVarName,
-		glua.LNil,
-	)
-
-	// Remove template args
-	state.SetGlobal(
-		TemplateArgsVarName,
-		glua.LNil,
-	)
+	// Remove HTTP metatable
+	state.SetGlobal(HTTPMetaTableName, glua.LNil)
 
 	// Append to the pool
 	p.saved = append(p.saved, state)
@@ -78,10 +57,6 @@ func (p *luaStatePool) New() *glua.LState {
 			IncludeGoStackTrace: true,
 		},
 	)
-
-	// Set lua state methods
-	luaState.SetGlobal(TemplateFuncName, luaState.NewFunction(RenderTemplate))
-	luaState.SetGlobal(RedirectFuncName, luaState.NewFunction(Redirect))
 
 	// Return the lua state
 	return luaState

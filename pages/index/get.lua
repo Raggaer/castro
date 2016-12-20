@@ -1,1 +1,1 @@
-render("home.html", nil)
+print(http:redirect())

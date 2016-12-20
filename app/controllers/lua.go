@@ -9,6 +9,12 @@ import (
 	glua "github.com/yuin/gopher-lua"
 )
 
+var (
+	httpMethods = map[string]glua.LGFunction{
+		"redirect": lua.Redirect,
+	}
+)
+
 // LuaPage executes the given lua page
 func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Get state from the pool
@@ -17,6 +23,20 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Defer the state put method
 	defer lua.Pool.Put(luaState)
 
+	// Create and set HTTP metatable
+	httpMetaTable := luaState.NewTypeMetatable(lua.HTTPMetaTableName)
+	luaState.SetGlobal(lua.HTTPMetaTableName, httpMetaTable)
+	luaState.SetField(httpMetaTable, lua.HTTPMetaTableMethodName, glua.LString(r.Method))
+	httpW := luaState.NewUserData()
+	httpW.Value = w
+	luaState.SetField(httpMetaTable, lua.HTTPResponseWriterName, httpW)
+	httpR := luaState.NewUserData()
+	httpR.Value = r
+	luaState.SetField(httpMetaTable, lua.HTTPRequestName, httpR)
+	luaState.SetFuncs(httpMetaTable, httpMethods)
+
+
+/*
 	// Set some lua state values
 	luaState.SetGlobal(
 		lua.HTTPMethodName,
@@ -40,7 +60,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			lua.URLValuesToTable(r.PostForm),
 		)
 	}
-
+*/
 	// Set LUA file name
 	pageName := ps.ByName("page")
 
@@ -62,7 +82,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		w.WriteHeader(500)
 		w.Write([]byte("Cannot execute the given subtopic"))
 	}
-
+/*
 	// Get redirect location
 	redirectLocation := luaState.GetGlobal(lua.RedirectVarName).String()
 
@@ -101,4 +121,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// Execute template with arguments
 		util.Template.RenderTemplate(w, r, templateName, args)
 	}
+
+	*/
 }
