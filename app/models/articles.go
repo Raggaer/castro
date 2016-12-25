@@ -15,10 +15,10 @@ type Article struct {
 	UpdatedAt time.Time
 }
 
-// GetArticleWhere gets a single article from
-// the database by the given where query
-func GetAricleWhere(where string, args []interface{}) (Article, error) {
+func ArticleSingleWhere(where string, args ...interface{}) (*Article, error) {
 	article := Article{}
-	db := database.DB.Table("articles").Where(where, args).Scan(&article)
-	return article, db.Error
+	if err := database.DB.Table("articles").Where(where, args).Scan(&article).Error; err != nil {
+		return nil, err
+	}
+	return &article, nil
 }

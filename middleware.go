@@ -52,7 +52,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 	// Get main cooke
 	_, err := req.Cookie(util.Config.Cookies.Name)
 
-	// If cant retrieve main cookie stop execution
+	// If cant retrieve main cookie refresh
 	// main cookie should always be available since
 	// cookie handler is the first handler executed
 	if err != nil {
