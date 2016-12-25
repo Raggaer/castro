@@ -6,6 +6,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/raggaer/castro/app/util"
+	"github.com/dchest/uniuri"
 )
 
 func isInstalled() bool {
@@ -27,6 +28,7 @@ func createConfigFile(name string) error {
 		Port:     8080,
 		URL:      "localhost",
 		Datapack: "/",
+		Secret: uniuri.New(),
 		Cookies: util.CookieConfig{
 			Name:   "castro",
 			MaxAge: 1000000,

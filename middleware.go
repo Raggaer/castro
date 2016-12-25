@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"golang.org/x/net/context"
+	"github.com/raggaer/castro/app/util"
+	"github.com/dchest/uniuri"
 )
 
 type notFoundHandler struct {
@@ -12,14 +14,19 @@ type notFoundHandler struct {
 
 // cookieHandler used to make sure all requests
 // contain a castro specific cookie
-type cookieHandler struct {
-	cookieDuration int
-	cookieName     string
-}
+type cookieHandler struct {}
 
 // microtimeHandler used to record all requests
 // time spent
-type microtimeHandler struct {
+type microtimeHandler struct {}
+
+// csrfHandler used to grant CSRF tokens
+// also checks POST requests
+type csrfHandler struct {}
+
+// newCsrfHandler creates and returns a new csrfHandler instance
+func newCsrfHandler() *csrfHandler {
+	return &csrfHandler{}
 }
 
 // newNotFoundHandler creates and returns a new notFoundHandler
@@ -30,11 +37,8 @@ func newNotFoundHandler() *notFoundHandler {
 
 // newCookieHandler creates and returns a new cookieHandler
 // instance with the given options
-func newCookieHandler(duration int, name string) *cookieHandler {
-	return &cookieHandler{
-		cookieDuration: duration,
-		cookieName:     name,
-	}
+func newCookieHandler() *cookieHandler {
+	return &cookieHandler{}
 }
 
 // newMicrotimeHandler creates and returns a new microtimeHandler
@@ -43,7 +47,26 @@ func newMicrotimeHandler() *microtimeHandler {
 	return &microtimeHandler{}
 }
 
-// ServeHTTP makes notFoundHandler compatible with httprouter
+// ServeHTTP makes csrfHandler compatible with negroni
+func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+	// Get main cooke
+	_, err := req.Cookie(util.Config.Cookies.Name)
+
+	// If cant retrieve main cookie stop execution
+	// main cookie should always be available since
+	// cookie handler is the first handler executed
+	if err != nil {
+		http.Redirect(w, req, req.RequestURI, 302)
+		return
+	}
+
+	//c.Value
+
+	// Execute next handler
+	next(w, req)
+}
+
+// ServeHTTP makes notFoundHandler compatible with negroni
 func (c *notFoundHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(404)
 	w.Write([]byte("Page was not found"))
@@ -52,13 +75,32 @@ func (c *notFoundHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 // ServeHTTP makes cookieHandler compatible with negroni
 func (c *cookieHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
 	// Check if the castro cookie is present
-	_, err := req.Cookie(c.cookieName)
+	_, err := req.Cookie(util.Config.Cookies.Name)
 
 	if err != nil {
+
+		// Create cookie ID
+		id := uniuri.New()
+
+		// Check if ID exists on the cache
+		_, found := util.Cache.Get(id)
+
+		for found {
+
+			// Create new ID
+			id = uniuri.New()
+
+			// Check if ID exists on the cache
+			_, found = util.Cache.Get(id)
+		}
+
 		// Cookie is not found so we create one
 		newCookie := http.Cookie{
-			Name:   c.cookieName,
-			MaxAge: c.cookieDuration,
+			Name:   util.Config.Cookies.Name,
+			MaxAge: util.Config.Cookies.MaxAge,
+			Value: id,
+			Secure: util.Config.SSL.Enabled,
+			HttpOnly: true,
 		}
 
 		// Set the new cookie into the user
@@ -71,6 +113,9 @@ func (c *cookieHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next
 
 // ServeHTTP makes microtimeHandler compatible with negroni
 func (m *microtimeHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+	// Set timestamp on the request context
 	ctx := context.WithValue(req.Context(), "microtime", time.Now())
+
+	// Execute next handler
 	next(w, req.WithContext(ctx))
 }

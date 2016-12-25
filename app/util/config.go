@@ -31,6 +31,7 @@ type Configuration struct {
 	Port     int
 	URL      string
 	Datapack string
+	Secret   string
 	SSL      SSLConfig
 	Cookies  CookieConfig
 	Cache    CacheConfig
