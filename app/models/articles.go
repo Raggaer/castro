@@ -15,10 +15,18 @@ type Article struct {
 	UpdatedAt time.Time
 }
 
-func ArticleSingleWhere(where string, args ...interface{}) (*Article, error) {
+func ArticleSingle(query string, args []interface{}) (*Article, error) {
 	article := Article{}
-	if err := database.DB.Table("articles").Where(where, args).Scan(&article).Error; err != nil {
+
+	// Get article using RAW query
+	if err := database.DB.Table("articles").Where(query, args).Scan(&article).Error; err != nil {
 		return nil, err
 	}
+
+	// Return all values
 	return &article, nil
+}
+
+func SaveArticle(article *Article) error {
+	return database.DB.Save(article).Error
 }

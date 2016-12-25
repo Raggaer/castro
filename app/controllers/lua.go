@@ -7,7 +7,6 @@ import (
 	"github.com/raggaer/castro/app/util"
 
 	glua "github.com/yuin/gopher-lua"
-	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/lua/database"
 )
 
@@ -26,7 +25,6 @@ var (
 
 // LuaPage executes the given lua page
 func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	models.ArticleSingleWhere("id = ?", 1)
 	// Get state from the pool
 	luaState := lua.Pool.Get()
 
