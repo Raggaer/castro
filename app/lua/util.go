@@ -7,6 +7,7 @@ import (
 	"github.com/yuin/gopher-lua"
 	"net/url"
 	"strings"
+	"time"
 )
 
 // GetStructVariables loads all the global variables
@@ -70,6 +71,36 @@ func TableToMap(table *lua.LTable) map[interface{}]interface{} {
 		}
 	})
 	return m
+}
+
+// QueryToTable converts a slice of interfaces to a lua table
+func QueryToTable(r [][]interface{}, names []string) *lua.LTable {
+	// Main table pointer
+	resultTable := &lua.LTable{}
+
+	// Loop query results
+	for i := range r {
+
+		// Table for current result set
+		t := &lua.LTable{}
+
+		// Loop result fields
+		for x := range r[i] {
+
+			// Set table fields
+			v := r[i][x]
+			switch v.(type) {
+			case []uint8:
+				t.RawSetString(names[x], lua.LString(string(r[i][x].([]uint8))))
+			case time.Time:
+				t.RawSetString(names[x], lua.LNumber(v.(time.Time).Unix()))
+			}
+		}
+
+		// Append current table to main table
+		resultTable.Append(t)
+	}
+	return resultTable
 }
 
 // URLValuesToTable converts a map[string][]string to a LUA table

@@ -1,4 +1,4 @@
-test = mysql:articleMultiple("SELECT id, title FROM articles")
-
+test = mysql:query("SELECT title FROM articles WHERE id = ?", 2)
+print(test[1].title)
 print(config:getString("Motd"))
 http:render("home.html")

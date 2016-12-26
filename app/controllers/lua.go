@@ -7,7 +7,6 @@ import (
 	"github.com/raggaer/castro/app/util"
 
 	glua "github.com/yuin/gopher-lua"
-	"github.com/raggaer/castro/app/lua/database"
 )
 
 var (
@@ -19,8 +18,7 @@ var (
 		"getString": lua.GetConfigValueString,
 	}
 	mysqlMethods = map[string]glua.LGFunction{
-		"articleSingle": database.ArticleSingle,
-		"articleMultiple": database.ArticleMultiple,
+		"query": lua.Query,
 	}
 )
 
