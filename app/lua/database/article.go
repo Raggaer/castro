@@ -6,7 +6,6 @@ import (
 	"strings"
 	"strconv"
 	"time"
-	"log"
 )
 
 var articleMethods = map[string]lua.LGFunction{
@@ -158,8 +157,6 @@ func ArticleMultiple(L *lua.LState) int {
 
 		// Append to main table
 		mainTable.Append(m)
-
-		log.Println(article)
 	}
 
 	// Return main table

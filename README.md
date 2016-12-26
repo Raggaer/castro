@@ -14,3 +14,7 @@ All pages are done using the LUA bindings. This provides a great resource for ne
 Please if you find a bug head over to the [github issues](https://github.com/Raggaer/castro/issues) page. Feel free to ask anything about Castro too
 
 You can also contact the project maintainer at **nakotoffana@gmail.com**
+
+# License
+
+**Castro** is made available under the **MIT** license
