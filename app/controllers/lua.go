@@ -34,6 +34,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
 		}
 
+		// Throw error to user
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
 		return
@@ -49,6 +50,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
 		}
 
+		// Throw error to user
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
 		return
