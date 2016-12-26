@@ -6,7 +6,6 @@ import (
 
 	"golang.org/x/net/context"
 	"github.com/raggaer/castro/app/util"
-	"github.com/dchest/uniuri"
 )
 
 type notFoundHandler struct {
@@ -79,26 +78,25 @@ func (c *cookieHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next
 
 	if err != nil {
 
-		// Create cookie ID
-		id := uniuri.New()
+		// Create JWT
+		token, err := util.CreateJWToken(util.CastroClaims{
+			Logged: false,
+		})
 
-		// Check if ID exists on the cache
-		_, found := util.Cache.Get(id)
+		if err != nil {
 
-		for found {
+			// Throw error with header 500
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
 
-			// Create new ID
-			id = uniuri.New()
-
-			// Check if ID exists on the cache
-			_, found = util.Cache.Get(id)
+			return
 		}
 
 		// Cookie is not found so we create one
 		newCookie := http.Cookie{
 			Name:   util.Config.Cookies.Name,
 			MaxAge: util.Config.Cookies.MaxAge,
-			Value: id,
+			Value: token,
 			Secure: util.Config.SSL.Enabled,
 			HttpOnly: true,
 		}

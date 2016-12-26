@@ -24,6 +24,36 @@ var (
 
 // LuaPage executes the given lua page
 func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	// Get Castro cookie
+	cookie, err := r.Cookie(util.Config.Cookies.Name)
+
+	if err != nil {
+
+		// If AAC is running on development mode log error
+		if util.Config.IsDev() {
+			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
+		}
+
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	// Get json web token claims from the cookie value
+	tokenClaims, err := util.ParseJWToken(cookie.Value)
+
+	if err != nil {
+
+		// If AAC is running on development mode log error
+		if util.Config.IsDev() {
+			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
+		}
+
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
 	// Get state from the pool
 	luaState := lua.Pool.Get()
 
@@ -36,6 +66,13 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	// Set all MySQL metatable functions
 	luaState.SetFuncs(mysqlMetaTable, mysqlMethods)
+
+	// Set json web token metatable
+	jwtMetaTable := luaState.NewTypeMetatable("jwt")
+	luaState.SetGlobal("jwt", jwtMetaTable)
+
+	// Set json web token metatable fields
+	luaState.SetField(jwtMetaTable, "logged", glua.LBool(tokenClaims.Logged))
 
 	// Create and set Config metatable
 	configMetaTable := luaState.NewTypeMetatable(lua.ConfigMetaTableName)
@@ -92,11 +129,10 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// If AAC is running on development mode log error
 		if util.Config.IsDev() {
 			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
-			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
-			return
 		}
+
 		w.WriteHeader(500)
 		w.Write([]byte("Cannot execute the given subtopic"))
+		return
 	}
 }
