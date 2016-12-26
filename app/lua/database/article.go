@@ -6,6 +6,7 @@ import (
 	"strings"
 	"strconv"
 	"time"
+	"log"
 )
 
 var articleMethods = map[string]lua.LGFunction{
@@ -101,7 +102,6 @@ func articleSave(L *lua.LState) int {
 		return 0
 	}
 
-
 	// Try to save the article pointer
 	if err := models.SaveArticle(&article); err != nil {
 
@@ -114,7 +114,60 @@ func articleSave(L *lua.LState) int {
 	return 0
 }
 
-//
+func ArticleMultiple(L *lua.LState) int {
+	// Get query
+	query := L.Get(2)
+
+	// Check if query is valid
+	if query.Type() != lua.LTString {
+
+		// Raise error
+		L.RaiseError("Cannot get articles: missing QUERY")
+		return 0
+	}
+
+	// Count number of params
+	n := strings.Count(query.String(), "?")
+
+	args := []interface{}{}
+
+	// Get all arguments matching the number of params
+	for i := 0; i < n; i++ {
+
+		// Append argument to slice
+		args = append(args, L.Get(2 + n).String())
+	}
+
+	// Get articles from database
+	list, err := models.ArticleMultiple(query.String(), args)
+	if err != nil {
+
+		// Raise error
+		L.RaiseError("Cannot get articles: missing QUERY")
+		return 0
+	}
+
+	// Main table to hold all articles tables
+	mainTable := L.NewTable()
+
+	// Loop all articles to populate LUA table
+	for _, article := range list {
+
+		// Create metatable for the article
+		m := articleMetaTable(&article, "article", L)
+
+		// Append to main table
+		mainTable.Append(m)
+
+		log.Println(article)
+	}
+
+	// Return main table
+	L.Push(mainTable)
+
+	return 1
+}
+
 func ArticleSingle(L *lua.LState) int {
 	// Get query
 	query := L.Get(2)

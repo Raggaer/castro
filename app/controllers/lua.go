@@ -20,6 +20,7 @@ var (
 	}
 	mysqlMethods = map[string]glua.LGFunction{
 		"articleSingle": database.ArticleSingle,
+		"articleMultiple": database.ArticleMultiple,
 	}
 )
 

@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 	"github.com/raggaer/castro/app/database"
+
 )
 
 // Article struct used to represent castro
@@ -18,8 +19,8 @@ type Article struct {
 func ArticleSingle(query string, args []interface{}) (*Article, error) {
 	article := Article{}
 
-	// Get article using RAW query
-	if err := database.DB.Table("articles").Where(query, args).Scan(&article).Error; err != nil {
+	// Get article using WHERE query
+	if err := database.DB.Table("articles").Raw(query, args).Scan(&article).Error; err != nil {
 		return nil, err
 	}
 
@@ -27,6 +28,18 @@ func ArticleSingle(query string, args []interface{}) (*Article, error) {
 	return &article, nil
 }
 
+func ArticleMultiple(query string, args []interface{}) ([]Article, error) {
+	articleList := []Article{}
+
+	// Get article list using WHERE query
+	if err := database.DB.Table("articles").Raw(query, args).Scan(&articleList).Error; err != nil {
+		return nil, err
+	}
+
+	// Return all values
+	return articleList, nil
+}
+
 func SaveArticle(article *Article) error {
-	return database.DB.Save(article).Error
+	return database.DB.Model(article).Updates(article).Error
 }
