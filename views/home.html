@@ -1,7 +1,12 @@
 {{ template "header.html" }}
-<form method="post">
-    <input type="text" name="name">
-    <button type="submit">vamos</button>
-</form>
-{{ .name }}
+    {{ range $index, $element := .list }}
+    <h3>
+        {{ $element.title }}
+        <small>
+            {{ $element.created_at }}
+        </small>
+    </h3>
+    <hr>
+    {{ $element.text }}
+    {{ end }}
 {{ template "footer.html" . }} 

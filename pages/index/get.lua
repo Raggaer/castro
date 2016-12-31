@@ -1,4 +1,2 @@
-test = db:query("SELECT title FROM articles WHERE id = ?", 2)
-print(test[1].title)
-print(config:getString("Motd"))
-http:render("home.html")
+articles = db:query("SELECT title, text, created_at FROM articles ORDER BY id DESC LIMIT 5")
+http:render("home.html", { list = articles })
