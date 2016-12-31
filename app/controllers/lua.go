@@ -9,19 +9,6 @@ import (
 	glua "github.com/yuin/gopher-lua"
 )
 
-var (
-	httpMethods = map[string]glua.LGFunction{
-		"redirect": lua.Redirect,
-		"render": lua.RenderTemplate,
-	}
-	configMethods = map[string]glua.LGFunction{
-		"getString": lua.GetConfigValueString,
-	}
-	mysqlMethods = map[string]glua.LGFunction{
-		"query": lua.Query,
-	}
-)
-
 // LuaPage executes the given lua page
 func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Get Castro cookie
@@ -62,30 +49,14 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Defer the state put method
 	defer lua.Pool.Put(luaState)
 
-	// Create and set the MySQL metatable
-	mysqlMetaTable := luaState.NewTypeMetatable("mysql")
-	luaState.SetGlobal("mysql", mysqlMetaTable)
-
-	// Set all MySQL metatable functions
-	luaState.SetFuncs(mysqlMetaTable, mysqlMethods)
-
-	// Set json web token metatable
-	jwtMetaTable := luaState.NewTypeMetatable("jwt")
-	luaState.SetGlobal("jwt", jwtMetaTable)
+	// Get JWT metatable
+	jwtMetaTable := luaState.GetTypeMetatable(lua.JWTMetaTable)
 
 	// Set json web token metatable fields
 	luaState.SetField(jwtMetaTable, "logged", glua.LBool(tokenClaims.Logged))
 
-	// Create and set Config metatable
-	configMetaTable := luaState.NewTypeMetatable(lua.ConfigMetaTableName)
-	luaState.SetGlobal(lua.ConfigMetaTableName, configMetaTable)
-
-	// Set all Config metatable functions
-	luaState.SetFuncs(configMetaTable, configMethods)
-
-	// Create and set HTTP metatable
-	httpMetaTable := luaState.NewTypeMetatable(lua.HTTPMetaTableName)
-	luaState.SetGlobal(lua.HTTPMetaTableName, httpMetaTable)
+	// Get HTTP metatable
+	httpMetaTable := luaState.GetTypeMetatable(lua.HTTPMetaTableName)
 
 	// Set HTTP method field
 	luaState.SetField(httpMetaTable, lua.HTTPMetaTableMethodName, glua.LString(r.Method))
@@ -99,9 +70,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	httpR := luaState.NewUserData()
 	httpR.Value = r
 	luaState.SetField(httpMetaTable, lua.HTTPRequestName, httpR)
-
-	// Set all HTTP metatable functions
-	luaState.SetFuncs(httpMetaTable, httpMethods)
 
 	// Check if request is POST
 	if r.Method == http.MethodPost {

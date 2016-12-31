@@ -11,10 +11,23 @@ type luaStatePool struct {
 	saved []*glua.LState
 }
 
-// Pool saves all lua state pointers to create a sync.Pool
-var Pool = &luaStatePool{
-	saved: make([]*glua.LState, 0, 10),
-}
+var (
+	// Pool saves all lua state pointers to create a sync.Pool
+	Pool = &luaStatePool{
+		saved: make([]*glua.LState, 0, 10),
+	}
+
+	mysqlMethods = map[string]glua.LGFunction{
+		"query": Query,
+	}
+	configMethods = map[string]glua.LGFunction{
+		"getString": GetConfigValueString,
+	}
+	httpMethods = map[string]glua.LGFunction{
+		"redirect": Redirect,
+		"render": RenderTemplate,
+	}
+)
 
 // Get retrieves a lua state from the pool
 // if no states are available we create one
@@ -43,7 +56,7 @@ func (p *luaStatePool) Put(state *glua.LState) {
 	defer p.m.Unlock()
 
 	// Remove HTTP metatable
-	state.SetGlobal(HTTPMetaTableName, glua.LNil)
+	//state.SetGlobal(HTTPMetaTableName, glua.LNil)
 
 	// Append to the pool
 	p.saved = append(p.saved, state)
@@ -57,6 +70,31 @@ func (p *luaStatePool) New() *glua.LState {
 			IncludeGoStackTrace: true,
 		},
 	)
+
+	// Create and set the MySQL metatable
+	mysqlMetaTable := luaState.NewTypeMetatable(MySQLMetaTableName)
+	luaState.SetGlobal(MySQLMetaTableName, mysqlMetaTable)
+
+	// Set all MySQL metatable functions
+	luaState.SetFuncs(mysqlMetaTable, mysqlMethods)
+
+	// Create and set the json web token metatable
+	jwtMetaTable := luaState.NewTypeMetatable(JWTMetaTable)
+	luaState.SetGlobal(JWTMetaTable, jwtMetaTable)
+
+	// Create and set Config metatable
+	configMetaTable := luaState.NewTypeMetatable(ConfigMetaTableName)
+	luaState.SetGlobal(ConfigMetaTableName, configMetaTable)
+
+	// Set all Config metatable functions
+	luaState.SetFuncs(configMetaTable, configMethods)
+
+	// Create and set HTTP metatable
+	httpMetaTable := luaState.NewTypeMetatable(HTTPMetaTableName)
+	luaState.SetGlobal(HTTPMetaTableName, httpMetaTable)
+
+	// Set all HTTP metatable functions
+	luaState.SetFuncs(httpMetaTable, httpMethods)
 
 	// Return the lua state
 	return luaState

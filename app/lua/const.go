@@ -1,6 +1,8 @@
 package lua
 
 const (
+	JWTMetaTable = "jwt"
+	MySQLMetaTableName = "db"
 	ConfigMetaTableName = "config"
 	HTTPMetaTableName = "http"
 	HTTPMetaTableMethodName = "method"
