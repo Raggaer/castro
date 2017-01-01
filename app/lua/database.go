@@ -4,6 +4,8 @@ import (
 	"github.com/yuin/gopher-lua"
 	"strings"
 	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/util"
+	"time"
 )
 
 func Query(L *lua.LState) int {
@@ -27,7 +29,37 @@ func Query(L *lua.LState) int {
 	for i := 0; i < n; i++ {
 
 		// Append argument to slice
-		args = append(args, L.Get(2 + n).String())
+		args = append(args, L.Get(3 + i).String())
+	}
+
+	// Check if user wants to use cache
+	cache := L.Get(3 + n)
+
+	// Save cache variable
+	saveToCache := false
+	cacheKey := query.String()
+
+	if cache.Type() != lua.LTNil {
+
+		// Build cache key as the full query with arguments inside
+		for _, arg := range args {
+
+			// Replace "?" with argument
+			cacheKey = strings.Replace(cacheKey, "?", arg.(string), 1)
+		}
+
+		// Try to load from cache
+		q, found := util.Cache.Get(cacheKey)
+
+		if found {
+
+			// Push the cached lua table to stack
+			L.Push(q.(*lua.LTable))
+
+			return 1
+		}
+
+		saveToCache = true
 	}
 
 	// Execute query and get rows
@@ -71,8 +103,15 @@ func Query(L *lua.LState) int {
 		results = append(results, columns)
 	}
 
+	finalTable := QueryToTable(results, columnNames)
+
+	// If user wants to use cache save table
+	if saveToCache {
+		util.Cache.Add(cacheKey, finalTable, time.Minute * 3)
+	}
+
 	// Push the converted query to the stack
-	L.Push(QueryToTable(results, columnNames))
+	L.Push(finalTable)
 
 	return 1
 }
