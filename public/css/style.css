@@ -3,7 +3,7 @@ body {
 }
 
 .main {
-    margin-top: 90px;
+    margin-top: 40px;
 }
 
 .footer {
@@ -13,4 +13,9 @@ body {
     height: 60px;
     line-height: 60px;
     background-color: #f5f5f5;
+}
+
+.navbar-info {
+    padding: 15px;
+    background-color: #F5F5F5;
 }

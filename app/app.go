@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
-	"strconv"
 	"time"
 
 	"github.com/patrickmn/go-cache"
@@ -12,11 +11,12 @@ import (
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
+	"strconv"
 )
 
 // Start the main execution point for Castro
 func Start() {
-	// Load the configuration file
+	// Load the TOML configuration file
 	file, err := ioutil.ReadFile("config.toml")
 	if err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
@@ -25,7 +25,7 @@ func Start() {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
 
-	// Load the lua configuration file
+	// Load the LUA configuration file
 	if err := lua.LoadConfig(util.Config.Datapack, lua.Config); err != nil {
 		util.Logger.Fatalf("Cannot read lua configuration file: %v", err)
 	}
@@ -70,17 +70,19 @@ func templateFuncs() template.FuncMap {
 			}
 			return template.URL(url)
 		},
-		"pagination": func(current, limit int, url string) template.HTML {
-			list := `<div class="pagination"><ul>`
-			for i := 0; i < limit; i++ {
-				if i != current {
-					list += `<li><a href="` + fmt.Sprintf(url, i) + `">` + strconv.Itoa(i) + `</a></li>`
-				} else {
-					list += `<li class="current"><a href="` + fmt.Sprintf(url, i) + `">` + strconv.Itoa(i) + `</a></li>`
-				}
+		"queryResults": func(m map[interface{}]interface{}) []interface{} {
+			n := len(m)
+			r := []interface{}{}
+			for i := 0; i < n; i++ {
+				r = append(r, m[strconv.Itoa(i+1)])
 			}
-			list += `</ul></div>`
-			return template.HTML(list)
+			return r
+		},
+		"unixToDate": func(m int64) template.HTML {
+			date := time.Unix(0, m)
+			return template.HTML(
+				date.Format("2006 - Mon Jan 2 15:04:05"),
+			)
 		},
 	}
 }

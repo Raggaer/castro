@@ -31,8 +31,10 @@ func RenderTemplate(L *glua.LState) int {
 	// Check if args is set
 	if tableValue.Type() == glua.LTTable {
 
+		args := TableToMap(tableValue.(*glua.LTable))
+
 		// Render template with args
-		util.Template.RenderTemplate(w, req, L.ToString(2), TableToMap(tableValue.(*glua.LTable)))
+		util.Template.RenderTemplate(w, req, L.ToString(2), args)
 
 		return 0
 	}

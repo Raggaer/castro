@@ -1,12 +1,8 @@
 {{ template "header.html" }}
-    {{ range $index, $element := .list }}
+{{ range $index, $element := queryResults .list }}
     <h3>
         {{ $element.title }}
-        <small>
-            {{ $element.created_at }}
-        </small>
+        <small>{{ unixToDate $element.created_at }}</small>
     </h3>
-    <hr>
-    {{ $element.text }}
-    {{ end }}
+{{ end }}
 {{ template "footer.html" . }} 

@@ -66,6 +66,13 @@ func TableToMap(table *lua.LTable) map[interface{}]interface{} {
 		case lua.LTTable:
 			n := TableToMap(v.(*lua.LTable))
 			m[i.String()] = n
+		case lua.LTNumber:
+			num, err := strconv.ParseInt(v.String(), 10, 64)
+			if err != nil {
+				m[i.String()] = err.Error()
+			} else {
+				m[i.String()] = num
+			}
 		default:
 			m[i.String()] = v.String()
 		}
