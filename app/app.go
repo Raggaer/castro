@@ -79,7 +79,7 @@ func templateFuncs() template.FuncMap {
 			return r
 		},
 		"unixToDate": func(m int64) template.HTML {
-			date := time.Unix(0, m)
+			date := time.Unix(m, 0)
 			return template.HTML(
 				date.Format("2006 - Mon Jan 2 15:04:05"),
 			)

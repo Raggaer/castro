@@ -73,6 +73,13 @@ func TableToMap(table *lua.LTable) map[interface{}]interface{} {
 			} else {
 				m[i.String()] = num
 			}
+		case lua.LTBool:
+			b, err := strconv.ParseBool(v.String())
+			if err != nil {
+				m[i.String()] = err.Error()
+			} else {
+				m[i.String()] = b
+			}
 		default:
 			m[i.String()] = v.String()
 		}
