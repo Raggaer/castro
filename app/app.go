@@ -31,11 +31,11 @@ func Start() {
 		connectDatabase(wait)
 		migrateDatabase(wait)
 	}(wait)
+
 	go createCache(wait)
 	go loadWidgetList(wait)
 	go appTemplates(wait)
 	go widgetTemplates(wait)
-
 
 	// Wait for the tasks
 	wait.Wait()
@@ -154,7 +154,10 @@ func templateFuncs() template.FuncMap {
 			for _, arg := range args {
 				url = url + fmt.Sprintf("/%v", arg)
 			}
-			return template.URL(url)
+			if util.Config.SSL.Enabled {
+				return template.URL("https://" + url)
+			}
+			return template.URL("http://" + url)
 		},
 		"queryResults": func(m map[interface{}]interface{}) []interface{} {
 			n := len(m)

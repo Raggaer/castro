@@ -34,3 +34,7 @@ body {
     background-color: #34383B;
     color: rgba(255, 255, 255, 0.8);
 }
+
+.white-hr {
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}

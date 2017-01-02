@@ -89,13 +89,14 @@ func LoadConfig(path string, dest *Configuration) error {
 	return GetStructVariables(dest, L)
 }
 
-func GetConfigValueString(L *lua.LState) int {
+func GetConfigValue(L *lua.LState) int {
 	// Get value of Config struct
 	r := reflect.ValueOf(Config)
 
 	// Get field by its name
 	f := reflect.Indirect(r).FieldByName(L.ToString(2))
 
+	// Switch field type to push to stack
 	switch f.Kind() {
 	case reflect.String:
 		L.Push(lua.LString(f.String()))
@@ -104,7 +105,6 @@ func GetConfigValueString(L *lua.LState) int {
 	case  reflect.Bool:
 		L.Push(lua.LBool(f.Bool()))
 	}
-
 
 	return 1
 }

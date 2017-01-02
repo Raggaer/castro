@@ -21,7 +21,7 @@ var (
 		"query": Query,
 	}
 	configMethods = map[string]glua.LGFunction{
-		"getString": GetConfigValueString,
+		"get": GetConfigValue,
 	}
 	httpMethods = map[string]glua.LGFunction{
 		"redirect": Redirect,
