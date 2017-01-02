@@ -4,6 +4,8 @@ import (
 	glua "github.com/yuin/gopher-lua"
 	"net/http"
 	"github.com/raggaer/castro/app/util"
+	"bytes"
+	"html/template"
 )
 
 func getRequestAndResponseWriter(L *glua.LState) (*http.Request, http.ResponseWriter) {
@@ -24,6 +26,43 @@ func getRequestAndResponseWriter(L *glua.LState) (*http.Request, http.ResponseWr
 func RenderTemplate(L *glua.LState) int {
 	// Get HTTP request and HTTP response writer
 	req, w := getRequestAndResponseWriter(L)
+
+	// If development mode compile all widget templates
+	if util.Config.IsDev() {
+		if err := util.LoadTemplates("widgets/", &util.WidgetTemplate); err != nil {
+			L.RaiseError("Cannot execute widgets: %v", err)
+
+			return 0
+		}
+	}
+
+	// Loop all widgets
+	for _, widget := range util.WidgetList {
+
+		// Execute widget
+		result, err := widget.ExecuteWidget(w, req, L)
+
+		if err != nil {
+
+			// Raise error if needed
+			L.RaiseError("Cannot execute widgets: %v", err)
+
+			return 0
+		}
+
+		// Hold template result
+		tmplResult := &bytes.Buffer{}
+
+		// Execute widget template
+		if err := util.WidgetTemplate.Tmpl.ExecuteTemplate(tmplResult, widget.Name + ".html", TableToMap(result)); err != nil {
+			L.RaiseError("Cannot execute widgets: %v", err)
+
+			return 0
+		}
+
+		// Assign result to widget
+		widget.Result = template.HTML(tmplResult.String())
+	}
 
 	// Get args table as LUA value
 	tableValue := L.Get(3)

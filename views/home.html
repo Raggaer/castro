@@ -1,8 +1,14 @@
 {{ template "header.html" }}
 {{ range $index, $element := queryResults .list }}
+<div class="news-box">
     <h3>
-        {{ $element.title }}
-        <small>{{ unixToDate $element.created_at }}</small>
+        <a href="#">{{ $element.title }}</a>
+        <small class="small-info">{{ unixToDate $element.created_at }}</small>
     </h3>
+    <hr>
+    <p>
+        {{ nl2br $element.text }}
+    </p>
+</div>
 {{ end }}
 {{ template "footer.html" . }} 

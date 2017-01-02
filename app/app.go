@@ -12,6 +12,7 @@ import (
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"strconv"
+	"strings"
 )
 
 // Start the main execution point for Castro
@@ -30,6 +31,16 @@ func Start() {
 		util.Logger.Fatalf("Cannot read lua configuration file: %v", err)
 	}
 
+	// Load widget list
+	wList, err := util.LoadWidgetList("widgets/")
+
+	if err != nil {
+		util.Logger.Fatalf("Cannot load widget list: %v", err)
+	}
+
+	// Assign widget list to global variable
+	util.WidgetList = wList
+
 	// Create a new cache instance with the given options
 	// first parameter is the default item duration on the cache
 	// second parameter is the tick time to purge all dead cache items
@@ -43,8 +54,18 @@ func Start() {
 	util.FuncMap = templateFuncs()
 
 	// Load templates
-	if err := util.LoadTemplates(&util.Template); err != nil {
+	if err := util.LoadTemplates("views/", &util.Template); err != nil {
 		util.Logger.Fatalf("Cannot load templates: %v", err)
+	}
+
+	// Create widget template
+	util.WidgetTemplate = util.NewTemplate("widget")
+
+	util.WidgetTemplate.FuncMap(templateFuncs())
+
+	// Load widget templates
+	if err := util.LoadTemplates("widgets/", &util.WidgetTemplate); err != nil {
+		util.Logger.Fatalf("Cannot load widget templates: %v", err)
 	}
 
 	// Connect to the MySQL database
@@ -83,6 +104,17 @@ func templateFuncs() template.FuncMap {
 			return template.HTML(
 				date.Format("2006 - Mon Jan 2 15:04:05"),
 			)
+		},
+		"nl2br": func(text string) template.HTML {
+			return template.HTML(
+				strings.Replace(text, "\n", "<br>", -1),
+			)
+		},
+		"serverName": func() string {
+			return lua.Config.ServerName
+		},
+		"widgetList": func() []*util.Widget {
+			return util.WidgetList
 		},
 	}
 }

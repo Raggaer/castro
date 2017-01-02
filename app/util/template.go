@@ -11,34 +11,34 @@ import (
 	"fmt"
 )
 
-type tmpl struct {
-	tmpl *template.Template
+type Tmpl struct {
+	Tmpl *template.Template
 }
 
 var (
 	// Template holds all the app templates
-	Template tmpl
+	Template Tmpl
 
 	// FuncMap holds the main FuncMap definition
 	FuncMap template.FuncMap
 )
 
 // NewTemplate creates and returns a new tmpl instance
-func NewTemplate(name string) tmpl {
-	return tmpl{
-		tmpl: template.New(name),
+func NewTemplate(name string) Tmpl {
+	return Tmpl{
+		Tmpl: template.New(name),
 	}
 }
 
 // LoadTemplates parses and loads all template into
 // the given variable
-func LoadTemplates(t *tmpl) error {
+func LoadTemplates(dir string, t *Tmpl) error {
 	// Walk over the views directory
-	err := filepath.Walk("views/", func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 
-		// Check if file has .html extesnion
+		// Check if file has .html extension
 		if strings.HasSuffix(info.Name(), ".html") {
-			if t.tmpl, err = t.tmpl.ParseFiles(path); err != nil {
+			if t.Tmpl, err = t.Tmpl.ParseFiles(path); err != nil {
 				return err
 			}
 		}
@@ -49,11 +49,11 @@ func LoadTemplates(t *tmpl) error {
 	return err
 }
 
-func (t *tmpl) FuncMap(f template.FuncMap) {
-	t.tmpl.Funcs(f)
+func (t *Tmpl) FuncMap(f template.FuncMap) {
+	t.Tmpl.Funcs(f)
 }
 
-func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name string, args map[interface{}]interface{}) {
+func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name string, args map[interface{}]interface{}) {
 	// Check if app is running on dev mode
 	if Config.IsDev() {
 
@@ -61,10 +61,10 @@ func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 		t = NewTemplate("castro")
 
 		// Set template FuncMap
-		t.tmpl.Funcs(FuncMap)
+		t.Tmpl.Funcs(FuncMap)
 
 		// Reload all templates
-		if err := LoadTemplates(&t); err != nil {
+		if err := LoadTemplates("views/", &t); err != nil {
 			Logger.Error(err)
 			return
 		}
@@ -86,26 +86,24 @@ func (t tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 	// Set microtime value
 	args["microtime"] = fmt.Sprintf("%9.4f seconds", time.Since(microtime).Seconds())
 
-
-
 	// Render template and log error
-	if err := t.tmpl.ExecuteTemplate(w, name, args); err != nil {
+	if err := t.Tmpl.ExecuteTemplate(w, name, args); err != nil {
 		Logger.Error(err)
 	}
 }
 
 // Render executes the given template. if the app is running
 // on dev mode all the templates will be reloaded
-func (t tmpl) Render(wr io.Writer, name string, args interface{}) error {
+func (t Tmpl) Render(wr io.Writer, name string, args interface{}) error {
 	// Check if app is running on dev mode
 	if Config.IsDev() {
 
 		// Reload all templates
-		if err := LoadTemplates(&t); err != nil {
+		if err := LoadTemplates("views/", &t); err != nil {
 			return err
 		}
 	}
 
 	// Execute template and return error
-	return t.tmpl.ExecuteTemplate(wr, name, args)
+	return t.Tmpl.ExecuteTemplate(wr, name, args)
 }

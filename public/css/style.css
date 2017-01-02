@@ -7,8 +7,6 @@ body {
 }
 
 .footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
     height: 60px;
     line-height: 60px;
@@ -18,4 +16,21 @@ body {
 .navbar-info {
     padding: 15px;
     background-color: #F5F5F5;
+}
+
+.small-info {
+    font-size: 12px;
+}
+
+.news-box {
+    margin-bottom: 35px;
+}
+
+.info-panel {
+    padding: 20px;
+}
+
+.black {
+    background-color: #34383B;
+    color: rgba(255, 255, 255, 0.8);
 }

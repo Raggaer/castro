@@ -60,6 +60,9 @@ func GetStructVariables(src interface{}, L *lua.LState) error {
 
 // TableToMap converts a LUA table to a Go map[interface{}]interface{}
 func TableToMap(table *lua.LTable) map[interface{}]interface{} {
+	if table == nil {
+		return nil
+	}
 	m := make(map[interface{}]interface{})
 	table.ForEach(func(i lua.LValue, v lua.LValue) {
 		switch v.Type() {
