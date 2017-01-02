@@ -1,16 +1,33 @@
 {{ template "header.html" }}
 <h3>Register at {{ .serverName }}</h3>
 <hr>
-<form>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+<form method="POST">
     <div class="form-group">
         <label for="input-account-name">Account name</label>
-        <input type="text" class="form-control" id="input-account-name" placeholder="Account name">
+        <input type="text" class="form-control" id="input-account-name" name="account-name" placeholder="Account name">
         <small class="form-text text-muted">Your account name must be a valid alphanumeric string</small>
     </div>
     <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <label for="input-email">Email address</label>
+        <input type="email" class="form-control" id="input-email" name="email" aria-describedby="emailHelp" placeholder="Email">
+        <small id="emailHelp" class="form-text text-muted">We will never share your email with anyone else</small>
     </div>
+    <div class="form-group">
+        <label for="input-account-name">Password</label>
+        <input type="password" class="form-control" id="input-password" name="password" placeholder="Password">
+        <small class="form-text text-muted">A strong and secure password should contain numbers and non-alphabetic characters</small>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+    <hr>
+    <p>
+        By clicking "Register" you agree to {{ .serverName }} rules. These rules can change at any time
+    </p>
 </form>
 {{ template "footer.html" . }} 

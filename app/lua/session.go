@@ -57,6 +57,12 @@ func GetFlash(L *lua.LState) int {
 	// Delete value from flash map
 	delete(session.Flash, key.String())
 
+	// Update session
+	if err := session.Save(); err != nil {
+
+		L.RaiseError("Cannot save user session: %v", err)
+	}
+
 	// Push value to stack
 	L.Push(lua.LString(v))
 
