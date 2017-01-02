@@ -120,6 +120,30 @@ func QueryToTable(r [][]interface{}, names []string) *lua.LTable {
 	return resultTable
 }
 
+// TableToStringSlice converts a LUA table to a Go slice of strings
+func TableToStringSlice(table *lua.LTable) []string {
+	result := []string{}
+
+	// Loop the lua table
+	table.ForEach(func(i lua.LValue, v lua.LValue) {
+
+		switch v.Type() {
+		case lua.LTTable:
+
+			// Convert table to slice using recursive algorithm
+			r := TableToStringSlice(v.(*lua.LTable))
+
+			// Append to main result
+			result = append(result, r...)
+		default:
+
+			// Append to main result
+			result = append(result, v.String())
+		}
+	})
+	return result
+}
+
 // URLValuesToTable converts a map[string][]string to a LUA table
 func URLValuesToTable(m url.Values) *lua.LTable {
 	t := lua.LTable{}

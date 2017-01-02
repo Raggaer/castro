@@ -29,6 +29,7 @@ var (
 	}
 	validatorMethods = map[string]glua.LGFunction{
 		"validate": Validate,
+		"blackList": BlackList,
 	}
 )
 

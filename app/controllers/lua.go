@@ -96,12 +96,16 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Execute the requested page
 	if err := luaState.DoFile("pages/" + pageName + "/" + r.Method + ".lua"); err != nil {
 
+		// Set error header
+		w.WriteHeader(500)
+
 		// If AAC is running on development mode log error
 		if util.Config.IsDev() {
 			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
+			w.Write([]byte(err.Error()))
+			return
 		}
 
-		w.WriteHeader(500)
 		w.Write([]byte("Cannot execute the given subtopic"))
 		return
 	}
