@@ -28,7 +28,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Get json web token claims from the cookie value
-	_, err = util.ParseJWToken(cookie.Value)
+	_, expired, err := util.ParseJWToken(cookie.Value)
 
 	if err != nil {
 
@@ -41,6 +41,32 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
 		return
+	}
+
+	// If token is expired set a new one
+	if expired {
+
+		// Create a new jwt token
+		token, err := util.CreateJWToken(util.CastroClaims{})
+
+		if err != nil {
+
+			// If AAC is running on development mode log error
+			if util.Config.IsDev() {
+				util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
+			}
+
+			// Throw error to user
+			w.WriteHeader(500)
+			w.Write([]byte("Cannot generate new JWT token"))
+			return
+		}
+
+		// Set the token on the cookie
+		cookie.Value = token
+
+		// Update cookie
+		http.SetCookie(w, cookie)
 	}
 
 	sessionData, err := util.GetSession(cookie.Value)

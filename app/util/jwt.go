@@ -28,7 +28,7 @@ func CreateJWToken(claims CastroClaims) (string, error) {
 
 // ParseJWToken reads the given json web token and
 // returns the data map
-func ParseJWToken(tkn string) (*CastroClaims, error) {
+func ParseJWToken(tkn string) (*CastroClaims, bool, error) {
 	token, err := jwt.ParseWithClaims(tkn, &CastroClaims{}, func(token *jwt.Token) (interface{}, error) {
 
 		// Check token signature
@@ -43,7 +43,16 @@ func ParseJWToken(tkn string) (*CastroClaims, error) {
 	// Return any errors
 	if err != nil {
 
-		return nil, err
+		// Convert error to JWT type
+		customError := err.(*jwt.ValidationError)
+
+		// If token is expired tell the user
+		if customError.Errors == jwt.ValidationErrorExpired {
+
+			return nil, true, nil
+		}
+
+		return nil, false, err
 	}
 
 	// Grab token claims
@@ -52,11 +61,13 @@ func ParseJWToken(tkn string) (*CastroClaims, error) {
 		// Check valid issuer
 		if claims.Issuer != "Castro AAC" {
 
-			return nil, errors.New("Invalid token issuer")
+			return nil, false, errors.New("Invalid token issuer")
 		}
 
-		return claims, nil
+		return claims, false, nil
 	}
 
-	return nil, errors.New("Cannot get token claims")
+
+
+	return nil, false, errors.New("Cannot get token claims")
 }
