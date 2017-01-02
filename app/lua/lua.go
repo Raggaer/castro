@@ -31,6 +31,9 @@ var (
 		"validate": Validate,
 		"blackList": BlackList,
 	}
+	sessionMethods = map[string]glua.LGFunction{
+		"isLogged": IsLogged,
+	}
 )
 
 // Get retrieves a lua state from the pool
@@ -92,6 +95,9 @@ func (p *luaStatePool) New() *glua.LState {
 	// Create and set the json web token metatable
 	jwtMetaTable := luaState.NewTypeMetatable(JWTMetaTable)
 	luaState.SetGlobal(JWTMetaTable, jwtMetaTable)
+
+	// Set all jwt functions
+	luaState.SetFuncs(jwtMetaTable, sessionMethods)
 
 	// Create and set Config metatable
 	configMetaTable := luaState.NewTypeMetatable(ConfigMetaTableName)

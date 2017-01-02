@@ -7,7 +7,6 @@ import (
 )
 
 type CastroClaims struct {
-	Logged bool
 	jwt.StandardClaims
 }
 

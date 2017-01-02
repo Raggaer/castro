@@ -136,7 +136,7 @@ func connectDatabase(wg *sync.WaitGroup) {
 
 func migrateDatabase(wg *sync.WaitGroup) {
 	// Migrate database models
-	if err := database.DB.AutoMigrate(&models.Article{}).Error; err != nil {
+	if err := database.DB.AutoMigrate(&models.Article{}, &models.Session{}).Error; err != nil {
 		util.Logger.Fatalf("Cannot migrate database models: %v", err)
 	}
 

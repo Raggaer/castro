@@ -79,9 +79,7 @@ func (c *cookieHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next
 	if err != nil {
 
 		// Create JWT
-		token, err := util.CreateJWToken(util.CastroClaims{
-			Logged: false,
-		})
+		token, err := util.CreateJWToken(util.CastroClaims{})
 
 		if err != nil {
 
@@ -99,6 +97,7 @@ func (c *cookieHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next
 			Value: token,
 			Secure: util.Config.SSL.Enabled,
 			HttpOnly: true,
+			Path: "/",
 		}
 
 		// Set the new cookie into the user

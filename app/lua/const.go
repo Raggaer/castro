@@ -2,6 +2,7 @@ package lua
 
 const (
 	ValidatorMetaTableName = "validator"
+	JWTTokenName = "__token"
 	JWTMetaTable = "session"
 	MySQLMetaTableName = "db"
 	ConfigMetaTableName = "config"

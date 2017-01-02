@@ -18,6 +18,7 @@ var methods = map[string]govalidator.Validator{
 	"IsASCII": govalidator.IsASCII,
 	"IsUpperCase": govalidator.IsUpperCase,
 	"IsLowerCase": govalidator.IsLowerCase,
+	"IsInt": govalidator.IsInt,
 
 }
 
