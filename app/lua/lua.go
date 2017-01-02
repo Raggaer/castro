@@ -27,6 +27,9 @@ var (
 		"redirect": Redirect,
 		"render": RenderTemplate,
 	}
+	validatorMethods = map[string]glua.LGFunction{
+		"validate": Validate,
+	}
 )
 
 // Get retrieves a lua state from the pool
@@ -70,6 +73,13 @@ func (p *luaStatePool) New() *glua.LState {
 			IncludeGoStackTrace: true,
 		},
 	)
+
+	// Create and set the validator metatable
+	validMetaTable := luaState.NewTypeMetatable(ValidatorMetaTableName)
+	luaState.SetGlobal(ValidatorMetaTableName, validMetaTable)
+
+	// Set all validator metatable functions
+	luaState.SetFuncs(validMetaTable, validatorMethods)
 
 	// Create and set the MySQL metatable
 	mysqlMetaTable := luaState.NewTypeMetatable(MySQLMetaTableName)

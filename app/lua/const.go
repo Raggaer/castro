@@ -1,12 +1,13 @@
 package lua
 
 const (
-	JWTMetaTable = "jwt"
+	ValidatorMetaTableName = "validator"
+	JWTMetaTable = "session"
 	MySQLMetaTableName = "db"
 	ConfigMetaTableName = "config"
 	HTTPMetaTableName = "http"
 	HTTPMetaTableMethodName = "method"
 	HTTPResponseWriterName = "_w"
 	HTTPRequestName = "_r"
-	HTTPPostValuesName = "post_values"
+	HTTPPostValuesName = "postValues"
 )

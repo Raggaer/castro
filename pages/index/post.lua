@@ -1,1 +1,0 @@
-print(http.post_values["name"])

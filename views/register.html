@@ -1,0 +1,12 @@
+{{ template "header.html" }}
+<h3>Register at {{ .serverName }}</h3>
+<hr>
+<form>
+    <div class="form-group row">
+        <label for="account-name-input" class="col-xs-3 col-form-label">Account name</label>
+        <div class="col-xs-9">
+            <input name="account-name" class="form-control" type="text" id="account-name-input">
+        </div>
+    </div>
+</form>
+{{ template "footer.html" . }} 

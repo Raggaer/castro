@@ -1,5 +1,5 @@
 {{ template "header.html" }}
-{{ range $index, $element := queryResults .list }}
+{{ range $index, $element := queryResults .articles }}
 <div class="news-box">
     <h3>
         <a href="#">{{ $element.title }}</a>
