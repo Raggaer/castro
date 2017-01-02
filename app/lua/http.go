@@ -31,7 +31,6 @@ func RenderTemplate(L *glua.LState) int {
 	if util.Config.IsDev() {
 		if err := util.LoadTemplates("widgets/", &util.WidgetTemplate); err != nil {
 			L.RaiseError("Cannot execute widgets: %v", err)
-
 			return 0
 		}
 	}
@@ -46,7 +45,6 @@ func RenderTemplate(L *glua.LState) int {
 
 			// Raise error if needed
 			L.RaiseError("Cannot execute widgets: %v", err)
-
 			return 0
 		}
 
@@ -56,7 +54,6 @@ func RenderTemplate(L *glua.LState) int {
 		// Execute widget template
 		if err := util.WidgetTemplate.Tmpl.ExecuteTemplate(tmplResult, widget.Name + ".html", TableToMap(result)); err != nil {
 			L.RaiseError("Cannot execute widgets: %v", err)
-
 			return 0
 		}
 
@@ -74,7 +71,6 @@ func RenderTemplate(L *glua.LState) int {
 
 		// Render template with args
 		util.Template.RenderTemplate(w, req, L.ToString(2), args)
-
 		return 0
 	}
 
