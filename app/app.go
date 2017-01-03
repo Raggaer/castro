@@ -159,7 +159,7 @@ func templateFuncs() template.FuncMap {
 			}
 			return template.URL("http://" + url)
 		},
-		"queryResults": func(m map[interface{}]interface{}) []interface{} {
+		"queryResults": func(m map[string]interface{}) []interface{} {
 			n := len(m)
 			r := []interface{}{}
 			for i := 0; i < n; i++ {

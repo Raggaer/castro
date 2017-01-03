@@ -39,6 +39,8 @@ var (
 		"isLogged": IsLogged,
 		"getFlash": GetFlash,
 		"setFlash": SetFlash,
+		"set": SetSessionData,
+		"get": GetSessionData,
 	}
 	captchaMethods = map[string]glua.LGFunction{
 		"isEnabled": IsEnabled,

@@ -29,6 +29,13 @@ func RenderTemplate(L *glua.LState) int {
 
 	// If development mode compile all widget templates
 	if util.Config.IsDev() {
+
+		// Create new template
+		util.WidgetTemplate = util.NewTemplate("widget")
+
+		// Set template FuncMap
+		util.WidgetTemplate.Tmpl.Funcs(util.FuncMap)
+
 		if err := util.LoadTemplates("widgets/", &util.WidgetTemplate); err != nil {
 			L.RaiseError("Cannot execute widgets: %v", err)
 			return 0

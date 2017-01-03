@@ -13,7 +13,7 @@ type Session struct {
 	token string
 	Logged bool
 	Flash map[string]string
-	Data map[interface{}]interface{}
+	Data map[string]interface{}
 }
 
 func GetSession(token string) (*Session, error) {
@@ -36,7 +36,7 @@ func GetSession(token string) (*Session, error) {
 		// Create session data
 		data, err := Encode(
 			&Session{
-				Data: make(map[interface{}]interface{}),
+				Data: make(map[string]interface{}),
 				Flash: make(map[string]string),
 			},
 		)

@@ -1,0 +1,22 @@
+{{ template "header.html" }}
+<h3>Login to your account</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+<form method="POST">
+    <div class="form-group">
+        <label for="input-account-name">Account name</label>
+        <input type="text" class="form-control" id="input-account-name" name="account-name" placeholder="Account name">
+    </div>
+    <div class="form-group">
+        <label for="input-account-name">Password</label>
+        <input type="password" class="form-control" id="input-password" name="password" placeholder="Password">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+</form>
+{{ template "footer.html" . }} 

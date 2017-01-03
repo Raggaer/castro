@@ -1,0 +1,20 @@
+<div class="info-panel black">
+    {{ if .logged }}
+    <h5>My account</h5>
+    <hr class="white-hr">
+    {{ else }}
+    <h5>Login</h5>
+    <hr class="white-hr">
+    <form method="POST" action="{{ url "subtopic" "login" }}">
+        <div class="form-group">
+            <input type="text" class="form-control" id="input-account-name" name="account-name" placeholder="Account name">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="input-password" name="password" placeholder="Account password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+    </form>
+    {{ end }}
+</div>

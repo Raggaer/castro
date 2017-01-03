@@ -58,12 +58,36 @@ func GetStructVariables(src interface{}, L *lua.LState) error {
 	return nil
 }
 
-// TableToMap converts a LUA table to a Go map[interface{}]interface{}
-func TableToMap(table *lua.LTable) map[interface{}]interface{} {
+// MapToTable converts a Go map to a lua table
+func MapToTable(m map[string]interface{}) *lua.LTable {
+	// Main table pointer
+	resultTable := &lua.LTable{}
+
+	// Loop map
+	for key, element := range m {
+
+		switch element.(type) {
+		case int64:
+			resultTable.RawSetString(key, lua.LNumber(element.(int64)))
+		case string:
+			resultTable.RawSetString(key, lua.LString(element.(string)))
+		case bool:
+			resultTable.RawSetString(key, lua.LBool(element.(bool)))
+		case map[string]interface{}:
+			tble := MapToTable(element.(map[string]interface{}))
+			resultTable.RawSetString(key, tble)
+		}
+	}
+
+	return resultTable
+}
+
+// TableToMap converts a LUA table to a Go map[string]interface{}
+func TableToMap(table *lua.LTable) map[string]interface{} {
 	if table == nil {
 		return nil
 	}
-	m := make(map[interface{}]interface{})
+	m := make(map[string]interface{})
 	table.ForEach(func(i lua.LValue, v lua.LValue) {
 		switch v.Type() {
 		case lua.LTTable:
