@@ -17,8 +17,12 @@ var (
 		saved: make([]*glua.LState, 0, 10),
 	}
 
+	cryptoMethods = map[string]glua.LGFunction{
+		"sha1": Sha1Hash,
+	}
 	mysqlMethods = map[string]glua.LGFunction{
 		"query": Query,
+		"execute": Execute,
 	}
 	configMethods = map[string]glua.LGFunction{
 		"get": GetConfigValue,
@@ -79,6 +83,13 @@ func (p *luaStatePool) New() *glua.LState {
 			IncludeGoStackTrace: true,
 		},
 	)
+
+	// Create and set the crypto metatable
+	cryptoMetaTable := luaState.NewTypeMetatable(CryptoMetaTableName)
+	luaState.SetGlobal(CryptoMetaTableName, cryptoMetaTable)
+
+	// Set all crypto metatable functions
+	luaState.SetFuncs(cryptoMetaTable, cryptoMethods)
 
 	// Create and set the validator metatable
 	validMetaTable := luaState.NewTypeMetatable(ValidatorMetaTableName)

@@ -9,4 +9,3 @@ data["serverName"] = config:get("ServerName")
 data["validationError"] = session:getFlash("validationError")
 
 http:render("register.html", data)
-

@@ -8,6 +8,42 @@ import (
 	"time"
 )
 
+// Execute executes a query without returning the result
+func Execute(L *lua.LState) int {
+	// Get query
+	query := L.Get(2)
+
+	// Check if query is valid
+	if query.Type() != lua.LTString {
+
+		// Raise error
+		L.ArgError(1, "Invalid query type. Expected string")
+		return 0
+	}
+
+	// Count number of params
+	n := strings.Count(query.String(), "?")
+
+	args := []interface{}{}
+
+	// Get all arguments matching the number of params
+	for i := 0; i < n; i++ {
+
+		// Append argument to slice
+		args = append(args, L.Get(3 + i).String())
+	}
+
+	// Execute the query
+	if err := database.DB.Exec(query.String(), args...).Error; err != nil {
+
+		L.RaiseError("Cannot execute query: %v", err)
+		return 0
+	}
+
+	return 0
+}
+
+// Query executes an ad-hoc query
 func Query(L *lua.LState) int {
 	// Get query
 	query := L.Get(2)
@@ -16,7 +52,7 @@ func Query(L *lua.LState) int {
 	if query.Type() != lua.LTString {
 
 		// Raise error
-		L.RaiseError("Cannot get article: missing QUERY")
+		L.ArgError(1, "Invalid query type. Expected string")
 		return 0
 	}
 
@@ -63,11 +99,11 @@ func Query(L *lua.LState) int {
 	}
 
 	// Execute query and get rows
-	rows, err := database.DB.Raw(query.String(), args).Rows()
+	rows, err := database.DB.Raw(query.String(), args...).Rows()
 	if err != nil {
 
 		// Raise error
-		L.RaiseError("Cannot get article: missing QUERY")
+		L.RaiseError("Cannot get result: %v", err)
 		return 0
 	}
 
@@ -101,6 +137,13 @@ func Query(L *lua.LState) int {
 
 		// Append to results
 		results = append(results, columns)
+	}
+
+	// If there are no query results push nil
+	if len(results) <= 0 {
+
+		L.Push(lua.LNil)
+		return 1
 	}
 
 	finalTable := QueryToTable(results, columnNames)
