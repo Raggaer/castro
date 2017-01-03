@@ -46,6 +46,20 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// If token is expired set a new one
 	if expired {
 
+		// Delete old one
+		if err := util.DeleteSession(cookie.Value); err != nil {
+
+			// If AAC is running on development mode log error
+			if util.Config.IsDev() {
+				util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
+			}
+
+			// Throw error to user
+			w.WriteHeader(500)
+			w.Write([]byte("Cannot delete session from database"))
+			return
+		}
+
 		// Create a new jwt token
 		token, err := util.CreateJWToken(util.CastroClaims{})
 

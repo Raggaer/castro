@@ -55,3 +55,7 @@ db:execute(
     http.postValues["email"],
     os.time()
 )
+
+session:setFlash("success", "Account created. You can now sign in")
+
+http:redirect("/subtopic/login")

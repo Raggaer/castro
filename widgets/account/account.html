@@ -2,6 +2,9 @@
     {{ if .logged }}
     <h5>My account</h5>
     <hr class="white-hr">
+    <form method="POST" action="{{ url "subtopic" "logout" }}">
+        <button type="submit" class="btn btn-sm btn-danger">Logout</button>
+    </form>
     {{ else }}
     <h5>Login</h5>
     <hr class="white-hr">

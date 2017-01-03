@@ -6,6 +6,11 @@
     <strong>Error!</strong> {{ .validationError }}
 </div>
 {{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
 <form method="POST">
     <div class="form-group">
         <label for="input-account-name">Account name</label>

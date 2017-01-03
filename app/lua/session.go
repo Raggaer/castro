@@ -19,6 +19,21 @@ func getSessionData(L *lua.LState) *util.Session {
 	return data.Value.(*util.Session)
 }
 
+// DestroySession removes the session data from the database
+func DestroySession(L *lua.LState) int {
+
+	// Get session data from the user data field
+	session := getSessionData(L)
+
+	// Destroy user session
+	if err := session.Destroy(); err != nil {
+
+		L.RaiseError("Cannot destroy user session: %v", err)
+	}
+
+	return 0
+}
+
 // SetSessionData saves an item to the session map
 func SetSessionData(L *lua.LState) int {
 	// Get key
@@ -205,6 +220,7 @@ func GetFlash(L *lua.LState) int {
 
 // SetFlash sets a flash value to the user session
 func SetFlash(L *lua.LState) int {
+
 	// Get session data from the user data field
 	session := getSessionData(L)
 

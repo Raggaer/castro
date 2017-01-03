@@ -10,7 +10,7 @@ import (
 )
 
 type Session struct {
-	token string
+	Token string
 	Logged bool
 	Flash map[string]string
 	Data map[string]interface{}
@@ -36,6 +36,7 @@ func GetSession(token string) (*Session, error) {
 		// Create session data
 		data, err := Encode(
 			&Session{
+				Token: s.Token,
 				Data: make(map[string]interface{}),
 				Flash: make(map[string]string),
 			},
@@ -102,11 +103,23 @@ func (s *Session) Save() error {
 
 	// Populate model with session data
 	sess := models.Session{
-		Token: s.token,
+		Token: s.Token,
 		Data: data,
 		UpdatedAt: time.Now(),
 	}
 
 	// Try to update session data
-	return database.DB.Table("sessions").Update(&sess).Error
+	return database.DB.Table("sessions").Where("token = ?", s.Token).Update(&sess).Error
+}
+
+// Destroy removes the session data from the database
+func (s *Session) Destroy() error {
+	// Try to remove data from database
+	return database.DB.Table("sessions").Delete("token = ?", s.Token).Error
+}
+
+// DeleteSession removes the given session data from the database
+func DeleteSession(token string) error {
+	// Try to remove data from database
+	return database.DB.Table("sessions").Delete("token = ?", token).Error
 }

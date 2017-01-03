@@ -7,6 +7,8 @@ import (
 )
 
 type CastroClaims struct {
+	Token string
+	CreatedAt int64
 	jwt.StandardClaims
 }
 
