@@ -10,7 +10,8 @@ import (
 const captchaURL = "https://www.google.com/recaptcha/api/siteverify"
 
 type captchaResponse struct {
-	Success bool
+	Success bool `json:"success"`
+	Hostname string `json:"hostname"`
 }
 
 // CaptchaConfig struct used for the TOML configuration file
@@ -23,14 +24,16 @@ type CaptchaConfig struct {
 // VerifyCaptcha checks if the given captcha answer is valid
 func VerifyCaptcha(answer string) (bool, error) {
 	// Post form to google service
-	resp, err := http.PostForm(captchaURL, url.Values{
-		"secret": {
-			Config.Captcha.Secret,
+	resp, err := http.PostForm(captchaURL,
+		url.Values{
+			"secret": {
+				Config.Captcha.Secret,
+			},
+			"response": {
+				answer,
+			},
 		},
-		"response": {
-			answer,
-		},
-	})
+	)
 
 	// Check for errors
 	if err != nil {
@@ -48,7 +51,10 @@ func VerifyCaptcha(answer string) (bool, error) {
 		return false, err
 	}
 
-	captchaResp := captchaResponse{}
+	captchaResp := captchaResponse{
+		Success: false,
+		Hostname: "",
+	}
 
 	// Unmarshal body to json struct
 	if err := json.Unmarshal(body, &captchaResp); err != nil {
@@ -57,5 +63,5 @@ func VerifyCaptcha(answer string) (bool, error) {
 	}
 
 	// Return success status
-	return captchaResp.Success
+	return captchaResp.Success, nil
 }

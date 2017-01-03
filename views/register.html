@@ -1,4 +1,5 @@
 {{ template "header.html" }}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <h3>Register at {{ .serverName }}</h3>
 <hr>
 {{ if .validationError }}
@@ -22,6 +23,12 @@
         <input type="password" class="form-control" id="input-password" name="password" placeholder="Password">
         <small class="form-text text-muted">A strong and secure password should contain numbers and non-alphabetic characters. 8 - 32 characters</small>
     </div>
+    {{ if captchaEnabled }}
+    <div class="form-group">
+        <div class="g-recaptcha" data-sitekey="{{ captchaKey }}"></div>
+        <small class="form-text text-muted">We need to verify you are not a bot. A single click usually works</small>
+    </div>
+    {{ end }}
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Register</button>
     </div>

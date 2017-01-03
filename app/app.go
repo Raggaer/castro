@@ -187,5 +187,8 @@ func templateFuncs() template.FuncMap {
 		"captchaKey": func() string {
 			return util.Config.Captcha.Public
 		},
+		"captchaEnabled": func() bool {
+			return util.Config.Captcha.Enabled
+		},
 	}
 }

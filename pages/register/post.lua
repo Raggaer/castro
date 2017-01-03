@@ -3,6 +3,14 @@ if session:isLogged() then
     return
 end
 
+if captcha:isEnabled() then
+    if not captcha:verify(http.postValues["g-recaptcha-response"]) then
+        session:setFlash("validationError", "Invalid captcha answer")
+        http:redirect("/subtopic/register")
+        return
+    end
+end
+
 if db:query("SELECT name FROM accounts WHERE email = ?", http.postValues.email) ~= nil then
     session:setFlash("validationError", "Email already in use by another user")
     http:redirect("/subtopic/register")
