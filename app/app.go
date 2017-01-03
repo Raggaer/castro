@@ -184,5 +184,8 @@ func templateFuncs() template.FuncMap {
 		"widgetList": func() []*util.Widget {
 			return util.WidgetList
 		},
+		"captchaKey": func() string {
+			return util.Config.Captcha.Public
+		},
 	}
 }

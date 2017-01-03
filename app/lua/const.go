@@ -1,6 +1,7 @@
 package lua
 
 const (
+	CaptchaMetaTableName
 	CryptoMetaTableName = "crypto"
 	ValidatorMetaTableName = "validator"
 	JWTTokenName = "__token"

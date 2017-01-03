@@ -29,6 +29,9 @@ func createConfigFile(name string) error {
 		URL:      "localhost",
 		Datapack: "/",
 		Secret: uniuri.New(),
+		Captcha: util.CaptchaConfig{
+			Enabled: false,
+		},
 		Cookies: util.CookieConfig{
 			Name:   "castro",
 			MaxAge: 1000000,

@@ -40,6 +40,10 @@ var (
 		"getFlash": GetFlash,
 		"setFlash": SetFlash,
 	}
+	captchaMethods = map[string]glua.LGFunction{
+		"isEnabled": IsEnabled,
+		"verify": VerifyCaptcha,
+	}
 )
 
 // Get retrieves a lua state from the pool
@@ -83,6 +87,13 @@ func (p *luaStatePool) New() *glua.LState {
 			IncludeGoStackTrace: true,
 		},
 	)
+
+	// Create and set the captcha metatable
+	captchaMetaTable := luaState.NewTypeMetatable(CaptchaMetaTableName)
+	luaState.SetGlobal(CaptchaMetaTableName, captchaMetaTable)
+
+	// Set all captcha metatable functions
+	luaState.SetFuncs(captchaMetaTable, captchaMethods)
 
 	// Create and set the crypto metatable
 	cryptoMetaTable := luaState.NewTypeMetatable(CryptoMetaTableName)

@@ -32,6 +32,7 @@ type Configuration struct {
 	URL      string
 	Datapack string
 	Secret   string
+	Captcha  CaptchaConfig
 	SSL      SSLConfig
 	Cookies  CookieConfig
 	Cache    CacheConfig

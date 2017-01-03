@@ -37,7 +37,7 @@ func main() {
 			util.Logger.Fatalf("Cannot create %v file: %v", "config.toml", err)
 		}
 
-		util.Logger.Info("Config.toml file is now installed. Edit Datapack field to your server location\nCastro will now exit")
+		util.Logger.Info("Config.toml file is now installed. Edit the configuration file and start Castro")
 
 		// Exit app
 		return
