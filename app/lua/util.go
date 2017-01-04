@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strings"
 	"time"
+	"github.com/raggaer/castro/app/util"
 )
 
 // GetStructVariables loads all the global variables
@@ -182,4 +183,27 @@ func URLValuesToTable(m url.Values) *lua.LTable {
 		)
 	}
 	return &t
+}
+
+// HouseListToTable converts a slice of houses to a lua table
+func HouseListToTable(list []*util.House) *lua.LTable {
+	t := &lua.LTable{}
+
+	// Loop house list
+	for _, house := range list {
+
+		// Create a table for each house
+		houseTable := &lua.LTable{}
+
+		// Set table fields
+		houseTable.RawSetString("name", lua.LString(house.Name))
+		houseTable.RawSetString("size", lua.LNumber(house.Size))
+		houseTable.RawSetString("townid", lua.LNumber(house.TownID))
+		houseTable.RawSetString("id", lua.LNumber(house.ID))
+
+		// Append house table to main table
+		t.Append(houseTable)
+	}
+
+	return t
 }

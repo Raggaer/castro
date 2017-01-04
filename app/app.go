@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"github.com/raggaer/otmap"
 )
 
 // Start the main execution point for Castro
@@ -21,8 +22,8 @@ func Start() {
 	// Wait for all goroutines to make their work
 	wait := &sync.WaitGroup{}
 
-	// Wait for 8 tasks
-	wait.Add(8)
+	// Wait for all tasks
+	wait.Add(10)
 
 	// Execute our tasks
 	go func(wait *sync.WaitGroup) {
@@ -30,6 +31,8 @@ func Start() {
 		loadLUAConfig(wait)
 		connectDatabase(wait)
 		migrateDatabase(wait)
+		loadMap(wait)
+		loadHouses(wait)
 	}(wait)
 
 	go createCache(wait)
@@ -39,6 +42,33 @@ func Start() {
 
 	// Wait for the tasks
 	wait.Wait()
+}
+
+func loadHouses(wg *sync.WaitGroup) {
+	// Load server houses
+	if err := util.LoadHouses(
+		util.Config.Datapack + "/data/world/" + util.OTBMap.HouseFile,
+		util.ServerHouseList,
+	); err != nil {
+		util.Logger.Fatalf("Cannot load map house list: %v", err)
+	}
+
+	// Tell the wait group we are done
+	wg.Done()
+}
+
+func loadMap(wg *sync.WaitGroup) {
+	// Parse OTBM file
+	m, err := otmap.Parse(util.Config.Datapack + "/data/world/" + lua.Config.MapName + ".otbm")
+
+	if err != nil {
+		util.Logger.Fatalf("Cannot parse OTBM file: %v", err)
+	}
+
+	util.OTBMap = m
+
+	// Tell the wait group we are done
+	wg.Done()
 }
 
 func loadAppConfig(wg *sync.WaitGroup) {

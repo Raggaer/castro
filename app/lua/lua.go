@@ -47,6 +47,9 @@ var (
 		"isEnabled": IsEnabled,
 		"verify": VerifyCaptcha,
 	}
+	mapMethods = map[string]glua.LGFunction{
+		"houseList": HouseList,
+	}
 )
 
 // Get retrieves a lua state from the pool
@@ -139,6 +142,13 @@ func (p *luaStatePool) New() *glua.LState {
 
 	// Set all HTTP metatable functions
 	luaState.SetFuncs(httpMetaTable, httpMethods)
+
+	// Create and set map metatable
+	mapMetaTable := luaState.NewTypeMetatable(MapMetaTableName)
+	luaState.SetGlobal(MapMetaTableName, mapMetaTable)
+
+	// Set all map metatable functions
+	luaState.SetFuncs(mapMetaTable, mapMethods)
 
 	// Return the lua state
 	return luaState

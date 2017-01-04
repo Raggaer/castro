@@ -39,3 +39,11 @@ body {
 .white-hr {
     border: 1px solid rgba(255, 255, 255, 0.8);
 }
+
+.light {
+    color: #6bb9fd;
+}
+
+.light:hover {
+    color: #2097ff;
+}

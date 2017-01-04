@@ -78,9 +78,22 @@ func (c *cookieHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next
 
 	if err != nil {
 
+		// Create new unique token
+		newToken, err := util.CreateUniqueToken(35)
+
+		if err != nil {
+
+			// Throw error with header 500
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+
+			return
+		}
+
 		// Create JWT
 		token, err := util.CreateJWToken(util.CastroClaims{
 			CreatedAt: time.Now().Unix(),
+			Token: newToken,
 		})
 
 		if err != nil {

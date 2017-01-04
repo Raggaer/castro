@@ -115,11 +115,11 @@ func (s *Session) Save() error {
 // Destroy removes the session data from the database
 func (s *Session) Destroy() error {
 	// Try to remove data from database
-	return database.DB.Table("sessions").Delete("token = ?", s.Token).Error
+	return database.DB.Table("sessions").Delete(models.Session{}, "token = ?", s.Token).Error
 }
 
 // DeleteSession removes the given session data from the database
 func DeleteSession(token string) error {
 	// Try to remove data from database
-	return database.DB.Table("sessions").Delete("token = ?", token).Error
+	return database.DB.Table("sessions").Delete(models.Session{}, "token = ?", token).Error
 }

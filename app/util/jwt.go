@@ -4,6 +4,10 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"time"
 	"github.com/kataras/go-errors"
+	"github.com/dchest/uniuri"
+	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/models"
+	"github.com/jinzhu/gorm"
 )
 
 type CastroClaims struct {
@@ -72,4 +76,50 @@ func ParseJWToken(tkn string) (*CastroClaims, bool, error) {
 
 
 	return nil, false, errors.New("Cannot get token claims")
+}
+
+// CreateUniqueToken returns a unique token of the table sessions
+// starting with the given length
+func CreateUniqueToken(len int) (string, error) {
+	// Create first token
+	token := uniuri.NewLen(len)
+
+	// Hold query results
+	s := models.Session{}
+
+	// Number of failed attempts
+	fail := 0
+
+	// Loop until token is unique
+	for {
+
+		// If we failed 3 times increment token length
+		if fail > 3 {
+
+			fail = 0
+			len++
+		}
+
+		// Check if token is unique
+		if err := database.DB.Table("sessions").First(&s, "token = ?", token).Error; err != nil {
+
+			// Check if record exists
+			if err == gorm.ErrRecordNotFound {
+
+				// Stop loop
+				break
+			} else {
+
+				return "", err
+			}
+
+			// Create new token
+			token = uniuri.NewLen(len)
+
+			// Increment fail attempts
+			fail++
+		}
+	}
+
+	return token, nil
 }

@@ -5,6 +5,11 @@
     <form method="POST" action="{{ url "subtopic" "logout" }}">
         <button type="submit" class="btn btn-sm btn-danger">Logout</button>
     </form>
+    <hr class="white-hr">
+    <ul>
+        <li><a class="light" href="{{ url "subtopic" "dashboard" }}">Dashboard</a></li>
+        <li><a class="light" href="{{ url "subtopic" "createchar" }}">Create character</a></li>
+    </ul>
     {{ else }}
     <h5>Login</h5>
     <hr class="white-hr">
@@ -17,6 +22,7 @@
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Login</button>
+            <a href="{{ url "subtopic" "register" }}" role="button" class="btn btn-secondary">Register</a>
         </div>
     </form>
     {{ end }}

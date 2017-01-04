@@ -1,6 +1,7 @@
 package lua
 
 const (
+	MapMetaTableName = "otbm"
 	CaptchaMetaTableName = "captcha"
 	CryptoMetaTableName = "crypto"
 	ValidatorMetaTableName = "validator"
@@ -8,9 +9,10 @@ const (
 	JWTMetaTable = "session"
 	MySQLMetaTableName = "db"
 	ConfigMetaTableName = "config"
+	HTTPGetValuesName = "getValues"
 	HTTPMetaTableName = "http"
 	HTTPMetaTableMethodName = "method"
-	HTTPResponseWriterName = "_w"
-	HTTPRequestName = "_r"
+	HTTPResponseWriterName = "__w"
+	HTTPRequestName = "__r"
 	HTTPPostValuesName = "postValues"
 )
