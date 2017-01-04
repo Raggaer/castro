@@ -166,7 +166,7 @@ func connectDatabase(wg *sync.WaitGroup) {
 
 func migrateDatabase(wg *sync.WaitGroup) {
 	// Migrate database models
-	if err := database.DB.AutoMigrate(&models.Article{}, &models.Session{}).Error; err != nil {
+	if err := database.DB.AutoMigrate(&models.Article{}, &models.Session{}, &models.CastroAccount{}).Error; err != nil {
 		util.Logger.Fatalf("Cannot migrate database models: %v", err)
 	}
 
@@ -210,6 +210,9 @@ func templateFuncs() template.FuncMap {
 		},
 		"serverName": func() string {
 			return lua.Config.ServerName
+		},
+		"serverMotd": func() string {
+			return lua.Config.Motd
 		},
 		"widgetList": func() []*util.Widget {
 			return util.WidgetList

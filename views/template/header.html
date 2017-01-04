@@ -13,6 +13,7 @@
     <div class="navbar-info">
         <div class="container">
             <h1 class="display-3 crop">{{ serverName }}</h1>
+            <small>{{ serverMotd }}</small>
         </div>
     </div>
 	<header>
@@ -22,8 +23,11 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ url "/" }}">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url "search" }}">Features</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="supportedContentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Community</a>
+                    <div class="dropdown-menu" aria-labelledby="supportedContentDropdown">
+                        <a class="dropdown-item" href="{{ url "subtopic" "houses" }}">Houses</a>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Pricing</a>

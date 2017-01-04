@@ -148,6 +148,14 @@ func Query(L *lua.LState) int {
 
 	finalTable := QueryToTable(results, columnNames)
 
+	// If there is only one result do not
+	// return as table of results
+	if len(results) == 1 {
+
+		// Get first element of the result table
+		finalTable = finalTable.RawGetInt(1).(*lua.LTable)
+	}
+
 	// If user wants to use cache save table
 	if saveToCache {
 		util.Cache.Add(cacheKey, finalTable, time.Minute * 3)

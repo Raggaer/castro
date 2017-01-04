@@ -56,5 +56,7 @@ db:execute(
     os.time()
 )
 
+db:execute("INSERT INTO castro_accounts (name, points) VALUES (?, 0)", http.postValues["account-name"])
+
 session:setFlash("success", "Account created. You can now sign in")
 http:redirect("/subtopic/login")

@@ -16,6 +16,10 @@ type Session struct {
 	Data map[string]interface{}
 }
 
+func init() {
+	gob.Register(map[string]interface{}{})
+}
+
 func GetSession(token string) (*Session, error) {
 	// Hold session information
 	s := models.Session{}
