@@ -1,5 +1,22 @@
 {{ template "header.html" }}
 <h3>House list</h3>
 <hr>
-aaaa
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th>Name</th>
+            <th>Size</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range $index, $element := .list }}
+        <tr>
+            <td>
+                <a href="{{ url "subtopic" "house" }}?id={{ $element.id }}">{{ $element.name }}</a>
+            </td>
+            <td>{{ $element.size }}</td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
 {{ template "footer.html" . }} 

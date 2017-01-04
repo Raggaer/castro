@@ -87,6 +87,22 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Update cookie
 		http.SetCookie(w, cookie)
+
+		// Get json web token claims from the cookie value
+		claims, expired, err = util.ParseJWToken(cookie.Value)
+
+		if err != nil {
+
+			// If AAC is running on development mode log error
+			if util.Config.IsDev() {
+				util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
+			}
+
+			// Throw error to user
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+			return
+		}
 	}
 
 	sessionData, err := util.GetSession(claims.Token)

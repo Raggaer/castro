@@ -186,11 +186,16 @@ func URLValuesToTable(m url.Values) *lua.LTable {
 }
 
 // HouseListToTable converts a slice of houses to a lua table
-func HouseListToTable(list []*util.House) *lua.LTable {
+func HouseListToTable(list []*util.House, townid uint32) *lua.LTable {
 	t := &lua.LTable{}
 
 	// Loop house list
 	for _, house := range list {
+
+		if townid != 0 && townid != house.TownID {
+
+			continue
+		}
 
 		// Create a table for each house
 		houseTable := &lua.LTable{}

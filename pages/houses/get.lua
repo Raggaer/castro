@@ -1,6 +1,10 @@
-t = otbm:houseList()
+local data = {}
 
-print(t[1].name)
+if http.getValues.town == nil then
+    data.list = otbm:houseList()
+else
+    data.list = otbm:houseList(tonumber(http.getValues.town))
+end
 
-http:render("houselist.html")
+http:render("houselist.html", data)
 
