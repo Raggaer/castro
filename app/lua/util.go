@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 	"github.com/raggaer/castro/app/util"
+	"github.com/raggaer/otmap"
 )
 
 // GetStructVariables loads all the global variables
@@ -211,4 +212,30 @@ func HouseListToTable(list []*util.House, townid uint32) *lua.LTable {
 	}
 
 	return t
+}
+
+// TownListToTable converts a slice of towns to a lua table
+func TownListToTable(list []otmap.Town) *lua.LTable {
+	t := &lua.LTable{}
+
+	// Loop town list
+	for _, town := range list {
+
+		// Append town table to main table
+		t.Append(TownToTable(town))
+	}
+
+	return t
+}
+
+// TownToTable converts the given town to a lua table
+func TownToTable(town otmap.Town) *lua.LTable {
+	// Create a table for the town
+	townTable := &lua.LTable{}
+
+	// Set table fields
+	townTable.RawSetString("name", lua.LString(town.Name))
+	townTable.RawSetString("id", lua.LNumber(town.ID))
+
+	return townTable
 }

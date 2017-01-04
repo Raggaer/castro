@@ -49,6 +49,8 @@ var (
 	}
 	mapMethods = map[string]glua.LGFunction{
 		"houseList": HouseList,
+		"townList": TownList,
+		"townByID": GetTownByID,
 	}
 )
 
