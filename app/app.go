@@ -23,7 +23,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(10)
+	wait.Add(11)
 
 	// Execute our tasks
 	go func(wait *sync.WaitGroup) {
@@ -32,7 +32,8 @@ func Start() {
 		connectDatabase(wait)
 		migrateDatabase(wait)
 		loadMap(wait)
-		loadHouses(wait)
+		go loadHouses(wait)
+		go loadVocations(wait)
 	}(wait)
 
 	go createCache(wait)
@@ -42,6 +43,19 @@ func Start() {
 
 	// Wait for the tasks
 	wait.Wait()
+}
+
+func loadVocations(wg *sync.WaitGroup) {
+	// Load server vocations
+	if err := util.LoadVocations(
+		util.Config.Datapack + "/data/xml/vocations.xml",
+		util.ServerVocationList,
+	); err != nil {
+		util.Logger.Fatalf("Cannot load map house list: %v", err)
+	}
+
+	// Tell the wait group we are done
+	wg.Done()
 }
 
 func loadHouses(wg *sync.WaitGroup) {
