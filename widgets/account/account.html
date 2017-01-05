@@ -4,6 +4,7 @@
     <hr class="white-hr">
     <form method="POST" action="{{ url "subtopic" "logout" }}">
         <button type="submit" class="btn btn-sm btn-danger">Logout</button>
+        <button type="button" class="btn btn-sm btn-primary">{{ .account.points }} Points</button>
     </form>
     <hr class="white-hr">
     <ul>

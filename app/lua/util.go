@@ -134,9 +134,13 @@ func QueryToTable(r [][]interface{}, names []string) *lua.LTable {
 			v := r[i][x]
 			switch v.(type) {
 			case []uint8:
-				t.RawSetString(names[x], lua.LString(string(r[i][x].([]uint8))))
+				t.RawSetString(names[x], lua.LString(string(v.([]uint8))))
 			case time.Time:
 				t.RawSetString(names[x], lua.LNumber(v.(time.Time).Unix()))
+			case int64:
+				t.RawSetString(names[x], lua.LNumber(v.(int64)))
+			case string:
+				t.RawSetString(names[x], lua.LString(v.(string)))
 			}
 		}
 
