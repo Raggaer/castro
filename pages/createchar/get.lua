@@ -3,4 +3,8 @@ if not session:isLogged() then
     return
 end
 
-http:render("createcharacter.html")
+local data = {}
+
+data.vocations = xml:vocationList(true)
+
+http:render("createcharacter.html", data)

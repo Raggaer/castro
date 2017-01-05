@@ -243,3 +243,31 @@ func TownToTable(town otmap.Town) *lua.LTable {
 
 	return townTable
 }
+
+// VocationListToTable converts the server vocation list to a lua table
+// executing the given condition
+func VocationListToTable(list []*util.Vocation, cond func(*util.Vocation) bool) *lua.LTable {
+	t := &lua.LTable{}
+
+	// Loop vocation list
+	for _, vocation := range list {
+
+		// Check condition
+		if !cond(vocation) {
+			continue
+		}
+
+		// Create vocation table
+		vocTable := &lua.LTable{}
+
+		// Set vocation table fields
+		vocTable.RawSetString("name", lua.LString(vocation.Name))
+		vocTable.RawSetString("description", lua.LString(vocation.Description))
+		vocTable.RawSetString("id", lua.LNumber(vocation.ID))
+
+		// Append vocation table to main table
+		t.Append(vocTable)
+	}
+
+	return t
+}

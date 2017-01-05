@@ -52,6 +52,9 @@ var (
 		"townList": TownList,
 		"townByID": GetTownByID,
 	}
+	xmlMethods = map[string]glua.LGFunction{
+		"vocationList": VocationList,
+	}
 )
 
 // Get retrieves a lua state from the pool
@@ -95,6 +98,13 @@ func (p *luaStatePool) New() *glua.LState {
 			IncludeGoStackTrace: true,
 		},
 	)
+
+	// Create and set the xml metatable
+	xmlMetaTable := luaState.NewTypeMetatable(XMLMetaTableName)
+	luaState.SetGlobal(XMLMetaTableName, xmlMetaTable)
+
+	// Set all xml metatable functions
+	luaState.SetFuncs(xmlMetaTable, xmlMethods)
 
 	// Create and set the captcha metatable
 	captchaMetaTable := luaState.NewTypeMetatable(CaptchaMetaTableName)
