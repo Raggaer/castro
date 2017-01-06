@@ -18,6 +18,7 @@ func main() {
 			Castro - Open Tibia automatic account creator
 
 			Developed by Raggaer
+
 	`)
 
 	// Declare our new http router
