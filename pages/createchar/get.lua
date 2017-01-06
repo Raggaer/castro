@@ -7,5 +7,6 @@ local data = {}
 
 data.vocations = xml:vocationList(true)
 data.towns = otbm:townList()
+data.validationError = session:getFlash("validation-error")
 
 http:render("createcharacter.html", data)

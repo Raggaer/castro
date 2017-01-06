@@ -3,6 +3,7 @@ package lua
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/yuin/gopher-lua"
+	"regexp"
 )
 
 // methods holds all the validation methods related to
@@ -19,7 +20,32 @@ var methods = map[string]govalidator.Validator{
 	"IsUpperCase": govalidator.IsUpperCase,
 	"IsLowerCase": govalidator.IsLowerCase,
 	"IsInt": govalidator.IsInt,
+}
 
+// ValidUsername checks if the given username contains only
+// letters and spaces
+func ValidUsername(L *lua.LState) int {
+	// Get string to validate
+	v := L.Get(2)
+
+	// Check for valid type
+	if v.Type() != lua.LTString {
+
+		L.ArgError(1, "Invalid string format. Expected string")
+		return 0
+	}
+
+	// Check against regexp
+	match, err := regexp.MatchString("^[a-zA-Z ]*$", v.String())
+
+	if err != nil {
+		L.RaiseError("Cannot compare string against regexp: %v", err)
+	}
+
+	// Push regexp result
+	L.Push(lua.LBool(match))
+
+	return 1
 }
 
 // Validate executes the given govalidator func

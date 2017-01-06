@@ -34,6 +34,7 @@ var (
 	validatorMethods = map[string]glua.LGFunction{
 		"validate": Validate,
 		"blackList": BlackList,
+		"validUsername": ValidUsername,
 	}
 	sessionMethods = map[string]glua.LGFunction{
 		"isLogged": IsLogged,
