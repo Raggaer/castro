@@ -42,6 +42,7 @@ var (
 		"set": SetSessionData,
 		"get": GetSessionData,
 		"destroy": DestroySession,
+		"loggedAccount": GetLoggedAccount,
 	}
 	captchaMethods = map[string]glua.LGFunction{
 		"isEnabled": IsEnabled,

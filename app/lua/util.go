@@ -10,6 +10,7 @@ import (
 	"time"
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/otmap"
+	"github.com/raggaer/castro/app/models"
 )
 
 // GetStructVariables loads all the global variables
@@ -268,6 +269,32 @@ func VocationListToTable(list []*util.Vocation, cond func(*util.Vocation) bool) 
 		// Append vocation table to main table
 		t.Append(vocTable)
 	}
+
+	return t
+}
+
+// AccountToTable converts a tfs account to a lua table
+func AccountToTable(account models.Account) *lua.LTable {
+	t := &lua.LTable{}
+
+	// Set account fields
+	t.RawSetString("id", lua.LNumber(account.ID))
+	t.RawSetString("premdays", lua.LNumber(account.Premdays))
+	t.RawSetString("lastday", lua.LNumber(account.Lastday))
+	t.RawSetString("name", lua.LString(account.Name))
+	t.RawSetString("email", lua.LString(account.Email))
+
+	return t
+}
+
+// CastroAccountToTable converts a castro account to a lua table
+func CastroAccountToTable(account models.CastroAccount) *lua.LTable {
+	t := &lua.LTable{}
+
+	// Set account fields
+	t.RawSetString("id", lua.LNumber(account.ID))
+	t.RawSetString("points", lua.LNumber(account.Points))
+	t.RawSetString("name", lua.LString(account.Name))
 
 	return t
 }

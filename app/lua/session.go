@@ -4,6 +4,7 @@ import (
 	"github.com/yuin/gopher-lua"
 	"github.com/raggaer/castro/app/util"
 	"strconv"
+	"github.com/raggaer/castro/app/models"
 )
 
 // getSessionData gets the user data struct from the
@@ -19,9 +20,61 @@ func getSessionData(L *lua.LState) *util.Session {
 	return data.Value.(*util.Session)
 }
 
+// GetLoggedAccount gets the user account if any
+func GetLoggedAccount(L *lua.LState) int {
+	// Get session data from the user data field
+	session := getSessionData(L)
+
+	// Check if user is logged
+	logged, ok := session.Data["logged"].(bool)
+
+	if !ok {
+
+		// Return nil if user is not logged in
+		L.Push(lua.LNil)
+		return 1
+	}
+
+	if !logged {
+
+		// Return nil if user is not logged in
+		L.Push(lua.LNil)
+		return 1
+	}
+
+	// Get logged account name
+	accountName, ok := session.Data["logged-account"].(string)
+
+	if !ok {
+
+		// Return nil if invalid account name
+		L.Push(lua.LNil)
+		return 1
+	}
+
+	// Get accounts from database
+	account, castroAccount, err := models.GetAccountByName(accountName)
+
+	if err != nil {
+
+		L.RaiseError("Cannot get account by name: %v", err)
+		return 0
+	}
+
+	// Convert tfs account to lua table
+	t := AccountToTable(account)
+
+	// Set castro account inside the table
+	t.RawSetString("castro", CastroAccountToTable(castroAccount))
+
+	// Send table to stack
+	L.Push(t)
+
+	return 1
+}
+
 // DestroySession removes the session data from the database
 func DestroySession(L *lua.LState) int {
-
 	// Get session data from the user data field
 	session := getSessionData(L)
 
