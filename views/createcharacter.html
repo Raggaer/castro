@@ -16,7 +16,7 @@
         <label for="character-vocation">Character vocation</label>
         <select name="character-vocation" class="form-control" id="character-vocation">
             {{ range $index, $element := .vocations }}
-            <option value="{{ $element.id }}">{{ $element.name }}</option>
+            <option value="{{ $element.name }}">{{ $element.name }}</option>
             {{ end }}
         </select>
     </div>
@@ -24,7 +24,7 @@
         <label for="character-town">Character town</label>
         <select name="character-town" class="form-control" id="character-town">
             {{ range $index, $element := .towns }}
-            <option value="{{ $element.id }}">{{ $element.name }}</option>
+            <option value="{{ $element.name }}">{{ $element.name }}</option>
             {{ end }}
         </select>
     </div>

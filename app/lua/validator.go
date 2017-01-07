@@ -4,6 +4,7 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/yuin/gopher-lua"
 	"regexp"
+	"github.com/raggaer/castro/app/util"
 )
 
 // methods holds all the validation methods related to
@@ -20,6 +21,62 @@ var methods = map[string]govalidator.Validator{
 	"IsUpperCase": govalidator.IsUpperCase,
 	"IsLowerCase": govalidator.IsLowerCase,
 	"IsInt": govalidator.IsInt,
+}
+
+func ValidTown(L *lua.LState) int {
+	// Get town value
+	town := L.Get(2)
+
+	// Check for valid town type
+	if town.Type() != lua.LTString && town.Type() != lua.LTNumber {
+
+		L.ArgError(1, "Invalid town format. Expected number or string")
+		return 0
+	}
+
+	// If town is number we assume its the town id
+	if town.Type() == lua.LTNumber {
+
+		// Convert town id to uint32
+		townid := uint32(L.ToInt(2))
+
+		// Check if town exists
+		for _, town := range util.OTBMap.Towns {
+
+			// If its the town we are looking for
+			if town.ID == townid {
+
+				// Town is found push true
+				L.Push(lua.LBool(true))
+
+				return 1
+			}
+		}
+
+		L.Push(lua.LBool(false))
+
+		return 1
+	}
+
+	// If town is string we assume its the town name
+	townName := L.ToString(2)
+
+	// Check if town exists
+	for _, town := range util.OTBMap.Towns {
+
+		// If its the town we are looking for
+		if town.Name == townName {
+
+			// Town is found push true
+			L.Push(lua.LBool(true))
+
+			return 1
+		}
+	}
+
+	L.Push(lua.LBool(false))
+
+	return 1
 }
 
 // ValidUsername checks if the given username contains only
