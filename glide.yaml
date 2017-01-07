@@ -1,0 +1,32 @@
+package: github.com/raggaer/castro
+import:
+- package: github.com/BurntSushi/toml
+  version: v0.2.0
+- package: github.com/asaskevich/govalidator
+  version: v5
+- package: github.com/dchest/uniuri
+- package: github.com/dgrijalva/jwt-go
+  version: v3.0.0
+- package: github.com/jinzhu/gorm
+  version: v1.0
+  subpackages:
+  - dialects/mysql
+- package: github.com/julienschmidt/httprouter
+  version: v1.1
+- package: github.com/kataras/go-errors
+  version: v0.0.3
+- package: github.com/op/go-logging
+  version: v1
+- package: github.com/patrickmn/go-cache
+  version: v2.0.0
+- package: github.com/raggaer/otmap
+- package: github.com/urfave/negroni
+  version: v0.2.0
+- package: github.com/yuin/gopher-lua
+- package: golang.org/x/net
+  subpackages:
+  - context
+- package: gopkg.in/square/go-jose.v1
+  version: v2.0.1
+  subpackages:
+  - json

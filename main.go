@@ -18,7 +18,6 @@ func main() {
 			Castro - Open Tibia automatic account creator
 
 			Developed by Raggaer
-
 	`)
 
 	// Declare our new http router
@@ -63,9 +62,6 @@ func main() {
 
 	// Disable httprouter not found handler
 	router.HandleMethodNotAllowed = false
-
-	// Use custom not found handler
-	router.NotFound = newNotFoundHandler()
 
 	// Tell negroni to use our http router
 	n.UseHandler(router)

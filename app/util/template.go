@@ -65,7 +65,7 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 
 		// Reload all templates
 		if err := LoadTemplates("views/", &t); err != nil {
-			Logger.Error(err)
+			Logger.Error(err.Error())
 			return
 		}
 	}
@@ -88,7 +88,7 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 
 	// Render template and log error
 	if err := t.Tmpl.ExecuteTemplate(w, name, args); err != nil {
-		Logger.Error(err)
+		Logger.Error(err.Error())
 	}
 }
 

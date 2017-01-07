@@ -8,9 +8,6 @@ import (
 	"github.com/raggaer/castro/app/util"
 )
 
-type notFoundHandler struct {
-}
-
 // cookieHandler used to make sure all requests
 // contain a castro specific cookie
 type cookieHandler struct {}
@@ -26,12 +23,6 @@ type csrfHandler struct {}
 // newCsrfHandler creates and returns a new csrfHandler instance
 func newCsrfHandler() *csrfHandler {
 	return &csrfHandler{}
-}
-
-// newNotFoundHandler creates and returns a new notFoundHandler
-// instance
-func newNotFoundHandler() *notFoundHandler {
-	return &notFoundHandler{}
 }
 
 // newCookieHandler creates and returns a new cookieHandler
@@ -63,12 +54,6 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 
 	// Execute next handler
 	next(w, req)
-}
-
-// ServeHTTP makes notFoundHandler compatible with negroni
-func (c *notFoundHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	w.WriteHeader(404)
-	w.Write([]byte("Page was not found"))
 }
 
 // ServeHTTP makes cookieHandler compatible with negroni

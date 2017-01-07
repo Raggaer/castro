@@ -2,5 +2,7 @@ tmp/
 *.gzip
 *.toml
 .idea/
+glide.lock
+vendor/
 
 Castro build.exe
