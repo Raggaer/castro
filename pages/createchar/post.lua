@@ -3,7 +3,7 @@ if not session:isLogged() then
     return
 end
 
-if not validator:validVocation(http.postValues["character-vocation"]) then
+if not validator:validVocation(http.postValues["character-vocation"], true) then
     session:setFlash("validation-error", "Invalid character vocation. Vocation not found")
     http:redirect("/subtopic/createchar")
 end
