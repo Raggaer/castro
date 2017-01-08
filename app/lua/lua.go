@@ -36,6 +36,7 @@ var (
 		"blackList": BlackList,
 		"validUsername": ValidUsername,
 		"validTown": ValidTown,
+		"validVocation": ValidVocation,
 	}
 	sessionMethods = map[string]glua.LGFunction{
 		"isLogged": IsLogged,
@@ -54,9 +55,11 @@ var (
 		"houseList": HouseList,
 		"townList": TownList,
 		"townByID": GetTownByID,
+		"townByName": GetTownByName,
 	}
 	xmlMethods = map[string]glua.LGFunction{
 		"vocationList": VocationList,
+		"vocationByName": GetVocationByName,
 	}
 )
 

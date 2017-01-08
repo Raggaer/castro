@@ -23,6 +23,99 @@ var methods = map[string]govalidator.Validator{
 	"IsInt": govalidator.IsInt,
 }
 
+// ValidVocation checks if the given vocation exists
+func ValidVocation(L *lua.LState) int {
+	// Get vocation value
+	voc := L.Get(2)
+
+	// Check is users wants to get base vocation
+	base := L.ToBool(3)
+
+	// Check for valid vocation type
+	if voc.Type() != lua.LTString && voc.Type() != lua.LTNumber {
+
+		L.ArgError(1, "Invalid vocation format. Expected number or string")
+		return 0
+	}
+
+	// If vocation is number we assume its the vocation id
+	if voc.Type() == lua.LTNumber {
+
+		// Convert vocation to int
+		vocid := L.ToInt(2)
+
+		// Loop vocation list
+		for _, voc := range util.ServerVocationList.List.Vocations {
+
+			// If we find the vocation we are looking for
+			if voc.ID == vocid {
+
+				if base {
+
+					// If its a base vocation return true
+					if voc.FromVoc == voc.ID {
+
+						// Vocation is found push true
+						L.Push(lua.LBool(true))
+
+						return 1
+					}
+
+					L.Push(lua.LBool(false))
+
+					return 1
+				}
+
+				// Vocation is found push true
+				L.Push(lua.LBool(true))
+
+				return 1
+			}
+		}
+
+		L.Push(lua.LBool(false))
+
+		return 1
+	}
+
+	// If vocation is string we assume its the vocation name
+	vocname := L.ToString(2)
+
+	// Loop vocation list
+	for _, voc := range util.ServerVocationList.List.Vocations {
+
+		// If we find the vocation we are looking for
+		if voc.Name == vocname {
+
+			if base {
+
+				// If its a base vocation return true
+				if voc.FromVoc == voc.ID {
+
+					// Vocation is found push true
+					L.Push(lua.LBool(true))
+
+					return 1
+				}
+
+				L.Push(lua.LBool(false))
+
+				return 1
+			}
+
+			// Vocation is found push true
+			L.Push(lua.LBool(true))
+
+			return 1
+		}
+	}
+
+	L.Push(lua.LBool(false))
+
+	return 1
+}
+
+// ValidTown checks if the given town exists
 func ValidTown(L *lua.LState) int {
 	// Get town value
 	town := L.Get(2)

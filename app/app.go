@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"time"
 
 	"github.com/patrickmn/go-cache"
@@ -25,9 +24,12 @@ func Start() {
 	// Wait for all tasks
 	wait.Add(11)
 
+	// Load application config
+	loadAppConfig(wait)
+
 	// Execute our tasks
 	go func(wait *sync.WaitGroup) {
-		loadAppConfig(wait)
+
 		loadLUAConfig(wait)
 		connectDatabase(wait)
 		migrateDatabase(wait)
@@ -36,7 +38,9 @@ func Start() {
 		go loadVocations(wait)
 	}(wait)
 
-	go createCache(wait)
+	// Create application cache
+	createCache(wait)
+
 	go loadWidgetList(wait)
 	go appTemplates(wait)
 	go widgetTemplates(wait)
@@ -87,11 +91,7 @@ func loadMap(wg *sync.WaitGroup) {
 
 func loadAppConfig(wg *sync.WaitGroup) {
 	// Load the TOML configuration file
-	file, err := ioutil.ReadFile("config.toml")
-	if err != nil {
-		util.Logger.Fatalf("Cannot read configuration file: %v", err)
-	}
-	if err = util.LoadConfig(string(file), util.Config); err != nil {
+	if err := util.LoadConfig("config.toml", util.Config); err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
 

@@ -40,6 +40,34 @@ func TownList(L *lua.LState) int {
 	return 1
 }
 
+// GetTownByName grabs a town by the given name
+func GetTownByName(L *lua.LState) int {
+	// Get town name
+	name := L.Get(2)
+
+	// Check for valid ID type
+	if name.Type() != lua.LTString {
+
+		L.ArgError(1, "Invalid name format. Expected string")
+		return 0
+	}
+
+	// Get town
+	for _, town := range util.OTBMap.Towns {
+
+		// If its the town we are looking for
+		if town.Name == name.String() {
+
+			// Convert town to lua table and push
+			L.Push(TownToTable(town))
+
+			return 1
+		}
+	}
+
+	return 0
+}
+
 // GetTownByID grabs a town by the given ID
 func GetTownByID(L *lua.LState) int {
 	// Get town ID

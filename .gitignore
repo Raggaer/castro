@@ -6,3 +6,4 @@ glide.lock
 vendor/
 
 Castro build.exe
+Castro data race.exe

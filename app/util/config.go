@@ -50,7 +50,7 @@ func init() {
 // the given interface pointer
 func LoadConfig(data string, dest interface{}) error {
 	// Decode the given file to the given interface
-	if _, err := toml.Decode(data, dest); err != nil {
+	if _, err := toml.DecodeFile(data, dest); err != nil {
 		return err
 	}
 	return nil

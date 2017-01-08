@@ -1,0 +1,9 @@
+<div class="info-panel black">
+    <h5>Top players</h5>
+    <hr class="white-hr">
+    <ul>
+    {{ range $index, $element := .top }}
+        <li><a class="light" href="">{{ $element.name }}</a> ({{ $element.level }})</li>
+    {{ end }}
+    </ul>
+</div>

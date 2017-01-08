@@ -258,17 +258,20 @@ func VocationListToTable(list []*util.Vocation, cond func(*util.Vocation) bool) 
 			continue
 		}
 
-		// Create vocation table
-		vocTable := &lua.LTable{}
-
-		// Set vocation table fields
-		vocTable.RawSetString("name", lua.LString(vocation.Name))
-		vocTable.RawSetString("description", lua.LString(vocation.Description))
-		vocTable.RawSetString("id", lua.LNumber(vocation.ID))
-
-		// Append vocation table to main table
-		t.Append(vocTable)
+		// Append new table
+		t.Append(VocationToTable(vocation))
 	}
+
+	return t
+}
+
+func VocationToTable(voc *util.Vocation) *lua.LTable {
+	t := &lua.LTable{}
+
+	// Set table fields
+	t.RawSetString("id", lua.LNumber(voc.ID))
+	t.RawSetString("name", lua.LString(voc.Name))
+	t.RawSetString("description", lua.LString(voc.Description))
 
 	return t
 }
