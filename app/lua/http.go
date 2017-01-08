@@ -31,14 +31,9 @@ func RenderTemplate(L *glua.LState) int {
 	if util.Config.IsDev() {
 
 		// Load widget list
-		wList, err := util.LoadWidgetList("widgets/")
-
-		if err != nil {
+		if err := util.Widgets.LoadWidgetList("widgets/"); err != nil {
 			util.Logger.Fatalf("Cannot load widget list: %v", err)
 		}
-
-		// Assign widget list to global variable
-		util.WidgetList = wList
 
 		// Create new template
 		util.WidgetTemplate = util.NewTemplate("widget")
@@ -52,8 +47,10 @@ func RenderTemplate(L *glua.LState) int {
 		}
 	}
 
+
+
 	// Loop all widgets
-	for _, widget := range util.WidgetList {
+	for _, widget := range util.Widgets.List {
 
 		// Execute widget
 		result, err := widget.ExecuteWidget(w, req, L)

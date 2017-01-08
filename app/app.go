@@ -121,14 +121,9 @@ func createCache(wg *sync.WaitGroup) {
 
 func loadWidgetList(wg *sync.WaitGroup) {
 	// Load widget list
-	wList, err := util.LoadWidgetList("widgets/")
-
-	if err != nil {
+	if err := util.Widgets.LoadWidgetList("widgets/"); err != nil {
 		util.Logger.Fatalf("Cannot load widget list: %v", err)
 	}
-
-	// Assign widget list to global variable
-	util.WidgetList = wList
 
 	// Tell the wait group we are done
 	wg.Done()
@@ -229,7 +224,7 @@ func templateFuncs() template.FuncMap {
 			return lua.Config.Motd
 		},
 		"widgetList": func() []*util.Widget {
-			return util.WidgetList
+			return util.Widgets.List
 		},
 		"captchaKey": func() string {
 			return util.Config.Captcha.Public

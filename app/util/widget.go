@@ -5,15 +5,23 @@ import (
 	"html/template"
 	"net/http"
 	glua "github.com/yuin/gopher-lua"
+	"sync"
 )
 
 var (
-	// WidgetList holds all the AAC widgets
-	WidgetList []*Widget
+	// Widgets holds all the AAC widgets
+	Widgets = WidgetList{
+		rw: &sync.RWMutex{},
+	}
 
 	// WidgetTemplate holds all the widget templates
 	WidgetTemplate Tmpl
 )
+
+type WidgetList struct {
+	List []*Widget
+	rw *sync.RWMutex
+}
 
 // Widget struct used to hold widget information
 type Widget struct {
@@ -22,15 +30,18 @@ type Widget struct {
 }
 
 // LoadWidgetList parses and returns a list with widget names
-func LoadWidgetList(dir string) ([]*Widget, error) {
+func (w *WidgetList) LoadWidgetList(dir string) error {
+	w.rw.Lock()
+	defer w.rw.Unlock()
+
 	// Load all directories of the widget folder
 	widgets, err := ioutil.ReadDir(dir)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	list := []*Widget{}
+	w.List = []*Widget{}
 
 	// Loop folder items
 	for _, file := range widgets {
@@ -39,14 +50,13 @@ func LoadWidgetList(dir string) ([]*Widget, error) {
 		if file.IsDir() {
 
 			// Append file
-			list = append(list, &Widget{
+			w.List = append(w.List, &Widget{
 				Name: file.Name(),
 			})
 		}
 	}
 
-	// Return list
-	return list, nil
+	return nil
 }
 
 // ExecuteWidget runs the given widget and returns its output
