@@ -5,6 +5,7 @@ import (
 	"github.com/raggaer/castro/app/models"
 	"image/color"
 	"strconv"
+	"path/filepath"
 )
 
 // CreatePlayerSignature creates a player image signature file using goimage
@@ -27,5 +28,5 @@ func CreatePlayerSignature(player models.Player) error {
 	}
 
 	// Save image
-	return img.Save("public/img/signature/" + player.Name + ".png")
+	return img.Save(filepath.Join("public", "img", "signature", player.Name) + ".png")
 }
