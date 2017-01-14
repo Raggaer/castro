@@ -2,8 +2,8 @@ tmp/
 *.gzip
 *.toml
 .idea/
-glide.lock
 vendor/
+public/img/signature/*.png
 
 Castro build.exe
 Castro data race.exe
