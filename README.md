@@ -1,5 +1,7 @@
 ![Castro AAC](https://i.gyazo.com/f328c60ee8c219b94a521e3e51fa66e7.png)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/Raggaer/castro)](https://goreportcard.com/report/github.com/Raggaer/castro)
+
 High performance Open Tibia automatic account creator written in **Go** using **Lua** for the subtopics
 
 Castro provides lua bindings using a pool of lua states. Each request gets a state from the pool. If there are no states available a new one is created and later saved on the pool.
