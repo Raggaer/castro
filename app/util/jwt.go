@@ -112,13 +112,13 @@ func CreateUniqueToken(len int) (string, error) {
 
 				return "", err
 			}
-
-			// Create new token
-			token = uniuri.NewLen(len)
-
-			// Increment fail attempts
-			fail++
 		}
+
+		// Create new token
+		token = uniuri.NewLen(len)
+
+		// Increment fail attempts
+		fail++
 	}
 
 	return token, nil

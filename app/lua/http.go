@@ -47,8 +47,6 @@ func RenderTemplate(L *glua.LState) int {
 		}
 	}
 
-
-
 	// Loop all widgets
 	for _, widget := range util.Widgets.List {
 

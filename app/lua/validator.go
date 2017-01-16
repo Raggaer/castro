@@ -229,7 +229,7 @@ func Validate(L *lua.LState) int {
 	if !ok {
 
 		// Raise argument error
-		L.ArgError(1, "Unkown validator name")
+		L.ArgError(1, "Unknown validator name")
 		return 0
 	}
 
