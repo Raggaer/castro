@@ -1,16 +1,15 @@
 package lua
 
 import (
-	"github.com/astaxie/beego/session"
 	"github.com/raggaer/castro/app/models"
 	"github.com/yuin/gopher-lua"
-	"log"
 	"strconv"
+	"github.com/goincremental/negroni-sessions"
 )
 
 // SetSessionMetaTable sets the session metatable on the given
 // lua state
-func SetSessionMetaTable(luaState *lua.LState, sessionData session.Store) {
+func SetSessionMetaTable(luaState *lua.LState, sessionData sessions.Session) {
 	// Create and set session metatable
 	jwtMetaTable := luaState.NewTypeMetatable(JWTMetaTable)
 	luaState.SetGlobal(JWTMetaTable, jwtMetaTable)
@@ -26,7 +25,7 @@ func SetSessionMetaTable(luaState *lua.LState, sessionData session.Store) {
 
 // getSessionData gets the user data struct from the
 // session metatable and returns the session pointer
-func getSessionData(L *lua.LState) session.Store {
+func getSessionData(L *lua.LState) sessions.Session {
 	// Get metatable
 	meta := L.GetTypeMetatable(JWTMetaTable)
 
@@ -34,7 +33,7 @@ func getSessionData(L *lua.LState) session.Store {
 	data := L.GetField(meta, JWTTokenName).(*lua.LUserData)
 
 	// Return session struct
-	return data.Value.(session.Store)
+	return data.Value.(sessions.Session)
 }
 
 // GetLoggedAccount gets the user account if any
@@ -96,10 +95,7 @@ func DestroySession(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Destroy user session
-	if err := session.Flush(); err != nil {
-
-		L.RaiseError("Cannot destroy user session: %v", err)
-	}
+	session.Clear()
 
 	return 0
 }
@@ -141,11 +137,7 @@ func SetSessionData(L *lua.LState) int {
 		}
 
 		// Assign element as int64
-		if err := session.Set(key.String(), num); err != nil {
-
-			L.RaiseError("Cannot set session value: %v", err)
-			return 0
-		}
+		session.Set(key.String(), num)
 
 	case lua.LTBool:
 
@@ -159,11 +151,7 @@ func SetSessionData(L *lua.LState) int {
 		}
 
 		// Assign element as bool
-		if err := session.Set(key.String(), b); err != nil {
-
-			L.RaiseError("Cannot set session value: %v", err)
-			return 0
-		}
+		session.Set(key.String(), b)
 
 	case lua.LTTable:
 
@@ -171,11 +159,7 @@ func SetSessionData(L *lua.LState) int {
 		m := TableToMap(val.(*lua.LTable))
 
 		// Assign element as map
-		if err := session.Set(key.String(), m); err != nil {
-
-			L.RaiseError("Cannot set session value: %v", err)
-			return 0
-		}
+		session.Set(key.String(), m)
 	}
 
 	return 0
@@ -268,8 +252,6 @@ func GetFlash(L *lua.LState) int {
 	// Get value from the flash map
 	v, ok := session.Get(key.String()).(string)
 
-	log.Println(v, ok)
-
 	if !ok {
 		L.Push(lua.LString(""))
 		return 1
@@ -310,14 +292,8 @@ func SetFlash(L *lua.LState) int {
 		return 0
 	}
 
-	log.Println(session.SessionID())
-
 	// Set flash value
-	if err := session.Set(key.String(), content.String()); err != nil {
-
-		L.RaiseError("Cannot set session value: %v", err)
-		return 0
-	}
+	session.Set(key.String(), content.String())
 
 	return 0
 }

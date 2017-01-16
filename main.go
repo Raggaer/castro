@@ -10,6 +10,8 @@ import (
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
+	"github.com/goincremental/negroni-sessions"
+	"github.com/goincremental/negroni-sessions/cookiestore"
 )
 
 func main() {
@@ -43,16 +45,19 @@ func main() {
 		return
 	}
 
+	// Run main app entry point
+	app.Start()
+
 	// Create the middleware negroni instance with
 	// some middlewares
 	n := negroni.New(
 		newMicrotimeHandler(),
 		negroni.NewRecovery(),
-		newCsrfHandler(),
+		sessions.Sessions(
+			"my_session",
+			cookiestore.New([]byte("secret123")),
+		),
 	)
-
-	// Run main app entry point
-	app.Start()
 
 	// Use negroni logger only in development mode
 	if util.Config.IsDev() {

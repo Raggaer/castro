@@ -5,6 +5,7 @@ import (
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
 	"net/http"
+	"github.com/goincremental/negroni-sessions"
 )
 
 // LuaPage executes the given lua page
@@ -20,17 +21,8 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 	}
 
-	// Get user session
-	sess, err := util.SessionManager.SessionStart(w, r)
-
-	if err != nil {
-		w.WriteHeader(500)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	// Release session
-	defer sess.SessionRelease(w)
+	// Get session
+	session := sessions.GetSession(r)
 
 	// Get state from the pool
 	luaState := lua.Pool.Get()
@@ -50,14 +42,13 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Create validator metatable
 	lua.SetValidatorMetaTable(luaState)
 
+	lua.SetSessionMetaTable(luaState, session)
+
 	// Create database metatable
 	lua.SetDatabaseMetaTable(luaState)
 
 	// Create config metatable
 	lua.SetConfigMetaTable(luaState)
-
-	// Create session metatable
-	lua.SetSessionMetaTable(luaState, sess)
 
 	// Create HTTP metatable
 	lua.SetHTTPMetaTable(luaState, w, r)

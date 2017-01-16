@@ -2,12 +2,12 @@ package lua
 
 import (
 	"bytes"
-	"github.com/astaxie/beego/session"
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"net/http"
 	"sync"
+	"github.com/goincremental/negroni-sessions"
 )
 
 // SetHTTPMetaTable sets the http metatable on the given
@@ -132,7 +132,7 @@ func Redirect(L *glua.LState) int {
 	return 0
 }
 
-func ex(widget *util.Widget, sess session.Store, wg *sync.WaitGroup) {
+func ex(widget *util.Widget, sess sessions.Session, wg *sync.WaitGroup) {
 	// Get a new lua state
 	L := Pool.Get()
 
