@@ -1,19 +1,20 @@
 package util
 
 import (
-	"github.com/raggaer/castro/app/models"
-	"github.com/raggaer/castro/app/database"
-	"github.com/jinzhu/gorm"
-	"time"
 	"bytes"
 	"encoding/gob"
+	"github.com/jinzhu/gorm"
+	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/models"
+	"time"
 )
 
+// Session struct to represent an user session
 type Session struct {
-	Token string
+	Token  string
 	Logged bool
-	Flash map[string]string
-	Data map[string]interface{}
+	Flash  map[string]string
+	Data   map[string]interface{}
 }
 
 func init() {
@@ -41,7 +42,7 @@ func GetSession(token string) (*Session, error) {
 		data, err := Encode(
 			&Session{
 				Token: s.Token,
-				Data: make(map[string]interface{}),
+				Data:  make(map[string]interface{}),
 				Flash: make(map[string]string),
 			},
 		)
@@ -107,8 +108,8 @@ func (s *Session) Save() error {
 
 	// Populate model with session data
 	sess := models.Session{
-		Token: s.Token,
-		Data: data,
+		Token:     s.Token,
+		Data:      data,
 		UpdatedAt: time.Now(),
 	}
 

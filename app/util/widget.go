@@ -1,10 +1,10 @@
 package util
 
 import (
-	"io/ioutil"
-	"html/template"
-	"net/http"
 	glua "github.com/yuin/gopher-lua"
+	"html/template"
+	"io/ioutil"
+	"net/http"
 	"sync"
 )
 
@@ -18,14 +18,15 @@ var (
 	WidgetTemplate Tmpl
 )
 
+// WidgetList struct that holds a list of application widgets
 type WidgetList struct {
 	List []*Widget
-	rw *sync.RWMutex
+	rw   *sync.RWMutex
 }
 
 // Widget struct used to hold widget information
 type Widget struct {
-	Name string
+	Name   string
 	Result template.HTML
 }
 
