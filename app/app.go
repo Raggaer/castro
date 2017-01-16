@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"time"
 
+	"github.com/astaxie/beego/session"
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
@@ -22,7 +23,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(11)
+	wait.Add(12)
 
 	// Load application config
 	loadAppConfig(wait)
@@ -44,9 +45,23 @@ func Start() {
 	go loadWidgetList(wait)
 	go appTemplates(wait)
 	go widgetTemplates(wait)
+	go loadSessionManager(wait)
 
 	// Wait for the tasks
 	wait.Wait()
+}
+
+func loadSessionManager(wg *sync.WaitGroup) {
+	// Create session manager
+	if err := util.RegisterSessionManager(&session.ManagerConfig{
+		CookieName:     "castrosessionid",
+		CookieLifeTime: 3600,
+	}); err != nil {
+		util.Logger.Fatalf("Cannot register session manager: %v", err)
+	}
+
+	// Tell the wait group we are done
+	wg.Done()
 }
 
 func loadVocations(wg *sync.WaitGroup) {
@@ -175,7 +190,7 @@ func connectDatabase(wg *sync.WaitGroup) {
 
 func migrateDatabase(wg *sync.WaitGroup) {
 	// Migrate database models
-	if err := database.DB.AutoMigrate(&models.Article{}, &models.Session{}, &models.CastroAccount{}).Error; err != nil {
+	if err := database.DB.AutoMigrate(&models.Article{}, &models.CastroAccount{}).Error; err != nil {
 		util.Logger.Fatalf("Cannot migrate database models: %v", err)
 	}
 

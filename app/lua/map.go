@@ -5,6 +5,15 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func SetMapMetaTable(luaState *lua.LState) {
+	// Create and set map metatable
+	mapMetaTable := luaState.NewTypeMetatable(MapMetaTableName)
+	luaState.SetGlobal(MapMetaTableName, mapMetaTable)
+
+	// Set all map metatable functions
+	luaState.SetFuncs(mapMetaTable, mapMethods)
+}
+
 // HouseList returns the server house list
 // as a lua table
 func HouseList(L *lua.LState) int {

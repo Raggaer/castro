@@ -23,6 +23,15 @@ var methods = map[string]govalidator.Validator{
 	"IsInt":          govalidator.IsInt,
 }
 
+func SetValidatorMetaTable(luaState *lua.LState) {
+	// Create and set the validator metatable
+	validMetaTable := luaState.NewTypeMetatable(ValidatorMetaTableName)
+	luaState.SetGlobal(ValidatorMetaTableName, validMetaTable)
+
+	// Set all validator metatable functions
+	luaState.SetFuncs(validMetaTable, validatorMethods)
+}
+
 // ValidVocation checks if the given vocation exists
 func ValidVocation(L *lua.LState) int {
 	// Get vocation value

@@ -4,7 +4,6 @@ import (
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"io/ioutil"
-	"net/http"
 	"sync"
 )
 
@@ -61,7 +60,7 @@ func (w *WidgetList) LoadWidgetList(dir string) error {
 }
 
 // ExecuteWidget runs the given widget and returns its output
-func (w *Widget) ExecuteWidget(res http.ResponseWriter, req *http.Request, luaState *glua.LState) (*glua.LTable, error) {
+func (w *Widget) ExecuteWidget(luaState *glua.LState) (*glua.LTable, error) {
 	// Execute widget LUA page
 	if err := luaState.DoFile(
 		"widgets/" + w.Name + "/" + w.Name + ".lua",

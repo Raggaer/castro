@@ -6,6 +6,15 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func SetCryptoMetaTable(luaState *lua.LState) {
+	// Create and set the crypto metatable
+	cryptoMetaTable := luaState.NewTypeMetatable(CryptoMetaTableName)
+	luaState.SetGlobal(CryptoMetaTableName, cryptoMetaTable)
+
+	// Set all crypto metatable functions
+	luaState.SetFuncs(cryptoMetaTable, cryptoMethods)
+}
+
 // Sha1Hash returns the sha1 hash of the given string
 func Sha1Hash(L *lua.LState) int {
 	// Get string to be hashed

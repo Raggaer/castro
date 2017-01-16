@@ -5,154 +5,10 @@ import (
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
 	"net/http"
-
-	glua "github.com/yuin/gopher-lua"
-	"time"
 )
 
 // LuaPage executes the given lua page
 func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	// Get Castro cookie
-	cookie, err := r.Cookie(util.Config.Cookies.Name)
-
-	if err != nil {
-
-		// If AAC is running on development mode log error
-		if util.Config.IsDev() {
-			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
-		}
-
-		// Throw error to user
-		w.WriteHeader(500)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	// Get json web token claims from the cookie value
-	claims, expired, err := util.ParseJWToken(cookie.Value)
-
-	if err != nil {
-
-		// If AAC is running on development mode log error
-		if util.Config.IsDev() {
-			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
-		}
-
-		// Throw error to user
-		w.WriteHeader(500)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	// If token is expired set a new one
-	if expired {
-
-		// Create new unique token
-		newToken, err := util.CreateUniqueToken(35)
-
-		if err != nil {
-
-			// If AAC is running on development mode log error
-			if util.Config.IsDev() {
-				util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
-			}
-
-			// Throw error to user
-			w.WriteHeader(500)
-			w.Write([]byte("Cannot generate new JWT token"))
-			return
-		}
-
-		// Create a new jwt token
-		token, err := util.CreateJWToken(util.CastroClaims{
-			CreatedAt: time.Now().Unix(),
-			Token:     newToken,
-		})
-
-		if err != nil {
-
-			// If AAC is running on development mode log error
-			if util.Config.IsDev() {
-				util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
-			}
-
-			// Throw error to user
-			w.WriteHeader(500)
-			w.Write([]byte("Cannot generate new JWT token"))
-			return
-		}
-
-		// Set the token on the cookie
-		cookie.Value = token
-
-		// Update cookie
-		http.SetCookie(w, cookie)
-
-		// Get json web token claims from the cookie value
-		claims, expired, err = util.ParseJWToken(cookie.Value)
-
-		if err != nil {
-
-			// If AAC is running on development mode log error
-			if util.Config.IsDev() {
-				util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
-			}
-
-			// Throw error to user
-			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
-			return
-		}
-	}
-
-	sessionData, err := util.GetSession(claims.Token)
-
-	if err != nil {
-
-		// If AAC is running on development mode log error
-		if util.Config.IsDev() {
-			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
-		}
-
-		// Throw error to user
-		w.WriteHeader(500)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	// Get state from the pool
-	luaState := lua.Pool.Get()
-
-	// Defer the state put method
-	defer lua.Pool.Put(luaState)
-
-	// Get JWT metatable
-	jwtMetaTable := luaState.GetTypeMetatable(lua.JWTMetaTable)
-
-	// Set session field
-	sess := luaState.NewUserData()
-	sess.Value = sessionData
-	luaState.SetField(jwtMetaTable, lua.JWTTokenName, sess)
-
-	// Get HTTP metatable
-	httpMetaTable := luaState.GetTypeMetatable(lua.HTTPMetaTableName)
-
-	// Set HTTP method field
-	luaState.SetField(httpMetaTable, lua.HTTPMetaTableMethodName, glua.LString(r.Method))
-
-	// Set HTTP response writer field
-	httpW := luaState.NewUserData()
-	httpW.Value = w
-	luaState.SetField(httpMetaTable, lua.HTTPResponseWriterName, httpW)
-
-	// Set HTTP request field
-	httpR := luaState.NewUserData()
-	httpR.Value = r
-	luaState.SetField(httpMetaTable, lua.HTTPRequestName, httpR)
-
-	// Set GET values as LUA table
-	luaState.SetField(httpMetaTable, lua.HTTPGetValuesName, lua.URLValuesToTable(r.URL.Query()))
-
 	// Check if request is POST
 	if r.Method == http.MethodPost {
 
@@ -162,10 +18,52 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			w.Write([]byte(err.Error()))
 			return
 		}
-
-		// Set POST values as LUA table
-		luaState.SetField(httpMetaTable, lua.HTTPPostValuesName, lua.URLValuesToTable(r.PostForm))
 	}
+
+	// Get user session
+	sess, err := util.SessionManager.SessionStart(w, r)
+
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	// Release session
+	defer sess.SessionRelease(w)
+
+	// Get state from the pool
+	luaState := lua.Pool.Get()
+
+	// Defer the state put method
+	defer lua.Pool.Put(luaState)
+
+	// Create XML metatable
+	lua.SetXMLMetaTable(luaState)
+
+	// Create captcha metatable
+	lua.SetCaptchaMetaTable(luaState)
+
+	// Create crypto metatable
+	lua.SetCryptoMetaTable(luaState)
+
+	// Create validator metatable
+	lua.SetValidatorMetaTable(luaState)
+
+	// Create database metatable
+	lua.SetDatabaseMetaTable(luaState)
+
+	// Create config metatable
+	lua.SetConfigMetaTable(luaState)
+
+	// Create session metatable
+	lua.SetSessionMetaTable(luaState, sess)
+
+	// Create HTTP metatable
+	lua.SetHTTPMetaTable(luaState, w, r)
+
+	// Create map metatable
+	lua.SetMapMetaTable(luaState)
 
 	// Set LUA file name
 	pageName := ps.ByName("page")

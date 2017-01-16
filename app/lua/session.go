@@ -1,15 +1,32 @@
 package lua
 
 import (
+	"github.com/astaxie/beego/session"
 	"github.com/raggaer/castro/app/models"
-	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
+	"log"
 	"strconv"
 )
 
+// SetSessionMetaTable sets the session metatable on the given
+// lua state
+func SetSessionMetaTable(luaState *lua.LState, sessionData session.Store) {
+	// Create and set session metatable
+	jwtMetaTable := luaState.NewTypeMetatable(JWTMetaTable)
+	luaState.SetGlobal(JWTMetaTable, jwtMetaTable)
+
+	// Set all map metatable functions
+	luaState.SetFuncs(jwtMetaTable, sessionMethods)
+
+	// Set session field
+	sess := luaState.NewUserData()
+	sess.Value = sessionData
+	luaState.SetField(jwtMetaTable, JWTTokenName, sess)
+}
+
 // getSessionData gets the user data struct from the
 // session metatable and returns the session pointer
-func getSessionData(L *lua.LState) *util.Session {
+func getSessionData(L *lua.LState) session.Store {
 	// Get metatable
 	meta := L.GetTypeMetatable(JWTMetaTable)
 
@@ -17,7 +34,7 @@ func getSessionData(L *lua.LState) *util.Session {
 	data := L.GetField(meta, JWTTokenName).(*lua.LUserData)
 
 	// Return session struct
-	return data.Value.(*util.Session)
+	return data.Value.(session.Store)
 }
 
 // GetLoggedAccount gets the user account if any
@@ -26,7 +43,7 @@ func GetLoggedAccount(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Check if user is logged
-	logged, ok := session.Data["logged"].(bool)
+	logged, ok := session.Get("logged").(bool)
 
 	if !ok {
 
@@ -43,7 +60,7 @@ func GetLoggedAccount(L *lua.LState) int {
 	}
 
 	// Get logged account name
-	accountName, ok := session.Data["logged-account"].(string)
+	accountName, ok := session.Get("logged-account").(string)
 
 	if !ok {
 
@@ -79,7 +96,7 @@ func DestroySession(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Destroy user session
-	if err := session.Destroy(); err != nil {
+	if err := session.Flush(); err != nil {
 
 		L.RaiseError("Cannot destroy user session: %v", err)
 	}
@@ -110,7 +127,8 @@ func SetSessionData(L *lua.LState) int {
 	case lua.LTString:
 
 		// Assign element as string
-		session.Data[key.String()] = val.String()
+		session.Set(key.String(), val.String())
+
 	case lua.LTNumber:
 
 		// Convert element to int64
@@ -123,7 +141,12 @@ func SetSessionData(L *lua.LState) int {
 		}
 
 		// Assign element as int64
-		session.Data[key.String()] = num
+		if err := session.Set(key.String(), num); err != nil {
+
+			L.RaiseError("Cannot set session value: %v", err)
+			return 0
+		}
+
 	case lua.LTBool:
 
 		// Convert element to boolean
@@ -136,20 +159,23 @@ func SetSessionData(L *lua.LState) int {
 		}
 
 		// Assign element as bool
-		session.Data[key.String()] = b
+		if err := session.Set(key.String(), b); err != nil {
+
+			L.RaiseError("Cannot set session value: %v", err)
+			return 0
+		}
+
 	case lua.LTTable:
 
 		// Convert table to map
 		m := TableToMap(val.(*lua.LTable))
 
 		// Assign element as map
-		session.Data[key.String()] = m
-	}
+		if err := session.Set(key.String(), m); err != nil {
 
-	// Save user session
-	if err := session.Save(); err != nil {
-
-		L.RaiseError("Cannot save user session: %v", err)
+			L.RaiseError("Cannot set session value: %v", err)
+			return 0
+		}
 	}
 
 	return 0
@@ -171,14 +197,7 @@ func GetSessionData(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Get element from session
-	val, ok := session.Data[key.String()]
-
-	// Check if element exists
-	if !ok {
-
-		L.Push(lua.LNil)
-		return 1
-	}
+	val := session.Get(key.String())
 
 	// Push element depending on the Go type
 	switch val.(type) {
@@ -214,7 +233,7 @@ func IsLogged(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Try to get logged field from data
-	b, ok := session.Data["logged"].(bool)
+	b, ok := session.Get("logged").(bool)
 
 	// If element does not exist push false
 	if !ok {
@@ -247,23 +266,17 @@ func GetFlash(L *lua.LState) int {
 	}
 
 	// Get value from the flash map
-	v, ok := session.Flash[key.String()]
+	v, ok := session.Get(key.String()).(string)
 
-	// Check if flash value exists
+	log.Println(v, ok)
+
 	if !ok {
-
 		L.Push(lua.LString(""))
-		return 0
+		return 1
 	}
 
 	// Delete value from flash map
-	delete(session.Flash, key.String())
-
-	// Update session
-	if err := session.Save(); err != nil {
-
-		L.RaiseError("Cannot save user session: %v", err)
-	}
+	session.Delete(key.String())
 
 	// Push value to stack
 	L.Push(lua.LString(v))
@@ -297,13 +310,13 @@ func SetFlash(L *lua.LState) int {
 		return 0
 	}
 
+	log.Println(session.SessionID())
+
 	// Set flash value
-	session.Flash[key.String()] = content.String()
+	if err := session.Set(key.String(), content.String()); err != nil {
 
-	// Update session
-	if err := session.Save(); err != nil {
-
-		L.RaiseError("Cannot save user session: %v", err)
+		L.RaiseError("Cannot set session value: %v", err)
+		return 0
 	}
 
 	return 0

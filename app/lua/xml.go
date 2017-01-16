@@ -5,6 +5,17 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+// SetXMLMetaTable sets the xml metatable of the given
+// lua state
+func SetXMLMetaTable(luaState *lua.LState) {
+	// Create and set the xml metatable
+	xmlMetaTable := luaState.NewTypeMetatable(XMLMetaTableName)
+	luaState.SetGlobal(XMLMetaTableName, xmlMetaTable)
+
+	// Set all xml metatable functions
+	luaState.SetFuncs(xmlMetaTable, xmlMethods)
+}
+
 // GetVocationByName gets a vocation by the given name
 func GetVocationByName(L *lua.LState) int {
 	// Get name

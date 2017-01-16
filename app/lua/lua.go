@@ -105,69 +105,6 @@ func (p *luaStatePool) New() *glua.LState {
 		},
 	)
 
-	// Create and set the xml metatable
-	xmlMetaTable := luaState.NewTypeMetatable(XMLMetaTableName)
-	luaState.SetGlobal(XMLMetaTableName, xmlMetaTable)
-
-	// Set all xml metatable functions
-	luaState.SetFuncs(xmlMetaTable, xmlMethods)
-
-	// Create and set the captcha metatable
-	captchaMetaTable := luaState.NewTypeMetatable(CaptchaMetaTableName)
-	luaState.SetGlobal(CaptchaMetaTableName, captchaMetaTable)
-
-	// Set all captcha metatable functions
-	luaState.SetFuncs(captchaMetaTable, captchaMethods)
-
-	// Create and set the crypto metatable
-	cryptoMetaTable := luaState.NewTypeMetatable(CryptoMetaTableName)
-	luaState.SetGlobal(CryptoMetaTableName, cryptoMetaTable)
-
-	// Set all crypto metatable functions
-	luaState.SetFuncs(cryptoMetaTable, cryptoMethods)
-
-	// Create and set the validator metatable
-	validMetaTable := luaState.NewTypeMetatable(ValidatorMetaTableName)
-	luaState.SetGlobal(ValidatorMetaTableName, validMetaTable)
-
-	// Set all validator metatable functions
-	luaState.SetFuncs(validMetaTable, validatorMethods)
-
-	// Create and set the MySQL metatable
-	mysqlMetaTable := luaState.NewTypeMetatable(MySQLMetaTableName)
-	luaState.SetGlobal(MySQLMetaTableName, mysqlMetaTable)
-
-	// Set all MySQL metatable functions
-	luaState.SetFuncs(mysqlMetaTable, mysqlMethods)
-
-	// Create and set the json web token metatable
-	jwtMetaTable := luaState.NewTypeMetatable(JWTMetaTable)
-	luaState.SetGlobal(JWTMetaTable, jwtMetaTable)
-
-	// Set all jwt functions
-	luaState.SetFuncs(jwtMetaTable, sessionMethods)
-
-	// Create and set Config metatable
-	configMetaTable := luaState.NewTypeMetatable(ConfigMetaTableName)
-	luaState.SetGlobal(ConfigMetaTableName, configMetaTable)
-
-	// Set all Config metatable functions
-	luaState.SetFuncs(configMetaTable, configMethods)
-
-	// Create and set HTTP metatable
-	httpMetaTable := luaState.NewTypeMetatable(HTTPMetaTableName)
-	luaState.SetGlobal(HTTPMetaTableName, httpMetaTable)
-
-	// Set all HTTP metatable functions
-	luaState.SetFuncs(httpMetaTable, httpMethods)
-
-	// Create and set map metatable
-	mapMetaTable := luaState.NewTypeMetatable(MapMetaTableName)
-	luaState.SetGlobal(MapMetaTableName, mapMetaTable)
-
-	// Set all map metatable functions
-	luaState.SetFuncs(mapMetaTable, mapMethods)
-
 	// Return the lua state
 	return luaState
 }

@@ -78,6 +78,15 @@ type Configuration struct {
 	Location                            string `lua:"location"`
 }
 
+func SetConfigMetaTable(luaState *lua.LState) {
+	// Create and set Config metatable
+	configMetaTable := luaState.NewTypeMetatable(ConfigMetaTableName)
+	luaState.SetGlobal(ConfigMetaTableName, configMetaTable)
+
+	// Set all Config metatable functions
+	luaState.SetFuncs(configMetaTable, configMethods)
+}
+
 // LoadConfig loads the lua configuration file using
 // lua vm to get the global variables
 func LoadConfig(path string, dest *Configuration) error {

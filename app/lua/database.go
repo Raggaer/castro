@@ -8,6 +8,15 @@ import (
 	"time"
 )
 
+func SetDatabaseMetaTable(luaState *lua.LState) {
+	// Create and set the MySQL metatable
+	mysqlMetaTable := luaState.NewTypeMetatable(MySQLMetaTableName)
+	luaState.SetGlobal(MySQLMetaTableName, mysqlMetaTable)
+
+	// Set all MySQL metatable functions
+	luaState.SetFuncs(mysqlMetaTable, mysqlMethods)
+}
+
 // Execute executes a query without returning the result
 func Execute(L *lua.LState) int {
 	// Get query

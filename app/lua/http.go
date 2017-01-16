@@ -2,11 +2,47 @@ package lua
 
 import (
 	"bytes"
+	"github.com/astaxie/beego/session"
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"net/http"
+	"sync"
 )
+
+// SetHTTPMetaTable sets the http metatable on the given
+// lua state
+func SetHTTPMetaTable(luaState *glua.LState, w http.ResponseWriter, r *http.Request) {
+	// Create and set HTTP metatable
+	httpMetaTable := luaState.NewTypeMetatable(HTTPMetaTableName)
+	luaState.SetGlobal(HTTPMetaTableName, httpMetaTable)
+
+	// Set all HTTP metatable functions
+	luaState.SetFuncs(httpMetaTable, httpMethods)
+
+	// Set HTTP method field
+	luaState.SetField(httpMetaTable, HTTPMetaTableMethodName, glua.LString(r.Method))
+
+	// Set HTTP response writer field
+	httpW := luaState.NewUserData()
+	httpW.Value = w
+	luaState.SetField(httpMetaTable, HTTPResponseWriterName, httpW)
+
+	// Set HTTP request field
+	httpR := luaState.NewUserData()
+	httpR.Value = r
+	luaState.SetField(httpMetaTable, HTTPRequestName, httpR)
+
+	// Set GET values as LUA table
+	luaState.SetField(httpMetaTable, HTTPGetValuesName, URLValuesToTable(r.URL.Query()))
+
+	// Check if request is POST
+	if r.Method == http.MethodPost {
+
+		// Set POST values as LUA table
+		luaState.SetField(httpMetaTable, HTTPPostValuesName, URLValuesToTable(r.PostForm))
+	}
+}
 
 func getRequestAndResponseWriter(L *glua.LState) (*http.Request, http.ResponseWriter) {
 	// Get HTTP metatable
@@ -47,31 +83,23 @@ func RenderTemplate(L *glua.LState) int {
 		}
 	}
 
+	// Get session
+	sess := getSessionData(L)
+
+	// Create a wait group for the widgets
+	wg := &sync.WaitGroup{}
+
 	// Loop all widgets
 	for _, widget := range util.Widgets.List {
 
-		// Execute widget
-		result, err := widget.ExecuteWidget(w, req, L)
+		// Add a task
+		wg.Add(1)
 
-		if err != nil {
-
-			// Raise error if needed
-			L.RaiseError("Cannot execute widgets: %v", err)
-			return 0
-		}
-
-		// Hold template result
-		tmplResult := &bytes.Buffer{}
-
-		// Execute widget template
-		if err := util.WidgetTemplate.Tmpl.ExecuteTemplate(tmplResult, widget.Name+".html", TableToMap(result)); err != nil {
-			L.RaiseError("Cannot execute widgets: %v", err)
-			return 0
-		}
-
-		// Assign result to widget
-		widget.Result = template.HTML(tmplResult.String())
+		go ex(widget, sess, wg)
 	}
+
+	// Wait for the tasks
+	wg.Wait()
 
 	// Get args table as LUA value
 	tableValue := L.Get(3)
@@ -102,4 +130,61 @@ func Redirect(L *glua.LState) int {
 	http.Redirect(w, req, L.ToString(2), 302)
 
 	return 0
+}
+
+func ex(widget *util.Widget, sess session.Store, wg *sync.WaitGroup) {
+	// Get a new lua state
+	L := Pool.Get()
+
+	// Create XML metatable
+	SetXMLMetaTable(L)
+
+	// Create crypto metatable
+	SetCryptoMetaTable(L)
+
+	// Create validator metatable
+	SetValidatorMetaTable(L)
+
+	// Create database metatable
+	SetDatabaseMetaTable(L)
+
+	// Create config metatable
+	SetConfigMetaTable(L)
+
+	// Create session metatable
+	SetSessionMetaTable(L, sess)
+
+	// Create map metatable
+	SetMapMetaTable(L)
+
+	// Return state to the pool
+	defer Pool.Put(L)
+
+	// Set session metatable
+	SetSessionMetaTable(L, sess)
+
+	// Execute widget
+	result, err := widget.ExecuteWidget(L)
+
+	if err != nil {
+
+		util.Logger.Errorf("Cannot execute widget %v: %v", widget.Name, err)
+		return
+	}
+
+	// Hold template result
+	tmplResult := &bytes.Buffer{}
+
+	// Execute widget template
+	if err := util.WidgetTemplate.Tmpl.ExecuteTemplate(tmplResult, widget.Name+".html", TableToMap(result)); err != nil {
+
+		util.Logger.Errorf("Cannot execute widget %v template: %v", widget.Name, err)
+		return
+	}
+
+	// Assign result to widget
+	widget.Result = template.HTML(tmplResult.String())
+
+	// End task
+	wg.Done()
 }

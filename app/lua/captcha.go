@@ -5,6 +5,15 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+func SetCaptchaMetaTable(luaState *lua.LState) {
+	// Create and set the captcha metatable
+	captchaMetaTable := luaState.NewTypeMetatable(CaptchaMetaTableName)
+	luaState.SetGlobal(CaptchaMetaTableName, captchaMetaTable)
+
+	// Set all captcha metatable functions
+	luaState.SetFuncs(captchaMetaTable, captchaMethods)
+}
+
 // IsEnabled checks if the captcha service is enabled
 func IsEnabled(L *lua.LState) int {
 	// Push captcha status
