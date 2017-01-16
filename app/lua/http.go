@@ -1,11 +1,11 @@
 package lua
 
 import (
-	glua "github.com/yuin/gopher-lua"
-	"net/http"
-	"github.com/raggaer/castro/app/util"
 	"bytes"
+	"github.com/raggaer/castro/app/util"
+	glua "github.com/yuin/gopher-lua"
 	"html/template"
+	"net/http"
 )
 
 func getRequestAndResponseWriter(L *glua.LState) (*http.Request, http.ResponseWriter) {
@@ -64,7 +64,7 @@ func RenderTemplate(L *glua.LState) int {
 		tmplResult := &bytes.Buffer{}
 
 		// Execute widget template
-		if err := util.WidgetTemplate.Tmpl.ExecuteTemplate(tmplResult, widget.Name + ".html", TableToMap(result)); err != nil {
+		if err := util.WidgetTemplate.Tmpl.ExecuteTemplate(tmplResult, widget.Name+".html", TableToMap(result)); err != nil {
 			L.RaiseError("Cannot execute widgets: %v", err)
 			return 0
 		}

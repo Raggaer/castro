@@ -1,8 +1,8 @@
 package lua
 
 import (
-	"github.com/yuin/gopher-lua"
 	"github.com/raggaer/castro/app/util"
+	"github.com/yuin/gopher-lua"
 )
 
 // IsEnabled checks if the captcha service is enabled

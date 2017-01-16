@@ -4,13 +4,13 @@ import (
 	"reflect"
 	"strconv"
 
+	"github.com/raggaer/castro/app/models"
+	"github.com/raggaer/castro/app/util"
+	"github.com/raggaer/otmap"
 	"github.com/yuin/gopher-lua"
 	"net/url"
 	"strings"
 	"time"
-	"github.com/raggaer/castro/app/util"
-	"github.com/raggaer/otmap"
-	"github.com/raggaer/castro/app/models"
 )
 
 // GetStructVariables loads all the global variables

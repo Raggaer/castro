@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"github.com/julienschmidt/httprouter"
-	"net/http"
-	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/database"
-	"os"
+	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
+	"net/http"
+	"os"
 	"time"
 )
 
@@ -33,7 +33,7 @@ func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 
 		// Serve signature file
-		http.ServeFile(w, r, "public/img/signature/" + name + ".png")
+		http.ServeFile(w, r, "public/img/signature/"+name+".png")
 
 		return
 	}
@@ -51,5 +51,5 @@ func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Serve signature file
-	http.ServeFile(w, r, "public/img/signature/" + name + ".png")
+	http.ServeFile(w, r, "public/img/signature/"+name+".png")
 }

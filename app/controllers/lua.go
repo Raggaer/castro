@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"net/http"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
+	"net/http"
 
 	glua "github.com/yuin/gopher-lua"
 	"time"
@@ -66,7 +66,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// Create a new jwt token
 		token, err := util.CreateJWToken(util.CastroClaims{
 			CreatedAt: time.Now().Unix(),
-			Token: newToken,
+			Token:     newToken,
 		})
 
 		if err != nil {
@@ -152,7 +152,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	// Set GET values as LUA table
 	luaState.SetField(httpMetaTable, lua.HTTPGetValuesName, lua.URLValuesToTable(r.URL.Query()))
-
 
 	// Check if request is POST
 	if r.Method == http.MethodPost {

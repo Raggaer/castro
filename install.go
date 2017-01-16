@@ -5,18 +5,20 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/raggaer/castro/app/util"
 	"github.com/dchest/uniuri"
+	"github.com/raggaer/castro/app/util"
 )
 
 func isInstalled() bool {
+	// Check if file exists
 	_, err := os.Stat("config.toml")
+
 	return err == nil
 }
 
 func createConfigFile(name string) error {
 	// Create configuration file handle
-	configFile, err := os.Create("config.toml")
+	configFile, err := os.Create(name)
 	if err != nil {
 		return err
 	}
@@ -28,7 +30,7 @@ func createConfigFile(name string) error {
 		Port:     8080,
 		URL:      "localhost",
 		Datapack: "/",
-		Secret: uniuri.New(),
+		Secret:   uniuri.New(),
 		Captcha: util.CaptchaConfig{
 			Enabled: false,
 		},

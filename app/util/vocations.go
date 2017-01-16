@@ -11,15 +11,15 @@ var ServerVocationList = ServerVocations{
 
 // House holds all information about a game house
 type Vocation struct {
-	ID     int `xml:"id,attr"`
-	Name   string `xml:"name,attr"`
+	ID          int    `xml:"id,attr"`
+	Name        string `xml:"name,attr"`
 	Description string `xml:"description,attr"`
-	FromVoc int `xml:"fromvoc,attr"`
+	FromVoc     int    `xml:"fromvoc,attr"`
 }
 
 // VocationList golds the XML list of the vocation list
 type VocationList struct {
-	XMLName xml.Name `xml:"vocations"`
+	XMLName   xml.Name    `xml:"vocations"`
 	Vocations []*Vocation `xml:"vocation"`
 }
 

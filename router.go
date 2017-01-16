@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -54,19 +53,8 @@ func serveStatic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		w.Header().Add("Content-Type", "text/plain")
 	}
 
-	// Read the final asset bytes
-	final, err := ioutil.ReadFile("public/" + ps.ByName("filepath") + ".gzip")
-	if err != nil {
-		w.WriteHeader(500)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	// Set content length
-	w.Header().Add("Content-Length", strconv.Itoa(len(final)))
-
-	// Serve asset
-	w.Write(final)
+	// Serve file
+	http.ServeFile(w, r, "public/"+ps.ByName("filepath")+".gzip")
 }
 
 func gzipCompress(path string) error {

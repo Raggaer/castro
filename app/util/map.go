@@ -1,9 +1,9 @@
 package util
 
 import (
+	"encoding/xml"
 	"github.com/raggaer/otmap"
 	"io/ioutil"
-	"encoding/xml"
 )
 
 var (
@@ -39,7 +39,6 @@ type HouseList struct {
 type ServerHouses struct {
 	List *HouseList
 }
-
 
 // LoadHouses parses the server map houses
 func LoadHouses(file string, list ServerHouses) error {

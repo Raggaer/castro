@@ -102,7 +102,7 @@ func GetConfigValue(L *lua.LState) int {
 		L.Push(lua.LString(f.String()))
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		L.Push(lua.LNumber(f.Int()))
-	case  reflect.Bool:
+	case reflect.Bool:
 		L.Push(lua.LBool(f.Bool()))
 	}
 

@@ -1,9 +1,9 @@
 package lua
 
 import (
-	"github.com/yuin/gopher-lua"
 	"crypto/sha1"
 	"fmt"
+	"github.com/yuin/gopher-lua"
 )
 
 // Sha1Hash returns the sha1 hash of the given string

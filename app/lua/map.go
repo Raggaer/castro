@@ -1,8 +1,8 @@
 package lua
 
 import (
-	"github.com/yuin/gopher-lua"
 	"github.com/raggaer/castro/app/util"
+	"github.com/yuin/gopher-lua"
 )
 
 // HouseList returns the server house list

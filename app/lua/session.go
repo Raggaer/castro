@@ -1,10 +1,10 @@
 package lua
 
 import (
-	"github.com/yuin/gopher-lua"
-	"github.com/raggaer/castro/app/util"
-	"strconv"
 	"github.com/raggaer/castro/app/models"
+	"github.com/raggaer/castro/app/util"
+	"github.com/yuin/gopher-lua"
+	"strconv"
 )
 
 // getSessionData gets the user data struct from the

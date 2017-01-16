@@ -4,20 +4,20 @@ import "github.com/raggaer/castro/app/database"
 
 // Account struct used for tfs accounts
 type Account struct {
-	ID int64
-	Name string
+	ID       int64
+	Name     string
 	Premdays int
-	Email string
-	Lastday int64
+	Email    string
+	Lastday  int64
 	Creation int64
 }
 
 // CastroAccount struct used for castro custom accounts
 type CastroAccount struct {
-	ID int64
+	ID        int64
 	AccountID int64
-	Name string
-	Points int
+	Name      string
+	Points    int
 }
 
 func GetAccountByName(name string) (Account, CastroAccount, error) {

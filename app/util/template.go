@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
@@ -8,7 +9,6 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-	"fmt"
 )
 
 type Tmpl struct {

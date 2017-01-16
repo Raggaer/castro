@@ -1,24 +1,24 @@
 package util
 
 import (
+	"gopkg.in/square/go-jose.v1/json"
+	"io/ioutil"
 	"net/http"
 	"net/url"
-	"io/ioutil"
-	"gopkg.in/square/go-jose.v1/json"
 )
 
 const captchaURL = "https://www.google.com/recaptcha/api/siteverify"
 
 type captchaResponse struct {
-	Success bool `json:"success"`
+	Success  bool   `json:"success"`
 	Hostname string `json:"hostname"`
 }
 
 // CaptchaConfig struct used for the TOML configuration file
 type CaptchaConfig struct {
 	Enabled bool
-	Public string
-	Secret string
+	Public  string
+	Secret  string
 }
 
 // VerifyCaptcha checks if the given captcha answer is valid
@@ -52,7 +52,7 @@ func VerifyCaptcha(answer string) (bool, error) {
 	}
 
 	captchaResp := captchaResponse{
-		Success: false,
+		Success:  false,
 		Hostname: "",
 	}
 

@@ -14,11 +14,6 @@ var (
 	utilFormat = logging.MustStringFormatter(
 		`%{color}%{time:15:04:05} - %{level:.5s}:%{color:reset} %{message}`,
 	)
-
-	// Format for all error messages
-	errFormat = logging.MustStringFormatter(
-		`%{color}%{time:15:04:05} %{shortfunc} - %{level:.5s}:%{color:reset} %{message}`,
-	)
 )
 
 func init() {

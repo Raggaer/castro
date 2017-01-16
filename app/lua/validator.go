@@ -2,25 +2,25 @@ package lua
 
 import (
 	"github.com/asaskevich/govalidator"
+	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
 	"regexp"
-	"github.com/raggaer/castro/app/util"
 )
 
 // methods holds all the validation methods related to
 // govalidator
 var methods = map[string]govalidator.Validator{
-	"IsURL": govalidator.IsURL,
-	"IsAlpha": govalidator.IsAlpha,
+	"IsURL":          govalidator.IsURL,
+	"IsAlpha":        govalidator.IsAlpha,
 	"IsAlphanumeric": govalidator.IsAlphanumeric,
-	"IsEmail": govalidator.IsEmail,
-	"IsJson": govalidator.IsJSON,
-	"IsNull": govalidator.IsNull,
-	"IsEmpty": govalidator.IsNull,
-	"IsASCII": govalidator.IsASCII,
-	"IsUpperCase": govalidator.IsUpperCase,
-	"IsLowerCase": govalidator.IsLowerCase,
-	"IsInt": govalidator.IsInt,
+	"IsEmail":        govalidator.IsEmail,
+	"IsJson":         govalidator.IsJSON,
+	"IsNull":         govalidator.IsNull,
+	"IsEmpty":        govalidator.IsNull,
+	"IsASCII":        govalidator.IsASCII,
+	"IsUpperCase":    govalidator.IsUpperCase,
+	"IsLowerCase":    govalidator.IsLowerCase,
+	"IsInt":          govalidator.IsInt,
 }
 
 // ValidVocation checks if the given vocation exists

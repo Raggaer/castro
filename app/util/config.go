@@ -20,8 +20,8 @@ type CacheConfig struct {
 // configuration options
 type SSLConfig struct {
 	Enabled bool
-	Cert string
-	Key string
+	Cert    string
+	Key     string
 }
 
 // Configuration struct used for the main Castro

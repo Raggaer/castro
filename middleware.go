@@ -4,21 +4,21 @@ import (
 	"net/http"
 	"time"
 
-	"golang.org/x/net/context"
 	"github.com/raggaer/castro/app/util"
+	"golang.org/x/net/context"
 )
 
 // cookieHandler used to make sure all requests
 // contain a castro specific cookie
-type cookieHandler struct {}
+type cookieHandler struct{}
 
 // microtimeHandler used to record all requests
 // time spent
-type microtimeHandler struct {}
+type microtimeHandler struct{}
 
 // csrfHandler used to grant CSRF tokens
 // also checks POST requests
-type csrfHandler struct {}
+type csrfHandler struct{}
 
 // newCsrfHandler creates and returns a new csrfHandler instance
 func newCsrfHandler() *csrfHandler {
@@ -78,7 +78,7 @@ func (c *cookieHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next
 		// Create JWT
 		token, err := util.CreateJWToken(util.CastroClaims{
 			CreatedAt: time.Now().Unix(),
-			Token: newToken,
+			Token:     newToken,
 		})
 
 		if err != nil {
@@ -92,12 +92,12 @@ func (c *cookieHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next
 
 		// Cookie is not found so we create one
 		newCookie := http.Cookie{
-			Name:   util.Config.Cookies.Name,
-			MaxAge: util.Config.Cookies.MaxAge,
-			Value: token,
-			Secure: util.Config.SSL.Enabled,
+			Name:     util.Config.Cookies.Name,
+			MaxAge:   util.Config.Cookies.MaxAge,
+			Value:    token,
+			Secure:   util.Config.SSL.Enabled,
 			HttpOnly: true,
-			Path: "/",
+			Path:     "/",
 		}
 
 		// Set the new cookie into the user

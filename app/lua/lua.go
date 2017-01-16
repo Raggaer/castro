@@ -7,7 +7,7 @@ import (
 
 // luaStatePool struct used for lua state pooling
 type luaStatePool struct {
-	m sync.Mutex
+	m     sync.Mutex
 	saved []*glua.LState
 }
 
@@ -21,7 +21,7 @@ var (
 		"sha1": Sha1Hash,
 	}
 	mysqlMethods = map[string]glua.LGFunction{
-		"query": Query,
+		"query":   Query,
 		"execute": Execute,
 	}
 	configMethods = map[string]glua.LGFunction{
@@ -29,36 +29,36 @@ var (
 	}
 	httpMethods = map[string]glua.LGFunction{
 		"redirect": Redirect,
-		"render": RenderTemplate,
+		"render":   RenderTemplate,
 	}
 	validatorMethods = map[string]glua.LGFunction{
-		"validate": Validate,
-		"blackList": BlackList,
+		"validate":      Validate,
+		"blackList":     BlackList,
 		"validUsername": ValidUsername,
-		"validTown": ValidTown,
+		"validTown":     ValidTown,
 		"validVocation": ValidVocation,
 	}
 	sessionMethods = map[string]glua.LGFunction{
-		"isLogged": IsLogged,
-		"getFlash": GetFlash,
-		"setFlash": SetFlash,
-		"set": SetSessionData,
-		"get": GetSessionData,
-		"destroy": DestroySession,
+		"isLogged":      IsLogged,
+		"getFlash":      GetFlash,
+		"setFlash":      SetFlash,
+		"set":           SetSessionData,
+		"get":           GetSessionData,
+		"destroy":       DestroySession,
 		"loggedAccount": GetLoggedAccount,
 	}
 	captchaMethods = map[string]glua.LGFunction{
 		"isEnabled": IsEnabled,
-		"verify": VerifyCaptcha,
+		"verify":    VerifyCaptcha,
 	}
 	mapMethods = map[string]glua.LGFunction{
-		"houseList": HouseList,
-		"townList": TownList,
-		"townByID": GetTownByID,
+		"houseList":  HouseList,
+		"townList":   TownList,
+		"townByID":   GetTownByID,
 		"townByName": GetTownByName,
 	}
 	xmlMethods = map[string]glua.LGFunction{
-		"vocationList": VocationList,
+		"vocationList":   VocationList,
 		"vocationByName": GetVocationByName,
 	}
 )
@@ -77,8 +77,8 @@ func (p *luaStatePool) Get() *glua.LState {
 	}
 
 	// Return last state from the pool
-	x := p.saved[len(p.saved) - 1]
-	p.saved = p.saved[0:len(p.saved) - 1]
+	x := p.saved[len(p.saved)-1]
+	p.saved = p.saved[0 : len(p.saved)-1]
 	return x
 }
 

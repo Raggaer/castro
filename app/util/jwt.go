@@ -1,17 +1,17 @@
 package util
 
 import (
-	"github.com/dgrijalva/jwt-go"
-	"time"
-	"github.com/kataras/go-errors"
 	"github.com/dchest/uniuri"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/jinzhu/gorm"
+	"github.com/kataras/go-errors"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/models"
-	"github.com/jinzhu/gorm"
+	"time"
 )
 
 type CastroClaims struct {
-	Token string
+	Token     string
 	CreatedAt int64
 	jwt.StandardClaims
 }
@@ -72,8 +72,6 @@ func ParseJWToken(tkn string) (*CastroClaims, bool, error) {
 
 		return claims, false, nil
 	}
-
-
 
 	return nil, false, errors.New("Cannot get token claims")
 }

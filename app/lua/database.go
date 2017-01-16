@@ -1,10 +1,10 @@
 package lua
 
 import (
-	"github.com/yuin/gopher-lua"
-	"strings"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
+	"github.com/yuin/gopher-lua"
+	"strings"
 	"time"
 )
 
@@ -30,7 +30,7 @@ func Execute(L *lua.LState) int {
 	for i := 0; i < n; i++ {
 
 		// Append argument to slice
-		args = append(args, L.Get(3 + i).String())
+		args = append(args, L.Get(3+i).String())
 	}
 
 	// Execute the query
@@ -65,7 +65,7 @@ func Query(L *lua.LState) int {
 	for i := 0; i < n; i++ {
 
 		// Append argument to slice
-		args = append(args, L.Get(3 + i).String())
+		args = append(args, L.Get(3+i).String())
 	}
 
 	// Check if user wants to use cache
@@ -158,7 +158,7 @@ func Query(L *lua.LState) int {
 
 	// If user wants to use cache save table
 	if saveToCache {
-		util.Cache.Add(cacheKey, finalTable, time.Minute * 3)
+		util.Cache.Add(cacheKey, finalTable, time.Minute*3)
 	}
 
 	// Push the converted query to the stack

@@ -10,10 +10,10 @@ import (
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
+	"github.com/raggaer/otmap"
 	"strconv"
 	"strings"
 	"sync"
-	"github.com/raggaer/otmap"
 )
 
 // Start the main execution point for Castro
@@ -52,7 +52,7 @@ func Start() {
 func loadVocations(wg *sync.WaitGroup) {
 	// Load server vocations
 	if err := util.LoadVocations(
-		util.Config.Datapack + "/data/xml/vocations.xml",
+		util.Config.Datapack+"/data/xml/vocations.xml",
 		util.ServerVocationList,
 	); err != nil {
 		util.Logger.Fatalf("Cannot load map house list: %v", err)
@@ -65,7 +65,7 @@ func loadVocations(wg *sync.WaitGroup) {
 func loadHouses(wg *sync.WaitGroup) {
 	// Load server houses
 	if err := util.LoadHouses(
-		util.Config.Datapack + "/data/world/" + util.OTBMap.HouseFile,
+		util.Config.Datapack+"/data/world/"+util.OTBMap.HouseFile,
 		util.ServerHouseList,
 	); err != nil {
 		util.Logger.Fatalf("Cannot load map house list: %v", err)
