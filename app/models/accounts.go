@@ -20,6 +20,7 @@ type CastroAccount struct {
 	Points    int
 }
 
+// GetAccountByName gets an account and its castro account by the account name
 func GetAccountByName(name string) (Account, CastroAccount, error) {
 	// Placeholders for query values
 	account := Account{}

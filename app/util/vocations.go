@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 )
 
+// ServerVocationList holds all the vocations of the server
 var ServerVocationList = ServerVocations{
 	List: &VocationList{},
 }

@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// Signature shows a player signature or creates one
 func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Get name
 	name := ps.ByName("name")

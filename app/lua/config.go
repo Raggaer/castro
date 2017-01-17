@@ -78,6 +78,7 @@ type Configuration struct {
 	Location                            string `lua:"location"`
 }
 
+// SetConfigMetaTable sets the config metatable of the given state
 func SetConfigMetaTable(luaState *lua.LState) {
 	// Create and set Config metatable
 	configMetaTable := luaState.NewTypeMetatable(ConfigMetaTableName)
@@ -98,6 +99,7 @@ func LoadConfig(path string, dest *Configuration) error {
 	return GetStructVariables(dest, L)
 }
 
+// GetConfigValue gets a value from the config struct using reflect
 func GetConfigValue(L *lua.LState) int {
 	// Get value of Config struct
 	r := reflect.ValueOf(Config)

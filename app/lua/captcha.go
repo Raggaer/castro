@@ -5,6 +5,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+// SetCaptchaMetaTable sets the captcha metatable of the given state
 func SetCaptchaMetaTable(luaState *lua.LState) {
 	// Create and set the captcha metatable
 	captchaMetaTable := luaState.NewTypeMetatable(CaptchaMetaTableName)

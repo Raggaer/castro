@@ -30,7 +30,7 @@ func createConfigFile(name string) error {
 		Port:     8080,
 		URL:      "localhost",
 		Datapack: "/",
-		Secret:   uniuri.New(),
+		Secret:   uniuri.NewLen(35),
 		Captcha: util.CaptchaConfig{
 			Enabled: false,
 		},

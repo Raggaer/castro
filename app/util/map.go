@@ -11,7 +11,7 @@ var (
 	// using otmap library
 	OTBMap *otmap.Map
 
-	// HouseList holds the main server house list
+	// ServerHouseList holds the main server house list
 	// XML list
 	ServerHouseList = ServerHouses{
 		List: &HouseList{},

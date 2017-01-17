@@ -265,6 +265,7 @@ func VocationListToTable(list []*util.Vocation, cond func(*util.Vocation) bool) 
 	return t
 }
 
+// VocationToTable converts a vocation to a lua table
 func VocationToTable(voc *util.Vocation) *lua.LTable {
 	t := &lua.LTable{}
 

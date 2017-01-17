@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+// SetCryptoMetaTable sets the crypto metatable of the given state
 func SetCryptoMetaTable(luaState *lua.LState) {
 	// Create and set the crypto metatable
 	cryptoMetaTable := luaState.NewTypeMetatable(CryptoMetaTableName)

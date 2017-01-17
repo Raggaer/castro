@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/goincremental/negroni-sessions"
+	"github.com/goincremental/negroni-sessions/cookiestore"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app"
 	"github.com/raggaer/castro/app/controllers"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
-	"github.com/goincremental/negroni-sessions"
-	"github.com/goincremental/negroni-sessions/cookiestore"
 )
 
 func main() {
@@ -54,8 +54,8 @@ func main() {
 		newMicrotimeHandler(),
 		negroni.NewRecovery(),
 		sessions.Sessions(
-			"my_session",
-			cookiestore.New([]byte("secret123")),
+			util.Config.Cookies.Name,
+			cookiestore.New([]byte(util.Config.Secret)),
 		),
 	)
 

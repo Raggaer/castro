@@ -23,6 +23,7 @@ var methods = map[string]govalidator.Validator{
 	"IsInt":          govalidator.IsInt,
 }
 
+// SetValidatorMetaTable sets the validator metatable of the given state
 func SetValidatorMetaTable(luaState *lua.LState) {
 	// Create and set the validator metatable
 	validMetaTable := luaState.NewTypeMetatable(ValidatorMetaTableName)

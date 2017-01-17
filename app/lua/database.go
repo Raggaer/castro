@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// SetDatabaseMetaTable sets the database metatable of the given state
 func SetDatabaseMetaTable(luaState *lua.LState) {
 	// Create and set the MySQL metatable
 	mysqlMetaTable := luaState.NewTypeMetatable(MySQLMetaTableName)
