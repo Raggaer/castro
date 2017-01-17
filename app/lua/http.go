@@ -164,9 +164,6 @@ func ex(widget *util.Widget, sess sessions.Session, wg *sync.WaitGroup) {
 	// Return state to the pool
 	defer Pool.Put(L)
 
-	// Set session metatable
-	SetSessionMetaTable(L, sess)
-
 	// Execute widget
 	result, err := widget.ExecuteWidget(L)
 
