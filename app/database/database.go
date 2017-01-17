@@ -22,5 +22,6 @@ func Open(username, password, db string) (*gorm.DB, error) {
 		password,
 		db,
 	))
+
 	return databaseHandle, err
 }
