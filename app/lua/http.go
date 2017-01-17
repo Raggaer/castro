@@ -2,12 +2,12 @@ package lua
 
 import (
 	"bytes"
+	"github.com/goincremental/negroni-sessions"
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"net/http"
 	"sync"
-	"github.com/goincremental/negroni-sessions"
 )
 
 // SetHTTPMetaTable sets the http metatable on the given
@@ -95,6 +95,7 @@ func RenderTemplate(L *glua.LState) int {
 		// Add a task
 		wg.Add(1)
 
+		// Execute widget to get the result
 		go ex(widget, sess, wg)
 	}
 
@@ -133,6 +134,9 @@ func Redirect(L *glua.LState) int {
 }
 
 func ex(widget *util.Widget, sess sessions.Session, wg *sync.WaitGroup) {
+	// End task
+	defer wg.Done()
+
 	// Get a new lua state
 	L := Pool.Get()
 
@@ -168,7 +172,9 @@ func ex(widget *util.Widget, sess sessions.Session, wg *sync.WaitGroup) {
 
 	if err != nil {
 
-		util.Logger.Errorf("Cannot execute widget %v: %v", widget.Name, err)
+		widget.Result = template.HTML(
+			"Cannot execute widget <b>" + widget.Name + "</b>: " + err.Error(),
+		)
 		return
 	}
 
@@ -178,13 +184,12 @@ func ex(widget *util.Widget, sess sessions.Session, wg *sync.WaitGroup) {
 	// Execute widget template
 	if err := util.WidgetTemplate.Tmpl.ExecuteTemplate(tmplResult, widget.Name+".html", TableToMap(result)); err != nil {
 
-		util.Logger.Errorf("Cannot execute widget %v template: %v", widget.Name, err)
+		widget.Result = template.HTML(
+			"Cannot execute widget <b>" + widget.Name + "</b>: " + err.Error(),
+		)
 		return
 	}
 
 	// Assign result to widget
 	widget.Result = template.HTML(tmplResult.String())
-
-	// End task
-	wg.Done()
 }

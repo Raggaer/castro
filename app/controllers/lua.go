@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"github.com/goincremental/negroni-sessions"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
 	"net/http"
-	"github.com/goincremental/negroni-sessions"
+	"path/filepath"
 )
 
 // LuaPage executes the given lua page
@@ -65,7 +66,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Execute the requested page
-	if err := luaState.DoFile("pages/" + pageName + "/" + r.Method + ".lua"); err != nil {
+	if err := luaState.DoFile(filepath.Join("pages", pageName, r.Method+".lua")); err != nil {
 
 		// Set error header
 		w.WriteHeader(500)
