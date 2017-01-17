@@ -5,6 +5,7 @@ import (
 	"github.com/yuin/gopher-lua"
 )
 
+// SetMapMetaTable sets a map metatable for the given state
 func SetMapMetaTable(luaState *lua.LState) {
 	// Create and set map metatable
 	mapMetaTable := luaState.NewTypeMetatable(MapMetaTableName)
