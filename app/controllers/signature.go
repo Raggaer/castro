@@ -7,6 +7,7 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -20,6 +21,7 @@ func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	// Get player information
 	if err := database.DB.Find(&player, "name = ?", name).Error; err != nil {
+		util.Logger.Error(err)
 		return
 	}
 
@@ -30,6 +32,7 @@ func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Create signature image
 		if err := util.CreatePlayerSignature(player); err != nil {
+			util.Logger.Error(err)
 			return
 		}
 
@@ -47,10 +50,11 @@ func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Create signature image
 		if err := util.CreatePlayerSignature(player); err != nil {
+			util.Logger.Error(err)
 			return
 		}
 	}
 
 	// Serve signature file
-	http.ServeFile(w, r, "public/img/signature/"+name+".png")
+	http.ServeFile(w, r, filepath.Join("public", "img", "signature", name+".png"))
 }

@@ -10,11 +10,12 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/util"
+	"path/filepath"
 )
 
 func serveStatic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Check if the asset already has gzip compression
-	stats, err := os.Stat("public/" + ps.ByName("filepath") + ".gzip")
+	stats, err := os.Stat(filepath.Join("public", ps.ByName("filepath")))
 	if err != nil {
 		if err := gzipCompress("public/" + ps.ByName("filepath")); err != nil {
 			w.WriteHeader(500)
@@ -54,7 +55,7 @@ func serveStatic(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Serve file
-	http.ServeFile(w, r, "public/"+ps.ByName("filepath")+".gzip")
+	http.ServeFile(w, r, filepath.Join("public", ps.ByName("filepath")+".gzip"))
 }
 
 func gzipCompress(path string) error {
