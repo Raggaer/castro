@@ -61,6 +61,9 @@ var (
 		"vocationList":   VocationList,
 		"vocationByName": GetVocationByName,
 	}
+	mailMethods = map[string]glua.LGFunction{
+		"send": SendMail,
+	}
 )
 
 // Get retrieves a lua state from the pool

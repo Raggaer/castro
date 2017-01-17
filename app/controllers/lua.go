@@ -57,6 +57,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Create map metatable
 	lua.SetMapMetaTable(luaState)
 
+	// Create mail metatable
+	lua.SetMailMetaTable(luaState)
+
 	// Set LUA file name
 	pageName := ps.ByName("page")
 

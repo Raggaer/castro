@@ -24,6 +24,15 @@ type SSLConfig struct {
 	Key     string
 }
 
+// MailConfig struct used for the mail
+// configuration options
+type MailConfig struct {
+	Server   string
+	Port     int
+	Username string
+	Password string
+}
+
 // Configuration struct used for the main Castro
 // config file TOML file
 type Configuration struct {
@@ -32,6 +41,7 @@ type Configuration struct {
 	URL      string
 	Datapack string
 	Secret   string
+	Mail     MailConfig
 	Captcha  CaptchaConfig
 	SSL      SSLConfig
 	Cookies  CookieConfig
