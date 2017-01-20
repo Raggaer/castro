@@ -22,6 +22,8 @@ func createConfigFile(name string) error {
 	if err != nil {
 		return err
 	}
+
+	// Close file handle
 	defer configFile.Close()
 
 	// Encode the given configuration struct into the file

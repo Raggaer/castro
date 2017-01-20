@@ -4,9 +4,6 @@ import (
 	"github.com/raggaer/castro/app/database"
 )
 
-// Tables holds all the server tables
-var Tables []*Table
-
 // Table struct contains all the server tables
 type Table struct {
 	Database      string

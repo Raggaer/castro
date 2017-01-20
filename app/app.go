@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/patrickmn/go-cache"
-	"github.com/raggaer/castro/app/admin"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/models"
@@ -23,7 +22,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(12)
+	wait.Add(11)
 
 	// Load application config
 	loadAppConfig(wait)
@@ -37,7 +36,6 @@ func Start() {
 		loadMap(wait)
 		go loadHouses(wait)
 		go loadVocations(wait)
-		go loadDatabaseInformation(wait)
 	}(wait)
 
 	// Create application cache
@@ -49,21 +47,6 @@ func Start() {
 
 	// Wait for the tasks
 	wait.Wait()
-}
-
-func loadDatabaseInformation(wg *sync.WaitGroup) {
-	// Fetch database information
-	list, err := admin.GetDatabaseInformation(lua.Config.MySQLDatabase)
-
-	if err != nil {
-		util.Logger.Fatalf("Cannot fetch database information: %v", err)
-	}
-
-	// Assign global variable
-	admin.Tables = list
-
-	// End task
-	wg.Done()
 }
 
 func loadVocations(wg *sync.WaitGroup) {
