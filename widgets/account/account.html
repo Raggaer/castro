@@ -3,6 +3,7 @@
     <h5>My account</h5>
     <hr class="white-hr">
     <form method="POST" action="{{ url "subtopic" "logout" }}">
+    <input type="hidden" name="_csrf" value="{{ ._csrf }}">
         <button type="submit" class="btn btn-sm btn-danger">Logout</button>
         <button type="button" class="btn btn-sm btn-primary">{{ .account.castro.points }} Points</button>
     </form>
@@ -15,6 +16,7 @@
     <h5>Login</h5>
     <hr class="white-hr">
     <form method="POST" action="{{ url "subtopic" "login" }}">
+    <input type="hidden" name="_csrf" value="{{ ._csrf }}">
         <div class="form-group">
             <input type="text" class="form-control" id="input-account-name" name="account-name" placeholder="Account name">
         </div>

@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"github.com/raggaer/castro/app/models"
 	"html/template"
 	"io"
 	"net/http"
@@ -82,6 +83,17 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 		w.Write([]byte("Cannot read microtime value"))
 		return
 	}
+
+	// Get csrf token
+	tkn, ok := req.Context().Value("csrf-token").(*models.CsrfToken)
+	if !ok {
+		w.WriteHeader(500)
+		w.Write([]byte("Cannot read csrf token value"))
+		return
+	}
+
+	// Set token value
+	args["_csrf"] = tkn.Token
 
 	// Set microtime value
 	args["microtime"] = fmt.Sprintf("%9.4f seconds", time.Since(microtime).Seconds())

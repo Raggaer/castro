@@ -185,6 +185,14 @@ func migrateDatabase(wg *sync.WaitGroup) {
 
 func templateFuncs() template.FuncMap {
 	return template.FuncMap{
+		"vocation": func(voc int64) string {
+			for _, v := range util.ServerVocationList.List.Vocations {
+				if v.ID == int(voc) {
+					return v.Name
+				}
+			}
+			return ""
+		},
 		"isDev": func() bool {
 			return util.Config.IsDev()
 		},

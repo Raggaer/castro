@@ -1,5 +1,33 @@
 {{ template "header.html" }}
-<h3>My account dashboard</h3>
+<h3>My Characters</h3>
 <hr>
-
+<table class="table table-striped">
+    <thead class="thead-inverse">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Vocation</th>
+        <th>Level</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ range $index, $element := .list }}
+    <tr>
+        <th scope="row">{{ $index }}</th>
+        <td>
+            <a href="">{{ $element.name }}</a>
+        </td>
+        <td>{{ vocation $element.vocation }}</td>
+        <td>{{ $element.level }}</td>
+        <td>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-secondary">View</button>
+            </div>
+        </td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
 {{ template "footer.html" . }} 

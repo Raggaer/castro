@@ -12,6 +12,7 @@
 </div>
 {{ end }}
 <form method="POST">
+    <input type="hidden" name="_csrf" value="{{ ._csrf }}">
     <div class="form-group">
         <label for="input-account-name">Account name</label>
         <input type="text" class="form-control" id="input-account-name" name="account-name" placeholder="Account name">

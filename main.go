@@ -4,17 +4,22 @@ import (
 	"fmt"
 	"net/http"
 
+	"encoding/gob"
 	"github.com/goincremental/negroni-sessions"
 	"github.com/goincremental/negroni-sessions/cookiestore"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app"
 	"github.com/raggaer/castro/app/controllers"
 	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
 )
 
 func main() {
+	// Register gob data
+	gob.Register(&models.CsrfToken{})
+
 	// Show credits and application name
 	fmt.Println(`
 			Castro - Open Tibia automatic account creator
@@ -57,6 +62,7 @@ func main() {
 			util.Config.Cookies.Name,
 			cookiestore.New([]byte(util.Config.Secret)),
 		),
+		newCsrfHandler(),
 	)
 
 	// Use negroni logger only in development mode
