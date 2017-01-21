@@ -76,12 +76,13 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 
 	// Check if token needs to be refreshed
 	if time.Now().Before(tkn.At) {
+
 		tkn.Token = uniuri.New()
 		tkn.At = time.Now()
-	}
 
-	// Set session value
-	session.Set("csrf-token", tkn)
+		// Set session value
+		session.Set("csrf-token", tkn)
+	}
 
 	// Set token on the request context
 	ctx := context.WithValue(req.Context(), "csrf-token", tkn)

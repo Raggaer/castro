@@ -7,7 +7,7 @@
 </div>
 {{ end }}
 <form method="POST">
-    <input type="hidden" name="_csrf" value="{{ ._csrf }}">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
     <div class="form-group">
         <label for="input-character-name">Character name</label>
         <input type="text" class="form-control" id="input-character-name" name="character-name" placeholder="Character name">

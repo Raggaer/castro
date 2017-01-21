@@ -3,6 +3,7 @@ package lua
 import (
 	"bytes"
 	"github.com/goincremental/negroni-sessions"
+	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
@@ -83,6 +84,13 @@ func RenderTemplate(L *glua.LState) int {
 		}
 	}
 
+	// Get csrf token
+	tkn, ok := req.Context().Value("csrf-token").(*models.CsrfToken)
+	if !ok {
+		L.RaiseError("Cannot get CSRF token")
+		return 0
+	}
+
 	// Get session
 	sess := getSessionData(L)
 
@@ -96,7 +104,7 @@ func RenderTemplate(L *glua.LState) int {
 		wg.Add(1)
 
 		// Execute widget to get the result
-		go ex(widget, sess, wg)
+		go ex(widget, sess, wg, tkn.Token)
 	}
 
 	// Wait for the tasks
@@ -133,7 +141,7 @@ func Redirect(L *glua.LState) int {
 	return 0
 }
 
-func ex(widget *util.Widget, sess sessions.Session, wg *sync.WaitGroup) {
+func ex(widget *util.Widget, sess sessions.Session, wg *sync.WaitGroup, tkn string) {
 	// End task
 	defer wg.Done()
 
@@ -178,8 +186,11 @@ func ex(widget *util.Widget, sess sessions.Session, wg *sync.WaitGroup) {
 	// Hold template result
 	tmplResult := &bytes.Buffer{}
 
+	args := TableToMap(result)
+	args["csrfToken"] = tkn
+
 	// Execute widget template
-	if err := util.WidgetTemplate.Tmpl.ExecuteTemplate(tmplResult, widget.Name+".html", TableToMap(result)); err != nil {
+	if err := util.WidgetTemplate.Tmpl.ExecuteTemplate(tmplResult, widget.Name+".html", args); err != nil {
 
 		widget.Result = template.HTML(
 			"Cannot execute widget <b>" + widget.Name + "</b>: " + err.Error(),
