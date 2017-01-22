@@ -3,6 +3,12 @@ if not session:isLogged() then
     return
 end
 
+if http.postValues["character-name"]:len() < 5 or http.postValues["character-name"]:len() > 12 then
+    session:setFlash("validation-error", "Invalid character name. Names can only have 5 to 12 characters")
+    http:redirect("/subtopic/createchar")
+    return
+end
+
 if not validator:validVocation(http.postValues["character-vocation"], true) then
     session:setFlash("validation-error", "Invalid character vocation. Vocation not found")
     http:redirect("/subtopic/createchar")

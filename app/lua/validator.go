@@ -196,7 +196,7 @@ func ValidUsername(L *lua.LState) int {
 	}
 
 	// Check against regexp
-	match, err := regexp.MatchString("^[a-zA-Z ]*$", v.String())
+	match, err := regexp.MatchString("^[a-zA-Z_ ]+$", v.String())
 
 	if err != nil {
 		L.RaiseError("Cannot compare string against regexp: %v", err)

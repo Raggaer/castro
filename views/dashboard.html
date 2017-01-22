@@ -1,6 +1,7 @@
 {{ template "header.html" }}
 <h3>My Characters</h3>
 <hr>
+{{ .list }}
 <table class="table table-striped">
     <thead class="thead-inverse">
     <tr>
@@ -22,7 +23,7 @@
         <td>{{ $element.level }}</td>
         <td>
             <form method="post">
-                <input type="hidden" name="_csrf" value="{{ ._csrf }}">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                     <button type="button" class="btn btn-sm btn-secondary">View</button>
@@ -33,4 +34,4 @@
     {{ end }}
     </tbody>
 </table>
-{{ template "footer.html" . }} 
+{{ template "footer.html" . }}
