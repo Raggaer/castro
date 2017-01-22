@@ -1,7 +1,6 @@
 {{ template "header.html" }}
 <h3>My Characters</h3>
 <hr>
-{{ .list }}
 <table class="table table-striped">
     <thead class="thead-inverse">
     <tr>
@@ -13,7 +12,7 @@
     </tr>
     </thead>
     <tbody>
-    {{ range $index, $element := .list }}
+    {{ range $index, $element := queryResults .list }}
     <tr>
         <th scope="row">{{ $index }}</th>
         <td>
