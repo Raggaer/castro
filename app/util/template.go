@@ -93,7 +93,7 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 	}
 
 	// Set token value
-	args["_csrf"] = tkn.Token
+	args["csrfToken"] = tkn.Token
 
 	// Set microtime value
 	args["microtime"] = fmt.Sprintf("%9.4f seconds", time.Since(microtime).Seconds())

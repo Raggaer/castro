@@ -43,6 +43,11 @@ func Execute(L *lua.LState) int {
 		args = append(args, L.Get(3+i).String())
 	}
 
+	// Log query on development mode
+	if util.Config.IsDev() {
+		util.Logger.Infof("execute: "+strings.Replace(query.String(), "?", "%v", -1), args...)
+	}
+
 	// Execute the query
 	if err := database.DB.Exec(query.String(), args...).Error; err != nil {
 
@@ -106,6 +111,11 @@ func Query(L *lua.LState) int {
 		}
 
 		saveToCache = true
+	}
+
+	// Log query on development mode
+	if util.Config.IsDev() {
+		util.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
 	// Execute query and get rows
