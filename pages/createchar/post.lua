@@ -36,3 +36,7 @@ end
 account = session:loggedAccount()
 
 db:execute("INSERT INTO players (name, account_id, vocation, town_id, conditions) VALUES (?, ?, ?, ?, '')", http.postValues["character-name"], account.id, xml:vocationByName(http.postValues["character-vocation"]).id, otbm:townByName(http.postValues["character-town"]).id)
+
+session:setFlash("success", "Character created")
+
+http:redirect("/subtopic/dashboard")

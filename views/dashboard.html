@@ -1,4 +1,9 @@
 {{ template "header.html" }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
 <h3>My Characters</h3>
 <hr>
 <table class="table table-striped">
