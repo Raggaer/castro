@@ -26,7 +26,7 @@ func newCsrfHandler() *csrfHandler {
 }
 
 func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
-	if !strings.HasPrefix(req.RequestURI, "/subtopic/") {
+	if req.RequestURI != "/" && !strings.HasPrefix(req.RequestURI, "/subtopic/") {
 		next(w, req)
 		return
 	}
