@@ -69,6 +69,12 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 			Logger.Error(err.Error())
 			return
 		}
+
+		// Reload all templates
+		if err := LoadTemplates("pages/", &t); err != nil {
+			Logger.Error(err.Error())
+			return
+		}
 	}
 
 	// Check if args is a valid map
