@@ -7,6 +7,16 @@ import (
 	"time"
 )
 
+// SetCacheMetaTable sets the cache metatable of the given state
+func SetCacheMetaTable(luaState *lua.LState) {
+	// Create and set the captcha metatable
+	cacheMetaTable := luaState.NewTypeMetatable(CacheMetaTableName)
+	luaState.SetGlobal(CacheMetaTableName, cacheMetaTable)
+
+	// Set all captcha metatable functions
+	luaState.SetFuncs(cacheMetaTable, cacheMethods)
+}
+
 // GetCacheValue retrieves a value from the application cache
 func GetCacheValue(L *lua.LState) int {
 	// Get key
@@ -71,7 +81,15 @@ func SetCacheValue(L *lua.LState) int {
 
 	// Check for valid time string
 	if t.Type() != lua.LTString {
-		L.ArgError(3, "Invalid time foramt. Unexpected format")
+		L.ArgError(3, "Invalid time format. Unexpected format")
+		return 0
+	}
+
+	// Parse time
+	dur, err := time.ParseDuration(t.String())
+
+	if err != nil {
+		L.ArgError(3, "Invalid time format. Unexpected format")
 		return 0
 	}
 
@@ -80,7 +98,7 @@ func SetCacheValue(L *lua.LState) int {
 
 	case lua.LTString:
 
-		util.Cache.Set(key, val.String(), time.Hour)
+		util.Cache.Set(key.String(), val.String(), dur)
 	case lua.LTNumber:
 
 		// Convert number to float64
@@ -92,7 +110,7 @@ func SetCacheValue(L *lua.LState) int {
 		}
 
 		// Set cache value
-		util.Cache.Set(key, f, time.Hour)
+		util.Cache.Set(key.String(), f, dur)
 
 	case lua.LTBool:
 
@@ -105,7 +123,7 @@ func SetCacheValue(L *lua.LState) int {
 		}
 
 		// Set cache value
-		util.Cache.Set(key, b, time.Hour)
+		util.Cache.Set(key.String(), b, dur)
 
 	case lua.LTTable:
 
@@ -113,7 +131,7 @@ func SetCacheValue(L *lua.LState) int {
 		m := TableToMap(val.(*lua.LTable))
 
 		// Set cache value
-		util.Cache.Set(key, m, time.Hour)
+		util.Cache.Set(key.String(), m, dur)
 	}
 
 	return 0

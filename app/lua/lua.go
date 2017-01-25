@@ -64,6 +64,10 @@ var (
 	mailMethods = map[string]glua.LGFunction{
 		"send": SendMail,
 	}
+	cacheMethods = map[string]glua.LGFunction{
+		"get": GetCacheValue,
+		"set": SetCacheValue,
+	}
 )
 
 // Get retrieves a lua state from the pool

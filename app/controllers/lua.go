@@ -43,6 +43,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Create validator metatable
 	lua.SetValidatorMetaTable(luaState)
 
+	// Create session metatable
 	lua.SetSessionMetaTable(luaState, session)
 
 	// Create database metatable
@@ -59,6 +60,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	// Create mail metatable
 	lua.SetMailMetaTable(luaState)
+
+	// Create cache metatable
+	lua.SetCacheMetaTable(luaState)
 
 	// Set LUA file name
 	pageName := ps.ByName("page")

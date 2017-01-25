@@ -1,6 +1,7 @@
 package lua
 
 const (
+	CacheMetaTableName      = "cache"
 	MailMetaTableName       = "mail"
 	XMLMetaTableName        = "xml"
 	MapMetaTableName        = "otbm"
