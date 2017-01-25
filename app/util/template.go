@@ -54,6 +54,7 @@ func (t *Tmpl) FuncMap(f template.FuncMap) {
 	t.Tmpl.Funcs(f)
 }
 
+// RenderTemplate render the given template passing some values and loading all templates if in development mode
 func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name string, args map[string]interface{}) {
 	// Check if app is running on dev mode
 	if Config.IsDev() {
