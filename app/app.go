@@ -185,7 +185,7 @@ func migrateDatabase(wg *sync.WaitGroup) {
 
 func templateFuncs() template.FuncMap {
 	return template.FuncMap{
-		"vocation": func(voc int64) string {
+		"vocation": func(voc float64) string {
 			for _, v := range util.ServerVocationList.List.Vocations {
 				if v.ID == int(voc) {
 					return v.Name
@@ -214,8 +214,8 @@ func templateFuncs() template.FuncMap {
 			}
 			return r
 		},
-		"unixToDate": func(m int64) template.HTML {
-			date := time.Unix(m, 0)
+		"unixToDate": func(m float64) template.HTML {
+			date := time.Unix(int64(m), 0)
 			return template.HTML(
 				date.Format("2006 - Mon Jan 2 15:04:05"),
 			)

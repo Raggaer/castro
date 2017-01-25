@@ -1,10 +1,10 @@
 package lua
 
 import (
+	"github.com/goincremental/negroni-sessions"
 	"github.com/raggaer/castro/app/models"
 	"github.com/yuin/gopher-lua"
 	"strconv"
-	"github.com/goincremental/negroni-sessions"
 )
 
 // SetSessionMetaTable sets the session metatable on the given
@@ -127,8 +127,8 @@ func SetSessionData(L *lua.LState) int {
 
 	case lua.LTNumber:
 
-		// Convert element to int64
-		num, err := strconv.ParseInt(val.String(), 10, 64)
+		// Convert element to flaot64
+		num, err := strconv.ParseFloat(val.String(), 64)
 
 		if err != nil {
 
@@ -136,7 +136,7 @@ func SetSessionData(L *lua.LState) int {
 			return 0
 		}
 
-		// Assign element as int64
+		// Assign element as flaot64
 		session.Set(key.String(), num)
 
 	case lua.LTBool:

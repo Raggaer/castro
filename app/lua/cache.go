@@ -1,0 +1,120 @@
+package lua
+
+import (
+	"github.com/raggaer/castro/app/util"
+	"github.com/yuin/gopher-lua"
+	"strconv"
+	"time"
+)
+
+// GetCacheValue retrieves a value from the application cache
+func GetCacheValue(L *lua.LState) int {
+	// Get key
+	key := L.Get(2)
+
+	// Check valid key
+	if key.Type() != lua.LTString {
+		L.ArgError(1, "Invalid cache key type. Expected string")
+		return 0
+	}
+
+	// Get value from cache
+	v, found := util.Cache.Get(key.String())
+
+	// If there is no value return error
+	if !found {
+		L.ArgError(1, "No cache value found using the given key")
+		return 0
+	}
+
+	// Switch cache value type
+	switch v.(type) {
+
+	case string:
+		L.Push(lua.LString(v.(string)))
+	case float64:
+		L.Push(lua.LNumber(v.(float64)))
+	case bool:
+		L.Push(lua.LBool(v.(bool)))
+	case map[string]interface{}:
+		L.Push(MapToTable(v.(map[string]interface{})))
+	}
+
+	return 1
+}
+
+// SetCacheValue sets a cache value with the given key and the given duration string
+// A duration string is a possibly signed sequence of decimal numbers
+// Each with optional fraction and a unit suffix, such as "300ms", "-1.5h" or "2h45m"
+// Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h"
+func SetCacheValue(L *lua.LState) int {
+	// Get key
+	key := L.Get(2)
+
+	// Check valid key
+	if key.Type() != lua.LTString {
+		L.ArgError(1, "Invalid cache key type. Expected string")
+		return 0
+	}
+
+	// Get value
+	val := L.Get(3)
+
+	// Check for invalid lua value
+	if val.Type() == lua.LTNil {
+		L.ArgError(2, "Invalid cache value type")
+		return 0
+	}
+
+	// Get time value
+	t := L.Get(4)
+
+	// Check for valid time string
+	if t.Type() != lua.LTString {
+		L.ArgError(3, "Invalid time foramt. Unexpected format")
+		return 0
+	}
+
+	// Switch cache value type
+	switch val.Type() {
+
+	case lua.LTString:
+
+		util.Cache.Set(key, val.String(), time.Hour)
+	case lua.LTNumber:
+
+		// Convert number to float64
+		f, err := strconv.ParseFloat(val.String(), 64)
+
+		if err != nil {
+			L.ArgError(2, "Invalid cache value type. Expected number")
+			return 0
+		}
+
+		// Set cache value
+		util.Cache.Set(key, f, time.Hour)
+
+	case lua.LTBool:
+
+		// Convert bool to go bool
+		b, err := strconv.ParseBool(val.String())
+
+		if err != nil {
+			L.ArgError(2, "Invalid cache value type. Expected boolean")
+			return 0
+		}
+
+		// Set cache value
+		util.Cache.Set(key, b, time.Hour)
+
+	case lua.LTTable:
+
+		// Convert table to map
+		m := TableToMap(val.(*lua.LTable))
+
+		// Set cache value
+		util.Cache.Set(key, m, time.Hour)
+	}
+
+	return 0
+}

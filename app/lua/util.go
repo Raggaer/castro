@@ -87,23 +87,36 @@ func MapToTable(m map[string]interface{}) *lua.LTable {
 
 // TableToMap converts a LUA table to a Go map[string]interface{}
 func TableToMap(table *lua.LTable) map[string]interface{} {
+	// Check for valid table
 	if table == nil {
 		return nil
 	}
+
+	// Data holder
 	m := make(map[string]interface{})
+
+	// Loop lua table
 	table.ForEach(func(i lua.LValue, v lua.LValue) {
+
+		// Switch value type
 		switch v.Type() {
 		case lua.LTTable:
+
+			// Convert table to map
 			n := TableToMap(v.(*lua.LTable))
 			m[i.String()] = n
 		case lua.LTNumber:
-			num, err := strconv.ParseInt(v.String(), 10, 64)
+
+			// Convert to number to float64
+			num, err := strconv.ParseFloat(v.String(), 64)
 			if err != nil {
 				m[i.String()] = err.Error()
 			} else {
 				m[i.String()] = num
 			}
 		case lua.LTBool:
+
+			// Convert value to boolean
 			b, err := strconv.ParseBool(v.String())
 			if err != nil {
 				m[i.String()] = err.Error()
