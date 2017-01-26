@@ -22,13 +22,13 @@ const (
 	// ValidatorMetaTableName the name of the validator metatable
 	ValidatorMetaTableName = "validator"
 
-	// JWTMetaTable the name of the session metatable
+	// SessionMetaTable the name of the session metatable
 	SessionMetaTable = "session"
 
 	// SessionInstanceName the field name of the session instance
 	SessionInstanceName = "__s"
 
-	// MySQLMetaTableName the name of the database metatable
+	// DatabaseMetaTableName the name of the database metatable
 	DatabaseMetaTableName = "db"
 
 	// ConfigMetaTableName the name of the config metatable
