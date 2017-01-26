@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// DebugMetaTableName the name of the debug metatable
+	DebugMetaTableName = "debug"
+
 	// CacheMetaTableName the name of the cache metatable
 	CacheMetaTableName = "cache"
 

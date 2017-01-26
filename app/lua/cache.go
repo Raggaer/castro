@@ -9,7 +9,7 @@ import (
 
 // SetCacheMetaTable sets the cache metatable of the given state
 func SetCacheMetaTable(luaState *lua.LState) {
-	// Create and set the captcha metatable
+	// Create and set the cache metatable
 	cacheMetaTable := luaState.NewTypeMetatable(CacheMetaTableName)
 	luaState.SetGlobal(CacheMetaTableName, cacheMetaTable)
 

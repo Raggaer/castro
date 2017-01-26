@@ -71,6 +71,9 @@ var (
 		"get": GetCacheValue,
 		"set": SetCacheValue,
 	}
+	debugMethods = map[string]glua.LGFunction{
+		"value": DebugValue,
+	}
 )
 
 // Get retrieves a lua state from the pool
