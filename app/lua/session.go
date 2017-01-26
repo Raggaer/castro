@@ -11,8 +11,8 @@ import (
 // lua state
 func SetSessionMetaTable(luaState *lua.LState, sessionData sessions.Session) {
 	// Create and set session metatable
-	jwtMetaTable := luaState.NewTypeMetatable(JWTMetaTable)
-	luaState.SetGlobal(JWTMetaTable, jwtMetaTable)
+	jwtMetaTable := luaState.NewTypeMetatable(SessionMetaTable)
+	luaState.SetGlobal(SessionMetaTable, jwtMetaTable)
 
 	// Set all map metatable functions
 	luaState.SetFuncs(jwtMetaTable, sessionMethods)
@@ -20,17 +20,17 @@ func SetSessionMetaTable(luaState *lua.LState, sessionData sessions.Session) {
 	// Set session field
 	sess := luaState.NewUserData()
 	sess.Value = sessionData
-	luaState.SetField(jwtMetaTable, JWTTokenName, sess)
+	luaState.SetField(jwtMetaTable, SessionInstanceName, sess)
 }
 
 // getSessionData gets the user data struct from the
 // session metatable and returns the session pointer
 func getSessionData(L *lua.LState) sessions.Session {
 	// Get metatable
-	meta := L.GetTypeMetatable(JWTMetaTable)
+	meta := L.GetTypeMetatable(SessionMetaTable)
 
 	// Get user data field
-	data := L.GetField(meta, JWTTokenName).(*lua.LUserData)
+	data := L.GetField(meta, SessionInstanceName).(*lua.LUserData)
 
 	// Return session struct
 	return data.Value.(sessions.Session)

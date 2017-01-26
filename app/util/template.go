@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+// Tmpl struct that holds an application template
+// wrapper for the Go template used in the lua bindings
 type Tmpl struct {
 	Tmpl *template.Template
 }
@@ -50,6 +52,7 @@ func LoadTemplates(dir string, t *Tmpl) error {
 	return err
 }
 
+// FuncMap returns the template map of functions
 func (t *Tmpl) FuncMap(f template.FuncMap) {
 	t.Tmpl.Funcs(f)
 }

@@ -1,21 +1,54 @@
 package lua
 
 const (
-	CacheMetaTableName      = "cache"
-	MailMetaTableName       = "mail"
-	XMLMetaTableName        = "xml"
-	MapMetaTableName        = "otbm"
-	CaptchaMetaTableName    = "captcha"
-	CryptoMetaTableName     = "crypto"
-	ValidatorMetaTableName  = "validator"
-	JWTTokenName            = "__token"
-	JWTMetaTable            = "session"
-	MySQLMetaTableName      = "db"
-	ConfigMetaTableName     = "config"
-	HTTPGetValuesName       = "getValues"
-	HTTPMetaTableName       = "http"
+	// CacheMetaTableName the name of the cache metatable
+	CacheMetaTableName = "cache"
+
+	// MailMetaTableName the name of the mail metatable
+	MailMetaTableName = "mail"
+
+	// XMLMetaTableName the name of the xml metatable
+	XMLMetaTableName = "xml"
+
+	// MapMetaTableName the name of the map metatable
+	MapMetaTableName = "otbm"
+
+	// CaptchaMetaTableName the name of the captcha metatable
+	CaptchaMetaTableName = "captcha"
+
+	// CryptoMetaTableName the name of the crypto metatable
+	CryptoMetaTableName = "crypto"
+
+	// ValidatorMetaTableName the name of the validator metatable
+	ValidatorMetaTableName = "validator"
+
+	// JWTMetaTable the name of the session metatable
+	SessionMetaTable = "session"
+
+	// SessionInstanceName the field name of the session instance
+	SessionInstanceName = "__s"
+
+	// MySQLMetaTableName the name of the database metatable
+	DatabaseMetaTableName = "db"
+
+	// ConfigMetaTableName the name of the config metatable
+	ConfigMetaTableName = "config"
+
+	// HTTPGetValuesName the field name of the list of GET values
+	HTTPGetValuesName = "getValues"
+
+	// HTTPMetaTableName the name of the http metatable
+	HTTPMetaTableName = "http"
+
+	// HTTPMetaTableMethodName the field name of the http method
 	HTTPMetaTableMethodName = "method"
-	HTTPResponseWriterName  = "__w"
-	HTTPRequestName         = "__r"
-	HTTPPostValuesName      = "postValues"
+
+	// HTTPResponseWriterName the field name of the http response writer
+	HTTPResponseWriterName = "__w"
+
+	// HTTPRequestName the field name of the http request
+	HTTPRequestName = "__r"
+
+	// HTTPPostValuesName the field name of the list of POST values
+	HTTPPostValuesName = "postValues"
 )
