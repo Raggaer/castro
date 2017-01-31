@@ -15,6 +15,8 @@ To create a custom page head to the `pages` folder and create a new directory wi
  
 To create a custom widget head to the `widgets` folder and create a new directory with your widget name. Castro will look for `:name.html` and `:name.lua` files inside your widget directory
 
+Examples of both systems can be found on the github source
+
 # Setup
 
 Running Castro for the first time will generate a **config.toml** file. Thats the main configuration file for Castro.
