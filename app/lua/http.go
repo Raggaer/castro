@@ -172,6 +172,9 @@ func ex(widget *util.Widget, sess sessions.Session, wg *sync.WaitGroup, tkn stri
 	// Create cache metatable
 	SetCacheMetaTable(L)
 
+	// Create debug metatable
+	SetDebugMetaTable(L)
+
 	// Return state to the pool
 	defer Pool.Put(L)
 

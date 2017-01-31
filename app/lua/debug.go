@@ -6,7 +6,7 @@ import (
 )
 
 // SetDebugMetaTable sets the debug metatable of the given state
-func SetDebugMetaTable(luaState *lua.LState) int {
+func SetDebugMetaTable(luaState *lua.LState) {
 	// Create and set the debug metatable
 	debugMetaTable := luaState.NewTypeMetatable(DebugMetaTableName)
 	luaState.SetGlobal(DebugMetaTableName, debugMetaTable)
@@ -15,20 +15,25 @@ func SetDebugMetaTable(luaState *lua.LState) int {
 	luaState.SetFuncs(debugMetaTable, debugMethods)
 }
 
-// DebugValue prints a the value type and all the contents of the value
+// DebugValue prints the given values
 func DebugValue(L *lua.LState) int {
 	// Get value
 	val := L.Get(2)
 
-	// Log value type
-	util.Logger.Infof(" >> DEBUG - Value type %v", val.Type().String())
+	// Set increment value
+	i := 2
 
-	// Switch value type
-	switch val.Type() {
-	case lua.LTString:
-		util.Logger.Infof(" >> DEBUG - Value %v", val.String())
-	case lua.LTNumber:
-		util.Logger.Infof(" >> DEBUG - Value %v", val.String())
+	// Loop all values
+	for val.Type() != lua.LTNil {
+
+		// Debug statement
+		util.Logger.Debugf("type: %v, value: %v", val.Type().String(), val.String())
+
+		// Increment value index
+		i++
+
+		// Get new value
+		val = L.Get(i)
 	}
 
 	return 0
