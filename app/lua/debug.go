@@ -23,5 +23,13 @@ func DebugValue(L *lua.LState) int {
 	// Log value type
 	util.Logger.Infof(" >> DEBUG - Value type %v", val.Type().String())
 
+	// Switch value type
+	switch val.Type() {
+	case lua.LTString:
+		util.Logger.Infof(" >> DEBUG - Value %v", val.String())
+	case lua.LTNumber:
+		util.Logger.Infof(" >> DEBUG - Value %v", val.String())
+	}
+
 	return 0
 }
