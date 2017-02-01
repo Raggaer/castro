@@ -20,7 +20,7 @@ func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	player := models.Player{}
 
 	// Get player information
-	if err := database.DB.Find(&player, "name = ?", name).Error; err != nil {
+	if err := database.DB.Get(&player, "SELECT * FROM players WHERE name = ?", name); err != nil {
 		util.Logger.Error(err)
 		return
 	}

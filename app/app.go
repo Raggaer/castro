@@ -8,7 +8,6 @@ import (
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
-	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/otmap"
 	"strconv"
@@ -22,7 +21,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(11)
+	wait.Add(10)
 
 	// Load application config
 	loadAppConfig(wait)
@@ -32,7 +31,6 @@ func Start() {
 
 		loadLUAConfig(wait)
 		connectDatabase(wait)
-		migrateDatabase(wait)
 		loadMap(wait)
 		go loadHouses(wait)
 		go loadVocations(wait)
@@ -167,16 +165,6 @@ func connectDatabase(wg *sync.WaitGroup) {
 	// Connect to the MySQL database
 	if database.DB, err = database.Open(lua.Config.MySQLUser, lua.Config.MySQLPass, lua.Config.MySQLDatabase); err != nil {
 		util.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
-	}
-
-	// Tell the wait group we are done
-	wg.Done()
-}
-
-func migrateDatabase(wg *sync.WaitGroup) {
-	// Migrate database models
-	if err := database.DB.AutoMigrate(&models.Article{}, &models.CastroAccount{}).Error; err != nil {
-		util.Logger.Fatalf("Cannot migrate database models: %v", err)
 	}
 
 	// Tell the wait group we are done

@@ -8,7 +8,6 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/otmap"
 	"github.com/yuin/gopher-lua"
-	"log"
 	"net/url"
 	"strings"
 	"time"
@@ -73,15 +72,24 @@ func MapToTable(m map[string]interface{}) *lua.LTable {
 	for key, element := range m {
 
 		switch element.(type) {
+		case float64:
+			resultTable.RawSetString(key, lua.LNumber(element.(float64)))
 		case int64:
 			resultTable.RawSetString(key, lua.LNumber(element.(int64)))
 		case string:
 			resultTable.RawSetString(key, lua.LString(element.(string)))
 		case bool:
 			resultTable.RawSetString(key, lua.LBool(element.(bool)))
+		case []byte:
+			resultTable.RawSetString(key, lua.LString(string(element.([]byte))))
 		case map[string]interface{}:
+
+			// Get table from map
 			tble := MapToTable(element.(map[string]interface{}))
+
 			resultTable.RawSetString(key, tble)
+		case time.Time:
+			resultTable.RawSetString(key, lua.LNumber(element.(time.Time).Unix()))
 		}
 	}
 
@@ -226,7 +234,6 @@ func StructToTable(s interface{}) *lua.LTable {
 		fieldName := elem.Type().Field(i).Name
 
 		// Switch field type
-		log.Println(field.Type(), field.Kind())
 		switch field.Interface().(type) {
 		case string:
 

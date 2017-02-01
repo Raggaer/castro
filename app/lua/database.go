@@ -20,7 +20,7 @@ func SetDatabaseMetaTable(luaState *lua.LState) {
 
 // Execute executes a query without returning the result
 func Execute(L *lua.LState) int {
-	// Get query
+	/*// Get query
 	query := L.Get(2)
 
 	// Check if query is valid
@@ -49,13 +49,75 @@ func Execute(L *lua.LState) int {
 	}
 
 	// Execute the query
-	if err := database.DB.Exec(query.String(), args...).Error; err != nil {
+	db := database.DB.Exec(query.String(), args...)
 
+	// Check for errors
+	if db.Error != nil {
+
+		L.RaiseError("Cannot execute query: %v", db.Error)
+		return 0
+	}
+
+	// Check if query is INSERT
+	if !strings.HasPrefix(query.String(), "INSERT") {
+		return 0
+	}
+
+	*/
+
+	// Get query
+	query := L.Get(2)
+
+	// Check if query is valid
+	if query.Type() != lua.LTString {
+
+		// Raise error
+		L.ArgError(1, "Invalid query type. Expected string")
+		return 0
+	}
+
+	// Count number of params
+	n := strings.Count(query.String(), "?")
+
+	args := []interface{}{}
+
+	// Get all arguments matching the number of params
+	for i := 0; i < n; i++ {
+
+		// Append argument to slice
+		args = append(args, L.Get(3+i).String())
+	}
+
+	// Log query on development mode
+	if util.Config.IsDev() {
+		util.Logger.Infof("execute: "+strings.Replace(query.String(), "?", "%v", -1), args...)
+	}
+
+	// Execute query
+	result, err := database.DB.Exec(query.String(), args...)
+
+	if err != nil {
 		L.RaiseError("Cannot execute query: %v", err)
 		return 0
 	}
 
-	return 0
+	// Check if query is INSERT
+	if !strings.HasPrefix(query.String(), "INSERT") {
+		return 0
+	}
+
+	// Get last inserted id
+	id, err := result.LastInsertId()
+
+	if err != nil {
+		L.RaiseError("Cannot get last inserted id: %v", err)
+		return 0
+	}
+
+	// Push id
+	L.Push(lua.LNumber(id))
+
+	return 1
 }
 
 // Query executes an ad-hoc query
@@ -118,71 +180,42 @@ func Query(L *lua.LState) int {
 		util.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
-	// Execute query and get rows
-	rows, err := database.DB.Raw(query.String(), args...).Rows()
-	if err != nil {
+	// Execute query
+	rows, err := database.DB.Queryx(query.String(), args...)
 
-		// Raise error
-		L.RaiseError("Cannot get result: %v", err)
+	if err != nil {
+		L.RaiseError("Cannot execute query: %v", err)
 		return 0
 	}
 
+	// Close rows
 	defer rows.Close()
 
-	columnNames, err := rows.Columns()
-	if err != nil {
+	// Result holder
+	results := &lua.LTable{}
 
-		// Raise error
-		L.RaiseError("Cannot get article: missing QUERY")
-		return 0
-	}
-	var results [][]interface{}
-
-	// Loop result rows
+	// Loop rows
 	for rows.Next() {
 
-		// Hold all result columns
-		columns := make([]interface{}, len(columnNames))
+		// Hold current row
+		result := make(map[string]interface{})
 
-		// Hold all result pointers
-		columnPointers := make([]interface{}, len(columnNames))
-
-		// Loop result columns and assign to pointer
-		for i := range columnNames {
-			columnPointers[i] = &columns[i]
+		// Scan row to map
+		if err := rows.MapScan(result); err != nil {
+			L.RaiseError("Cannot map row to map: %v", err)
+			return 0
 		}
 
-		// Scan the column pointers
-		rows.Scan(columnPointers...)
-
-		// Append to results
-		results = append(results, columns)
-	}
-
-	// If there are no query results push nil
-	if len(results) <= 0 {
-
-		L.Push(lua.LNil)
-		return 1
-	}
-
-	finalTable := QueryToTable(results, columnNames)
-
-	// If there is only one result do not
-	// return as table of results
-	if len(results) == 1 {
-
-		// Get first element of the result table
-		finalTable = finalTable.RawGetInt(1).(*lua.LTable)
+		results.Append(MapToTable(result))
 	}
 
 	// If user wants to use cache save table
 	if saveToCache {
-		util.Cache.Add(cacheKey, finalTable, time.Minute*3)
+		util.Cache.Add(cacheKey, results, time.Minute*3)
 	}
 
-	// Push the converted query to the stack
-	L.Push(finalTable)
+	// Push result
+	L.Push(results)
 
 	return 1
 }
