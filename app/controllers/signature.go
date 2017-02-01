@@ -26,7 +26,7 @@ func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Check if signature image needs to be updated
-	info, err := os.Stat("public/img/signature/" + name + ".png")
+	info, err := os.Stat(filepath.Join("public", "images", "signature", name+".png"))
 
 	if err != nil {
 
@@ -37,7 +37,7 @@ func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 
 		// Serve signature file
-		http.ServeFile(w, r, "public/img/signature/"+name+".png")
+		http.ServeFile(w, r, filepath.Join("public", "images", "signature", name+".png"))
 
 		return
 	}
@@ -56,5 +56,5 @@ func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Serve signature file
-	http.ServeFile(w, r, filepath.Join("public", "img", "signature", name+".png"))
+	http.ServeFile(w, r, filepath.Join("public", "images", "signature", name+".png"))
 }

@@ -1,44 +1,51 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="/public/css/style.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
-	<title>Castro - AAC</title>
-</head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="icon" href="/public/images/favicon.png">
+
+    <title>{{ serverName }}</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Simonetta' rel='stylesheet' type='text/css'>
+    <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/public/css/style.css" rel="stylesheet">
+</head>
 <body>
-    <div class="navbar-info">
-        <div class="container">
-            <h1 class="display-3 crop">{{ serverName }}</h1>
-            <small>{{ serverMotd }}</small>
-        </div>
+
+<div class="container">
+    <div class="titleheader">
+        <!--<img src="images/logo.png" alt="">-->
+        <h1>{{ serverName }}</h1>
+        <h3>{{ serverMotd }}</h3>
+        <div class="clearfix"></div>
     </div>
-	<header>
-        <nav class="navbar navbar-dark bg-inverse">
-            <ul class="nav navbar-nav">
-                <div class="container">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ url "/" }}">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="supportedContentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Community</a>
-                    <div class="dropdown-menu" aria-labelledby="supportedContentDropdown">
-                        <a class="dropdown-item" href="{{ url "subtopic" "houses" }}">Houses</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                </div>
-            </ul>
-        </nav>
-	</header>
-    <div class="main container">
-        <div class="row">
-            <div class="col-lg-8">
+</div>
+<!-- /.container -->
+
+<div class="container">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url "/" }}">Home</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="box">
+        <div class="col-xs-9">

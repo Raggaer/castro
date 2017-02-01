@@ -1,23 +1,27 @@
 </div>
-<div class="col-lg-3">
+<div class="col-xs-3">
     {{ range $index, $element := widgetList }}
         {{ $element.Result }}
     {{ end }}
+    <!-- character search -->
 </div>
+<div class="clearfix"></div>
 </div>
-</div>
-<footer class="footer">
-    <div class="container">
-        <span class="text-muted">
-            <b><a href="https://github.com/Raggaer/castro">Castro AAC</a></b> - Page generated in  {{ .microtime }}
-        </span>
+
+</div> <!-- /container -->
+
+<div class="container">
+    <div class="footer">
+        <h6>© 2017 {{ serverName }}. All rights reserved. Engine by <a href="http://castro.raggaer.pw">Castro</a>.</h6>
     </div>
-</footer>
+</div> <!-- /container -->
+
 <script
         src="https://code.jquery.com/jquery-3.1.1.min.js"
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
-</body>
+        crossorigin="anonymous">
 
+</script>
+<script src="/public/js/bootstrap.min.js"></script>
+</body>
 </html>
