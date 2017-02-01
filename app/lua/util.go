@@ -16,6 +16,7 @@ import (
 // GetStructVariables loads all the global variables
 // from a lua file into a struct using reflect
 func GetStructVariables(src interface{}, L *lua.LState) error {
+	// Get base element
 	v := reflect.ValueOf(src).Elem()
 
 	// Loop all struct fields
@@ -202,6 +203,11 @@ func URLValuesToTable(m url.Values) *lua.LTable {
 		)
 	}
 	return &t
+}
+
+// StructToTable converts a go struct to a lua table
+func StructToTable(s interface{}) *lua.LTable {
+
 }
 
 // HouseListToTable converts a slice of houses to a lua table

@@ -18,6 +18,7 @@ type CastroAccount struct {
 	AccountID int64
 	Name      string
 	Points    int
+	Admin     bool
 }
 
 // GetAccountByName gets an account and its castro account by the account name

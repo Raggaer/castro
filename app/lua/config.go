@@ -91,11 +91,18 @@ func SetConfigMetaTable(luaState *lua.LState) {
 // LoadConfig loads the lua configuration file using
 // lua vm to get the global variables
 func LoadConfig(path string, dest *Configuration) error {
+	// Create new state
 	L := lua.NewState()
+
+	// Close state
 	defer L.Close()
+
+	// Run config lua file
 	if err := L.DoFile(path + "/config.lua"); err != nil {
 		return err
 	}
+
+	// Get file global variables and map them to a go struct
 	return GetStructVariables(dest, L)
 }
 
