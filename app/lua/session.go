@@ -78,10 +78,10 @@ func GetLoggedAccount(L *lua.LState) int {
 	}
 
 	// Convert tfs account to lua table
-	t := AccountToTable(account)
+	t := StructToTable(&account)
 
 	// Set castro account inside the table
-	t.RawSetString("castro", CastroAccountToTable(castroAccount))
+	t.RawSetString("castro", StructToTable(&castroAccount))
 
 	// Send table to stack
 	L.Push(t)

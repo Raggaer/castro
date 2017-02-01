@@ -5,7 +5,7 @@
     <form method="POST" action="{{ url "subtopic" "logout" }}">
     <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
         <button type="submit" class="btn btn-sm btn-danger">Logout</button>
-        <button type="button" class="btn btn-sm btn-primary">{{ .account.castro.points }} Points</button>
+    <button type="button" class="btn btn-sm btn-primary">{{ .account.castro.Points }} Points</button>
     </form>
     <hr class="white-hr">
     <ul>

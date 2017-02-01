@@ -8,6 +8,7 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/otmap"
 	"github.com/yuin/gopher-lua"
+	"log"
 	"net/url"
 	"strings"
 	"time"
@@ -21,6 +22,7 @@ func GetStructVariables(src interface{}, L *lua.LState) error {
 
 	// Loop all struct fields
 	for i := 0; i < v.NumField(); i++ {
+
 		field := v.Field(i)
 		fieldTag := v.Type().Field(i)
 
@@ -191,6 +193,7 @@ func TableToStringSlice(table *lua.LTable) []string {
 
 // URLValuesToTable converts a map[string][]string to a LUA table
 func URLValuesToTable(m url.Values) *lua.LTable {
+	// Data holder
 	t := lua.LTable{}
 
 	// Loop the map
@@ -205,9 +208,63 @@ func URLValuesToTable(m url.Values) *lua.LTable {
 	return &t
 }
 
-// StructToTable converts a go struct to a lua table
+// StructToTable converts a go struct pointer to a lua table
 func StructToTable(s interface{}) *lua.LTable {
+	// Data holder
+	t := &lua.LTable{}
 
+	// Get interface element
+	elem := reflect.ValueOf(s).Elem()
+
+	// Loop struct fields
+	for i := 0; i < elem.NumField(); i++ {
+
+		// Get current field
+		field := elem.Field(i)
+
+		// Get field name
+		fieldName := elem.Type().Field(i).Name
+
+		// Switch field type
+		log.Println(field.Type(), field.Kind())
+		switch field.Interface().(type) {
+		case string:
+
+			// Set value as string
+			t.RawSetString(fieldName, lua.LString(field.Interface().(string)))
+
+		case int64:
+
+			// Set value as number
+			t.RawSetString(fieldName, lua.LNumber(field.Interface().(int64)))
+
+		case int:
+
+			// Set value as number
+			t.RawSetString(fieldName, lua.LNumber(field.Interface().(int)))
+
+		case float64:
+
+			// Set value as number
+			t.RawSetString(fieldName, lua.LNumber(field.Interface().(float64)))
+
+		case bool:
+
+			// Set value as bool
+			t.RawSetString(fieldName, lua.LBool(field.Interface().(bool)))
+
+		case time.Time:
+
+			// Get time value
+			timeStamp := field.Interface().(time.Time).Unix()
+
+			// Set value as number
+			t.RawSetString(fieldName, lua.LNumber(timeStamp))
+
+		}
+	}
+
+	return t
 }
 
 // HouseListToTable converts a slice of houses to a lua table
