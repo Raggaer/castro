@@ -4,6 +4,6 @@ tmp/
 .idea/
 vendor/
 public/images/signature/*.png
-
+logs/*.json
 Castro build.exe
 Castro data race.exe

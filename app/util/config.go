@@ -56,18 +56,22 @@ func init() {
 	Config = &Configuration{}
 }
 
-// LoadConfig loads the configuration file to
-// the given interface pointer
+// LoadConfig loads the configuration file to the given interface pointer
 func LoadConfig(data string, dest interface{}) error {
 	// Decode the given file to the given interface
 	if _, err := toml.DecodeFile(data, dest); err != nil {
 		return err
 	}
+
 	return nil
 }
 
-// IsDev checks if castro is running on
-// development mode
+// IsDev checks if castro is running on development mode
 func (c Configuration) IsDev() bool {
 	return c.Mode == "dev"
+}
+
+// IsLog checks if castro is running on log mode
+func (c Configuration) IsLog() bool {
+	return c.Mode == "log"
 }

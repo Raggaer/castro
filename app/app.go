@@ -10,6 +10,7 @@ import (
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/otmap"
+	"log"
 	"strconv"
 	"strings"
 	"sync"
@@ -21,23 +22,29 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(10)
+	wait.Add(5)
+
+	// Load application logger
+	loadAppLogger()
 
 	// Load application config
-	loadAppConfig(wait)
+	loadAppConfig()
+
+	// Run logger renew service
+	go util.RenewLogger()
 
 	// Execute our tasks
 	go func(wait *sync.WaitGroup) {
 
-		loadLUAConfig(wait)
-		connectDatabase(wait)
-		loadMap(wait)
+		loadLUAConfig()
+		connectDatabase()
+		loadMap()
 		go loadHouses(wait)
 		go loadVocations(wait)
 	}(wait)
 
 	// Create application cache
-	createCache(wait)
+	createCache()
 
 	go loadWidgetList(wait)
 	go appTemplates(wait)
@@ -45,6 +52,24 @@ func Start() {
 
 	// Wait for the tasks
 	wait.Wait()
+}
+
+func loadAppLogger() {
+	// Create logger file
+	f, day, err := util.CreateLogFile()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Set logger output variable
+	util.LoggerOutput = f
+
+	// Set last logger day
+	util.LastLoggerDay = day
+
+	// Create main application logger instance
+	util.Logger = util.CreateLogger(f)
 }
 
 func loadVocations(wg *sync.WaitGroup) {
@@ -73,7 +98,7 @@ func loadHouses(wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func loadMap(wg *sync.WaitGroup) {
+func loadMap() {
 	// Parse OTBM file
 	m, err := otmap.Parse(util.Config.Datapack + "/data/world/" + lua.Config.MapName + ".otbm")
 
@@ -82,39 +107,27 @@ func loadMap(wg *sync.WaitGroup) {
 	}
 
 	util.OTBMap = m
-
-	// Tell the wait group we are done
-	wg.Done()
 }
 
-func loadAppConfig(wg *sync.WaitGroup) {
+func loadAppConfig() {
 	// Load the TOML configuration file
 	if err := util.LoadConfig("config.toml", util.Config); err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
-
-	// Tell the wait group we are done
-	wg.Done()
 }
 
-func loadLUAConfig(wg *sync.WaitGroup) {
+func loadLUAConfig() {
 	// Load the LUA configuration file
 	if err := lua.LoadConfig(util.Config.Datapack, lua.Config); err != nil {
 		util.Logger.Fatalf("Cannot read lua configuration file: %v", err)
 	}
-
-	// Tell the wait group we are done
-	wg.Done()
 }
 
-func createCache(wg *sync.WaitGroup) {
+func createCache() {
 	// Create a new cache instance with the given options
 	// first parameter is the default item duration on the cache
 	// second parameter is the tick time to purge all dead cache items
 	util.Cache = cache.New(time.Duration(util.Config.Cache.Default), time.Duration(util.Config.Cache.Purge))
-
-	// Tell the wait group we are done
-	wg.Done()
 }
 
 func loadWidgetList(wg *sync.WaitGroup) {
@@ -165,16 +178,13 @@ func widgetTemplates(wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func connectDatabase(wg *sync.WaitGroup) {
+func connectDatabase() {
 	var err error
 
 	// Connect to the MySQL database
 	if database.DB, err = database.Open(lua.Config.MySQLUser, lua.Config.MySQLPass, lua.Config.MySQLDatabase); err != nil {
 		util.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
-
-	// Tell the wait group we are done
-	wg.Done()
 }
 
 func templateFuncs() template.FuncMap {

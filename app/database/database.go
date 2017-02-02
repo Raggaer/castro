@@ -22,5 +22,6 @@ func Open(username, password, db string) (*sqlx.DB, error) {
 		db,
 	))
 
+	// Return database handler
 	return databaseHandle, err
 }
