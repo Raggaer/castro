@@ -54,4 +54,7 @@ const (
 
 	// HTTPPostValuesName the field name of the list of POST values
 	HTTPPostValuesName = "postValues"
+
+	// HTTPCurrentSubtopic the field name of the current subtopic uri
+	HTTPCurrentSubtopic = "subtopic"
 )

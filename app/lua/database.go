@@ -20,51 +20,6 @@ func SetDatabaseMetaTable(luaState *lua.LState) {
 
 // Execute executes a query without returning the result
 func Execute(L *lua.LState) int {
-	/*// Get query
-	query := L.Get(2)
-
-	// Check if query is valid
-	if query.Type() != lua.LTString {
-
-		// Raise error
-		L.ArgError(1, "Invalid query type. Expected string")
-		return 0
-	}
-
-	// Count number of params
-	n := strings.Count(query.String(), "?")
-
-	args := []interface{}{}
-
-	// Get all arguments matching the number of params
-	for i := 0; i < n; i++ {
-
-		// Append argument to slice
-		args = append(args, L.Get(3+i).String())
-	}
-
-	// Log query on development mode
-	if util.Config.IsDev() {
-		util.Logger.Infof("execute: "+strings.Replace(query.String(), "?", "%v", -1), args...)
-	}
-
-	// Execute the query
-	db := database.DB.Exec(query.String(), args...)
-
-	// Check for errors
-	if db.Error != nil {
-
-		L.RaiseError("Cannot execute query: %v", db.Error)
-		return 0
-	}
-
-	// Check if query is INSERT
-	if !strings.HasPrefix(query.String(), "INSERT") {
-		return 0
-	}
-
-	*/
-
 	// Get query
 	query := L.Get(2)
 
@@ -146,13 +101,13 @@ func Query(L *lua.LState) int {
 	}
 
 	// Check if user wants to use cache
-	cache := L.Get(3 + n)
+	cache := L.ToBool(3 + n)
 
 	// Save cache variable
 	saveToCache := false
 	cacheKey := query.String()
 
-	if cache.Type() != lua.LTNil {
+	if cache {
 
 		// Build cache key as the full query with arguments inside
 		for _, arg := range args {
@@ -166,8 +121,22 @@ func Query(L *lua.LState) int {
 
 		if found {
 
+			results := q.(*lua.LTable)
+
+			// If there are no results return nil
+			if results.Len() == 0 {
+				L.Push(lua.LNil)
+				return 1
+			}
+
+			// If only one result return that table
+			if results.Len() == 1 {
+				L.Push(results.RawGetInt(1).(*lua.LTable))
+				return 1
+			}
+
 			// Push the cached lua table to stack
-			L.Push(q.(*lua.LTable))
+			L.Push(results)
 
 			return 1
 		}
@@ -206,12 +175,25 @@ func Query(L *lua.LState) int {
 			return 0
 		}
 
+		// Append to lua table
 		results.Append(MapToTable(result))
 	}
 
 	// If user wants to use cache save table
 	if saveToCache {
 		util.Cache.Add(cacheKey, results, time.Minute*3)
+	}
+
+	// If there are no results return nil
+	if results.Len() == 0 {
+		L.Push(lua.LNil)
+		return 1
+	}
+
+	// If only one result return that table
+	if results.Len() == 1 {
+		L.Push(results.RawGetInt(1).(*lua.LTable))
+		return 1
 	}
 
 	// Push result

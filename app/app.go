@@ -140,6 +140,12 @@ func appTemplates(wg *sync.WaitGroup) {
 		util.Logger.Fatalf("Cannot load templates: %v", err)
 	}
 
+	// Load subtopic templates
+	if err := util.LoadTemplates("pages/", &util.Template); err != nil {
+		util.Logger.Error(err.Error())
+		return
+	}
+
 	// Tell the wait group we are done
 	wg.Done()
 }

@@ -43,6 +43,9 @@ func SetHTTPMetaTable(luaState *glua.LState, w http.ResponseWriter, r *http.Requ
 		// Set POST values as LUA table
 		luaState.SetField(httpMetaTable, HTTPPostValuesName, URLValuesToTable(r.PostForm))
 	}
+
+	// Set current subtopic
+	luaState.SetField(httpMetaTable, HTTPCurrentSubtopic, glua.LString(r.RequestURI))
 }
 
 func getRequestAndResponseWriter(L *glua.LState) (*http.Request, http.ResponseWriter) {
@@ -135,8 +138,17 @@ func Redirect(L *glua.LState) int {
 	// Get HTTP request and HTTP response writer
 	req, w := getRequestAndResponseWriter(L)
 
+	// Get destination
+	dest := L.Get(2)
+
+	// If there is no destination redirect to current subtopic
+	if dest.Type() == glua.LTNil {
+		http.Redirect(w, req, req.RequestURI, 302)
+		return 0
+	}
+
 	// Redirect to the desired location
-	http.Redirect(w, req, L.ToString(2), 302)
+	http.Redirect(w, req, dest.String(), 302)
 
 	return 0
 }
