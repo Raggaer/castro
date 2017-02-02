@@ -54,12 +54,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		// Set session value
 		session.Set("csrf-token", tkn)
 
-		// Set token on the request context
-		ctx := context.WithValue(req.Context(), "csrf-token", tkn)
-
-		// Execute next handler
-		next(w, req.WithContext(ctx))
-		return
+		t = &tkn
 	}
 
 	// Get token

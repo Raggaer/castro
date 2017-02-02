@@ -70,6 +70,54 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Set LUA file name
 	pageName := ps.ByName("page")
 
+	// Loop widget list
+	for _, widget := range util.Widgets.List {
+
+		// Execute widget
+		tbl, err := widget.Execute(luaState)
+
+		if err != nil {
+
+			// Set error header
+			w.WriteHeader(500)
+
+			// If AAC is running on development mode log error
+			if util.Config.IsDev() || util.Config.IsLog() {
+				util.Logger.Errorf("Cannot execute widget %v: %v\n", widget.Name, err)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			w.Write([]byte("Cannot execute widgets"))
+			return
+		}
+
+		// Convert result to map
+		m := lua.TableToMap(tbl)
+
+		// Render widget and get the result
+		buff, err := util.WidgetTemplate.RenderWidget(r, widget.Name+".html", m)
+
+		if err != nil {
+
+			// Set error header
+			w.WriteHeader(500)
+
+			// If AAC is running on development mode log error
+			if util.Config.IsDev() || util.Config.IsLog() {
+				util.Logger.Errorf("Cannot execute widget template %v: %v\n", widget.Name, err)
+				w.Write([]byte(err.Error()))
+				return
+			}
+
+			w.Write([]byte("Cannot execute widgets"))
+			return
+		}
+
+		// Set widget result
+		widget.SetResult(buff)
+	}
+
 	// If there is no subtopic request index
 	if pageName == "" {
 		pageName = "index"
@@ -82,7 +130,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		w.WriteHeader(500)
 
 		// If AAC is running on development mode log error
-		if util.Config.IsDev() {
+		if util.Config.IsDev() || util.Config.IsLog() {
 			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
 			w.Write([]byte(err.Error()))
 			return
@@ -91,4 +139,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		w.Write([]byte("Cannot execute the given subtopic"))
 		return
 	}
+
+	// Remove top stack value
+	luaState.Pop(-1)
 }

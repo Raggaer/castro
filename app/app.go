@@ -132,7 +132,7 @@ func createCache() {
 
 func loadWidgetList(wg *sync.WaitGroup) {
 	// Load widget list
-	if err := util.Widgets.LoadWidgetList("widgets/"); err != nil {
+	if err := util.Widgets.Load("widgets/"); err != nil {
 		util.Logger.Fatalf("Cannot load widget list: %v", err)
 	}
 
@@ -149,12 +149,12 @@ func appTemplates(wg *sync.WaitGroup) {
 	util.FuncMap = templateFuncs()
 
 	// Load templates
-	if err := util.LoadTemplates("views/", &util.Template); err != nil {
+	if err := util.Template.LoadTemplates("views/"); err != nil {
 		util.Logger.Fatalf("Cannot load templates: %v", err)
 	}
 
 	// Load subtopic templates
-	if err := util.LoadTemplates("pages/", &util.Template); err != nil {
+	if err := util.Template.LoadTemplates("pages/"); err != nil {
 		util.Logger.Error(err.Error())
 		return
 	}
@@ -170,7 +170,7 @@ func widgetTemplates(wg *sync.WaitGroup) {
 	util.WidgetTemplate.FuncMap(templateFuncs())
 
 	// Load widget templates
-	if err := util.LoadTemplates("widgets/", &util.WidgetTemplate); err != nil {
+	if err := util.WidgetTemplate.LoadTemplates("widgets/"); err != nil {
 		util.Logger.Fatalf("Cannot load widget templates: %v", err)
 	}
 

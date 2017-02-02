@@ -92,6 +92,7 @@ func (p *luaStatePool) Get() *glua.LState {
 	// Return last state from the pool
 	x := p.saved[len(p.saved)-1]
 	p.saved = p.saved[0 : len(p.saved)-1]
+
 	return x
 }
 
@@ -101,9 +102,6 @@ func (p *luaStatePool) Put(state *glua.LState) {
 	// data race
 	p.m.Lock()
 	defer p.m.Unlock()
-
-	// Remove HTTP metatable
-	//state.SetGlobal(HTTPMetaTableName, glua.LNil)
 
 	// Append to the pool
 	p.saved = append(p.saved, state)

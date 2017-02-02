@@ -100,7 +100,7 @@ func MapToTable(m map[string]interface{}) *lua.LTable {
 func TableToMap(table *lua.LTable) map[string]interface{} {
 	// Check for valid table
 	if table == nil {
-		return nil
+		return map[string]interface{}{}
 	}
 
 	// Data holder

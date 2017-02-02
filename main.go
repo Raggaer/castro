@@ -66,7 +66,7 @@ func main() {
 	)
 
 	// Use negroni logger only in development mode
-	if util.Config.IsDev() {
+	if util.Config.IsDev() || util.Config.IsLog() {
 		n.Use(negroni.NewLogger())
 	}
 
