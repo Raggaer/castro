@@ -164,7 +164,7 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 	args["csrfToken"] = tkn.Token
 
 	// Set microtime value
-	args["microtime"] = fmt.Sprintf("%9.4f seconds", time.Since(microtime).Seconds())
+	args["microtime"] = fmt.Sprintf("%v seconds", time.Since(microtime).Seconds())
 
 	// Render template and log error
 	if err := t.Tmpl.ExecuteTemplate(w, name, args); err != nil {

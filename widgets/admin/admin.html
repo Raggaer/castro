@@ -1,5 +1,11 @@
+{{ if .admin }}
 <div class="info-panel black">
-    <h5>Top players</h5>
+    <h5>Admin panel</h5>
     <hr class="white-hr">
-    {{ . }}
+    <ul>
+        <li>
+            <a class="light" href="{{ url " subtopic" "admin" "pages" }}">Pages</a>
+        </li>
+    </ul>
 </div>
+{{ end }}

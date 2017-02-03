@@ -68,7 +68,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	lua.SetCacheMetaTable(luaState)
 
 	// Set LUA file name
-	pageName := ps.ByName("page")
+	pageName := ps.ByName("filepath")
 
 	// Loop widget list
 	for _, widget := range util.Widgets.List {
@@ -116,6 +116,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Set widget result
 		widget.SetResult(buff)
+
+		// Remove top stack value
+		luaState.Pop(-1)
 	}
 
 	// If there is no subtopic request index

@@ -1,5 +1,9 @@
+if not session:isLogged() then
+    return nil
+end
+
 local data = {}
 
-data.test = session:loggedAccount()
+data.admin = session:loggedAccount().castro.Admin
 
-return nil
+return data

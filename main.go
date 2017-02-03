@@ -31,8 +31,8 @@ func main() {
 	router.GET("/", controllers.LuaPage)
 	router.POST("/", controllers.LuaPage)
 	router.GET("/signature/:name", controllers.Signature)
-	router.POST("/subtopic/:page", controllers.LuaPage)
-	router.GET("/subtopic/:page", controllers.LuaPage)
+	router.POST("/subtopic/*filepath", controllers.LuaPage)
+	router.GET("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/public/*filepath", serveStatic)
 
 	// Check if Castro is installed if not we create the
