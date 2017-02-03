@@ -100,8 +100,11 @@ func Query(L *lua.LState) int {
 		args = append(args, L.Get(3+i).String())
 	}
 
+	// Check if user wants to return the result in a single table
+	single := L.ToBool(3 + n)
+
 	// Check if user wants to use cache
-	cache := L.ToBool(3 + n)
+	cache := L.ToBool(4 + n)
 
 	// Save cache variable
 	saveToCache := false
@@ -130,7 +133,7 @@ func Query(L *lua.LState) int {
 			}
 
 			// If only one result return that table
-			if results.Len() == 1 {
+			if results.Len() == 1 && single {
 				L.Push(results.RawGetInt(1).(*lua.LTable))
 				return 1
 			}
@@ -191,7 +194,7 @@ func Query(L *lua.LState) int {
 	}
 
 	// If only one result return that table
-	if results.Len() == 1 {
+	if results.Len() == 1 && single {
 		L.Push(results.RawGetInt(1).(*lua.LTable))
 		return 1
 	}

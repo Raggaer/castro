@@ -2,7 +2,7 @@ package lua
 
 import (
 	"github.com/kardianos/osext"
-	"github.com/raggaer/whiworld/app/util"
+	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"path/filepath"
 	"sync"
@@ -84,7 +84,7 @@ func (p *luaStatePool) Get() *glua.LState {
 	p.m.Lock()
 	defer p.m.Unlock()
 
-	// If no states available create onw
+	// If no states available create one
 	if (len(p.saved)) == 0 {
 		return p.New()
 	}
@@ -131,7 +131,7 @@ func (p *luaStatePool) New() *glua.LState {
 		pkg,
 		"path",
 		glua.LString(
-			filepath.Join(f, "lua", "engine", "?.lua"),
+			filepath.Join(f, "app", "lua", "engine", "?.lua"),
 		),
 	)
 
