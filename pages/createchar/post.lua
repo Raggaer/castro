@@ -33,7 +33,7 @@ if db:query("SELECT id FROM players WHERE name = ?", http.postValues["character-
     return
 end
 
-account = session:loggedAccount()
+local account = session:loggedAccount()
 
 if db:query("SELECT COUNT(*) as total FROM players WHERE account_id = ?", account.ID).total > 5 then
     session:setFlash("validation-error", "You can only have 5 characters")

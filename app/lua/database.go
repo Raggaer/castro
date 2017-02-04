@@ -76,6 +76,10 @@ func Execute(L *lua.LState) int {
 }
 
 // Query executes an ad-hoc query
+// First argument is the query
+// Second argument the params
+// Third argument chooses if is a single or multi query
+// Fourth argument chooses to use cache or not. The returned table pointer can be edited to modify the cache
 func Query(L *lua.LState) int {
 	// Get query
 	query := L.Get(2)
@@ -126,22 +130,36 @@ func Query(L *lua.LState) int {
 
 			results := q.(*lua.LTable)
 
+			// Set cache status
+			L.Push(lua.LBool(true))
+
 			// If there are no results return nil
 			if results.Len() == 0 {
 				L.Push(lua.LNil)
-				return 1
+
+				// Set cache status
+				L.Push(lua.LBool(true))
+
+				return 2
 			}
 
 			// If only one result return that table
 			if results.Len() == 1 && single {
 				L.Push(results.RawGetInt(1).(*lua.LTable))
-				return 1
+
+				// Set cache status
+				L.Push(lua.LBool(true))
+
+				return 2
 			}
 
 			// Push the cached lua table to stack
 			L.Push(results)
 
-			return 1
+			// Set cache status
+			L.Push(lua.LBool(true))
+
+			return 2
 		}
 
 		saveToCache = true
@@ -164,7 +182,7 @@ func Query(L *lua.LState) int {
 	defer rows.Close()
 
 	// Result holder
-	results := &lua.LTable{}
+	results := L.NewTable()
 
 	// Loop rows
 	for rows.Next() {
@@ -190,17 +208,28 @@ func Query(L *lua.LState) int {
 	// If there are no results return nil
 	if results.Len() == 0 {
 		L.Push(lua.LNil)
-		return 1
+
+		// Set cache status
+		L.Push(lua.LBool(false))
+
+		return 2
 	}
 
 	// If only one result return that table
 	if results.Len() == 1 && single {
 		L.Push(results.RawGetInt(1).(*lua.LTable))
-		return 1
+
+		// Set cache status
+		L.Push(lua.LBool(false))
+
+		return 2
 	}
 
 	// Push result
 	L.Push(results)
 
-	return 1
+	// Set cache status
+	L.Push(lua.LBool(false))
+
+	return 2
 }

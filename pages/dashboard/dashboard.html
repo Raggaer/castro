@@ -23,8 +23,9 @@
     <tr>
         <th scope="row">{{ $index }}</th>
         <td>
-            <a href="{{ url " subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name
-            }}</a>
+            <a href="{{ url " subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">
+            {{ $element.name }}
+            </a>
         </td>
         <td>{{ vocation $element.vocation }}</td>
         <td>{{ $element.level }}</td>
