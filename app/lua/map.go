@@ -77,9 +77,36 @@ func HouseList(L *lua.LState) int {
 // TownList returns the server town list
 // as a lua table
 func TownList(L *lua.LState) int {
-	// Convert town list to table and push
-	// to stack
-	L.Push(TownListToTable(util.OTBMap.Towns))
+
+	// Check if the list is on the cache
+	list, found := util.Cache.Get("town_list")
+
+	if found {
+
+		// Push town list
+		L.Push(list.(*lua.LTable))
+
+		return 1
+	}
+
+	// Data holder
+	result := &lua.LTable{}
+
+	// Loop town list
+	for _, town := range util.OTBMap.Towns {
+
+		// Convert town to table
+		tbl := StructToTable(&town)
+
+		// Append to main table
+		result.Append(tbl)
+	}
+
+	// Save list to cache
+	util.Cache.Add("town_list", result, time.Minute*3)
+
+	// Push result
+	L.Push(result)
 
 	return 1
 }

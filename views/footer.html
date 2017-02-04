@@ -12,7 +12,10 @@
 
 <div class="container">
     <div class="footer">
-        <h6>Page generated in {{ .microtime }}. Engine by <a href="https://github.com/Raggaer/castro">Castro</a>.</h6>
+        <h6>
+            {{ if isDev }} <b>Development mode</b> | {{ end }}
+            Page generated in {{ .microtime }}. Engine by <a href="https://github.com/Raggaer/castro">Castro</a>.
+        </h6>
     </div>
 </div> <!-- /container -->
 

@@ -23,7 +23,9 @@
     <tr>
         <th scope="row">{{ $index }}</th>
         <td>
-            <a href="{{ url " subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">
+            <a href="
+                {{ url " subtopic" "community" "view" }}?name={{ urlEncode $element.name }}
+            ">
             {{ $element.name }}
             </a>
         </td>

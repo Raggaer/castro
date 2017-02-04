@@ -5,7 +5,7 @@
     <div class="form-group">
         <select name="town" class="form-control" id="select-town">
             {{ range $index, $element := .towns }}
-            <option value="{{ $element.id }}">{{ $element.name }}</option>
+            <option value="{{ $element.ID }}">{{ $element.Name }}</option>
             {{ end }}
         </select>
     </div>
