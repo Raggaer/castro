@@ -1,7 +1,7 @@
 local data = {}
 local name = url:decode(http.getValues.name)
 
-data.info = db:query("SELECT name, stamina, health, healthmax, mana, manamax, sex, vocation, level, town_id, lastlogin, lastlogout FROM players WHERE name = ?", name, true)
+data.info = db:query("SELECT name, stamina, health, healthmax, mana, manamax, sex, vocation, level, town_id, lastlogin, lastlogout FROM players WHERE name = ?", name, true, true)
 
 if data.info == nil then
     http:redirect("/")
