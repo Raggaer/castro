@@ -6,6 +6,7 @@ import (
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"time"
@@ -14,13 +15,17 @@ import (
 // Signature shows a player signature or creates one
 func Signature(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Get name
-	name := ps.ByName("name")
+	name, err := url.QueryUnescape(ps.ByName("name"))
+
+	if err != nil {
+		return
+	}
 
 	// Model to get player info
 	player := models.Player{}
 
 	// Get player information
-	if err := database.DB.Get(&player, "SELECT * FROM players WHERE name = ?", name); err != nil {
+	if err := database.DB.Get(&player, "SELECT name, level FROM players WHERE name = ?", name); err != nil {
 		util.Logger.Error(err)
 		return
 	}

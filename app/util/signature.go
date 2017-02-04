@@ -14,7 +14,7 @@ func CreatePlayerSignature(player models.Player) error {
 	img := goimage.NewImage(500, 150)
 
 	// Set image background
-	if err := img.SetBackGroundImage("public/img/signature-bg.png"); err != nil {
+	if err := img.SetBackGroundImage("public/images/signature-bg.png"); err != nil {
 		return err
 	}
 
@@ -28,5 +28,5 @@ func CreatePlayerSignature(player models.Player) error {
 	}
 
 	// Save image
-	return img.Save(filepath.Join("public", "img", "signature", player.Name) + ".png")
+	return img.Save(filepath.Join("public", "images", "signature", player.Name) + ".png")
 }

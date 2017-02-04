@@ -60,3 +60,8 @@
 .progress-bar {
     font-size: 9px;
 }
+
+.signature {
+    display: block;
+    margin: 0 auto;
+}
