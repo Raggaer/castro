@@ -1,0 +1,68 @@
+{{ template "header.html" }}
+<h3>Character profile</h3>
+<hr>
+<table class="table table-striped">
+    <thead class="thead-inverse">
+    <tr>
+        <th scope="row" colspan="2">Character information</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Name</th>
+        <td>{{ .info.name }}</td>
+    </tr>
+    <tr>
+        <th>Level</th>
+        <td>{{ .info.level }}</td>
+    </tr>
+    <tr>
+        <th>Vocation</th>
+        <td>{{ .info.vocation.Name }}</td>
+    </tr>
+    <tr>
+        <th>Residence</th>
+        <td>
+            <a href="{{ url " subtopic" "houses" }}?town={{ .info.town.ID }}">{{ .info.town.Name }}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<table class="table table-striped">
+    <thead class="thead-inverse">
+    <tr>
+        <th scope="row" colspan="2">Detailed information</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Last login</th>
+        <td>{{ .info.lastlogin.Result }}</td>
+    </tr>
+    <tr>
+        <th>Last logout</th>
+        <td>{{ .info.lastlogout.Result }}</td>
+    </tr>
+    <tr>
+        <th colspan="2">
+            <div class="progress">
+                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ .info.health }}"
+                     aria-valuemin="0" aria-valuemax="{{ .info.healthmax }}" style="width:{{ .info.healthpercent }}%">
+                    Health {{ .info.health }} / {{ .info.healthmax }}
+                </div>
+            </div>
+        </th>
+    </tr>
+    <tr>
+        <th colspan="2">
+            <div class="progress">
+                <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{ .info.mana }}"
+                     aria-valuemin="0" aria-valuemax="{{ .info.manamax }}" style="width:{{ .info.manapercent }}%">
+                    Mana {{ .info.mana }} / {{ .info.manamax }}
+                </div>
+            </div>
+        </th>
+    </tr>
+    </tbody>
+</table>
+{{ template "footer.html" . }}

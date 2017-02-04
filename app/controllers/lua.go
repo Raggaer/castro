@@ -31,6 +31,12 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Defer the state put method
 	defer lua.Pool.Put(luaState)
 
+	// Create time metatable
+	lua.SetTimeMetaTable(luaState)
+
+	// Create url metatable
+	lua.SetURLMetaTable(luaState)
+
 	// Create debug metatable
 	lua.SetDebugMetaTable(luaState)
 

@@ -1,6 +1,12 @@
 package lua
 
 const (
+	// TimeMetaTableName the name of the time metatable
+	TimeMetaTableName = "time"
+
+	// URLMetaTableName the name of the url metatable
+	URLMetaTableName = "url"
+
 	// DebugMetaTableName the name of the debug metatable
 	DebugMetaTableName = "debug"
 

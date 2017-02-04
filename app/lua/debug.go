@@ -11,7 +11,7 @@ func SetDebugMetaTable(luaState *lua.LState) {
 	debugMetaTable := luaState.NewTypeMetatable(DebugMetaTableName)
 	luaState.SetGlobal(DebugMetaTableName, debugMetaTable)
 
-	// Set all crypto metatable functions
+	// Set all debug metatable functions
 	luaState.SetFuncs(debugMetaTable, debugMethods)
 }
 

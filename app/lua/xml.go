@@ -44,6 +44,37 @@ func GetVocationByName(L *lua.LState) int {
 	return 0
 }
 
+// GetVocationByID gets a vocation by the given id
+func GetVocationByID(L *lua.LState) int {
+	// Get ID
+	id := L.Get(2)
+
+	// Check for valid name type
+	if id.Type() != lua.LTNumber {
+
+		L.ArgError(1, "Invalid ID format. Expected number")
+		return 0
+	}
+
+	// Get id as int
+	idn := L.ToInt(2)
+
+	// Get vocation
+	for _, voc := range util.ServerVocationList.List.Vocations {
+
+		// If it is the vocation we are looking for
+		if voc.ID == idn {
+
+			// Push vocation as lua table
+			L.Push(StructToTable(voc))
+
+			return 1
+		}
+	}
+
+	return 0
+}
+
 // VocationList returns the server vocations xml file
 func VocationList(L *lua.LState) int {
 	// Check if user wants base vocations

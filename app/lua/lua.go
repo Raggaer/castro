@@ -63,6 +63,7 @@ var (
 	xmlMethods = map[string]glua.LGFunction{
 		"vocationList":   VocationList,
 		"vocationByName": GetVocationByName,
+		"vocationByID":   GetVocationByID,
 	}
 	mailMethods = map[string]glua.LGFunction{
 		"send": SendMail,
@@ -73,6 +74,12 @@ var (
 	}
 	debugMethods = map[string]glua.LGFunction{
 		"value": DebugValue,
+	}
+	urlMethods = map[string]glua.LGFunction{
+		"decode": DecodeURL,
+	}
+	timeMethods = map[string]glua.LGFunction{
+		"parseUnix": ParseUnixTimestamp,
 	}
 )
 

@@ -69,7 +69,7 @@ func GetTownByName(L *lua.LState) int {
 		if town.Name == name.String() {
 
 			// Convert town to lua table and push
-			L.Push(TownToTable(town))
+			L.Push(StructToTable(&town))
 
 			return 1
 		}
@@ -100,7 +100,7 @@ func GetTownByID(L *lua.LState) int {
 		if town.ID == townid {
 
 			// Convert town to lua table and push
-			L.Push(TownToTable(town))
+			L.Push(StructToTable(&town))
 
 			return 1
 		}

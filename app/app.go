@@ -11,6 +11,7 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/otmap"
 	"log"
+	"net/url"
 	"strconv"
 	"strings"
 	"sync"
@@ -228,6 +229,9 @@ func templateFuncs() template.FuncMap {
 			return template.HTML(
 				strings.Replace(text, "\n", "<br>", -1),
 			)
+		},
+		"urlEncode": func(t string) template.URL {
+			return template.URL(url.QueryEscape(t))
 		},
 		"serverName": func() string {
 			return lua.Config.ServerName

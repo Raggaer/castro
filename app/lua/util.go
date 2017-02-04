@@ -245,6 +245,11 @@ func StructToTable(s interface{}) *lua.LTable {
 			// Set value as number
 			t.RawSetString(fieldName, lua.LNumber(field.Interface().(int64)))
 
+		case uint32:
+
+			// Set value as number
+			t.RawSetString(fieldName, lua.LNumber(field.Interface().(uint32)))
+
 		case int:
 
 			// Set value as number

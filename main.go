@@ -8,6 +8,7 @@ import (
 	"github.com/goincremental/negroni-sessions"
 	"github.com/goincremental/negroni-sessions/cookiestore"
 	"github.com/julienschmidt/httprouter"
+	"github.com/phyber/negroni-gzip/gzip"
 	"github.com/raggaer/castro/app"
 	"github.com/raggaer/castro/app/controllers"
 	"github.com/raggaer/castro/app/database"
@@ -33,7 +34,6 @@ func main() {
 	router.GET("/signature/:name", controllers.Signature)
 	router.POST("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
-	router.GET("/public/*filepath", serveStatic)
 
 	// Check if Castro is installed if not we create the
 	// config file on runtime
@@ -63,6 +63,8 @@ func main() {
 			cookiestore.New([]byte(util.Config.Secret)),
 		),
 		newCsrfHandler(),
+		gzip.Gzip(gzip.DefaultCompression),
+		negroni.NewStatic(http.Dir("public/")),
 	)
 
 	// Use negroni logger only in development mode

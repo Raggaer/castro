@@ -51,3 +51,12 @@
     background-color: #34383B;
     color: white;
 }
+
+.progress {
+    margin-bottom: 1px;
+    padding: 0px !important;
+}
+
+.progress-bar {
+    font-size: 9px;
+}

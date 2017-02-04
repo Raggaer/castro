@@ -16,9 +16,6 @@
     <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.firstpage.num }}">First</a></li>
     <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
     {{ end }}
-    {{ range $index, $element := .paginator.pages }}
-    <li><a href="{{ url " subtopic" "index" }}?page={{ $element.num }}">{{ $element.num }}</a></li>
-    {{ end }}
     </li>
     {{ if $.paginator.last }}
     <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
