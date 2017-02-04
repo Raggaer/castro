@@ -15,6 +15,8 @@ import (
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
+	"net/http/pprof"
+	_ "net/http/pprof"
 )
 
 func main() {
@@ -34,6 +36,8 @@ func main() {
 	router.GET("/signature/:name", controllers.Signature)
 	router.POST("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
+	//router.GET("/pprof/index", wrapHandler(pprof.Index))
+	router.GET("/pprof/heap", wrapHandler(pprof.Handler("heap")))
 
 	// Check if Castro is installed if not we create the
 	// config file on runtime
@@ -102,5 +106,11 @@ func main() {
 			// already in use
 			util.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
 		}
+	}
+}
+
+func wrapHandler(h http.Handler) httprouter.Handle {
+	return func(rw http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+		h.ServeHTTP(rw, req)
 	}
 }

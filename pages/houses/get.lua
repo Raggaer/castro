@@ -8,5 +8,7 @@ end
 
 data.towns = otbm:townList()
 
+
+
 http:render("houselist.html", data)
 

@@ -279,34 +279,6 @@ func StructToTable(s interface{}) *lua.LTable {
 	return t
 }
 
-// HouseListToTable converts a slice of houses to a lua table
-func HouseListToTable(list []*util.House, townid uint32) *lua.LTable {
-	t := &lua.LTable{}
-
-	// Loop house list
-	for _, house := range list {
-
-		if townid != 0 && townid != house.TownID {
-
-			continue
-		}
-
-		// Create a table for each house
-		houseTable := &lua.LTable{}
-
-		// Set table fields
-		houseTable.RawSetString("name", lua.LString(house.Name))
-		houseTable.RawSetString("size", lua.LNumber(house.Size))
-		houseTable.RawSetString("townid", lua.LNumber(house.TownID))
-		houseTable.RawSetString("id", lua.LNumber(house.ID))
-
-		// Append house table to main table
-		t.Append(houseTable)
-	}
-
-	return t
-}
-
 // TownListToTable converts a slice of towns to a lua table
 func TownListToTable(list []otmap.Town) *lua.LTable {
 	t := &lua.LTable{}

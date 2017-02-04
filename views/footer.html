@@ -1,7 +1,7 @@
 </div>
 <div class="col-sm-3 sidebar">
-    {{ range $index, $element := widgetList }}
-        {{ $element.Result }}
+    {{ range $index, $element := .widgets }}
+    {{ $element }}
     {{ end }}
     <!-- character search -->
 </div>

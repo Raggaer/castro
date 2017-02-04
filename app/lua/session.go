@@ -9,13 +9,19 @@ import (
 
 // SetSessionMetaTable sets the session metatable on the given
 // lua state
-func SetSessionMetaTable(luaState *lua.LState, sessionData sessions.Session) {
+func SetSessionMetaTable(luaState *lua.LState) {
 	// Create and set session metatable
 	jwtMetaTable := luaState.NewTypeMetatable(SessionMetaTable)
 	luaState.SetGlobal(SessionMetaTable, jwtMetaTable)
 
 	// Set all map metatable functions
 	luaState.SetFuncs(jwtMetaTable, sessionMethods)
+}
+
+// SetSessionMetaTableUserData sets the session metatable user data
+func SetSessionMetaTableUserData(luaState *lua.LState, sessionData sessions.Session) {
+	// Get session metatable
+	jwtMetaTable := luaState.GetTypeMetatable(SessionMetaTable)
 
 	// Set session field
 	sess := luaState.NewUserData()

@@ -1,8 +1,10 @@
 package lua
 
 import (
+	"fmt"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
+	"time"
 )
 
 // SetMapMetaTable sets a map metatable for the given state
@@ -19,20 +21,52 @@ func SetMapMetaTable(luaState *lua.LState) {
 // as a lua table
 func HouseList(L *lua.LState) int {
 	// Check if user wants specific town
-	town := L.Get(2)
+	town := uint32(L.ToInt(2))
+
+	// Check if list is on the cache
+	list, found := util.Cache.Get(
+		fmt.Sprintf("house_list_%v", town),
+	)
+
+	// If list is on the cache return cache result
+	if found {
+
+		L.Push(list.(*lua.LTable))
+
+		return 1
+	}
 
 	// Result table
-	var tbl *lua.LTable
+	tbl := &lua.LTable{}
 
-	if town.Type() != lua.LTNumber {
+	// Loop house list
+	for _, house := range util.ServerHouseList.List.Houses {
 
-		// Convert house list to table
-		tbl = HouseListToTable(util.ServerHouseList.List.Houses, 0)
-	} else {
+		// Check if user wants specific town
+		if town == 0 {
 
-		// Convert house list to table
-		tbl = HouseListToTable(util.ServerHouseList.List.Houses, uint32(L.ToInt(2)))
+			// Convert house to table
+			h := StructToTable(house)
+
+			// Append to final table
+			tbl.Append(h)
+
+		} else if town == house.TownID {
+
+			// Convert house to table
+			h := StructToTable(house)
+
+			// Append to final table
+			tbl.Append(h)
+		}
 	}
+
+	// Save list to cache
+	util.Cache.Add(
+		fmt.Sprintf("house_list_%v", town),
+		tbl,
+		time.Minute*3,
+	)
 
 	// Push table to stack
 	L.Push(tbl)

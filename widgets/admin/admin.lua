@@ -6,4 +6,4 @@ local data = {}
 
 data.admin = session:loggedAccount().castro.Admin
 
-return data
+return data, false

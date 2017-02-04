@@ -8,13 +8,19 @@ import (
 
 // SetHTTPMetaTable sets the http metatable on the given
 // lua state
-func SetHTTPMetaTable(luaState *glua.LState, w http.ResponseWriter, r *http.Request) {
+func SetHTTPMetaTable(luaState *glua.LState) {
 	// Create and set HTTP metatable
 	httpMetaTable := luaState.NewTypeMetatable(HTTPMetaTableName)
 	luaState.SetGlobal(HTTPMetaTableName, httpMetaTable)
 
 	// Set all HTTP metatable functions
 	luaState.SetFuncs(httpMetaTable, httpMethods)
+}
+
+// SetHTTPUserData sets the http metatable user data
+func SetHTTPUserData(luaState *glua.LState, w http.ResponseWriter, r *http.Request) {
+	// Get metatable
+	httpMetaTable := luaState.GetTypeMetatable(HTTPMetaTableName)
 
 	// Set HTTP method field
 	luaState.SetField(httpMetaTable, HTTPMetaTableMethodName, glua.LString(r.Method))
@@ -62,21 +68,37 @@ func RenderTemplate(L *glua.LState) int {
 	// Get HTTP request and HTTP response writer
 	req, w := getRequestAndResponseWriter(L)
 
+	templateName := L.ToString(2)
+
 	// Get args table as LUA value
 	tableValue := L.Get(3)
+
+	// Compile widget list
+	widgets, err := compileWidgetList(L, req)
+
+	if err != nil {
+		L.RaiseError("Cannot compile widget list: %v", err)
+		return 0
+	}
 
 	// Check if args is set
 	if tableValue.Type() == glua.LTTable {
 
+		// Convert table to map
 		args := TableToMap(tableValue.(*glua.LTable))
 
+		// Set widgets
+		args["widgets"] = widgets
+
 		// Render template with args
-		util.Template.RenderTemplate(w, req, L.ToString(2), args)
+		util.Template.RenderTemplate(w, req, templateName, args)
 		return 0
 	}
 
 	// Render template without args
-	util.Template.RenderTemplate(w, req, L.ToString(2), nil)
+	util.Template.RenderTemplate(w, req, templateName, map[string]interface{}{
+		"widgets": widgets,
+	})
 
 	return 0
 }

@@ -2,10 +2,10 @@ package util
 
 import (
 	"bytes"
+	"fmt"
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"io/ioutil"
-	"path/filepath"
 	"sync"
 )
 
@@ -65,23 +65,54 @@ func (w *WidgetList) Load(path string) error {
 	return nil
 }
 
+// IsCached checks if the given widget is cached
+func (w *Widget) IsCached() (template.HTML, bool) {
+	// Lock mutex
+	w.rw.RLock()
+	defer w.rw.RUnlock()
+
+	// Get value from cache
+	buff, found := Cache.Get(
+		fmt.Sprintf("widget_%v", w.Name),
+	)
+
+	if !found {
+		return "", false
+	}
+
+	return buff.(template.HTML), true
+}
+
 // Execute gets the result of the given widget
-func (w *Widget) Execute(luaState *glua.LState) (*glua.LTable, error) {
-	// Execute lua file
-	if err := luaState.DoFile(filepath.Join("widgets", w.Name, w.Name+".lua")); err != nil {
-		return nil, err
+func (w *Widget) Execute(luaState *glua.LState, f string) (*glua.LTable, bool, error) {
+	// Lock mutex
+	w.rw.RLock()
+	defer w.rw.RUnlock()
+
+	// Execute function
+	if err := luaState.DoString(f); err != nil {
+		return nil, false, err
 	}
 
 	// Get value of the top of the stack
-	v := luaState.Get(-1)
+	v := luaState.Get(-2)
+
+	// Remove top value
+	luaState.Pop(-2)
+
+	// Get cache option
+	c := luaState.ToBool(-1)
+
+	// Remove top value
+	luaState.Pop(-1)
 
 	// Check for valid returned type
 	if v.Type() != glua.LTTable {
-		return nil, nil
+		return nil, c, nil
 	}
 
 	// Return value as table
-	return v.(*glua.LTable), nil
+	return v.(*glua.LTable), c, nil
 }
 
 // SetResult changes a widget result

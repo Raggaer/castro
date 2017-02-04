@@ -23,7 +23,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(5)
+	wait.Add(7)
 
 	// Load application logger
 	loadAppLogger()
@@ -50,9 +50,31 @@ func Start() {
 	go loadWidgetList(wait)
 	go appTemplates(wait)
 	go widgetTemplates(wait)
+	go loadSubtopics(wait)
+	go loadWidgets(wait)
 
 	// Wait for the tasks
 	wait.Wait()
+}
+
+func loadWidgets(wg *sync.WaitGroup) {
+	// Load subtopic list
+	if err := lua.Widgets.Load("widgets"); err != nil {
+		util.Logger.Fatalf("Cannot load application widget list: %v", err)
+	}
+
+	// Tell the wait group we are done
+	wg.Done()
+}
+
+func loadSubtopics(wg *sync.WaitGroup) {
+	// Load subtopic list
+	if err := lua.Subtopics.Load("pages"); err != nil {
+		util.Logger.Fatalf("Cannot load application subtopic list: %v", err)
+	}
+
+	// Tell the wait group we are done
+	wg.Done()
 }
 
 func loadAppLogger() {
