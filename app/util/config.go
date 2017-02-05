@@ -1,31 +1,36 @@
 package util
 
-import "github.com/BurntSushi/toml"
+import (
+	"github.com/BurntSushi/toml"
+	"time"
+)
 
-// CookieConfig struct used for the cookies
-// configuration options
+// CookieConfig struct used for the cookies configuration options
 type CookieConfig struct {
 	Name   string
 	MaxAge int
 }
 
-// CacheConfig struct used for the cache
-// configuration options
-type CacheConfig struct {
-	Default int
-	Purge   int
+// RateLimiterConfig struct used for the rate limiting configration options
+type RateLimiterConfig struct {
+	Number int64
+	Time   time.Duration
 }
 
-// SSLConfig struct used for the ssl
-// configuration options
+// CacheConfig struct used for the cache configuration options
+type CacheConfig struct {
+	Default time.Duration
+	Purge   time.Duration
+}
+
+// SSLConfig struct used for the ssl configuration options
 type SSLConfig struct {
 	Enabled bool
 	Cert    string
 	Key     string
 }
 
-// MailConfig struct used for the mail
-// configuration options
+// MailConfig struct used for the mail configuration options
 type MailConfig struct {
 	Server   string
 	Port     int
@@ -33,20 +38,20 @@ type MailConfig struct {
 	Password string
 }
 
-// Configuration struct used for the main Castro
-// config file TOML file
+// Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
-	Mode     string
-	Port     int
-	URL      string
-	Datapack string
-	Secret   string
-	Mail     MailConfig
-	Captcha  CaptchaConfig
-	SSL      SSLConfig
-	Cookies  CookieConfig
-	Cache    CacheConfig
-	Custom   map[string]interface{}
+	Mode      string
+	Port      int
+	URL       string
+	Datapack  string
+	Secret    string
+	Mail      MailConfig
+	Captcha   CaptchaConfig
+	SSL       SSLConfig
+	Cookies   CookieConfig
+	Cache     CacheConfig
+	RateLimit RateLimiterConfig
+	Custom    map[string]interface{}
 }
 
 // Config holds the main configuration file

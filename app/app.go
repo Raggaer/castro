@@ -150,7 +150,7 @@ func createCache() {
 	// Create a new cache instance with the given options
 	// first parameter is the default item duration on the cache
 	// second parameter is the tick time to purge all dead cache items
-	util.Cache = cache.New(time.Duration(util.Config.Cache.Default), time.Duration(util.Config.Cache.Purge))
+	util.Cache = cache.New(util.Config.Cache.Default, util.Config.Cache.Purge)
 }
 
 func loadWidgetList(wg *sync.WaitGroup) {
@@ -224,14 +224,14 @@ func templateFuncs() template.FuncMap {
 			return util.Config.IsDev()
 		},
 		"url": func(args ...interface{}) template.URL {
-			url := fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port)
+			u := fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port)
 			for _, arg := range args {
-				url = url + fmt.Sprintf("/%v", arg)
+				u = u + fmt.Sprintf("/%v", arg)
 			}
 			if util.Config.SSL.Enabled {
-				return template.URL("https://" + url)
+				return template.URL("https://" + u)
 			}
-			return template.URL("http://" + url)
+			return template.URL("http://" + u)
 		},
 		"queryResults": func(m map[string]interface{}) []interface{} {
 			n := len(m)

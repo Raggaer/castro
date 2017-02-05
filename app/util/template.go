@@ -70,7 +70,7 @@ func (t *Tmpl) FuncMap(f template.FuncMap) {
 	t.Tmpl.Funcs(f)
 }
 
-// RenderWidget
+// RenderWidget renders the given widget template
 func (t Tmpl) RenderWidget(req *http.Request, name string, args map[string]interface{}) (*bytes.Buffer, error) {
 	// Check if app is running on dev mode
 	if Config.IsDev() {

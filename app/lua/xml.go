@@ -1,8 +1,10 @@
 package lua
 
 import (
+	"fmt"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
+	"time"
 )
 
 // SetXMLMetaTable sets the xml metatable of the given
@@ -28,14 +30,37 @@ func GetVocationByName(L *lua.LState) int {
 		return 0
 	}
 
+	// Check if vocation is on cache
+	v, found := util.Cache.Get(
+		fmt.Sprintf("vocation_%v", name.String()),
+	)
+
+	if found {
+
+		// Push vocation table
+		L.Push(v.(*lua.LTable))
+
+		return 1
+	}
+
 	// Get vocation
 	for _, voc := range util.ServerVocationList.List.Vocations {
 
 		// If it is the vocation we are looking for
 		if voc.Name == name.String() {
 
+			// Convert vocation to table
+			vocation := StructToTable(voc)
+
+			// Save vocation on the cache
+			util.Cache.Add(
+				fmt.Sprintf("vocation_%v", voc.Name),
+				vocation,
+				time.Minute*3,
+			)
+
 			// Push vocation as lua table
-			L.Push(VocationToTable(voc))
+			L.Push(vocation)
 
 			return 1
 		}
@@ -65,8 +90,31 @@ func GetVocationByID(L *lua.LState) int {
 		// If it is the vocation we are looking for
 		if voc.ID == idn {
 
+			// Check if vocation is on the cache
+			vocation, found := util.Cache.Get(
+				fmt.Sprintf("vocation_%v", voc.Name),
+			)
+
+			if found {
+
+				// Push vocation table
+				L.Push(vocation.(*lua.LTable))
+
+				return 1
+			}
+
+			// Convert vocation to table
+			v := StructToTable(voc)
+
+			// Save vocation to cache
+			util.Cache.Add(
+				fmt.Sprintf("vocation_%v", voc.Name),
+				v,
+				time.Minute*3,
+			)
+
 			// Push vocation as lua table
-			L.Push(StructToTable(voc))
+			L.Push(v)
 
 			return 1
 		}
@@ -78,46 +126,57 @@ func GetVocationByID(L *lua.LState) int {
 // VocationList returns the server vocations xml file
 func VocationList(L *lua.LState) int {
 	// Check if user wants base vocations
-	base := L.Get(2)
+	base := L.ToBool(2)
 
-	// Check for valid base type
-	if base.Type() != lua.LTBool {
+	// Build cache key
+	cacheKeyName := "vocation_list"
 
-		// Get vocation list table
-		t := VocationListToTable(util.ServerVocationList.List.Vocations, func(v *util.Vocation) bool {
-			return true
-		})
+	if base {
+		cacheKeyName = "vocation_list_base"
+	}
 
-		// Push table to stack
-		L.Push(t)
+	// Check if base vocation list is on the cache
+	b, found := util.Cache.Get(cacheKeyName)
+
+	if found {
+
+		// Push list table
+		L.Push(b.(*lua.LTable))
 
 		return 1
 	}
 
-	// Convert case to boolean
-	b := L.ToBool(2)
+	// Data holder
+	result := &lua.LTable{}
 
-	// Stupid case
-	if !b {
+	// Loop vocation list
+	for _, vocation := range util.ServerVocationList.List.Vocations {
 
-		// Get vocation list table
-		t := VocationListToTable(util.ServerVocationList.List.Vocations, func(v *util.Vocation) bool {
-			return true
-		})
+		// Convert vocation to table
+		v := StructToTable(vocation)
 
-		// Push table to stack
-		L.Push(t)
+		// Check if user wants base vocations
+		if base {
 
-		return 1
+			// Check if base vocation
+			if vocation.ID == vocation.FromVoc {
+
+				// Push vocation to table
+				result.Append(v)
+			}
+
+			continue
+		}
+
+		// Push vocation to table
+		result.Append(v)
 	}
 
-	// Get base vocation list
-	t := VocationListToTable(util.ServerVocationList.List.Vocations, func(v *util.Vocation) bool {
-		return v.FromVoc == v.ID
-	})
+	// Add table to cache
+	util.Cache.Add(cacheKeyName, result, time.Minute*3)
 
 	// Push table to stack
-	L.Push(t)
+	L.Push(result)
 
 	return 1
 }

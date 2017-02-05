@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"encoding/gob"
+	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/thirdparty/tollbooth_negroni"
 	"github.com/goincremental/negroni-sessions"
 	"github.com/goincremental/negroni-sessions/cookiestore"
 	"github.com/julienschmidt/httprouter"
@@ -26,7 +28,6 @@ func main() {
 	// Show credits and application name
 	fmt.Println(`
 			Castro - Open Tibia automatic account creator
-
 	`)
 
 	// Declare our new http router
@@ -36,7 +37,6 @@ func main() {
 	router.GET("/signature/:name", controllers.Signature)
 	router.POST("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
-	//router.GET("/pprof/index", wrapHandler(pprof.Index))
 	router.GET("/pprof/heap", wrapHandler(pprof.Handler("heap")))
 
 	// Check if Castro is installed if not we create the
@@ -58,7 +58,7 @@ func main() {
 	app.Start()
 
 	// Create the middleware negroni instance with
-	// some middlewares
+	// some application middleware
 	n := negroni.New(
 		newMicrotimeHandler(),
 		negroni.NewRecovery(),
@@ -69,6 +69,12 @@ func main() {
 		newCsrfHandler(),
 		gzip.Gzip(gzip.DefaultCompression),
 		negroni.NewStatic(http.Dir("public/")),
+		tollbooth_negroni.LimitHandler(
+			tollbooth.NewLimiter(
+				util.Config.RateLimit.Number,
+				util.Config.RateLimit.Time,
+			),
+		),
 	)
 
 	// Use negroni logger only in development mode

@@ -14,7 +14,7 @@ var (
 	// Logger main logger instance of the app
 	Logger = logrus.New()
 
-	// Logger file
+	// LoggerOutput output file
 	LoggerOutput *os.File
 
 	// LastLoggerDay save last day the logger was created

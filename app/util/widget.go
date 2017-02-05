@@ -19,11 +19,13 @@ var (
 	}
 )
 
+// WidgetList the list of widget applcation
 type WidgetList struct {
 	rw   *sync.RWMutex
 	List []*Widget
 }
 
+// Widget is an application sidebar content
 type Widget struct {
 	rw     *sync.RWMutex
 	Name   string

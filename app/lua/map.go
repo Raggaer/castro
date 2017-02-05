@@ -123,14 +123,36 @@ func GetTownByName(L *lua.LState) int {
 		return 0
 	}
 
+	// Check if town is on cache
+	t, found := util.Cache.Get(
+		fmt.Sprintf("town_%v", name.String()),
+	)
+
+	if found {
+
+		// Push town table
+		L.Push(t.(*lua.LTable))
+
+		return 1
+	}
+
 	// Get town
 	for _, town := range util.OTBMap.Towns {
 
 		// If its the town we are looking for
 		if town.Name == name.String() {
 
+			twn := StructToTable(&town)
+
+			// Save town to cache
+			util.Cache.Add(
+				fmt.Sprintf("town_%v", name.String()),
+				twn,
+				time.Minute*3,
+			)
+
 			// Convert town to lua table and push
-			L.Push(StructToTable(&town))
+			L.Push(twn)
 
 			return 1
 		}
@@ -160,8 +182,31 @@ func GetTownByID(L *lua.LState) int {
 		// If its the town we are looking for
 		if town.ID == townid {
 
+			// Check if town is on cache
+			t, found := util.Cache.Get(
+				fmt.Sprintf("town_%v", town.Name),
+			)
+
+			if found {
+
+				// Push town table
+				L.Push(t.(*lua.LTable))
+
+				return 1
+			}
+
+			// Convert town to table
+			twn := StructToTable(&town)
+
+			// Save town to cache
+			util.Cache.Add(
+				fmt.Sprintf("town_%v", town.Name),
+				twn,
+				time.Minute*3,
+			)
+
 			// Convert town to lua table and push
-			L.Push(StructToTable(&town))
+			L.Push(twn)
 
 			return 1
 		}

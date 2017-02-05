@@ -17,6 +17,7 @@ type luaStatePool struct {
 	saved []*glua.LState
 }
 
+// FunctionList list of lua source files
 type FunctionList struct {
 	rw   *sync.RWMutex
 	List map[string]string
@@ -101,6 +102,7 @@ var (
 	}
 )
 
+// Load loads all lua source files
 func (s *FunctionList) Load(dir string) error {
 	// Lock mutex
 	s.rw.Lock()
@@ -139,6 +141,7 @@ func (s *FunctionList) Load(dir string) error {
 	return nil
 }
 
+// Get retrieves the source of the given lua file
 func (s *FunctionList) Get(place, name, method string) (string, error) {
 	// Lock mutex
 	s.rw.Lock()

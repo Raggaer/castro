@@ -41,11 +41,15 @@ func createConfigFile(name string) error {
 			MaxAge: 1000000,
 		},
 		Cache: util.CacheConfig{
-			Default: int(time.Minute) * 5,
-			Purge:   int(time.Minute),
+			Default: time.Minute * 5,
+			Purge:   time.Minute,
 		},
 		SSL: util.SSLConfig{
 			Enabled: false,
+		},
+		RateLimit: util.RateLimiterConfig{
+			Number: 100,
+			Time:   time.Minute,
 		},
 		Custom: make(map[string]interface{}),
 	})

@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// LuaDate lua object date converted from go
 type LuaDate struct {
 	Year   int
 	Month  int
