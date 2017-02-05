@@ -7,6 +7,7 @@ type Account struct {
 	ID       int64
 	Name     string
 	Premdays int
+	Password string
 	Email    string
 	Lastday  int64
 	Creation int64
@@ -28,7 +29,7 @@ func GetAccountByName(name string) (Account, CastroAccount, error) {
 	castroAccount := CastroAccount{}
 
 	// Get account from database
-	if err := database.DB.Get(&account, "SELECT id, name, premdays, email, lastday, creation FROM accounts WHERE name = ?", name); err != nil {
+	if err := database.DB.Get(&account, "SELECT id, name, password, premdays, email, lastday, creation FROM accounts WHERE name = ?", name); err != nil {
 		return account, castroAccount, err
 	}
 

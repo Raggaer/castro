@@ -1,6 +1,8 @@
 package lua
 
 import (
+	"fmt"
+	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
 	"time"
 )
@@ -40,6 +42,19 @@ func ParseUnixTimestamp(L *lua.LState) int {
 	// Get time as int64
 	unix64 := L.ToInt64(2)
 
+	// Check if time table is saved on cache
+	t, found := util.Cache.Get(
+		fmt.Sprintf("time_result_%v", unix64),
+	)
+
+	if found {
+
+		// Push date table
+		L.Push(t.(*lua.LTable))
+
+		return 1
+	}
+
 	// If timestamp is empty return empty lua date
 	if unix64 == 0 {
 
@@ -68,8 +83,18 @@ func ParseUnixTimestamp(L *lua.LState) int {
 		Result: d.Format("Mon Jan 2 15:04:05"),
 	}
 
+	// Convert date struct to table
+	ldateTable := StructToTable(&ldate)
+
+	// Save date struct to cache
+	util.Cache.Add(
+		fmt.Sprintf("time_result_%v", unix64),
+		ldateTable,
+		time.Minute*3,
+	)
+
 	// Push result as table
-	L.Push(StructToTable(&ldate))
+	L.Push(ldateTable)
 
 	return 1
 }

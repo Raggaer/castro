@@ -226,6 +226,9 @@ func (p *luaStatePool) GetApplicationState() *glua.LState {
 	// Create cache metatable
 	SetCacheMetaTable(luaState)
 
+	// Set server path
+	luaState.SetGlobal("serverPath", glua.LString(util.Config.Datapack))
+
 	return luaState
 }
 

@@ -6,6 +6,35 @@
     <strong>Success!</strong> {{ .success }}
 </div>
 {{ end }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+    <tr>
+        <th colspan="2">Account information</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Account type</th>
+        {{ if .account.IsPremium }}
+        <td>
+            Premium account ({{ .account.Premdays }} days remaining)
+        </td>
+        {{ else }}
+        <td>
+            Normal account
+        </td>
+        {{ end }}
+    </tr>
+    <tr>
+        <th>Creation date</th>
+        <td>{{ .account.Creation.Result }}</td>
+    </tr>
+    <tr>
+        <th>Last login</th>
+        <td>{{ .account.Lastday.Result }}</td>
+    </tr>
+    </tbody>
+</table>
 <h3>My Characters</h3>
 <hr>
 <table class="table table-striped">
@@ -23,9 +52,7 @@
     <tr>
         <th scope="row">{{ $index }}</th>
         <td>
-            <a href="
-                {{ url " subtopic" "community" "view" }}?name={{ urlEncode $element.name }}
-            ">
+            <a href="{{ url " subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">
             {{ $element.name }}
             </a>
         </td>

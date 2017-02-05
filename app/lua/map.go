@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
-	"time"
 )
 
 // SetMapMetaTable sets a map metatable for the given state
@@ -65,7 +64,7 @@ func HouseList(L *lua.LState) int {
 	util.Cache.Add(
 		fmt.Sprintf("house_list_%v", town),
 		tbl,
-		time.Minute*3,
+		util.Config.Cache.Default,
 	)
 
 	// Push table to stack
@@ -103,7 +102,7 @@ func TownList(L *lua.LState) int {
 	}
 
 	// Save list to cache
-	util.Cache.Add("town_list", result, time.Minute*3)
+	util.Cache.Add("town_list", result, util.Config.Cache.Default)
 
 	// Push result
 	L.Push(result)
@@ -148,7 +147,7 @@ func GetTownByName(L *lua.LState) int {
 			util.Cache.Add(
 				fmt.Sprintf("town_%v", name.String()),
 				twn,
-				time.Minute*3,
+				util.Config.Cache.Default,
 			)
 
 			// Convert town to lua table and push
@@ -202,7 +201,7 @@ func GetTownByID(L *lua.LState) int {
 			util.Cache.Add(
 				fmt.Sprintf("town_%v", town.Name),
 				twn,
-				time.Minute*3,
+				util.Config.Cache.Default,
 			)
 
 			// Convert town to lua table and push

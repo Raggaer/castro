@@ -1,5 +1,9 @@
 require "paginator"
 
+dofile(serverPath .. "/data/lib/core/constants.lua")
+
+print(CONTAINER_POSITION)
+
 local page = 0
 
 if http.getValues.page ~= nil then

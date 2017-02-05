@@ -5,7 +5,6 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
 	"strings"
-	"time"
 )
 
 // SetDatabaseMetaTable sets the database metatable of the given state
@@ -202,7 +201,7 @@ func Query(L *lua.LState) int {
 
 	// If user wants to use cache save table
 	if saveToCache {
-		util.Cache.Add(cacheKey, results, time.Minute*3)
+		util.Cache.Add(cacheKey, results, util.Config.Cache.Default)
 	}
 
 	// If there are no results return nil
