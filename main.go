@@ -21,14 +21,26 @@ import (
 	_ "net/http/pprof"
 )
 
+var (
+	// VERSION is the application current version. Changed at compile time
+	VERSION string
+
+	// BUILD_DATE date of application compilation
+	BUILD_DATE string
+)
+
 func main() {
 	// Register gob data
 	gob.Register(&models.CsrfToken{})
 
 	// Show credits and application name
-	fmt.Println(`
-			Castro - Open Tibia automatic account creator
-	`)
+	fmt.Printf(`
+	Castro - Open Tibia automatic account creator
+
+	Running version: %v
+	Compiled at: %v
+
+	`, VERSION, BUILD_DATE)
 
 	// Declare our new http router
 	router := httprouter.New()
