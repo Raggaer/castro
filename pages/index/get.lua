@@ -1,9 +1,5 @@
 require "paginator"
 
-dofile(serverPath .. "/data/lib/core/constants.lua")
-
-print(CONTAINER_POSITION)
-
 local page = 0
 
 if http.getValues.page ~= nil then
@@ -16,7 +12,7 @@ if page < 0 then
 end
 
 local articleCount = db:query("SELECT COUNT(*) as total FROM articles", true, true)
-local pg = paginator(page, 4, tonumber(articleCount.total))
+local pg = paginator(page, 5, tonumber(articleCount.total))
 local data = {}
 
 data.articles = db:query("SELECT title, text, created_at FROM articles ORDER BY id DESC LIMIT ?, ?", pg.limit, pg.offset, false, true)

@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// ReflectMetaTableName the name of the reflect metatable
+	ReflectMetaTableName = "reflect"
+
 	// TimeMetaTableName the name of the time metatable
 	TimeMetaTableName = "time"
 

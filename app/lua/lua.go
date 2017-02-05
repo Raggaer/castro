@@ -100,6 +100,9 @@ var (
 	timeMethods = map[string]glua.LGFunction{
 		"parseUnix": ParseUnixTimestamp,
 	}
+	reflectMethods = map[string]glua.LGFunction{
+		"getGlobal": GetGlobal,
+	}
 )
 
 // Load loads all lua source files
@@ -226,8 +229,30 @@ func (p *luaStatePool) GetApplicationState() *glua.LState {
 	// Create cache metatable
 	SetCacheMetaTable(luaState)
 
+	// Create reflect metatable
+	SetReflectMetaTable(luaState)
+
 	// Set server path
 	luaState.SetGlobal("serverPath", glua.LString(util.Config.Datapack))
+
+	// Get executable folder
+	f, err := osext.ExecutableFolder()
+
+	if err != nil {
+		util.Logger.Fatalf("Cannot get executable folder path: %v", err)
+	}
+
+	// Get package metatable
+	pkg := luaState.GetGlobal("package")
+
+	// Set path field
+	luaState.SetField(
+		pkg,
+		"path",
+		glua.LString(
+			filepath.Join(f, "app", "lua", "engine", "?.lua"),
+		),
+	)
 
 	return luaState
 }
@@ -250,25 +275,6 @@ func (p *luaStatePool) New() *glua.LState {
 		glua.Options{
 			IncludeGoStackTrace: true,
 		},
-	)
-
-	// Get executable folder
-	f, err := osext.ExecutableFolder()
-
-	if err != nil {
-		util.Logger.Fatalf("Cannot get executable folder path: %v", err)
-	}
-
-	// Get package metatable
-	pkg := luaState.GetGlobal("package")
-
-	// Set path field
-	luaState.SetField(
-		pkg,
-		"path",
-		glua.LString(
-			filepath.Join(f, "app", "lua", "engine", "?.lua"),
-		),
 	)
 
 	// Return the lua state

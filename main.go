@@ -35,12 +35,12 @@ func main() {
 
 	// Show credits and application name
 	fmt.Printf(`
-	Castro - Open Tibia automatic account creator
+Castro - Open Tibia automatic account creator
 
-	Running version: %v
-	Compiled at: %v
+Running version: %v
+Compiled at: %v
 
-	`, VERSION, BUILD_DATE)
+`, VERSION, BUILD_DATE)
 
 	// Declare our new http router
 	router := httprouter.New()
