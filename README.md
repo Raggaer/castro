@@ -1,6 +1,7 @@
 ![Castro AAC](https://i.gyazo.com/f328c60ee8c219b94a521e3e51fa66e7.png)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/Raggaer/castro)](https://goreportcard.com/report/github.com/Raggaer/castro)
+[![lICENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/Raggaer/castro/blob/master/LICENSE)
 
 High performance Open Tibia automatic account creator written in **Go** using **Lua** for the subtopics
 
