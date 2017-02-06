@@ -95,6 +95,52 @@ func GetLoggedAccount(L *lua.LState) int {
 	return 1
 }
 
+// IsAdmin checks if the logged account is admin
+func IsAdmin(L *lua.LState) int {
+	// Get session data from the user data field
+	session := getSessionData(L)
+
+	// Try to get logged field from data
+	b, ok := session.Get("logged").(bool)
+
+	// If element does not exist push false
+	if !ok {
+		L.Push(lua.LBool(false))
+
+		return 1
+	}
+
+	// Check the session value
+	if !b {
+		L.Push(lua.LBool(false))
+
+		return 1
+	}
+
+	// Get logged account name
+	accountName, ok := session.Get("logged-account").(string)
+
+	if !ok {
+
+		// Return nil if invalid account name
+		L.Push(lua.LNil)
+		return 1
+	}
+
+	// Get accounts from database
+	_, castroAccount, err := models.GetAccountByName(accountName)
+
+	if err != nil {
+		L.RaiseError("Cannot get account by name: %v", err)
+		return 0
+	}
+
+	// Push admin status
+	L.Push(lua.LBool(castroAccount.Admin))
+
+	return 1
+}
+
 // DestroySession removes the session data from the database
 func DestroySession(L *lua.LState) int {
 	// Get session data from the user data field
@@ -133,7 +179,7 @@ func SetSessionData(L *lua.LState) int {
 
 	case lua.LTNumber:
 
-		// Convert element to flaot64
+		// Convert element to float64
 		num, err := strconv.ParseFloat(val.String(), 64)
 
 		if err != nil {
@@ -191,10 +237,10 @@ func GetSessionData(L *lua.LState) int {
 
 	// Push element depending on the Go type
 	switch val.(type) {
-	case int64:
+	case float64:
 
 		// Push element as number
-		L.Push(lua.LNumber(val.(int64)))
+		L.Push(lua.LNumber(val.(float64)))
 	case string:
 
 		// Push element as string

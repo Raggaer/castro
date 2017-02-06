@@ -17,6 +17,7 @@ import (
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
+	"github.com/yuin/gopher-lua"
 	"net/http/pprof"
 	_ "net/http/pprof"
 )
@@ -32,6 +33,7 @@ var (
 func main() {
 	// Register gob data
 	gob.Register(&models.CsrfToken{})
+	gob.Register(&lua.LTable{})
 
 	// Show credits and application name
 	fmt.Printf(`

@@ -62,6 +62,7 @@ var (
 	}
 	sessionMethods = map[string]glua.LGFunction{
 		"isLogged":      IsLogged,
+		"isAdmin":       IsAdmin,
 		"getFlash":      GetFlash,
 		"setFlash":      SetFlash,
 		"set":           SetSessionData,
