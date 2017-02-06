@@ -1,0 +1,29 @@
+{{ template "header.html" }}
+<h3>Change account email</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+<form method="POST">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <div class="form-group">
+        <label for="input-account-email">Current email</label>
+        <input type="email" class="form-control" id="input-account-email" name="account-email"
+               placeholder="Your current email">
+    </div>
+    <div class="form-group">
+        <label for="input-account-new-email">New email</label>
+        <input type="email" class="form-control" id="input-account-new-email" name="new-email" placeholder="New email">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Change</button>
+    </div>
+</form>
+{{ template "footer.html" . }} 

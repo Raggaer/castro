@@ -32,8 +32,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			// If AAC is running on development mode log error
 			if util.Config.IsDev() || util.Config.IsLog() {
 				util.Logger.Errorf("Cannot execute %v: %v", ps.ByName("page"), err)
-				w.Write([]byte(err.Error()))
-				return
 			}
 
 			w.Write([]byte("Cannot execute the given subtopic"))
@@ -48,8 +46,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			// If AAC is running on development mode log error
 			if util.Config.IsDev() || util.Config.IsLog() {
 				util.Logger.Errorf("Cannot execute %v: %v", ps.ByName("page"), err)
-				w.Write([]byte(err.Error()))
-				return
 			}
 
 			w.Write([]byte("Cannot execute the given subtopic"))
@@ -89,9 +85,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// If AAC is running on development mode log error
 		if util.Config.IsDev() || util.Config.IsLog() {
-			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
-			w.Write([]byte(err.Error()))
-			return
+			util.Logger.Errorf("Cannot execute %v: %v", pageName, err)
 		}
 
 		w.Write([]byte("Cannot execute the given subtopic"))
@@ -105,9 +99,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// If AAC is running on development mode log error
 		if util.Config.IsDev() || util.Config.IsLog() {
-			util.Logger.Errorf("Cannot execute %v: %v\n", ps.ByName("page"), err)
-			w.Write([]byte(err.Error()))
-			return
+			util.Logger.Errorf("Cannot execute %v: %v", pageName, err)
 		}
 
 		w.Write([]byte("Cannot execute the given subtopic"))

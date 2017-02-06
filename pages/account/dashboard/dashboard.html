@@ -33,6 +33,22 @@
         <th>Last login</th>
         <td>{{ .account.Lastday.Result }}</td>
     </tr>
+    <tr>
+        <th></th>
+        <td>
+            <a role="button" href="{{ url " subtopic" "account" "changepassword" }}" class="btn btn-xs btn-primary">
+            Change password
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <th></th>
+        <td>
+            <a role="button" href="{{ url " subtopic" "account" "changemail" }}" class="btn btn-xs btn-default">
+            Change email
+            </a>
+        </td>
+    </tr>
     </tbody>
 </table>
 <h3>My Characters</h3>
