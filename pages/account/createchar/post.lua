@@ -45,4 +45,4 @@ db:execute("INSERT INTO players (name, account_id, vocation, town_id, conditions
 
 session:setFlash("success", "Character created")
 
-http:redirect("/subtopic/dashboard")
+http:redirect("/subtopic/account/dashboard")

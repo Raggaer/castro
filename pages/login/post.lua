@@ -14,4 +14,4 @@ end
 session:set("logged", true)
 session:set("logged-account", account.name)
 
-http:redirect("/subtopic/dashboard")
+http:redirect("/subtopic/account/dashboard")
