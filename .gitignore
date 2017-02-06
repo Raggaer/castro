@@ -6,5 +6,4 @@ vendor/
 public/images/signature/*.png
 logs/*.json
 *.exe
-.goxc.json
 projectFilesBackup

@@ -29,7 +29,7 @@ if not validator:validVocation(data.vocType) then
     return
 end
 
-local playerCount = db:query("SELECT COUNT(*) as total FROM players WHERE vocation = ?", data.vocType, true)
+local playerCount = db:query("SELECT COUNT(*) as total FROM players WHERE vocation = ?", data.vocType, true, true)
 
 data.paginator = paginator(page, 15, tonumber(playerCount.total))
 
@@ -69,7 +69,7 @@ data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FRO
 
 if data.list ~= nil then
     if not cache then
-        for key, val in pairs(data.list) do
+        for _, val in pairs(data.list) do
             val.vocation = xml:vocationByID(val.vocation)
         end
     end

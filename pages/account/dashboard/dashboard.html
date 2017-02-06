@@ -60,7 +60,6 @@
         <th>Name</th>
         <th>Vocation</th>
         <th>Level</th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -74,15 +73,6 @@
         </td>
         <td>{{ vocation $element.vocation }}</td>
         <td>{{ $element.level }}</td>
-        <td>
-            <form method="post">
-                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="submit" class="btn btn-xs btn-danger">Delete</button>
-                    <button type="button" class="btn btn-xs btn-secondary">View</button>
-                </div>
-            </form>
-        </td>
     </tr>
     {{ end }}
     </tbody>
