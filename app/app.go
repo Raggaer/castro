@@ -270,5 +270,8 @@ func templateFuncs() template.FuncMap {
 		"captchaEnabled": func() bool {
 			return util.Config.Captcha.Enabled
 		},
+		"eqNumber": func(a, b float64) bool {
+			return a == b
+		},
 	}
 }

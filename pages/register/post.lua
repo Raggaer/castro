@@ -47,7 +47,7 @@ if string.len(http.postValues["password"]) > 32 or string.len(http.postValues["p
     return
 end
 
-id = db:execute(
+local id = db:execute(
     "INSERT INTO accounts (name, password, premdays, email, creation) VALUES (?, ?, ?, ?, ?)",
     http.postValues["account-name"],
     crypto:sha1(http.postValues["password"]),

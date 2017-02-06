@@ -1,0 +1,79 @@
+{{ template "header.html" }}
+<h3>Highscores for {{ .voc.Name }}</h3>
+<small>Ordering results by {{ .order }}</small>
+<hr>
+<form method="GET">
+    <div class="form-group">
+        <select name="voc" class="form-control" id="select-vocation">
+            {{ range $index, $element := .vocList }}
+            <option value="{{ $element.ID }}" {{ if eqNumber $.vocType $element.ID }} selected {{ end }}>{{
+                $element.Name }}
+            </option>
+            {{ end }}
+        </select>
+    </div>
+    <div class="form-group">
+        <select name="order" class="form-control" id="select-order">
+            <option value="0" {{ if eqNumber .orderType 0 }} selected {{ end }}>Level</option>
+            <option value="1" {{ if eqNumber .orderType 1 }} selected {{ end }}>Magic Level</option>
+            <option value="2" {{ if eqNumber .orderType 2 }} selected {{ end }}>Balance</option>
+            <option value="3" {{ if eqNumber .orderType 3 }} selected {{ end }}>Fist Fighting</option>
+            <option value="4" {{ if eqNumber .orderType 4 }} selected {{ end }}>Sword Fighting</option>
+            <option value="5" {{ if eqNumber .orderType 5 }} selected {{ end }}>Axe Fighting</option>
+            <option value="6" {{ if eqNumber .orderType 6 }} selected {{ end }}>Club Fighting</option>
+            <option value="7" {{ if eqNumber .orderType 7 }} selected {{ end }}>Distance Fighting</option>
+            <option value="8" {{ if eqNumber .orderType 8 }} selected {{ end }}>Shielding</option>
+            <option value="9" {{ if eqNumber .orderType 9 }} selected {{ end }}>Fishing</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-block btn-primary">Search</button>
+    </div>
+</form>
+<table class="table table-inverse">
+    <thead class="thead-inverse">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Vocation</th>
+        <th>{{ .order }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ if .list }}
+    {{ range $index, $element := .list }}
+    <tr>
+        <td>1</td>
+        <td>
+            <a href="{{ url " subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name
+            }}</a>
+        </td>
+        <td>{{ $element.vocation.Name }}</td>
+        <td>{{ $element.value }}</td>
+    </tr>
+    {{ end }}
+    {{ else }}
+    <tr>
+        <td colspan="4">
+            No players match this criteria
+        </td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
+<ul class="pagination pagination-sm">
+    {{ if .paginator.prev }}
+    <li><a href="{{ url " subtopic" "community" "highscores" }}?page={{ .paginator.firstpage.num }}&order={{ .orderType
+        }}&voc={{ .vocType }}">First</a></li>
+    <li><a href="{{ url " subtopic" "community" "highscores" }}?page={{ .paginator.prevnumber }}&order={{ .orderType
+        }}&voc={{ .vocType }}">&lt;</a></li>
+    {{ end }}
+    </li>
+    {{ if $.paginator.last }}
+    <li><a href="{{ url " subtopic" "community" "highscores" }}?page={{ .paginator.lastnumber }}&order={{ .orderType
+        }}&voc={{ .vocType }}">&gt;</a></li>
+    <li><a href="{{ url " subtopic" "community" "highscores" }}?page={{ .paginator.lastpage.num }}&order={{ .orderType
+        }}&voc={{ .vocType }}">Last</a></li>
+    {{ end }}
+</ul>
+{{ template "footer.html" . }}
