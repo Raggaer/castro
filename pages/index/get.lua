@@ -11,7 +11,7 @@ if page < 0 then
     return
 end
 
-local articleCount = db:query("SELECT COUNT(*) as total FROM articles", true, true)
+local articleCount = db:singleQuery("SELECT COUNT(*) as total FROM articles", true)
 local pg = paginator(page, 5, tonumber(articleCount.total))
 local data = {}
 

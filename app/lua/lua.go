@@ -44,8 +44,9 @@ var (
 		"sha1": Sha1Hash,
 	}
 	mysqlMethods = map[string]glua.LGFunction{
-		"query":   Query,
-		"execute": Execute,
+		"query":       Query,
+		"execute":     Execute,
+		"singleQuery": SingleQuery,
 	}
 	configMethods = map[string]glua.LGFunction{
 		"get": GetConfigLuaValue,

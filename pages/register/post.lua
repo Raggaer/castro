@@ -11,13 +11,13 @@ if captcha:isEnabled() then
     end
 end
 
-if db:query("SELECT name FROM accounts WHERE email = ?", http.postValues.email) ~= nil then
+if db:singleQuery("SELECT name FROM accounts WHERE email = ?", http.postValues.email) ~= nil then
     session:setFlash("validationError", "Email already in use by another user")
     http:redirect("/subtopic/register")
     return
 end
 
-if db:query("SELECT name FROM accounts WHERE name = ?", http.postValues["account-name"]) ~= nil then
+if db:singleQuery("SELECT name FROM accounts WHERE name = ?", http.postValues["account-name"]) ~= nil then
     session:setFlash("validationError", "Account name already in use by another user")
     http:redirect("/subtopic/register")
     return

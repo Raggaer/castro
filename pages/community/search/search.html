@@ -1,0 +1,41 @@
+{{ template "header.html" }}
+<h3>Search character</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+<form method="POST">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <div class="form-group">
+        <label for="input-character-name">Character name</label>
+        <input type="text" class="form-control" id="input-character-name" name="character-name"
+               placeholder="Search for characters">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+{{ if .list }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {{ range $index, $element := .list }}
+        <tr>
+            <td>{{ $index }}</td>
+            <td>
+                <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a>
+            </td>
+        </tr>
+    {{ end }}
+    </tbody>
+</table>
+{{ end }}
+{{ template "footer.html" . }}
