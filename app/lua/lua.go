@@ -1,6 +1,7 @@
 package lua
 
 import (
+	"fmt"
 	"github.com/kardianos/osext"
 	"github.com/kataras/go-errors"
 	"github.com/raggaer/castro/app/util"
@@ -239,6 +240,11 @@ func (p *luaStatePool) GetApplicationState() *glua.LState {
 
 	// Create json metatable
 	SetJSONMetaTable(luaState)
+
+	// Set last log file name
+	luaState.SetGlobal("logFile", glua.LString(
+		fmt.Sprintf("%v-%v-%v.json", util.LastLoggerDay.Year(), util.LastLoggerDay.Month(), util.LastLoggerDay.Day()),
+	))
 
 	// Set server path
 	luaState.SetGlobal("serverPath", glua.LString(util.Config.Datapack))

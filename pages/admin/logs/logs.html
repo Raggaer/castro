@@ -1,4 +1,22 @@
 {{ template "header.html" }}
 <h3>Website logs</h3>
 <hr>
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th>#</th>
+            <th>Type</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{ range $index, $element := queryResults .logs }}
+        <tr>
+            <td>{{ $index }}</td>
+            <td>{{ $element.level }}</td>
+            <td>{{ nl2br $element.msg }}</td>
+        </tr>
+    {{ end }}
+    </tbody>
+</table>
 {{ template "footer.html" . }}
