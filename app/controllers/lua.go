@@ -16,7 +16,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// Parse POST form
 		if err := r.ParseForm(); err != nil {
 			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
 			return
 		}
 	}
@@ -31,10 +30,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 			// If AAC is running on development mode log error
 			if util.Config.IsDev() || util.Config.IsLog() {
-				util.Logger.Errorf("Cannot execute %v: %v", ps.ByName("page"), err)
+				util.Logger.Errorf("Cannot load subtopic %v: %v", ps.ByName("page"), err)
 			}
 
-			w.Write([]byte("Cannot execute the given subtopic"))
 			return
 		}
 
@@ -45,10 +43,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 			// If AAC is running on development mode log error
 			if util.Config.IsDev() || util.Config.IsLog() {
-				util.Logger.Errorf("Cannot execute %v: %v", ps.ByName("page"), err)
+				util.Logger.Errorf("Cannot load widgets when executing %v subtopic: %v", ps.ByName("page"), err)
 			}
 
-			w.Write([]byte("Cannot execute the given subtopic"))
 			return
 		}
 	}
@@ -85,10 +82,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// If AAC is running on development mode log error
 		if util.Config.IsDev() || util.Config.IsLog() {
-			util.Logger.Errorf("Cannot execute %v: %v", pageName, err)
+			util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
 		}
 
-		w.Write([]byte("Cannot execute the given subtopic"))
 		return
 	}
 
@@ -99,10 +95,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// If AAC is running on development mode log error
 		if util.Config.IsDev() || util.Config.IsLog() {
-			util.Logger.Errorf("Cannot execute %v: %v", pageName, err)
+			util.Logger.Errorf("Cannot execute %v subtopic: %v", pageName, err)
 		}
 
-		w.Write([]byte("Cannot execute the given subtopic"))
 		return
 	}
 

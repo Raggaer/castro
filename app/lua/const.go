@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// JSONMetaTableName the name of the json metatable
+	JSONMetaTableName = "json"
+
 	// ReflectMetaTableName the name of the reflect metatable
 	ReflectMetaTableName = "reflect"
 

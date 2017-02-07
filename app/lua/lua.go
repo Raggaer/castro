@@ -104,6 +104,10 @@ var (
 	reflectMethods = map[string]glua.LGFunction{
 		"getGlobal": GetGlobal,
 	}
+	jsonMethods = map[string]glua.LGFunction{
+		"marshal":   MarshalJSON,
+		"unmarshal": UnmarshalJSON,
+	}
 )
 
 // Load loads all lua source files
@@ -232,6 +236,9 @@ func (p *luaStatePool) GetApplicationState() *glua.LState {
 
 	// Create reflect metatable
 	SetReflectMetaTable(luaState)
+
+	// Create json metatable
+	SetJSONMetaTable(luaState)
 
 	// Set server path
 	luaState.SetGlobal("serverPath", glua.LString(util.Config.Datapack))
