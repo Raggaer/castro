@@ -1,22 +1,22 @@
 {{ template "header.html" }}
 <h3>Website logs</h3>
 <hr>
-<table class="table table-striped">
-    <thead class="thead-inverse">
-        <tr>
-            <th>#</th>
-            <th>Type</th>
-            <th>Message</th>
-        </tr>
-    </thead>
-    <tbody>
-    {{ range $index, $element := queryResults .logs }}
-        <tr>
-            <td>{{ $index }}</td>
-            <td>{{ $element.level }}</td>
-            <td>{{ nl2br $element.msg }}</td>
-        </tr>
-    {{ end }}
-    </tbody>
-</table>
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+{{ range $index, $element := queryResults .logs }}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="heading-{{ $index }}">
+            <h4 class="panel-title">
+                <a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ $index }}" aria-expanded="true" aria-controls="collapse-{{ $index }}">
+                    {{ $element.time }}
+                </a>
+            </h4>
+        </div>
+        <div id="collapse-{{ $index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{ $index }}">
+            <div class="panel-body">
+               {{ nl2br $element.msg }}
+            </div>
+        </div>
+    </div>
+{{ end }}
+</div>
 {{ template "footer.html" . }}
