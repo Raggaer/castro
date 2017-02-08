@@ -1,5 +1,9 @@
 {{ template "header.html" }}
-<h3>Search character</h3>
+{{ if .query }}
+<h3>Search characters: "{{ .query }}"</h3>
+{{ else }}
+<h3>Search characters</h3>
+{{ end }}
 <hr>
 {{ if .validationError }}
 <div class="alert alert-danger" role="alert">
@@ -23,7 +27,6 @@
         <tr>
             <th>#</th>
             <th>Name</th>
-            <th></th>
         </tr>
     </thead>
     <tbody>

@@ -18,6 +18,7 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
 	"github.com/yuin/gopher-lua"
+	"log"
 	"net/http/pprof"
 	_ "net/http/pprof"
 )
@@ -46,27 +47,28 @@ Compiled at: %v
 
 	// Declare our new http router
 	router := httprouter.New()
+
+	// Check if application is installed
+	if !isInstalled() {
+
+		fmt.Println("Castro is not installed. Running installation process")
+
+		// Run the installation process
+		if err := installApplication(); err != nil {
+			log.Fatal(err)
+		}
+
+		return
+
+	}
+
+	// Declare application endpoints
 	router.GET("/", controllers.LuaPage)
 	router.POST("/", controllers.LuaPage)
 	router.GET("/signature/:name", controllers.Signature)
 	router.POST("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/pprof/heap", wrapHandler(pprof.Handler("heap")))
-
-	// Check if Castro is installed if not we create the
-	// config file on runtime
-	if !isInstalled() {
-
-		// Create the config file with the given name
-		if err := createConfigFile("config.toml"); err != nil {
-			util.Logger.Fatalf("Cannot create %v file: %v", "config.toml", err)
-		}
-
-		util.Logger.Info("Config.toml file is now installed. Edit the configuration file and start Castro")
-
-		// Exit app
-		return
-	}
 
 	// Run main app entry point
 	app.Start()

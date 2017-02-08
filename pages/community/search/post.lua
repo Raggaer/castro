@@ -14,4 +14,6 @@ if data.list == nil then
     return
 end
 
+data.query = http.postValues["character-name"]
+
 http:render("search.html", data)

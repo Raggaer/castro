@@ -34,7 +34,7 @@ func GetAccountByName(name string) (Account, CastroAccount, error) {
 	}
 
 	// Get castro account from database
-	if err := database.DB.Get(&castroAccount, "SELECT id, name, points, admin FROM castro_accounts WHERE name = ?", name); err != nil {
+	if err := database.DB.Get(&castroAccount, "SELECT id, name, points, admin FROM castro_accounts WHERE account_id = ?", account.ID); err != nil {
 		return account, castroAccount, err
 	}
 
