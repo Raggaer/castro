@@ -8,37 +8,26 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/dchest/uniuri"
 	"github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
+	"io/ioutil"
 	"path/filepath"
+	"strings"
 )
 
 const (
 	// configFileName the name of the application configuration file
 	configFileName = "config.toml"
+
+	// znoteTableName name of the znote table
+	znoteTableName = "znote"
 )
 
-var (
-	// tables list of application required tables
-	tables = []installationTable{
-		{
-			name: "castro_accounts",
-			source: `CREATE TABLE castro_accounts (
-				id INT(11) NOT NULL AUTO_INCREMENT,
-				account_id INT(11) NOT NULL,
-				points INT(11) DEFAULT 0,
-				admin TINYINT(1) DEFAULT 0,
-				PRIMARY KEY (id)
-			) ENGINE=InnoDB`,
-		},
-	}
-)
-
-// installationTable struct used for application tables
-type installationTable struct {
-	name   string
-	source string
+type znoteTable struct {
+	Version   int
+	Installed int64
 }
 
 // isInstalled check if application is installed
@@ -47,6 +36,26 @@ func isInstalled() bool {
 	_, err := os.Stat(configFileName)
 
 	return err == nil
+}
+
+// isZnoteInstalled checks if znote_aac is already installed
+func isZnoteInstalled(db *sqlx.DB) (bool, error) {
+	// Check if table exists
+	if _, err := db.Exec("DESCRIBE " + znoteTableName); err != nil {
+
+		// Convert error to MySQL error type
+		mErr, ok := err.(*mysql.MySQLError)
+
+		// Check if table is installed
+		if ok && mErr.Number == 1146 {
+
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	return true, nil
 }
 
 // installApplication runs the installation process
@@ -91,11 +100,18 @@ func installApplication() error {
 	// Close database handle
 	defer db.Close()
 
-	// Loop installation tables
+	// Get all sql files
+	tables, err := ioutil.ReadDir(filepath.Join("install"))
+
+	if err != nil {
+		return err
+	}
+
+	// Loop files
 	for _, table := range tables {
 
 		// Check if table exists
-		if _, err := db.Exec("DESCRIBE " + table.name); err != nil {
+		if _, err := db.Exec("DESCRIBE " + strings.TrimSuffix(table.Name(), ".sql")); err != nil {
 
 			// Convert error to MySQL error type
 			mErr, ok := err.(*mysql.MySQLError)
@@ -103,8 +119,15 @@ func installApplication() error {
 			// Check if table is installed
 			if ok && mErr.Number == 1146 {
 
-				// Create missing table
-				if _, err := db.Exec(table.source); err != nil {
+				// Read file
+				buff, err := ioutil.ReadFile(filepath.Join("install", table.Name()))
+
+				if err != nil {
+					return err
+				}
+
+				// Execute query
+				if _, err := db.Exec(string(buff)); err != nil {
 					return err
 				}
 
@@ -113,10 +136,12 @@ func installApplication() error {
 
 			return err
 		}
-
 	}
 
-	return nil
+	fmt.Println("Missing tables created")
+
+	// Create configuration file
+	return createConfigFile(configFileName, location)
 }
 
 // createConfigFile encodes a configuration file with the given name and location

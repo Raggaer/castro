@@ -11,11 +11,11 @@ if page < 0 then
     return
 end
 
-local articleCount = db:singleQuery("SELECT COUNT(*) as total FROM articles", true)
+local articleCount = db:singleQuery("SELECT COUNT(*) as total FROM castro_articles", true)
 local pg = paginator(page, 5, tonumber(articleCount.total))
 local data = {}
 
-data.articles = db:query("SELECT title, text, created_at FROM articles ORDER BY id DESC LIMIT ?, ?", pg.limit, pg.offset, false, true)
+data.articles = db:query("SELECT title, text, created_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.limit, pg.offset, false, true)
 
 if data.articles == nil then
     http:redirect("/subtopic/index")

@@ -58,8 +58,9 @@ Compiled at: %v
 			log.Fatal(err)
 		}
 
-		return
+		fmt.Println("Configuration file created. Installation process is now done")
 
+		return
 	}
 
 	// Declare application endpoints
