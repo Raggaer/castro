@@ -3,7 +3,6 @@ if not session:isLogged() then
     return
 end
 
-session:set("logged", false)
-session:setFlash("success", "You were logged out")
+session:destroy()
 
 http:redirect("/subtopic/login")

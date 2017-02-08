@@ -56,7 +56,7 @@ local id = db:execute(
     os.time()
 )
 
-db:execute("INSERT INTO castro_accounts (account_id, name, points) VALUES (?, ?, 0)", id, http.postValues["account-name"])
+db:execute("INSERT INTO castro_accounts (account_id) VALUES (?)", id)
 
 session:setFlash("success", "Account created. You can now sign in")
 http:redirect("/subtopic/login")

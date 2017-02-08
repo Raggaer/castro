@@ -17,7 +17,6 @@ type Account struct {
 type CastroAccount struct {
 	ID        int64
 	AccountID int64
-	Name      string
 	Points    int
 	Admin     bool
 }
@@ -34,7 +33,7 @@ func GetAccountByName(name string) (Account, CastroAccount, error) {
 	}
 
 	// Get castro account from database
-	if err := database.DB.Get(&castroAccount, "SELECT id, name, points, admin FROM castro_accounts WHERE account_id = ?", account.ID); err != nil {
+	if err := database.DB.Get(&castroAccount, "SELECT id, points, admin FROM castro_accounts WHERE account_id = ?", account.ID); err != nil {
 		return account, castroAccount, err
 	}
 

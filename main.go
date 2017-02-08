@@ -58,7 +58,7 @@ Compiled at: %v
 			log.Fatal(err)
 		}
 
-		fmt.Println("Configuration file created. Installation process is now done")
+		fmt.Printf("Configuration file created (%v) . Installation process is now done", configFileName)
 
 		return
 	}

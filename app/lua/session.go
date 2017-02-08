@@ -79,6 +79,9 @@ func GetLoggedAccount(L *lua.LState) int {
 
 	if err != nil {
 
+		// Clear session at critical error
+		session.Clear()
+
 		L.RaiseError("Cannot get account by name: %v", err)
 		return 0
 	}

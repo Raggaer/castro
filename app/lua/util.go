@@ -358,7 +358,6 @@ func CastroAccountToTable(account models.CastroAccount) *lua.LTable {
 	// Set account fields
 	t.RawSetString("id", lua.LNumber(account.ID))
 	t.RawSetString("points", lua.LNumber(account.Points))
-	t.RawSetString("name", lua.LString(account.Name))
 
 	return t
 }

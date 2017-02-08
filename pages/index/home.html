@@ -1,25 +1,31 @@
 {{ template "header.html" }}
-{{ range $index, $element := queryResults .articles }}
+{{ if .articles }}
+    {{ range $index, $element := queryResults .articles }}
+    <div class="news-box">
+        <h3>
+            <a href="#">{{ $element.title }}</a>
+            <small class="small-info">{{ unixToDate $element.created_at }}</small>
+        </h3>
+        <hr>
+        <p>
+            {{ nl2br $element.text }}
+        </p>
+    </div>
+    {{ end }}
+    <ul class="pagination pagination-sm">
+        {{ if .paginator.prev }}
+        <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.firstpage.num }}">First</a></li>
+        <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
+        {{ end }}
+        </li>
+        {{ if $.paginator.last }}
+        <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
+        <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
+        {{ end }}
+    </ul>
+{{ else }}
 <div class="news-box">
-    <h3>
-        <a href="#">{{ $element.title }}</a>
-        <small class="small-info">{{ unixToDate $element.created_at }}</small>
-    </h3>
-    <hr>
-    <p>
-        {{ nl2br $element.text }}
-    </p>
+    <p>There are no articles</p>
 </div>
 {{ end }}
-<ul class="pagination pagination-sm">
-    {{ if .paginator.prev }}
-    <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.firstpage.num }}">First</a></li>
-    <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
-    {{ end }}
-    </li>
-    {{ if $.paginator.last }}
-    <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
-    <li><a href="{{ url " subtopic" "index" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
-    {{ end }}
-</ul>
 {{ template "footer.html" . }}
