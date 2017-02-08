@@ -5,6 +5,7 @@ import (
 	"github.com/clbanning/mxj"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
+	"io/ioutil"
 	"time"
 )
 
@@ -43,6 +44,39 @@ func MarshalXML(L *lua.LState) int {
 
 	// Push result as string
 	L.Push(lua.LString(string(buff)))
+
+	return 1
+}
+
+// UnmarshalXMLFile unmarshals the given fle
+func UnmarshalXMLFile(L *lua.LState) int {
+	// Get path
+	src := L.Get(2)
+
+	// Check for valid string type
+	if src.Type() != lua.LTString {
+		L.ArgError(1, "Invalid unmarshal source. Expected string")
+		return 0
+	}
+
+	// Read the whole file
+	buff, err := ioutil.ReadFile(src.String())
+
+	if err != nil {
+		L.RaiseError("Cannot unmarshal file. File not found: %", err)
+		return 0
+	}
+
+	// Unmarshal string
+	result, err := mxj.NewMapXml(buff)
+
+	if err != nil {
+		L.RaiseError("Cannot unmarshal the given string: %v", err)
+		return 0
+	}
+
+	// Push result as table
+	L.Push(MapToTable(result))
 
 	return 1
 }

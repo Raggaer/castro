@@ -3,7 +3,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/Raggaer/castro)](https://goreportcard.com/report/github.com/Raggaer/castro)
 [![lICENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/Raggaer/castro/blob/master/LICENSE)
 
-High performance Open Tibia automatic account creator written in **Go** using **Lua** for the subtopics
+High performance Open Tibia automatic account creator written in **Go** using **Lua** scripting
 
 Castro provides lua bindings using a pool of lua states. Each request gets a state from the pool. If there are no states available a new one is created and later saved on the pool.
 

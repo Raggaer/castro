@@ -88,6 +88,7 @@ var (
 		"vocationByID":   GetVocationByID,
 		"marshal":        MarshalXML,
 		"unmarshal":      UnmarshalXML,
+		"unmarshalFile":  UnmarshalXMLFile,
 	}
 	mailMethods = map[string]glua.LGFunction{
 		"send": SendMail,

@@ -1,17 +1,18 @@
 package lua
 
 import (
-	"reflect"
-	"strconv"
-
-	"github.com/raggaer/castro/app/models"
-	"github.com/raggaer/castro/app/util"
-	"github.com/raggaer/otmap"
 	"github.com/yuin/gopher-lua"
 	"net/url"
+	"reflect"
+	"strconv"
 	"strings"
 	"time"
 )
+
+type castroInterfaceField struct {
+	Name string
+	Type reflect.Kind
+}
 
 // GetStructVariables loads all the global variables
 // from a lua file into a struct using reflect
@@ -90,6 +91,46 @@ func MapToTable(m map[string]interface{}) *lua.LTable {
 			resultTable.RawSetString(key, tble)
 		case time.Time:
 			resultTable.RawSetString(key, lua.LNumber(element.(time.Time).Unix()))
+
+		case []map[string]interface{}:
+
+			// Create slice table
+			sliceTable := &lua.LTable{}
+
+			// Loop element
+			for _, s := range element.([]map[string]interface{}) {
+
+				// Get table from map
+				tble := MapToTable(s)
+
+				sliceTable.Append(tble)
+			}
+
+			// Set slice table
+			resultTable.RawSetString(key, sliceTable)
+
+		case []interface{}:
+
+			// Create slice table
+			sliceTable := &lua.LTable{}
+
+			// Loop interface slice
+			for _, s := range element.([]interface{}) {
+
+				// Switch interface type
+				switch s.(type) {
+				case map[string]interface{}:
+
+					// Convert map to table
+					t := MapToTable(s.(map[string]interface{}))
+
+					// Append result
+					sliceTable.Append(t)
+				}
+			}
+
+			// Append to main table
+			resultTable.RawSetString(key, sliceTable)
 		}
 	}
 
@@ -109,94 +150,34 @@ func TableToMap(table *lua.LTable) map[string]interface{} {
 	// Loop lua table
 	table.ForEach(func(i lua.LValue, v lua.LValue) {
 
+		// Get string index
+		index := i.String()
+
 		// Switch value type
-		switch v.Type() {
-		case lua.LTTable:
+		switch lv := v.(type) {
+		case *lua.LTable:
 
 			// Convert table to map
 			n := TableToMap(v.(*lua.LTable))
-			m[i.String()] = n
-		case lua.LTNumber:
+			m[index] = n
+
+		case lua.LNumber:
 
 			// Convert to number to float64
-			num, err := strconv.ParseFloat(v.String(), 64)
-			if err != nil {
-				m[i.String()] = err.Error()
-			} else {
-				m[i.String()] = num
-			}
-		case lua.LTBool:
+			m[index] = float64(lv)
+
+		case lua.LBool:
 
 			// Convert value to boolean
-			b, err := strconv.ParseBool(v.String())
-			if err != nil {
-				m[i.String()] = err.Error()
-			} else {
-				m[i.String()] = b
-			}
-		default:
-			m[i.String()] = v.String()
+			m[index] = bool(lv)
+
+		case lua.LString:
+
+			// Convert value to string
+			m[index] = string(lv)
 		}
 	})
 	return m
-}
-
-// QueryToTable converts a slice of interfaces to a lua table
-func QueryToTable(r [][]interface{}, names []string) *lua.LTable {
-	// Main table pointer
-	resultTable := &lua.LTable{}
-
-	// Loop query results
-	for i := range r {
-
-		// Table for current result set
-		t := &lua.LTable{}
-
-		// Loop result fields
-		for x := range r[i] {
-
-			// Set table fields
-			v := r[i][x]
-			switch v.(type) {
-			case []uint8:
-				t.RawSetString(names[x], lua.LString(string(v.([]uint8))))
-			case time.Time:
-				t.RawSetString(names[x], lua.LNumber(v.(time.Time).Unix()))
-			case int64:
-				t.RawSetString(names[x], lua.LNumber(v.(int64)))
-			case string:
-				t.RawSetString(names[x], lua.LString(v.(string)))
-			}
-		}
-
-		// Append current table to main table
-		resultTable.Append(t)
-	}
-	return resultTable
-}
-
-// TableToStringSlice converts a LUA table to a Go slice of strings
-func TableToStringSlice(table *lua.LTable) []string {
-	result := []string{}
-
-	// Loop the lua table
-	table.ForEach(func(i lua.LValue, v lua.LValue) {
-
-		switch v.Type() {
-		case lua.LTTable:
-
-			// Convert table to slice using recursive algorithm
-			r := TableToStringSlice(v.(*lua.LTable))
-
-			// Append to main result
-			result = append(result, r...)
-		default:
-
-			// Append to main result
-			result = append(result, v.String())
-		}
-	})
-	return result
 }
 
 // URLValuesToTable converts a map[string][]string to a LUA table
@@ -275,89 +256,6 @@ func StructToTable(s interface{}) *lua.LTable {
 
 		}
 	}
-
-	return t
-}
-
-// TownListToTable converts a slice of towns to a lua table
-func TownListToTable(list []otmap.Town) *lua.LTable {
-	t := &lua.LTable{}
-
-	// Loop town list
-	for _, town := range list {
-
-		// Append town table to main table
-		t.Append(TownToTable(town))
-	}
-
-	return t
-}
-
-// TownToTable converts the given town to a lua table
-func TownToTable(town otmap.Town) *lua.LTable {
-	// Create a table for the town
-	townTable := &lua.LTable{}
-
-	// Set table fields
-	townTable.RawSetString("name", lua.LString(town.Name))
-	townTable.RawSetString("id", lua.LNumber(town.ID))
-
-	return townTable
-}
-
-// VocationListToTable converts the server vocation list to a lua table
-// executing the given condition
-func VocationListToTable(list []*util.Vocation, cond func(*util.Vocation) bool) *lua.LTable {
-	t := &lua.LTable{}
-
-	// Loop vocation list
-	for _, vocation := range list {
-
-		// Check condition
-		if !cond(vocation) {
-			continue
-		}
-
-		// Append new table
-		t.Append(VocationToTable(vocation))
-	}
-
-	return t
-}
-
-// VocationToTable converts a vocation to a lua table
-func VocationToTable(voc *util.Vocation) *lua.LTable {
-	t := &lua.LTable{}
-
-	// Set table fields
-	t.RawSetString("id", lua.LNumber(voc.ID))
-	t.RawSetString("name", lua.LString(voc.Name))
-	t.RawSetString("description", lua.LString(voc.Description))
-
-	return t
-}
-
-// AccountToTable converts a tfs account to a lua table
-func AccountToTable(account models.Account) *lua.LTable {
-	t := &lua.LTable{}
-
-	// Set account fields
-	t.RawSetString("id", lua.LNumber(account.ID))
-	t.RawSetString("premdays", lua.LNumber(account.Premdays))
-	t.RawSetString("lastday", lua.LNumber(account.Lastday))
-	t.RawSetString("name", lua.LString(account.Name))
-	t.RawSetString("email", lua.LString(account.Email))
-
-	return t
-}
-
-// CastroAccountToTable converts a castro account to a lua table
-func CastroAccountToTable(account models.CastroAccount) *lua.LTable {
-	t := &lua.LTable{}
-
-	// Set account fields
-	t.RawSetString("id", lua.LNumber(account.ID))
-	t.RawSetString("points", lua.LNumber(account.Points))
 
 	return t
 }
