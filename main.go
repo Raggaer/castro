@@ -86,17 +86,21 @@ Compiled at: %v
 		newCsrfHandler(),
 		gzip.Gzip(gzip.DefaultCompression),
 		negroni.NewStatic(http.Dir("public/")),
-		tollbooth_negroni.LimitHandler(
-			tollbooth.NewLimiter(
-				util.Config.RateLimit.Number,
-				util.Config.RateLimit.Time,
-			),
-		),
 	)
 
 	// Use negroni logger only in development mode
 	if util.Config.IsDev() || util.Config.IsLog() {
 		n.Use(negroni.NewLogger())
+
+	} else {
+
+		// Use rate-limiter on production mode
+		n.Use(tollbooth_negroni.LimitHandler(
+			tollbooth.NewLimiter(
+				util.Config.RateLimit.Number,
+				util.Config.RateLimit.Time,
+			),
+		))
 	}
 
 	// Disable httprouter not found handler
@@ -124,6 +128,8 @@ Compiled at: %v
 			util.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
 		}
 	} else {
+
+		// Listen without using ssl
 		if err := http.ListenAndServe(fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port), n); err != nil {
 			// This should only happen when a port is
 			// already in use
@@ -132,6 +138,7 @@ Compiled at: %v
 	}
 }
 
+// wrapHandler converts a normal http handler to a httprouter handler
 func wrapHandler(h http.Handler) httprouter.Handle {
 	return func(rw http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 		h.ServeHTTP(rw, req)
