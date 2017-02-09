@@ -1,8 +1,7 @@
-CREATE TABLE `articles` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
-  `text` longtext,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
+CREATE TABLE `castro_accounts` (
+  `id` INT(11) NOT NULL,
+  `account_id` INT(11) NOT NULL,
+  `points` INT(11) DEFAULT 0,
+  `admin` TINYINT(1) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
