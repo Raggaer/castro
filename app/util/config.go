@@ -7,8 +7,10 @@ import (
 
 // CookieConfig struct used for the cookies configuration options
 type CookieConfig struct {
-	Name   string
-	MaxAge int
+	Name     string
+	MaxAge   int
+	HashKey  string
+	BlockKey string
 }
 
 // RateLimiterConfig struct used for the rate limiting configration options
@@ -44,7 +46,6 @@ type Configuration struct {
 	Port      int
 	URL       string
 	Datapack  string
-	Secret    string
 	Mail      MailConfig
 	Captcha   CaptchaConfig
 	SSL       SSLConfig

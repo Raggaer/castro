@@ -1,10 +1,10 @@
 package lua
 
 import (
-	"github.com/goincremental/negroni-sessions"
 	"github.com/raggaer/castro/app/models"
+	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
-	"strconv"
+	"net/http"
 )
 
 // SetSessionMetaTable sets the session metatable on the given
@@ -19,7 +19,7 @@ func SetSessionMetaTable(luaState *lua.LState) {
 }
 
 // SetSessionMetaTableUserData sets the session metatable user data
-func SetSessionMetaTableUserData(luaState *lua.LState, sessionData sessions.Session) {
+func SetSessionMetaTableUserData(luaState *lua.LState, sessionData map[string]interface{}) {
 	// Get session metatable
 	jwtMetaTable := luaState.GetTypeMetatable(SessionMetaTable)
 
@@ -29,9 +29,8 @@ func SetSessionMetaTableUserData(luaState *lua.LState, sessionData sessions.Sess
 	luaState.SetField(jwtMetaTable, SessionInstanceName, sess)
 }
 
-// getSessionData gets the user data struct from the
-// session metatable and returns the session pointer
-func getSessionData(L *lua.LState) sessions.Session {
+// getSessionData gets the user data struct from the session metatable and returns the session pointer
+func getSessionData(L *lua.LState) map[string]interface{} {
 	// Get metatable
 	meta := L.GetTypeMetatable(SessionMetaTable)
 
@@ -39,7 +38,34 @@ func getSessionData(L *lua.LState) sessions.Session {
 	data := L.GetField(meta, SessionInstanceName).(*lua.LUserData)
 
 	// Return session struct
-	return data.Value.(sessions.Session)
+	return data.Value.(map[string]interface{})
+}
+
+// updateSessionData saves a new cookie with the encoded map
+func updateSessionData(L *lua.LState) {
+	// Get response writer from state
+	_, w := getRequestAndResponseWriter(L)
+
+	// Get session
+	session := getSessionData(L)
+
+	// Encode session map
+	encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, session)
+
+	if err != nil {
+		util.Logger.Fatalf("Cannot encode cookie value: %v", err)
+	}
+
+	// Set cookie
+	// Create cookie
+	c := &http.Cookie{
+		Name:  util.Config.Cookies.Name,
+		Value: encoded,
+		Path:  "/",
+	}
+
+	// Set cookie
+	http.SetCookie(w, c)
 }
 
 // GetLoggedAccount gets the user account if any
@@ -48,7 +74,7 @@ func GetLoggedAccount(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Check if user is logged
-	logged, ok := session.Get("logged").(bool)
+	logged, ok := session["logged"].(bool)
 
 	if !ok {
 
@@ -65,7 +91,7 @@ func GetLoggedAccount(L *lua.LState) int {
 	}
 
 	// Get logged account name
-	accountName, ok := session.Get("logged-account").(string)
+	accountName, ok := session["logged-account"].(string)
 
 	if !ok {
 
@@ -78,9 +104,6 @@ func GetLoggedAccount(L *lua.LState) int {
 	account, castroAccount, err := models.GetAccountByName(accountName)
 
 	if err != nil {
-
-		// Clear session at critical error
-		session.Clear()
 
 		L.RaiseError("Cannot get account by name: %v", err)
 		return 0
@@ -104,7 +127,7 @@ func IsAdmin(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Try to get logged field from data
-	b, ok := session.Get("logged").(bool)
+	b, ok := session["logged"].(bool)
 
 	// If element does not exist push false
 	if !ok {
@@ -121,7 +144,7 @@ func IsAdmin(L *lua.LState) int {
 	}
 
 	// Get logged account name
-	accountName, ok := session.Get("logged-account").(string)
+	accountName, ok := session["logged-account"].(string)
 
 	if !ok {
 
@@ -149,8 +172,20 @@ func DestroySession(L *lua.LState) int {
 	// Get session data from the user data field
 	session := getSessionData(L)
 
-	// Destroy user session
-	session.Clear()
+	// Loop map
+	for key := range session {
+
+		// Omit issuer element
+		if key == "issuer" {
+			continue
+		}
+
+		// Delete each element
+		delete(session, key)
+	}
+
+	// Update session data
+	updateSessionData(L)
 
 	return 0
 }
@@ -174,48 +209,33 @@ func SetSessionData(L *lua.LState) int {
 	val := L.Get(3)
 
 	// Transform value to Go type
-	switch val.Type() {
-	case lua.LTString:
+	switch lv := val.(type) {
+	case lua.LString:
 
 		// Assign element as string
-		session.Set(key.String(), val.String())
+		session[key.String()] = string(lv)
 
-	case lua.LTNumber:
+	case lua.LNumber:
 
-		// Convert element to float64
-		num, err := strconv.ParseFloat(val.String(), 64)
+		// Assign element as float64
+		session[key.String()] = float64(lv)
 
-		if err != nil {
-
-			L.ArgError(2, "Invalid number format. Cannot convert to Go type int64")
-			return 0
-		}
-
-		// Assign element as flaot64
-		session.Set(key.String(), num)
-
-	case lua.LTBool:
-
-		// Convert element to boolean
-		b, err := strconv.ParseBool(val.String())
-
-		if err != nil {
-
-			L.ArgError(2, "Invalid boolean format. Cannot convert to Go type bool")
-			return 0
-		}
+	case lua.LBool:
 
 		// Assign element as bool
-		session.Set(key.String(), b)
+		session[key.String()] = bool(lv)
 
-	case lua.LTTable:
+	case *lua.LTable:
 
 		// Convert table to map
 		m := TableToMap(val.(*lua.LTable))
 
 		// Assign element as map
-		session.Set(key.String(), m)
+		session[key.String()] = m
 	}
+
+	// Update session data
+	updateSessionData(L)
 
 	return 0
 }
@@ -236,7 +256,7 @@ func GetSessionData(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Get element from session
-	val := session.Get(key.String())
+	val := session[key.String()]
 
 	// Push element depending on the Go type
 	switch val.(type) {
@@ -272,7 +292,7 @@ func IsLogged(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Try to get logged field from data
-	b, ok := session.Get("logged").(bool)
+	b, ok := session["logged"].(bool)
 
 	// If element does not exist push false
 	if !ok {
@@ -305,15 +325,18 @@ func GetFlash(L *lua.LState) int {
 	}
 
 	// Get value from the flash map
-	v, ok := session.Get(key.String()).(string)
+	v, ok := session[key.String()].(string)
 
 	if !ok {
-		L.Push(lua.LString(""))
+		L.Push(lua.LNil)
 		return 1
 	}
 
-	// Delete value from flash map
-	session.Delete(key.String())
+	// Delete element from map
+	delete(session, key.String())
+
+	// Update session data
+	updateSessionData(L)
 
 	// Push value to stack
 	L.Push(lua.LString(v))
@@ -348,7 +371,10 @@ func SetFlash(L *lua.LState) int {
 	}
 
 	// Set flash value
-	session.Set(key.String(), content.String())
+	session[key.String()] = content.String()
+
+	// Update session data
+	updateSessionData(L)
 
 	return 0
 }

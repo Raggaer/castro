@@ -33,6 +33,31 @@ func SetValidatorMetaTable(luaState *lua.LState) {
 	luaState.SetFuncs(validMetaTable, validatorMethods)
 }
 
+// ValidGuildName checks if the given guild name is valid
+func ValidGuildName(L *lua.LState) int {
+	// Get string to validate
+	v := L.Get(2)
+
+	// Check for valid type
+	if v.Type() != lua.LTString {
+
+		L.ArgError(1, "Invalid string format. Expected string")
+		return 0
+	}
+
+	// Check against regexp
+	match, err := regexp.MatchString("^[a-zA-Z_ ]+$", v.String())
+
+	if err != nil {
+		L.RaiseError("Cannot compare string against regexp: %v", err)
+	}
+
+	// Push regexp result
+	L.Push(lua.LBool(match))
+
+	return 1
+}
+
 // ValidVocation checks if the given vocation exists
 func ValidVocation(L *lua.LState) int {
 	// Get vocation value

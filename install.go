@@ -161,13 +161,14 @@ func createConfigFile(name, location string) error {
 		Port:     8080,
 		URL:      "localhost",
 		Datapack: location,
-		Secret:   uniuri.NewLen(35),
 		Captcha: util.CaptchaConfig{
 			Enabled: false,
 		},
 		Cookies: util.CookieConfig{
-			Name:   "castro",
-			MaxAge: 1000000,
+			Name:     "castro",
+			MaxAge:   1000000,
+			HashKey:  uniuri.NewLen(32),
+			BlockKey: uniuri.NewLen(32),
 		},
 		Cache: util.CacheConfig{
 			Default: time.Minute * 5,

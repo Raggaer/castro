@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/goincremental/negroni-sessions"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
@@ -51,7 +50,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Get session
-	session := sessions.GetSession(r)
+	session := r.Context().Value("session").(map[string]interface{})
 
 	// Get state from the pool
 	luaState := lua.Pool.GetApplicationState()

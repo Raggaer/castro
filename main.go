@@ -5,8 +5,7 @@ import (
 	"net/http"
 
 	"encoding/gob"
-	"github.com/goincremental/negroni-sessions"
-	"github.com/goincremental/negroni-sessions/cookiestore"
+	"github.com/gorilla/securecookie"
 	"github.com/julienschmidt/httprouter"
 	"github.com/phyber/negroni-gzip/gzip"
 	"github.com/raggaer/castro/app"
@@ -72,15 +71,17 @@ Compiled at: %v
 	// Run main app entry point
 	app.Start()
 
+	// Create the session storage
+	util.SessionStore = securecookie.New(
+		[]byte(util.Config.Cookies.HashKey),
+		[]byte(util.Config.Cookies.BlockKey),
+	)
+
 	// Create the middleware negroni instance with
 	// some application middleware
 	n := negroni.New(
+		newSessionHandler(),
 		newMicrotimeHandler(),
-		negroni.NewRecovery(),
-		sessions.Sessions(
-			util.Config.Cookies.Name,
-			cookiestore.New([]byte(util.Config.Secret)),
-		),
 		newCsrfHandler(),
 		gzip.Gzip(gzip.DefaultCompression),
 		negroni.NewStatic(http.Dir("public/")),

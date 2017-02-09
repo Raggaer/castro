@@ -56,11 +56,12 @@ var (
 		"render":   RenderTemplate,
 	}
 	validatorMethods = map[string]glua.LGFunction{
-		"validate":      Validate,
-		"blackList":     BlackList,
-		"validUsername": ValidUsername,
-		"validTown":     ValidTown,
-		"validVocation": ValidVocation,
+		"validate":       Validate,
+		"blackList":      BlackList,
+		"validUsername":  ValidUsername,
+		"validTown":      ValidTown,
+		"validVocation":  ValidVocation,
+		"validGuildName": ValidGuildName,
 	}
 	sessionMethods = map[string]glua.LGFunction{
 		"isLogged":      IsLogged,
