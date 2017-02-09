@@ -4,5 +4,6 @@ if not session:isLogged() then
 end
 
 session:destroy()
+session:setFlash("success", "Logged out")
 
 http:redirect("/subtopic/login")

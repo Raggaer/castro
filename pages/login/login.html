@@ -1,7 +1,6 @@
 {{ template "header.html" }}
 <h3>Login to your account</h3>
 <hr>
-{{ . }}
 {{ if .validationError }}
 <div class="alert alert-danger" role="alert">
     <strong>Error!</strong> {{ .validationError }}

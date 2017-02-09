@@ -56,13 +56,8 @@ func updateSessionData(L *lua.LState) {
 		util.Logger.Fatalf("Cannot encode cookie value: %v", err)
 	}
 
-	// Set cookie
 	// Create cookie
-	c := &http.Cookie{
-		Name:  util.Config.Cookies.Name,
-		Value: encoded,
-		Path:  "/",
-	}
+	c := util.SessionCookie(encoded)
 
 	// Set cookie
 	http.SetCookie(w, c)
@@ -176,7 +171,7 @@ func DestroySession(L *lua.LState) int {
 	for key := range session {
 
 		// Omit issuer element
-		if key == "issuer" {
+		if key == "issuer" || key == "csrf-token" {
 			continue
 		}
 

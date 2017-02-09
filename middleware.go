@@ -164,11 +164,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		}
 
 		// Create cookie
-		c := &http.Cookie{
-			Name:  util.Config.Cookies.Name,
-			Value: encoded,
-			Path:  "/",
-		}
+		c := util.SessionCookie(encoded)
 
 		// Set cookie
 		http.SetCookie(w, c)
