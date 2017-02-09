@@ -1,32 +1,72 @@
 hash: 7c31711e962f8f6ee1c365ebb4462b38410ab6ee4521d1a9a9927931a9cda912
-updated: 2017-01-07T20:03:26.5181075+01:00
+updated: 2017-02-08T22:39:01.8706935+01:00
 imports:
 - name: github.com/asaskevich/govalidator
   version: 7b3beb6df3c42abd3509abfc3bcacc0fbfb7c877
 - name: github.com/BurntSushi/toml
   version: bbd5bb678321a0d6e58f1099321dfa73391c1b6f
+- name: github.com/clbanning/mxj
+  version: 4f533f7dcf01c552e238905c7e57cb43fe8cb9ae
 - name: github.com/dchest/uniuri
   version: 8902c56451e9b58ff940bbe5fec35d5f9c04584a
 - name: github.com/dgrijalva/jwt-go
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
+- name: github.com/didip/tollbooth
+  version: 114b844f76e131f21120af2d1b03ab49d998d81c
+  subpackages:
+  - config
+  - errors
+  - libstring
+  - thirdparty/tollbooth_negroni
+- name: github.com/fatih/structs
+  version: a720dfa8df582c51dee1b36feabb906bde1588bd
 - name: github.com/go-sql-driver/mysql
   version: 2e00b5cd70399450106cec6431c2e2ce3cae5034
+- name: github.com/goincremental/negroni-sessions
+  version: 0055e7581fb0fe0f6ee5f622199672425526e1b2
+  subpackages:
+  - cookiestore
+- name: github.com/golang/freetype
+  version: d9be45aaf7452cc30c0ceb1b1bf7efe1d17b7c87
+  subpackages:
+  - raster
+  - truetype
+- name: github.com/gorilla/context
+  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+- name: github.com/gorilla/securecookie
+  version: fa5329f913702981df43dcb2a380bac429c810b5
+- name: github.com/gorilla/sessions
+  version: 83c8db3bdc9be789e57e3756ffbcffd2d7d40176
 - name: github.com/jinzhu/gorm
   version: 5174cc5c242a728b435ea2be8a2f7f998e15429b
   subpackages:
   - dialects/mysql
-- name: github.com/jinzhu/inflection
-  version: 1c35d901db3da928c72a72d8458480cc9ade058f
+- name: github.com/jmoiron/sqlx
+  version: f980a91bdc37abef88269b8f122d7de6352102f5
+  subpackages:
+  - reflectx
 - name: github.com/julienschmidt/httprouter
   version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
+- name: github.com/kardianos/osext
+  version: 9b883c5eb462dd5cb1b0a7a104fe86bc6b9bd391
 - name: github.com/kataras/go-errors
   version: d2aaffdebcb40c69c4cb6a95e436430cde192435
+- name: github.com/nfnt/resize
+  version: 891127d8d1b52734debe1b3c3d7e747502b6c366
 - name: github.com/op/go-logging
   version: b2cb9fa56473e98db8caba80237377e83fe44db5
 - name: github.com/patrickmn/go-cache
   version: 1881a9bccb818787f68c52bfba648c6cf34c34fa
+- name: github.com/phyber/negroni-gzip
+  version: 13f05ed68248e012fcc773ecd829abcc0bb3abd8
+  subpackages:
+  - gzip
+- name: github.com/raggaer/goimage
+  version: 607784eb871bc907ca0f42d496aa117a942665e5
 - name: github.com/raggaer/otmap
   version: 6d21449880749e1ba9465fd3e5a5a99f6085146b
+- name: github.com/Sirupsen/logrus
+  version: 3f603f494d61c73457fb234161d8982b9f0f0b71
 - name: github.com/urfave/negroni
   version: fde5e16d32adc7ad637e9cd9ad21d4ebc6192535
 - name: github.com/yuin/gopher-lua
@@ -35,10 +75,30 @@ imports:
   - ast
   - parse
   - pm
+- name: golang.org/x/image
+  version: 05f0a469d9f7c77399b53a6bab80983eb856b52e
+  subpackages:
+  - draw
+  - font
+  - font/gofont/goregular
+  - math/f64
+  - math/fixed
 - name: golang.org/x/net
   version: b7883d29650d340156352196ef5e434db117757b
   subpackages:
   - context
+- name: golang.org/x/sys
+  version: 7a6e5648d140666db5d920909e082ca00a87ba2c
+  subpackages:
+  - unix
+- name: golang.org/x/time
+  version: f51c12702a4d776e4c1fa9b0fabab841babae631
+  subpackages:
+  - rate
+- name: gopkg.in/alexcesaro/quotedprintable.v3
+  version: 2caba252f4dc53eaf6b553000885530023f54623
+- name: gopkg.in/gomail.v2
+  version: 81ebce5c23dfd25c6c67194b37d3dd3f338c98b1
 - name: gopkg.in/square/go-jose.v1
   version: 296c7f1463ec9b712176dc804dea0173d06dc728
   subpackages:

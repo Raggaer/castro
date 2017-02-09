@@ -59,6 +59,19 @@ func UnmarshalXMLFile(L *lua.LState) int {
 		return 0
 	}
 
+	// Check if file is already parsed
+	xmlResult, found := util.Cache.Get(
+		fmt.Sprintf("xml_table_%v", src.String()),
+	)
+
+	if found {
+
+		// Push result as table
+		L.Push(xmlResult.(*lua.LTable))
+
+		return 1
+	}
+
 	// Read the whole file
 	buff, err := ioutil.ReadFile(src.String())
 
@@ -75,8 +88,18 @@ func UnmarshalXMLFile(L *lua.LState) int {
 		return 0
 	}
 
+	// Convert result to table
+	r := MapToTable(result)
+
+	// Save result to cache
+	util.Cache.Add(
+		fmt.Sprintf("xml_table_%v", src.String()),
+		r,
+		util.Config.Cache.Default,
+	)
+
 	// Push result as table
-	L.Push(MapToTable(result))
+	L.Push(r)
 
 	return 1
 }

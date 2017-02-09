@@ -1,0 +1,24 @@
+{{ template "header.html" }}
+<h3>Guild list</h3>
+<hr>
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <td>Name</td>
+            <td>Owner</td>
+            <td>Created</td>
+        </tr>
+    </thead>
+    <tbody>
+    {{ range $index, $element := queryResults .list }}
+    <tr>
+        <td>{{ $element.name }}</td>
+        <td>
+            <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.owner }}">{{ $element.owner }}</a>
+        </td>
+        <td>{{ $element.creation.Result }}</td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
+{{ template "footer.html" . }}
