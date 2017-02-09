@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/dchest/uniuri"
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"golang.org/x/net/context"
@@ -95,12 +96,86 @@ func newCsrfHandler() *csrfHandler {
 
 func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
 	// Get session
-	_ = req.Context().Value("session").(map[string]interface{})
+	session := req.Context().Value("session").(map[string]interface{})
 
-	// Create new context
-	ctx := context.WithValue(req.Context(), "csrf-token", &models.CsrfToken{
-		Token: "12",
-	})
+	// Get token
+	token, ok := session["csrf-token"].(*models.CsrfToken)
+
+	if !ok {
+
+		// Check if request is valid
+		if req.Method == http.MethodPost {
+			return
+		}
+
+		// Create token
+		tkn := models.CsrfToken{
+			Token: uniuri.New(),
+			At:    time.Now(),
+		}
+
+		// Set session value
+		session["csrf-token"] = &tkn
+
+		// Encode session
+		encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, session)
+
+		if err != nil {
+			util.Logger.Fatalf("Cannot encode session: %v", err)
+		}
+
+		// Create cookie
+		c := &http.Cookie{
+			Name:  util.Config.Cookies.Name,
+			Value: encoded,
+			Path:  "/",
+		}
+
+		// Set cookie
+		http.SetCookie(w, c)
+
+		// Create context
+		ctx := context.WithValue(req.Context(), "csrf-token", token)
+
+		// Run next handler
+		next(w, req.WithContext(ctx))
+
+		return
+
+	}
+
+	// Check if valid token
+	if req.Method == http.MethodPost && req.FormValue("_csrf") != token.Token {
+		return
+	}
+
+	// Check if token  is old
+	if time.Now().Before(token.At) {
+
+		// Create new token
+		token.Token = uniuri.New()
+		token.At = time.Now()
+
+		// Encode session
+		encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, session)
+
+		if err != nil {
+			util.Logger.Fatalf("Cannot encode session: %v", err)
+		}
+
+		// Create cookie
+		c := &http.Cookie{
+			Name:  util.Config.Cookies.Name,
+			Value: encoded,
+			Path:  "/",
+		}
+
+		// Set cookie
+		http.SetCookie(w, c)
+	}
+
+	// Create context
+	ctx := context.WithValue(req.Context(), "csrf-token", token)
 
 	// Run next handler
 	next(w, req.WithContext(ctx))
