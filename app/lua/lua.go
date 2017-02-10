@@ -103,6 +103,7 @@ var (
 	}
 	urlMethods = map[string]glua.LGFunction{
 		"decode": DecodeURL,
+		"encode": EncodeURL,
 	}
 	timeMethods = map[string]glua.LGFunction{
 		"parseUnix": ParseUnixTimestamp,

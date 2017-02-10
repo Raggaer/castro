@@ -28,3 +28,6 @@ local guild_id = db:execute("INSERT INTO guilds (name, ownerid, creationdata, mo
 local leader_id = db:singleQuery("SELECT id FROM guild_ranks WHERE guild_id = ? AND level = 3", guild_id)
 
 db:execute("INSERT INTO guild_membership (player_id, guild_id, rank_id) VALUES (?, ?, ?)", character.id, guild_id, leader_id.id)
+
+session:setFlash("success", "Guild created")
+http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(http.postValues["guild-name"]))

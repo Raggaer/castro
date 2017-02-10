@@ -65,3 +65,11 @@
     display: block;
     margin: 0 auto;
 }
+
+#guild-tabs {
+    margin-top: 20px;
+}
+
+.tab-content {
+    margin-top: 20px;
+}

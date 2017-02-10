@@ -44,3 +44,20 @@ func DecodeURL(L *lua.LState) int {
 
 	return 1
 }
+
+// EncodeURL encodes the given string
+func EncodeURL(L *lua.LState) int {
+	// Get uri
+	uri := L.Get(2)
+
+	// Check for valid uri type
+	if uri.Type() != lua.LTString {
+		L.ArgError(1, "Invalid uri type. Expected string")
+		return 0
+	}
+
+	// Push escaped string
+	L.Push(lua.LString(url.QueryEscape(uri.String())))
+
+	return 1
+}

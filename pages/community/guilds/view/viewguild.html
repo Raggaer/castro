@@ -1,0 +1,96 @@
+{{ template "header.html" }}
+<h3>Guild: {{ .guild.guildname }}</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th colspan="2">Guild information</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Guild name</th>
+            <td>{{ .guild.guildname }}</td>
+        </tr>
+        <tr>
+            <th>Creation</th>
+            <td>{{ .guild.created.Result }}</td>
+        </tr>
+        <tr>
+            <th>Owner</th>
+            <td>
+                <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode .guild.name }}">{{ .guild.name }}</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table class="table table-striped">
+    <thead class="thead-inverse">
+    <tr>
+        <th colspan="2">Guild statistics</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Member count</th>
+        <td>{{ .guild.members }} ({{ .guild.onl }} Online)</td>
+    </tr>
+    <tr>
+        <th>Highest level</th>
+        <td>{{ .guild.top }}</td>
+    </tr>
+    <tr>
+        <th>Lowest level</th>
+        <td>{{ .guild.low }}</td>
+    </tr>
+    </tbody>
+</table>
+<div id="guild-tabs">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#members" aria-controls="members" role="tab" data-toggle="tab">Members</a></li>
+        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="members">
+            <table class="table table-striped">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Name</th>
+                        <th>Level</th>
+                        <th>Rank</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{ range $index, $element := .memberlist }}
+                    <tr>
+                        <td>
+                            <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a>
+                        </td>
+                        <td>{{ $element.level }}</td>
+                        <td>{{ $element.rank }}</td>
+                    </tr>
+                {{ end }}
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="profile">..h.</div>
+        <div role="tabpanel" class="tab-pane" id="messages">.hh..</div>
+        <div role="tabpanel" class="tab-pane" id="settings">.hhhh..</div>
+    </div>
+</div>
+{{ template "footer.html" . }}
