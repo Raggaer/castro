@@ -45,8 +45,45 @@ func ValidGuildName(L *lua.LState) int {
 		return 0
 	}
 
+	// Check guild name length
+	if len(v.String()) < 5 || len(v.String()) > 20 {
+		L.Push(lua.LBool(false))
+		return 1
+	}
+
 	// Check against regexp
-	match, err := regexp.MatchString("^[a-zA-Z_ ]+$", v.String())
+	match, err := regexp.MatchString("^[a-zA-Z ]+$", v.String())
+
+	if err != nil {
+		L.RaiseError("Cannot compare string against regexp: %v", err)
+	}
+
+	// Push regexp result
+	L.Push(lua.LBool(match))
+
+	return 1
+}
+
+// ValidGuildRank checks if the given rank is valid
+func ValidGuildRank(L *lua.LState) int {
+	// Get string to validate
+	v := L.Get(2)
+
+	// Check for valid type
+	if v.Type() != lua.LTString {
+
+		L.ArgError(1, "Invalid string format. Expected string")
+		return 0
+	}
+
+	// Check guild rank length
+	if len(v.String()) < 5 || len(v.String()) > 15 {
+		L.Push(lua.LBool(false))
+		return 1
+	}
+
+	// Check against regexp
+	match, err := regexp.MatchString("^[a-zA-Z- ]+$", v.String())
 
 	if err != nil {
 		L.RaiseError("Cannot compare string against regexp: %v", err)
@@ -221,7 +258,7 @@ func ValidUsername(L *lua.LState) int {
 	}
 
 	// Check against regexp
-	match, err := regexp.MatchString("^[a-zA-Z_ ]+$", v.String())
+	match, err := regexp.MatchString("^[a-zA-Z ]+$", v.String())
 
 	if err != nil {
 		L.RaiseError("Cannot compare string against regexp: %v", err)

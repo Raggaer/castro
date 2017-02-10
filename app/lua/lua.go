@@ -62,6 +62,7 @@ var (
 		"validTown":      ValidTown,
 		"validVocation":  ValidVocation,
 		"validGuildName": ValidGuildName,
+		"validGuildRank": ValidGuildRank,
 	}
 	sessionMethods = map[string]glua.LGFunction{
 		"isLogged":      IsLogged,

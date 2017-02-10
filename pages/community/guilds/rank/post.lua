@@ -20,8 +20,8 @@ if not owner then
     return
 end
 
-if not validator:validGuildName(http.postValues["rank-3"]) or not validator:validGuildName(http.postValues["rank-2"]) or not validator:validGuildName(http.postValues["rank-1"]) then
-    session:setFlash("validationError", "Invalid rank title")
+if not validator:validGuildRank(http.postValues["rank-3"]) or not validator:validGuildRank(http.postValues["rank-2"]) or not validator:validGuildRank(http.postValues["rank-1"]) then
+    session:setFlash("validationError", "Invalid rank title. Titles can only contain (A-Z, -) and must have between 5 and 20 characters")
     http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
     return
 end
