@@ -116,7 +116,10 @@ var (
 		"marshal":   MarshalJSON,
 		"unmarshal": UnmarshalJSON,
 	}
-	storageMethods = map[string]glua.LGFunction{}
+	storageMethods = map[string]glua.LGFunction{
+		"get": GetStorageValue,
+		"set": SetStorageValue,
+	}
 )
 
 // Load loads all lua source files
