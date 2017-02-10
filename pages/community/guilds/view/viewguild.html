@@ -56,17 +56,14 @@
     </tbody>
 </table>
 <div id="guild-tabs">
-    <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#members" aria-controls="members" role="tab" data-toggle="tab">Members</a></li>
+        <li role="presentation"><a href="#invitations" aria-controls="invitations" role="tab" data-toggle="tab">Invitations</a></li>
         {{ if .owner }}
         <li role="presentation"><a href="#ranks" aria-controls="ranks" role="tab" data-toggle="tab">Ranks</a></li>
-        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Placeholder</a></li>
-        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Placeholder</a></li>
+        <li role="presentation"><a href="#invite" aria-controls="invite" role="tab" data-toggle="tab">Invite</a></li>
         {{ end }}
     </ul>
-
-    <!-- Tab panes -->
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="members">
             <table class="table table-striped">
@@ -78,14 +75,67 @@
                     </tr>
                 </thead>
                 <tbody>
-                {{ range $index, $element := .memberlist }}
+                {{ if .memberlist }}
+                    {{ range $index, $element := .memberlist }}
+                        <tr>
+                            <td>
+                                <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a>
+                            </td>
+                            <td>{{ $element.level }}</td>
+                            <td>{{ $element.rank }}</td>
+                        </tr>
+                    {{ end }}
+                {{ else }}
+                <tr>
+                    <td colspan="3">
+                        There are no members
+                    </td>
+                </tr>
+                {{ end }}
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="invitations">
+            <table class="table table-striped">
+                <thead class="thead-inverse">
                     <tr>
-                        <td>
-                            <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a>
-                        </td>
-                        <td>{{ $element.level }}</td>
-                        <td>{{ $element.rank }}</td>
+                        <th>Name</th>
+                        <th></th>
+                        <th></th>
                     </tr>
+                </thead>
+                <tbody>
+                {{ if .invitations }}
+                    {{ range $index, $element := .invitations }}
+                    <tr>
+                        <td>{{ $element.name }}</td>
+                        {{ if $element.m }}
+                        <td>
+                            <form action="{{ url "subtopic" "community" "guilds" "invite" "accept" }}" method="POST">
+                                <input type="hidden" name="guild-name" value="{{ $.guild.guildname }}">
+                                <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                                <input type="hidden" name="character-name" value="{{ $element.name }}">
+                                <button class="btn btn-success btn-xs">Accept</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="{{ url "subtopic" "community" "guilds" "invite" "decline" }}" method="POST">
+                                <input type="hidden" name="guild-name" value="{{ $.guild.guildname }}">
+                                <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                                <input type="hidden" name="character-name" value="{{ $element.name }}">
+                                <button class="btn btn-danger btn-xs">Decline</button>
+                            </form>
+                        </td>
+                        {{ else }}
+                        <td></td>
+                        <td></td>
+                        {{ end }}
+                    </tr>
+                    {{ end }}
+                {{ else }}
+                <tr>
+                    <td colspan="2">No invitations made</td>
+                </tr>
                 {{ end }}
                 </tbody>
             </table>
@@ -106,8 +156,19 @@
                 </div>
             </form>
         </div>
-        <div role="tabpanel" class="tab-pane" id="messages">.hh..</div>
-        <div role="tabpanel" class="tab-pane" id="settings">.hhhh..</div>
+        <div role="tabpanel" class="tab-pane" id="invite">
+            <form action="{{ url "subtopic" "community" "guilds" "invite" }}" method="POST">
+                <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                <div class="form-group">
+                    <label for="invite-name">Character name</label>
+                    <input name="invite-name" class="form-control" id="invite-name" placeholder="Character name">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Invite</button>
+                </div>
+            </form>
+        </div>
         {{ end }}
     </div>
 </div>

@@ -12,10 +12,12 @@ local characters = db:query("SELECT id FROM players WHERE account_id = ?", sessi
 
 data.owner = false
 
-for _, val in pairs(characters) do
-    if val.id == tonumber(data.guild.ownerid) then
-        data.owner = true
-        break
+if characters ~= nil then
+    for _, val in pairs(characters) do
+        if val.id == tonumber(data.guild.ownerid) then
+            data.owner = true
+            break
+        end
     end
 end
 
@@ -29,6 +31,18 @@ data.validationError = session:getFlash("validationError")
 
 if data.owner then
     data.ranks = db:query("SELECT name, level FROM guild_ranks WHERE guild_id = ? ORDER BY level DESC", data.guild.id)
+end
+
+data.invitations = db:query("SELECT a.id, a.name FROM players a, guild_invites b WHERE b.guild_id = ? AND b.player_id = a.id", data.guild.id)
+
+if data.invitations ~= nil then
+    for _, v in pairs(data.invitations) do
+        for _, p in pairs(characters) do
+            if p.id == v.id then
+                v.m = true
+            end
+        end
+    end
 end
 
 http:render("viewguild.html", data)

@@ -116,6 +116,7 @@ var (
 		"marshal":   MarshalJSON,
 		"unmarshal": UnmarshalJSON,
 	}
+	storageMethods = map[string]glua.LGFunction{}
 )
 
 // Load loads all lua source files
@@ -199,6 +200,9 @@ func (p *luaStatePool) Get() *glua.LState {
 func (p *luaStatePool) GetApplicationState() *glua.LState {
 	// Get state from the pool
 	luaState := Pool.Get()
+
+	// Create storage metatable
+	SetStorageMetaTable(luaState)
 
 	// Create time metatable
 	SetTimeMetaTable(luaState)

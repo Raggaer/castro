@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// StorageMetaTableName the name of the storage metatable
+	StorageMetaTableName = "storage"
+
 	// JSONMetaTableName the name of the json metatable
 	JSONMetaTableName = "json"
 

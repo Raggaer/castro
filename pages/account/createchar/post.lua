@@ -35,14 +35,12 @@ end
 
 local account = session:loggedAccount()
 
-if db:query("SELECT COUNT(*) as total FROM players WHERE account_id = ?", account.ID).total > 5 then
+if db:singleQuery("SELECT COUNT(*) as total FROM players WHERE account_id = ?", account.ID).total > 5 then
     session:setFlash("validation-error", "You can only have 5 characters")
     http:redirect()
     return
 end
 
-db:execute("INSERT INTO players (name, account_id, vocation, town_id, conditions) VALUES (?, ?, ?, ?, '')", http.postValues["character-name"], account.ID, xml:vocationByName(http.postValues["character-vocation"]).id, otbm:townByName(http.postValues["character-town"]).id)
-
+db:execute("INSERT INTO players (name, account_id, vocation, town_id, conditions) VALUES (?, ?, ?, ?, '')", http.postValues["character-name"], account.ID, xml:vocationByName(http.postValues["character-vocation"]).ID, otbm:townByName(http.postValues["character-town"]).ID)
 session:setFlash("success", "Character created")
-
 http:redirect("/subtopic/account/dashboard")

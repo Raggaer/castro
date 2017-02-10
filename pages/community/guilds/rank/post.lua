@@ -1,3 +1,8 @@
+if not session:isLogged() then
+    http:redirect("/")
+    return
+end
+
 local guild = db:singleQuery("SELECT name, ownerid, id FROM guilds WHERE name = ?", http.postValues["guild-name"])
 
 if guild == nil then
