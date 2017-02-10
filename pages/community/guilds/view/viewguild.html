@@ -59,9 +59,11 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#members" aria-controls="members" role="tab" data-toggle="tab">Members</a></li>
-        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
-        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+        {{ if .owner }}
+        <li role="presentation"><a href="#ranks" aria-controls="ranks" role="tab" data-toggle="tab">Ranks</a></li>
+        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Placeholder</a></li>
+        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Placeholder</a></li>
+        {{ end }}
     </ul>
 
     <!-- Tab panes -->
@@ -88,9 +90,25 @@
                 </tbody>
             </table>
         </div>
-        <div role="tabpanel" class="tab-pane" id="profile">..h.</div>
+        {{ if .owner }}
+        <div role="tabpanel" class="tab-pane" id="ranks">
+            <form action="{{ url "subtopic" "community" "guilds" "rank" }}" method="POST">
+                <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                {{ range $index, $element := .ranks }}
+                    <div class="form-group">
+                        <label for="rank-{{ $index }}">Rank level {{ $element.level }}</label>
+                        <input name="rank-{{ $element.level }}" class="form-control" placeholder="Rank level {{ $element.level }}" type="text" value="{{ $element.name }}">
+                    </div>
+                {{ end }}
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
         <div role="tabpanel" class="tab-pane" id="messages">.hh..</div>
         <div role="tabpanel" class="tab-pane" id="settings">.hhhh..</div>
+        {{ end }}
     </div>
 </div>
 {{ template "footer.html" . }}
