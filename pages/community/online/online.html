@@ -1,0 +1,21 @@
+{{ template "header.html" }}
+<h3>Who is online</h3>
+<hr>
+<p>There are currently {{ .count }} players online on {{ serverName }}.</p>
+{{ if .list }}
+	<table class="table table-striped table-hover">
+		<thead class="thead-inverse">
+			<th>Name</th><th>Vocation</th><th>Level</th>
+		</thead>
+		<tbody>
+			{{ range $index, $element := queryResults .list }}
+				<tr>
+					<td><a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a></td>
+					<td>{{ $element.vocation.Name }}</td>
+					<td>{{ $element.level }}</td>
+				</tr>
+			{{ end }}
+		</tbody>
+	</table>
+{{ end }}
+{{ template "footer.html" . }}
