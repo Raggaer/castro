@@ -121,7 +121,9 @@ var (
 		"set": SetStorageValue,
 	}
 	playerMethods = map[string]glua.LGFunction{
-		"getAccountId": GetPlayerAccountID,
+		"getAccountId":   GetPlayerAccountID,
+		"isOnline":       IsPlayerOnline,
+		"getBankBalance": GetPlayerBankBalance,
 	}
 )
 

@@ -79,13 +79,47 @@ func getPlayerObject(luaState *lua.LState) *models.Player {
 	return data.Value.(*models.Player)
 }
 
-// GetPlayerAccountID returns the account ID of a player metatable object
+// GetPlayerAccountID gets a player account ID
 func GetPlayerAccountID(L *lua.LState) int {
 	// Get player struct
 	player := getPlayerObject(L)
 
 	// Push account ID
 	L.Push(lua.LNumber(player.Account_id))
+
+	return 1
+}
+
+// GetPlayerBankBalance gets a player bank balance
+func GetPlayerBankBalance(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Data holder
+	balance := 0
+
+	// Get balance value
+	database.DB.Get(&balance, "SELECT balance FROM players WHERE id = ?", player.ID)
+
+	// Push value
+	L.Push(lua.LNumber(balance))
+
+	return 1
+}
+
+// IsPlayerOnline checks if the given player is online
+func IsPlayerOnline(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Data holder
+	online := false
+
+	// Get online value
+	database.DB.Get(&online, "SELECT 1 FROM players_online WHERE player_id = ?", player.ID)
+
+	// Push online value
+	L.Push(lua.LBool(online))
 
 	return 1
 }
