@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// PlayerMetaTableName the name of the player metatable
+	PlayerMetaTableName = "player"
+
 	// StorageMetaTableName the name of the storage metatable
 	StorageMetaTableName = "storage"
 

@@ -120,6 +120,9 @@ var (
 		"get": GetStorageValue,
 		"set": SetStorageValue,
 	}
+	playerMethods = map[string]glua.LGFunction{
+		"getAccountId": GetPlayerAccountID,
+	}
 )
 
 // Load loads all lua source files
@@ -254,6 +257,9 @@ func (p *luaStatePool) GetApplicationState() *glua.LState {
 
 	// Create json metatable
 	SetJSONMetaTable(luaState)
+
+	// Set player global
+	luaState.SetGlobal("Player", luaState.NewFunction(PlayerConstructor))
 
 	// Set last log file name
 	luaState.SetGlobal("logFile", glua.LString(

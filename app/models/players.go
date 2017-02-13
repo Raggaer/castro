@@ -2,8 +2,10 @@ package models
 
 // Player struct used for server players
 type Player struct {
-	Name     string
-	Level    int
-	Vocation int
-	TownID   int
+	ID         int64
+	Name       string
+	Level      int
+	Vocation   int
+	Town_id    int
+	Account_id int64
 }
