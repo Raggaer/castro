@@ -124,6 +124,7 @@ var (
 		"getAccountId":   GetPlayerAccountID,
 		"isOnline":       IsPlayerOnline,
 		"getBankBalance": GetPlayerBankBalance,
+		"getStorage":     GetStorageValue,
 	}
 )
 

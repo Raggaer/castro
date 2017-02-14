@@ -123,3 +123,29 @@ func IsPlayerOnline(L *lua.LState) int {
 
 	return 1
 }
+
+// GetPlayerStorageValue gets a player storage value by the given key
+func GetPlayerStorageValue(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Get key
+	key := L.Get(2)
+
+	// Check for valid key type
+	if key.Type() != lua.LTNumber {
+		L.ArgError(1, "Invalid key type. Expected number")
+		return 0
+	}
+
+	// Data holder
+	storage := models.Storage{}
+
+	// Get storage value
+	database.DB.Get(&storage, "SELECT key, value FROM players_storage WHERE player_id = ?", player.ID)
+
+	// Push storage as table
+	L.Push(StructToTable(&storage))
+
+	return 1
+}
