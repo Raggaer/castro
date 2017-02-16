@@ -65,7 +65,7 @@ elseif data.orderType == 9 then
     query = "skill_fishing"
 end
 
-data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FROM players WHERE vocation = ? ORDER BY id DESC LIMIT ?, ?", data.vocType, data.paginator.limit, data.paginator.offset, true)
+data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FROM players WHERE vocation = ? ORDER BY value DESC LIMIT ?, ?", data.vocType, data.paginator.limit, data.paginator.offset, true)
 
 if data.list ~= nil then
     if not cache then
