@@ -24,10 +24,12 @@ end
 data.articles, cache = db:query("SELECT title, text, created_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.limit, pg.offset, true)
 data.paginator = pg
 
-if not cache then
-	for _, article in pairs(data.articles) do
-		article.text = article.text:parseBBCode()
-	end
+if data.articles ~= nil then
+    if not cache then
+        for _, article in pairs(data.articles) do
+            article.text = article.text:parseBBCode()
+        end
+    end
 end
 
 http:render("home.html", data)

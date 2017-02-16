@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"encoding/gob"
+	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/thirdparty/tollbooth_negroni"
 	"github.com/gorilla/securecookie"
 	"github.com/julienschmidt/httprouter"
 	"github.com/phyber/negroni-gzip/gzip"
@@ -94,12 +96,12 @@ Compiled at: %v
 	} else {
 
 		// Use rate-limiter on production mode
-		/*n.Use(tollbooth_negroni.LimitHandler(
+		n.Use(tollbooth_negroni.LimitHandler(
 			tollbooth.NewLimiter(
 				util.Config.RateLimit.Number,
 				util.Config.RateLimit.Time,
 			),
-		))*/
+		))
 	}
 
 	// Disable httprouter not found handler
