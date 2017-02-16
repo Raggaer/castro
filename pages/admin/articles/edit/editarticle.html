@@ -1,0 +1,18 @@
+{{ template "header.html" }}
+<h3>Edit article</h3>
+<hr>
+<form action="{{ url "subtopic" "admin" "articles" "edit" }}" method="post">
+	<input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+	{{ if .id }}
+	<input type="hidden" name="id" value="{{ .id }}">
+	{{ end }}
+	<div class="form-group">
+		<input type="text" class="form-control" name="title" value="{{ .title }}">
+	</div>
+	<div class="form-group">
+		<textarea class="form-control" rows="8" name="text" spellcheck="true">{{ .text }}</textarea>
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+	<a class="btn btn-warning" href="{{ url "subtopic" "admin" "articles" "list" }}">Cancel</a>
+</form>
+{{ template "footer.html" . }}

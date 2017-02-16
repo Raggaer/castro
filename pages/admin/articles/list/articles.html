@@ -1,0 +1,49 @@
+{{ template "header.html" }}
+<h3>Articles</h3>
+<hr>
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+<a class ="btn btn-primary" href="{{ url "subtopic" "admin" "articles" "new" }}" role="button">New article</a>
+<hr>
+<form action="{{ url "subtopic" "admin" "articles" "delete" }}" method="post">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <input type="hidden" id="delete_id" name="id" value="0">
+    <table class="table table-striped table-hover">
+        <thead class="thead-inverse">
+            <tr><th>Title</th><th>Created</th><th>Updated</th><th colspan="2">Action</th></tr>
+        </thead>
+        <tbody>
+            {{ range $index, $element := queryResults .articles }}
+            <tr>
+                <td>{{ $element.title }}</td>
+                <td>{{ $element.created_at.Result }}</td>
+                <td>{{ $element.updated_at.Result }}</td>
+                <td><a class="btn btn-primary btn-xs" href="{{ url "subtopic" "admin" "articles" "edit" }}?id={{ $element.id }}">Edit</a></td>
+                <td>
+                    <button type="submit" id="{{ $element.id }}" class="btn btn-danger btn-xs" onclick="document.getElementById('delete_id').setAttribute('value', {{ $element.id }})">Delete</button>
+               </td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</form>
+
+<ul class="pagination pagination-sm">
+    {{ if .paginator.prev }}
+    <li><a href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.firstpage.num }}">First</a></li>
+    <li><a href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
+    {{ end }}
+    {{ if $.paginator.last }}
+    <li><a href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
+    <li><a href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
+    {{ end }}
+</ul>
+{{ template "footer.html" . }}

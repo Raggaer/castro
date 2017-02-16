@@ -1,4 +1,5 @@
 require "paginator"
+require "bbcode"
 
 local page = 0
 
@@ -20,7 +21,13 @@ if data.articles == nil and page > 0 then
     return
 end
 
-data.articles = db:query("SELECT title, text, created_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.limit, pg.offset, true)
+data.articles, cache = db:query("SELECT title, text, created_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.limit, pg.offset, true)
 data.paginator = pg
+
+if not cache then
+	for _, article in pairs(data.articles) do
+		article.text = article.text:parseBBCode()
+	end
+end
 
 http:render("home.html", data)
