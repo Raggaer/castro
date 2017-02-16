@@ -3,6 +3,7 @@ package lua
 import (
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/models"
+	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -99,7 +100,10 @@ func GetPlayerBankBalance(L *lua.LState) int {
 	balance := 0
 
 	// Get balance value
-	database.DB.Get(&balance, "SELECT balance FROM players WHERE id = ?", player.ID)
+	if err := database.DB.Get(&balance, "SELECT balance FROM players WHERE id = ?", player.ID); err != nil {
+		L.RaiseError("Cannot get player bank balance: %v", err)
+		return 0
+	}
 
 	// Push value
 	L.Push(lua.LNumber(balance))
@@ -148,4 +152,59 @@ func GetPlayerStorageValue(L *lua.LState) int {
 	L.Push(StructToTable(&storage))
 
 	return 1
+}
+
+// SetPlayerStorageValue sets a player storage value with the given key
+func SetPlayerStorageValue(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Get key
+	key := L.Get(2)
+
+	// Check for valid key type
+	if key.Type() != lua.LTNumber {
+		L.ArgError(1, "Invalid key type. Expected number")
+		return 0
+	}
+
+	// Get value
+	val := L.Get(3)
+
+	// Check for valid value type
+	if val.Type() != lua.LTNumber {
+		L.ArgError(1, "Invalid value type. Expected number")
+		return 0
+	}
+
+	// Insert storage value
+	if _, err := database.DB.Exec("INSERT INTO player_storage (player_id, key, value) VALUES (?, ?, ?)", player.ID, L.ToInt(2), L.ToInt(3)); err != nil {
+		L.RaiseError("Cannot set player storage value: %v", err)
+		return 0
+	}
+
+	return 0
+}
+
+// GetPlayerVocation gets the player vocation
+func GetPlayerVocation(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Loop server vocations
+	for _, voc := range util.ServerVocationList.List.Vocations {
+
+		// Check vocation
+		if voc.ID == player.Vocation {
+
+			// Convert vocation to lua table
+			L.Push(StructToTable(voc))
+
+			return 1
+		}
+	}
+
+	// Vocation is not found
+	L.RaiseError("Cannot find player vocation")
+	return 0
 }
