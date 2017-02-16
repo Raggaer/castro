@@ -50,7 +50,19 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Get session
-	session := r.Context().Value("session").(map[string]interface{})
+	session, ok := r.Context().Value("session").(map[string]interface{})
+
+	if !ok {
+		// Set error header
+		w.WriteHeader(500)
+
+		// If AAC is running on development mode log error
+		if util.Config.IsDev() || util.Config.IsLog() {
+			util.Logger.Error("Cannot get session as map")
+		}
+
+		return
+	}
 
 	// Get state from the pool
 	luaState := lua.Pool.GetApplicationState()
