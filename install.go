@@ -181,6 +181,9 @@ func createConfigFile(name, location string) error {
 			Number: 100,
 			Time:   time.Minute,
 		},
+		PayPal: util.PayPalConfig{
+			Enabled: false,
+		},
 		Custom: make(map[string]interface{}),
 	})
 }

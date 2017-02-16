@@ -40,6 +40,13 @@ type MailConfig struct {
 	Password string
 }
 
+// PayPalConfig struct used for the paypal configuration options
+type PayPalConfig struct {
+	Enabled   bool
+	PublicKey string
+	SecretKey string
+}
+
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
 	Mode      string
@@ -49,6 +56,7 @@ type Configuration struct {
 	Mail      MailConfig
 	Captcha   CaptchaConfig
 	SSL       SSLConfig
+	PayPal    PayPalConfig
 	Cookies   CookieConfig
 	Cache     CacheConfig
 	RateLimit RateLimiterConfig
