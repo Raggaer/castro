@@ -127,6 +127,9 @@ var (
 		"getStorageValue": GetPlayerStorageValue,
 		"setStorageValue": SetPlayerStorageValue,
 		"getVocation":     GetPlayerVocation,
+		"getTown":         GetPlayerTown,
+		"getSex":          GetPlayerGender,
+		"getPremiumDays":  nil,
 	}
 )
 

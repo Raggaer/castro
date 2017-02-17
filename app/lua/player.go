@@ -19,7 +19,7 @@ func PlayerConstructor(L *lua.LState) int {
 		player := models.Player{}
 
 		// Get player by ID
-		if err := database.DB.Get(&player, "SELECT id, accound_id, name, level, vocation, town_id FROM players WHERE id = ?", L.ToInt64(1)); err != nil {
+		if err := database.DB.Get(&player, "SELECT id, sex, accound_id, name, level, vocation, town_id FROM players WHERE id = ?", L.ToInt64(1)); err != nil {
 			L.RaiseError("Cannot get player for ID: %v. Error: %v", L.ToInt64(1), err)
 		}
 
@@ -38,7 +38,7 @@ func PlayerConstructor(L *lua.LState) int {
 	player := models.Player{}
 
 	// Get player by ID
-	if err := database.DB.Get(&player, "SELECT id, account_id, name, level, vocation, town_id FROM players WHERE name = ?", L.ToString(1)); err != nil {
+	if err := database.DB.Get(&player, "SELECT id, sex, account_id, name, level, vocation, town_id FROM players WHERE name = ?", L.ToString(1)); err != nil {
 		L.RaiseError("Cannot get player for name: %v. Error: %v", L.ToInt64(1), err)
 	}
 
@@ -206,5 +206,41 @@ func GetPlayerVocation(L *lua.LState) int {
 
 	// Vocation is not found
 	L.RaiseError("Cannot find player vocation")
+
 	return 0
+}
+
+// GetPlayerTown gets the player town
+func GetPlayerTown(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Loop server towns
+	for _, town := range util.OTBMap.Towns {
+
+		// Check town
+		if town.ID == player.Town_id {
+
+			// Convert and push town to lua table
+			L.Push(StructToTable(&town))
+
+			return 1
+		}
+	}
+
+	// Town is not found
+	L.RaiseError("Cannot find player town")
+
+	return 0
+}
+
+// GetPlayerGender gets the player gender
+func GetPlayerGender(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Push gender as number
+	L.Push(lua.LNumber(player.Sex))
+
+	return 1
 }
