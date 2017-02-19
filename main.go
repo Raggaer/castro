@@ -20,6 +20,7 @@ import (
 	"log"
 	"net/http/pprof"
 	_ "net/http/pprof"
+	"time"
 )
 
 var (
@@ -116,24 +117,28 @@ Compiled at: %v
 	// Show running port
 	util.Logger.Infof("Starting Castro http server on port :%v", util.Config.Port)
 
+	// Create castro server
+	server := http.Server{
+		Addr:         fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port),
+		Handler:      n,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
 	// Check if Castro should run on SSL mode
 	if util.Config.SSL.Enabled {
 
 		// If SSL is enabled listen with cert and key
-		if err := http.ListenAndServeTLS(
-			fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port),
+		if err := server.ListenAndServeTLS(
 			util.Config.SSL.Cert,
 			util.Config.SSL.Key,
-			n,
 		); err != nil {
 			util.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
 		}
 	} else {
 
 		// Listen without using ssl
-		if err := http.ListenAndServe(fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port), n); err != nil {
-			// This should only happen when a port is
-			// already in use
+		if err := server.ListenAndServe(); err != nil {
 			util.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
 		}
 	}
