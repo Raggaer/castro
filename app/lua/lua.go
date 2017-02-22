@@ -110,7 +110,7 @@ var (
 		"parseUnix": ParseUnixTimestamp,
 	}
 	reflectMethods = map[string]glua.LGFunction{
-		"getGlobal": GetGlobal,
+		"getGlobal": nil,
 	}
 	jsonMethods = map[string]glua.LGFunction{
 		"marshal":   MarshalJSON,
@@ -211,10 +211,7 @@ func (p *luaStatePool) Get() *glua.LState {
 }
 
 // GetPageState returns a page configured lua state
-func (p *luaStatePool) GetApplicationState() *glua.LState {
-	// Get state from the pool
-	luaState := Pool.Get()
-
+func getApplicationState(luaState *glua.LState) {
 	// Create storage metatable
 	SetStorageMetaTable(luaState)
 
@@ -295,8 +292,6 @@ func (p *luaStatePool) GetApplicationState() *glua.LState {
 			filepath.Join(f, "app", "lua", "engine", "?.lua"),
 		),
 	)
-
-	return luaState
 }
 
 // Put saves a lua state back to the pool
@@ -318,6 +313,8 @@ func (p *luaStatePool) New() *glua.LState {
 			IncludeGoStackTrace: true,
 		},
 	)
+
+	getApplicationState(luaState)
 
 	// Return the lua state
 	return luaState

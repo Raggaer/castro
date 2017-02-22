@@ -7,8 +7,7 @@ import (
 	"net/http"
 )
 
-// SetSessionMetaTable sets the session metatable on the given
-// lua state
+// SetSessionMetaTable sets the session metatable on the given lua state
 func SetSessionMetaTable(luaState *lua.LState) {
 	// Create and set session metatable
 	jwtMetaTable := luaState.NewTypeMetatable(SessionMetaTable)

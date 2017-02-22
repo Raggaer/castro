@@ -7,12 +7,10 @@ import (
 )
 
 var (
-	// OTBMap holds the main server map parsed
-	// using otmap library
+	// OTBMap holds the main server map parsed using otmap library
 	OTBMap *otmap.Map
 
-	// ServerHouseList holds the main server house list
-	// XML list
+	// ServerHouseList holds the main server house list XML list
 	ServerHouseList = ServerHouses{
 		List: &HouseList{},
 	}

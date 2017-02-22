@@ -1,6 +1,8 @@
 package models
 
-import "github.com/raggaer/castro/app/database"
+import (
+	"github.com/raggaer/castro/app/database"
+)
 
 // Account struct used for tfs accounts
 type Account struct {

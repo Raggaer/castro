@@ -65,16 +65,16 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Get state from the pool
-	luaState := lua.Pool.GetApplicationState()
+	luaState := lua.Pool.Get()
+
+	// Defer the state put method
+	defer lua.Pool.Put(luaState)
 
 	// Set the state user data
 	lua.SetHTTPUserData(luaState, w, r)
 
 	// Set session user data
 	lua.SetSessionMetaTableUserData(luaState, session)
-
-	// Defer the state put method
-	defer lua.Pool.Put(luaState)
 
 	// Set LUA file name
 	pageName := ps.ByName("filepath")
