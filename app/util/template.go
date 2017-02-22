@@ -23,8 +23,7 @@ var (
 	FuncMap template.FuncMap
 )
 
-// Tmpl struct that holds an application template
-// wrapper for the Go template used in the lua bindings
+// Tmpl struct that holds an application template wrapper for the Go template used in the lua bindings
 type Tmpl struct {
 	rw   *sync.RWMutex
 	Tmpl *template.Template
@@ -38,8 +37,7 @@ func NewTemplate(name string) Tmpl {
 	}
 }
 
-// LoadTemplates parses and loads all template into
-// the given variable
+// LoadTemplates parses and loads all template into the given variable
 func (t *Tmpl) LoadTemplates(dir string) error {
 	// Lock mutex
 	t.rw.Lock()

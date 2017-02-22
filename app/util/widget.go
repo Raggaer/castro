@@ -19,7 +19,7 @@ var (
 	}
 )
 
-// WidgetList the list of widget applcation
+// WidgetList the list of widget application
 type WidgetList struct {
 	rw   *sync.RWMutex
 	List []*Widget
