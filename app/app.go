@@ -12,6 +12,7 @@ import (
 	"github.com/raggaer/otmap"
 	"log"
 	"net/url"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
@@ -98,7 +99,7 @@ func loadAppLogger() {
 func loadVocations(wg *sync.WaitGroup) {
 	// Load server vocations
 	if err := util.LoadVocations(
-		util.Config.Datapack+"/data/xml/vocations.xml",
+		filepath.Join(util.Config.Datapack, "data", "xml", "vocations.xml"),
 		util.ServerVocationList,
 	); err != nil {
 		util.Logger.Fatalf("Cannot load map house list: %v", err)
@@ -111,7 +112,7 @@ func loadVocations(wg *sync.WaitGroup) {
 func loadHouses(wg *sync.WaitGroup) {
 	// Load server houses
 	if err := util.LoadHouses(
-		util.Config.Datapack+"/data/world/"+util.OTBMap.HouseFile,
+		filepath.Join(util.Config.Datapack, "data", "world", util.OTBMap.HouseFile),
 		util.ServerHouseList,
 	); err != nil {
 		util.Logger.Fatalf("Cannot load map house list: %v", err)
@@ -123,7 +124,7 @@ func loadHouses(wg *sync.WaitGroup) {
 
 func loadMap() {
 	// Parse OTBM file
-	m, err := otmap.Parse(util.Config.Datapack + "/data/world/" + lua.Config.MapName + ".otbm")
+	m, err := otmap.Parse(filepath.Join(util.Config.Datapack, "data", "world", lua.Config.MapName+".otbm"))
 
 	if err != nil {
 		util.Logger.Fatalf("Cannot parse OTBM file: %v", err)
