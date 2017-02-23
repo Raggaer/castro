@@ -1,7 +1,7 @@
 package lua
 
 import (
-	"encoding/json"
+	"github.com/clbanning/mxj"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -27,10 +27,10 @@ func MarshalJSON(L *lua.LState) int {
 	}
 
 	// Convert table to map
-	r := TableToMap(L.ToTable(2))
+	r := mxj.Map(TableToMap(L.ToTable(2)))
 
 	// Marshal converted table
-	buff, err := json.Marshal(r)
+	buff, err := r.Json()
 
 	if err != nil {
 		L.RaiseError("Cannot marshal the given table: %v", err)
@@ -54,13 +54,10 @@ func UnmarshalJSON(L *lua.LState) int {
 		return 0
 	}
 
-	// Data holder
-	result := make(map[string]interface{})
+	// Unmarshal string
+	result, err := mxj.NewMapJson([]byte(src.String()))
 
-	if err := json.Unmarshal(
-		[]byte(src.String()),
-		&result,
-	); err != nil {
+	if err != nil {
 		L.RaiseError("Cannot unmarshal the given string: %v", err)
 		return 0
 	}

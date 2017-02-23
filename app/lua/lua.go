@@ -289,7 +289,7 @@ func getApplicationState(luaState *glua.LState) {
 		pkg,
 		"path",
 		glua.LString(
-			filepath.Join(f, "app", "lua", "engine", "?.lua"),
+			filepath.Join(f, "engine", "?.lua"),
 		),
 	)
 }
