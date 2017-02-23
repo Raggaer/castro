@@ -63,6 +63,9 @@ Compiled at: %v
 		return
 	}
 
+	// Run main app entry point
+	app.Start()
+
 	// Declare application endpoints
 	router.GET("/", controllers.LuaPage)
 	router.POST("/", controllers.LuaPage)
@@ -70,9 +73,6 @@ Compiled at: %v
 	router.POST("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/pprof/heap", wrapHandler(pprof.Handler("heap")))
-
-	// Run main app entry point
-	app.Start()
 
 	// Create the session storage
 	util.SessionStore = securecookie.New(
