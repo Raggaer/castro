@@ -9,7 +9,9 @@ if data.guild == nil then
     return
 end
 
-local characters = db:query("SELECT id FROM players WHERE account_id = ?", session:loggedAccount().ID)
+if session:isLogged() then
+    local characters = db:query("SELECT id FROM players WHERE account_id = ?", session:loggedAccount().ID)
+end
 
 data.owner = false
 
@@ -36,11 +38,13 @@ end
 
 data.invitations = db:query("SELECT a.id, a.name FROM players a, guild_invites b WHERE b.guild_id = ? AND b.player_id = a.id", data.guild.id)
 
-if data.invitations ~= nil then
-    for _, v in pairs(data.invitations) do
-        for _, p in pairs(characters) do
-            if p.id == v.id then
-                v.m = true
+if session:isLogged() then
+    if data.invitations ~= nil then
+        for _, v in pairs(data.invitations) do
+            for _, p in pairs(characters) do
+                if p.id == v.id then
+                    v.m = true
+                end
             end
         end
     end
