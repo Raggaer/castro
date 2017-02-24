@@ -6,8 +6,7 @@ import (
 	"net/http"
 )
 
-// SetHTTPMetaTable sets the http metatable on the given
-// lua state
+// SetHTTPMetaTable sets the http metatable on the given lua state
 func SetHTTPMetaTable(luaState *glua.LState) {
 	// Create and set HTTP metatable
 	httpMetaTable := luaState.NewTypeMetatable(HTTPMetaTableName)
@@ -15,6 +14,16 @@ func SetHTTPMetaTable(luaState *glua.LState) {
 
 	// Set all HTTP metatable functions
 	luaState.SetFuncs(httpMetaTable, httpMethods)
+}
+
+// SetWidgetHTTPMetaTable sets the widget http metatable on the given lua state
+func SetWidgetHTTPMetaTable(luaState *glua.LState) {
+	// Create and set HTTP metatable
+	httpMetaTable := luaState.NewTypeMetatable(HTTPMetaTableName)
+	luaState.SetGlobal(HTTPMetaTableName, httpMetaTable)
+
+	// Set all HTTP metatable functions
+	luaState.SetFuncs(httpMetaTable, httpWidgetMethods)
 }
 
 // SetHTTPUserData sets the http metatable user data
@@ -79,7 +88,7 @@ func RenderTemplate(L *glua.LState) int {
 	widgets, err := compileWidgetList(req, w, session)
 
 	if err != nil {
-		util.Logger.Fatal(err)
+		util.Logger.Fatalf("Cannot compile widget list: %v", err)
 	}
 
 	// Check if args is set

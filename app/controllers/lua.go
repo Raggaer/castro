@@ -75,6 +75,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		pageName = "index"
 	}
 
+	// Get state from the pool
 	s, err := lua.PageList.Get(filepath.Join("pages", pageName, r.Method+".lua"))
 
 	// Create HTTP metatable
@@ -105,7 +106,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		glua.P{
 			Fn:      s.GetGlobal(strings.ToLower(r.Method)),
 			NRet:    0,
-			Protect: true,
+			Protect: !util.Config.IsDev(),
 		},
 	); err != nil {
 

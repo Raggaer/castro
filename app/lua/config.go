@@ -8,8 +8,7 @@ import (
 // Config holds the current lua configuration file
 var Config = &Configuration{}
 
-// Configuration struct used for LUA configuration
-// file
+// Configuration struct used for LUA configuration file
 type Configuration struct {
 	WorldType                           string `lua:"worldType"`
 	HotkeyAimbotEnabled                 bool   `lua:"hotkeyAimbotEnabled"`

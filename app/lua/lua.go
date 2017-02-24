@@ -3,12 +3,9 @@ package lua
 import (
 	"fmt"
 	"github.com/kardianos/osext"
-	"github.com/kataras/go-errors"
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
-	"io/ioutil"
 	"path/filepath"
-	"strings"
 	"sync"
 )
 
@@ -18,27 +15,10 @@ type luaStatePool struct {
 	saved []*glua.LState
 }
 
-// FunctionList list of lua source files
-type FunctionList struct {
-	rw   *sync.RWMutex
-	List map[string]string
-	Test map[string]*luaStatePool
-}
-
 var (
 	// Pool saves all lua state pointers to create a sync.Pool
 	Pool = &luaStatePool{
 		saved: make([]*glua.LState, 0, 10),
-	}
-
-	// Subtopics is the application list of lua subtopics
-	Subtopics = FunctionList{
-		rw: &sync.RWMutex{},
-	}
-
-	// Widgets is the application list of lua widgets
-	Widgets = FunctionList{
-		rw: &sync.RWMutex{},
 	}
 
 	cryptoMethods = map[string]glua.LGFunction{
@@ -56,7 +36,8 @@ var (
 		"redirect": Redirect,
 		"render":   RenderTemplate,
 	}
-	validatorMethods = map[string]glua.LGFunction{
+	httpWidgetMethods = map[string]glua.LGFunction{}
+	validatorMethods  = map[string]glua.LGFunction{
 		"validate":       Validate,
 		"blackList":      BlackList,
 		"validUsername":  ValidUsername,
@@ -132,65 +113,10 @@ var (
 		"getSex":          GetPlayerGender,
 		"getPremiumDays":  nil,
 	}
+	widgetMethods = map[string]glua.LGFunction{
+		"render": RenderWidgetTemplate,
+	}
 )
-
-// Load loads all lua source files
-func (s *FunctionList) Load(dir string) error {
-	// Lock mutex
-	s.rw.Lock()
-	defer s.rw.Unlock()
-
-	// Set list
-	s.List = make(map[string]string)
-
-	// Get a state from the pool
-	L := Pool.Get()
-
-	// Return the state
-	defer Pool.Put(L)
-
-	// Get subtopic list
-	subtopicList, err := util.GetLuaFiles(dir)
-
-	if err != nil {
-		return err
-	}
-
-	// Loop subtopic list
-	for _, subtopic := range subtopicList {
-
-		// Load file
-		f, err := ioutil.ReadFile(subtopic)
-
-		if err != nil {
-			return err
-		}
-
-		// Push result
-		s.List[subtopic] = string(f)
-	}
-
-	return nil
-}
-
-// Get retrieves the source of the given lua file
-func (s *FunctionList) Get(place, name, method string) (string, error) {
-	// Lock mutex
-	s.rw.Lock()
-	defer s.rw.Unlock()
-
-	// Build path
-	path := filepath.Join(place, strings.ToLower(name), strings.ToLower(method)+".lua")
-
-	// Check if path exists
-	f, ok := s.List[path]
-
-	if !ok {
-		return "", errors.New("Subtopic not found")
-	}
-
-	return f, nil
-}
 
 // Get retrieves a lua state from the pool if no states are available we create one
 func (p *luaStatePool) Get() *glua.LState {

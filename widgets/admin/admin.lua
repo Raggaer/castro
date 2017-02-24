@@ -1,13 +1,14 @@
 function widget()
 
-if not session:isLogged() then
-    return nil
-end
+    if not session:isLogged() then
+        widgets:render("admin.html", nil)
+        return
+    end
 
-local data = {}
+    local data = {}
 
-data.admin = session:loggedAccount().castro.Admin
+    data.admin = session:loggedAccount().castro.Admin
 
-return data, false
+    widgets:render("admin.html", data)
 
 end

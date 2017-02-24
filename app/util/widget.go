@@ -1,7 +1,6 @@
 package util
 
 import (
-	"bytes"
 	"fmt"
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
@@ -86,7 +85,7 @@ func (w *Widget) IsCached() (template.HTML, bool) {
 }
 
 // Execute gets the result of the given widget
-func (w *Widget) Execute(luaState *glua.LState) (*glua.LTable, bool, error) {
+func (w *Widget) Execute(luaState *glua.LState) error {
 	// Lock mutex
 	w.rw.RLock()
 	defer w.rw.RUnlock()
@@ -94,39 +93,11 @@ func (w *Widget) Execute(luaState *glua.LState) (*glua.LTable, bool, error) {
 	// Execute widget function
 	if err := luaState.CallByParam(glua.P{
 		Fn:      luaState.GetGlobal("widget"),
-		NRet:    2,
-		Protect: true,
+		NRet:    0,
+		Protect: !Config.IsDev(),
 	}); err != nil {
-		return nil, false, err
+		return err
 	}
 
-	// Get value of the top of the stack
-	v := luaState.Get(-2)
-
-	// Remove top value
-	luaState.Pop(-2)
-
-	// Get cache option
-	c := luaState.ToBool(-1)
-
-	// Remove top value
-	luaState.Pop(-1)
-
-	// Check for valid returned type
-	if v.Type() != glua.LTTable {
-		return nil, c, nil
-	}
-
-	// Return value as table
-	return v.(*glua.LTable), c, nil
-}
-
-// SetResult changes a widget result
-func (w *Widget) SetResult(buff *bytes.Buffer) {
-	// Lock mutex
-	w.rw.Lock()
-	defer w.rw.Unlock()
-
-	// Set result
-	w.Result = template.HTML(buff.String())
+	return nil
 }

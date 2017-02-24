@@ -1,13 +1,13 @@
 function widget()
 
-local data = {}
+    local data = {}
 
-data["logged"] = session:isLogged()
+    data["logged"] = session:isLogged()
 
-if data["logged"] then
-    data["account"] = session:loggedAccount()
-end
+    if data["logged"] then
+        data["account"] = session:loggedAccount()
+    end
 
-return data, false
+    widgets:render("account.html", data)
 
 end

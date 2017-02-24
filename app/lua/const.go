@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// WidgetMetaTableName the name of the widget metatable
+	WidgetMetaTableName = "widgets"
+
 	// PlayerMetaTableName the name of the player metatable
 	PlayerMetaTableName = "player"
 
