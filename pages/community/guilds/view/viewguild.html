@@ -1,5 +1,6 @@
 {{ template "header.html" }}
 <h3>Guild: {{ .guild.guildname }}</h3>
+<p>{{ .guild.motd }}</p>
 <hr>
 {{ if .validationError }}
 <div class="alert alert-danger" role="alert">
@@ -60,6 +61,7 @@
         <li role="presentation" class="active"><a href="#members" aria-controls="members" role="tab" data-toggle="tab">Members</a></li>
         <li role="presentation"><a href="#invitations" aria-controls="invitations" role="tab" data-toggle="tab">Invitations</a></li>
         {{ if .owner }}
+        <li role="presentation"><a href="#motd" aria-controls="motd" role="tab" data-toggle="tab">Motd</a></li>
         <li role="presentation"><a href="#ranks" aria-controls="ranks" role="tab" data-toggle="tab">Ranks</a></li>
         <li role="presentation"><a href="#invite" aria-controls="invite" role="tab" data-toggle="tab">Invite</a></li>
         {{ end }}
@@ -141,6 +143,19 @@
             </table>
         </div>
         {{ if .owner }}
+        <div role="tabpanel" class="tab-pane" id="motd">
+            <form action="{{ url "subtopic" "community" "guilds" "motd" }}" method="POST">
+            <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+            <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+            <div class="form-group">
+                <label for="guild-motd">Guild motd</label>
+                <textarea class="form-control" name="guild-motd" id="guild-motd">{{ .guild.motd }}</textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+            </form>
+        </div>
         <div role="tabpanel" class="tab-pane" id="ranks">
             <form action="{{ url "subtopic" "community" "guilds" "rank" }}" method="POST">
                 <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">

@@ -26,13 +26,13 @@ function post()
         return
     end
 
-    if not validator:validGuildRank(http.postValues["rank-3"]) or not validator:validGuildRank(http.postValues["rank-2"]) or not validator:validGuildRank(http.postValues["rank-1"]) then
-        session:setFlash("validationError", "Invalid rank title. Titles can only contain (A-Z, -) and must have between 5 and 20 characters")
+    if http.postValues["guild-motd"]:len() > 50 then
+        session:setFlash("validationError", "Motd message must be between 0 - 50 characters")
         http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
         return
     end
 
-    db:execute("UPDATE guild_ranks SET name = ( CASE WHEN level = 3 THEN ? WHEN level = 2 THEN ? WHEN level = 1 THEN ? END ) WHERE guild_id = ?", http.postValues["rank-3"], http.postValues["rank-2"], http.postValues["rank-1"], guild.id)
-    session:setFlash("success", "Ranks updated")
+    db:execute("UPDATE guilds SET motd = ? WHERE id = ?", http.postValues["guild-motd"], guild.id)
+    session:setFlash("success", "Motd updated")
     http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
 end
