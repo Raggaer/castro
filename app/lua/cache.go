@@ -54,9 +54,6 @@ func GetCacheValue(L *lua.LState) int {
 }
 
 // SetCacheValue sets a cache value with the given key and the given duration string
-// A duration string is a possibly signed sequence of decimal numbers
-// Each with optional fraction and a unit suffix, such as "300ms", "-1.5h" or "2h45m"
-// Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h"
 func SetCacheValue(L *lua.LState) int {
 	// Get key
 	key := L.Get(2)
