@@ -1,3 +1,4 @@
+function get()
 if not session:isLogged() then
     http:redirect("/subtopic/login")
     return
@@ -16,3 +17,4 @@ if data.account.Premdays > 0 then
 end
 
 http:render("dashboard.html", data)
+end

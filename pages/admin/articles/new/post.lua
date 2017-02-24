@@ -1,3 +1,4 @@
+function post()
 -- Block access for anyone who is not admin
 if not session:isLogged() or not session:isAdmin() then
     http:redirect("/")
@@ -25,3 +26,4 @@ db:execute("INSERT INTO castro_articles (title, text, created_at) VALUES (?, ?, 
 session:setFlash("success", "Article posted.")
 
 http:redirect("/subtopic/admin/articles/list")
+    end

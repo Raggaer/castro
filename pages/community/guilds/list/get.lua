@@ -1,3 +1,4 @@
+function get()
 local data = {}
 
 data.logged = session:isLogged()
@@ -18,3 +19,4 @@ data["validationError"] = session:getFlash("validationError")
 
 http:render("guildlist.html", data)
 
+end

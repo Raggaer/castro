@@ -1,3 +1,5 @@
+function get()
+
 if not session:isLogged() then
     http:redirect("/")
     return
@@ -11,3 +13,5 @@ data.towns = otbm:townList()
 data.validationError = session:getFlash("validation-error")
 
 http:render("createcharacter.html", data)
+
+    end

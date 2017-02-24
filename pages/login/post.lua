@@ -1,3 +1,4 @@
+function post()
 if session:isLogged() then
     http:redirect("/")
     return
@@ -15,3 +16,4 @@ session:set("logged", true)
 session:set("logged-account", account.name)
 
 http:redirect("/subtopic/account/dashboard")
+    end

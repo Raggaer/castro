@@ -1,3 +1,4 @@
+function get()
 if not session:isAdmin() then
     http:redirect("/")
 end
@@ -14,3 +15,4 @@ while line do
 end
 
 http:render("logs.html", data)
+    end

@@ -1,3 +1,4 @@
+function post()
 -- Block access for anyone who is not admin
 if not session:isLogged() or not session:isAdmin() then
     http:redirect("/")
@@ -11,3 +12,4 @@ if removeArticle then
 end
 
 http:redirect("/subtopic/admin/articles/list")
+    end

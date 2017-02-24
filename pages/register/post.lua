@@ -1,3 +1,4 @@
+function post()
 if session:isLogged() then
     http:redirect("/")
     return
@@ -60,3 +61,4 @@ db:execute("INSERT INTO castro_accounts (account_id) VALUES (?)", id)
 
 session:setFlash("success", "Account created. You can now sign in")
 http:redirect("/subtopic/login")
+    end

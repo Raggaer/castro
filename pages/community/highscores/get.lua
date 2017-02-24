@@ -1,5 +1,7 @@
 require "paginator"
 
+function get()
+
 local data = {}
 
 data.vocList = xml:vocationList()
@@ -78,3 +80,5 @@ end
 data.voc = xml:vocationByID(data.vocType)
 
 http:render("highscores.html", data)
+
+    end

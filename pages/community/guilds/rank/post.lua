@@ -1,3 +1,4 @@
+function post()
 if not session:isLogged() then
     http:redirect("/")
     return
@@ -34,3 +35,4 @@ end
 db:execute("UPDATE guild_ranks SET name = ( CASE WHEN level = 3 THEN ? WHEN level = 2 THEN ? WHEN level = 1 THEN ? END ) WHERE guild_id = ?", http.postValues["rank-3"], http.postValues["rank-2"], http.postValues["rank-1"], guild.id)
 session:setFlash("success", "Ranks updated")
 http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
+    end

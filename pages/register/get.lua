@@ -1,3 +1,4 @@
+function get()
 if session:isLogged() then
     http:redirect("/")
     return
@@ -9,3 +10,4 @@ data["serverName"] = config:get("ServerName")
 data["validationError"] = session:getFlash("validationError")
 
 http:render("register.html", data)
+    end

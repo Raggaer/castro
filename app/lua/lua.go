@@ -22,6 +22,7 @@ type luaStatePool struct {
 type FunctionList struct {
 	rw   *sync.RWMutex
 	List map[string]string
+	Test map[string]*luaStatePool
 }
 
 var (
@@ -210,7 +211,7 @@ func (p *luaStatePool) Get() *glua.LState {
 	return x
 }
 
-// GetPageState returns a page configured lua state
+// GetApplicationState returns a page configured lua state
 func getApplicationState(luaState *glua.LState) {
 	// Create storage metatable
 	SetStorageMetaTable(luaState)
@@ -244,9 +245,6 @@ func getApplicationState(luaState *glua.LState) {
 
 	// Create config metatable
 	SetConfigMetaTable(luaState)
-
-	// Create HTTP metatable
-	SetHTTPMetaTable(luaState)
 
 	// Create map metatable
 	SetMapMetaTable(luaState)
@@ -308,14 +306,15 @@ func (p *luaStatePool) Put(state *glua.LState) {
 // New creates and returns a lua state
 func (p *luaStatePool) New() *glua.LState {
 	// Create a new lua state
-	luaState := glua.NewState(
+	state := glua.NewState(
 		glua.Options{
 			IncludeGoStackTrace: true,
 		},
 	)
 
-	getApplicationState(luaState)
+	// Set castro metatables
+	getApplicationState(state)
 
 	// Return the lua state
-	return luaState
+	return state
 }

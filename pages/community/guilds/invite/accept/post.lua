@@ -1,3 +1,4 @@
+function post()
 if not session:isLogged() then
     http:redirect("/")
     return
@@ -25,3 +26,4 @@ local rank = db:singleQuery("SELECT id FROM guild_ranks WHERE level = 1 AND guil
 db:execute("INSERT INTO guild_membership (player_id, guild_id, rank_id) VALUES (?, ?, ?)", player.id, guild.id, rank.id)
 session:setFlash("success", "Invitation accepted. Welcome to " .. guild.name)
 http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
+    end

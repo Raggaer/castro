@@ -96,7 +96,11 @@ func newCsrfHandler() *csrfHandler {
 
 func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
 	// Get session
-	session := req.Context().Value("session").(map[string]interface{})
+	session, ok := req.Context().Value("session").(map[string]interface{})
+
+	if !ok {
+		return
+	}
 
 	// Get token
 	token, ok := session["csrf-token"].(*models.CsrfToken)
@@ -135,7 +139,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		http.SetCookie(w, c)
 
 		// Create context
-		ctx := context.WithValue(req.Context(), "csrf-token", token)
+		ctx := context.WithValue(req.Context(), "csrf-token", &tkn)
 
 		// Run next handler
 		next(w, req.WithContext(ctx))

@@ -4,7 +4,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
+	glua "github.com/yuin/gopher-lua"
 	"net/http"
+	"path/filepath"
+	"strings"
 )
 
 // LuaPage executes the given lua page
@@ -23,7 +26,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if util.Config.IsDev() {
 
 		// Reload pages
-		if err := lua.Subtopics.Load("pages"); err != nil {
+		if err := lua.PageList.Load("pages"); err != nil {
 			// Set error header
 			w.WriteHeader(500)
 
@@ -36,7 +39,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 
 		// Reload widgets
-		if err := lua.Widgets.Load("widgets"); err != nil {
+		if err := lua.WidgetList.Load("widgets"); err != nil {
 			// Set error header
 			w.WriteHeader(500)
 
@@ -64,18 +67,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	// Get state from the pool
-	luaState := lua.Pool.Get()
-
-	// Defer the state put method
-	defer lua.Pool.Put(luaState)
-
-	// Set the state user data
-	lua.SetHTTPUserData(luaState, w, r)
-
-	// Set session user data
-	lua.SetSessionMetaTableUserData(luaState, session)
-
 	// Set LUA file name
 	pageName := ps.ByName("filepath")
 
@@ -84,8 +75,10 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		pageName = "index"
 	}
 
-	// Get function for the subtopic
-	source, err := lua.Subtopics.Get("pages", pageName, r.Method)
+	s, err := lua.PageList.Get(filepath.Join("pages", pageName, r.Method+".lua"))
+
+	// Create HTTP metatable
+	lua.SetHTTPMetaTable(s)
 
 	if err != nil {
 		// Set error header
@@ -99,19 +92,77 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	// Execute function
-	if err := luaState.DoString(source); err != nil {
+	defer lua.PageList.Put(s, filepath.Join("pages", pageName, r.Method+".lua"))
+
+	// Set the state user data
+	lua.SetHTTPUserData(s, w, r)
+
+	// Set session user data
+	lua.SetSessionMetaTableUserData(s, session)
+
+	if err := s.CallByParam(
+
+		glua.P{
+			Fn:      s.GetGlobal(strings.ToLower(r.Method)),
+			NRet:    0,
+			Protect: true,
+		},
+	); err != nil {
+
 		// Set error header
 		w.WriteHeader(500)
 
 		// If AAC is running on development mode log error
 		if util.Config.IsDev() || util.Config.IsLog() {
-			util.Logger.Errorf("Cannot execute %v subtopic: %v", pageName, err)
+			util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
 		}
 
 		return
 	}
 
-	// Remove top stack value
-	luaState.Pop(-1)
+	return
+
+	/*
+		// Get state from the pool
+		luaState := lua.Pool.Get()
+
+		// Defer the state put method
+		defer lua.Pool.Put(luaState)
+
+		// Set the state user data
+		lua.SetHTTPUserData(luaState, w, r)
+
+		// Set session user data
+		lua.SetSessionMetaTableUserData(luaState, session)
+
+		// Get function for the subtopic
+		source, err := lua.Subtopics.Get("pages", pageName, r.Method)
+
+		if err != nil {
+			// Set error header
+			w.WriteHeader(500)
+
+			// If AAC is running on development mode log error
+			if util.Config.IsDev() || util.Config.IsLog() {
+				util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
+			}
+
+			return
+		}
+
+		// Execute function
+		if err := luaState.DoString(source); err != nil {
+			// Set error header
+			w.WriteHeader(500)
+
+			// If AAC is running on development mode log error
+			if util.Config.IsDev() || util.Config.IsLog() {
+				util.Logger.Errorf("Cannot execute %v subtopic: %v", pageName, err)
+			}
+
+			return
+		}
+
+		// Remove top stack value
+		luaState.Pop(-1)*/
 }

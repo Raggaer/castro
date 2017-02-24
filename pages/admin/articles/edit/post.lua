@@ -1,3 +1,4 @@
+function post()
 -- Block access for anyone who is not admin
 if not session:isLogged() or not session:isAdmin() then
     http:redirect("/")
@@ -26,3 +27,4 @@ db:execute("UPDATE castro_articles SET title = ?, text = ?, updated_at = NOW() W
 session:setFlash("success", "Article updated.")
 
 http:redirect("/subtopic/admin/articles/list")
+	end

@@ -60,7 +60,7 @@ func Start() {
 
 func loadWidgets(wg *sync.WaitGroup) {
 	// Load subtopic list
-	if err := lua.Widgets.Load("widgets"); err != nil {
+	if err := lua.WidgetList.Load("widgets"); err != nil {
 		util.Logger.Fatalf("Cannot load application widget list: %v", err)
 	}
 
@@ -70,7 +70,7 @@ func loadWidgets(wg *sync.WaitGroup) {
 
 func loadSubtopics(wg *sync.WaitGroup) {
 	// Load subtopic list
-	if err := lua.Subtopics.Load("pages"); err != nil {
+	if err := lua.PageList.Load("pages"); err != nil {
 		util.Logger.Fatalf("Cannot load application subtopic list: %v", err)
 	}
 

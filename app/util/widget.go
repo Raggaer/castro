@@ -86,13 +86,17 @@ func (w *Widget) IsCached() (template.HTML, bool) {
 }
 
 // Execute gets the result of the given widget
-func (w *Widget) Execute(luaState *glua.LState, f string) (*glua.LTable, bool, error) {
+func (w *Widget) Execute(luaState *glua.LState) (*glua.LTable, bool, error) {
 	// Lock mutex
 	w.rw.RLock()
 	defer w.rw.RUnlock()
 
-	// Execute function
-	if err := luaState.DoString(f); err != nil {
+	// Execute widget function
+	if err := luaState.CallByParam(glua.P{
+		Fn:      luaState.GetGlobal("widget"),
+		NRet:    2,
+		Protect: true,
+	}); err != nil {
 		return nil, false, err
 	}
 

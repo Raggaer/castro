@@ -1,3 +1,4 @@
+function post()
 if http.postValues["character-name"] == "" then
     session:setFlash("validationError", "Search query cant be empty")
     http:redirect("/subtopic/community/search")
@@ -17,3 +18,4 @@ end
 data.query = http.postValues["character-name"]
 
 http:render("search.html", data)
+    end

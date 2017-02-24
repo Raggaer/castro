@@ -1,3 +1,4 @@
+function get()
 local data = {}
 local name = url:decode(http.getValues.name)
 
@@ -23,3 +24,4 @@ if not cache then
 end
 
 http:render("viewcharacter.html", data)
+    end

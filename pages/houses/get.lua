@@ -1,3 +1,4 @@
+function get()
 local data = {}
 
 if http.getValues.town == nil then
@@ -12,3 +13,4 @@ data.towns = otbm:townList()
 
 http:render("houselist.html", data)
 
+end

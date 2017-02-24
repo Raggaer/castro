@@ -3,13 +3,13 @@ package lua
 import (
 	"fmt"
 	"github.com/raggaer/castro/app/util"
-	"github.com/yuin/gopher-lua"
 	"html/template"
 	"net/http"
+	"path/filepath"
 	"time"
 )
 
-func compileWidgetList(luaState *lua.LState, req *http.Request) ([]template.HTML, error) {
+func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string]interface{}) ([]template.HTML, error) {
 	// Data holder
 	results := []template.HTML{}
 
@@ -28,15 +28,20 @@ func compileWidgetList(luaState *lua.LState, req *http.Request) ([]template.HTML
 			continue
 		}
 
-		// Get widget source
-		source, err := Widgets.Get("widgets", widget.Name, widget.Name)
+		// Get state
+		state, err := WidgetList.Get(filepath.Join("widgets", widget.Name, widget.Name+".lua"))
 
 		if err != nil {
 			return nil, err
 		}
 
+		defer WidgetList.Put(state, filepath.Join("widgets", widget.Name, widget.Name+".lua"))
+
+		// Set session user data
+		SetSessionMetaTableUserData(state, sess)
+
 		// Execute widget
-		tbl, useCache, err := widget.Execute(luaState, source)
+		tbl, useCache, err := widget.Execute(state)
 
 		if err != nil {
 			return nil, err

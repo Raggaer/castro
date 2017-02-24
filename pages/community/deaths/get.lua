@@ -1,5 +1,7 @@
 require "paginator"
 
+function get()
+
 local page = 0
 
 if http.getValues.page ~= nil then
@@ -25,3 +27,5 @@ end
 data.paginator = pg
 
 http:render("latestdeaths.html", data)
+
+end

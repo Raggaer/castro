@@ -1,3 +1,4 @@
+function get()
 -- Block access for anyone who is not admin
 if not session:isLogged() or not session:isAdmin() then
     http:redirect("/")
@@ -26,7 +27,6 @@ data.validationError = session:getFlash("validationError")
 local articleCount = db:singleQuery("SELECT COUNT(*) as total FROM castro_articles", false)
 local pg = paginator(page, 10, tonumber(articleCount.total))
 data.articles = db:query("SELECT id, title, text, created_at, updated_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.limit, pg.offset, false)
---data.articles = db:query("SELECT id, title, text, created_at, updated_at FROM castro_articles ORDER BY id DESC LIMIT 1", false)
 data.paginator = pg
 
 if data.articles ~= nil then
@@ -43,3 +43,4 @@ if data.articles ~= nil then
 end
 
 http:render("articles.html", data)
+	end

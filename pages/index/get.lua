@@ -1,6 +1,8 @@
 require "paginator"
 require "bbcode"
 
+function get()
+
 local page = 0
 
 if http.getValues.page ~= nil then
@@ -33,3 +35,5 @@ if data.articles ~= nil then
 end
 
 http:render("home.html", data)
+
+end

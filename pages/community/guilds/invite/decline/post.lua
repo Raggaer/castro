@@ -1,3 +1,4 @@
+function post()
 if not session:isLogged() then
     http:redirect("/")
     return
@@ -22,3 +23,4 @@ end
 db:execute("DELETE FROM guild_invites WHERE player_id = ? AND guild_id = ?", player.id, guild.id)
 session:setFlash("success", "Invitation declined")
 http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
+    end

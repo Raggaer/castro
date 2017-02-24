@@ -1,3 +1,4 @@
+function post()
 if not session:isLogged() then
     http:redirect("/")
     return
@@ -44,3 +45,4 @@ end
 db:execute("INSERT INTO guild_invites (player_id, guild_id) VALUES (?, ?)", invite.id, guild.id)
 session:setFlash("success", "Invitation sent")
 http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
+    end

@@ -62,11 +62,13 @@ func getRequestAndResponseWriter(L *glua.LState) (*http.Request, http.ResponseWr
 	return req, w
 }
 
-// RenderTemplate renders the given template
-// with the given data as a LUA table
+// RenderTemplate renders the given template with the given data as a LUA table
 func RenderTemplate(L *glua.LState) int {
 	// Get HTTP request and HTTP response writer
 	req, w := getRequestAndResponseWriter(L)
+
+	// Get session
+	session := getSessionData(L)
 
 	templateName := L.ToString(2)
 
@@ -74,11 +76,10 @@ func RenderTemplate(L *glua.LState) int {
 	tableValue := L.Get(3)
 
 	// Compile widget list
-	widgets, err := compileWidgetList(L, req)
+	widgets, err := compileWidgetList(req, w, session)
 
 	if err != nil {
-		L.RaiseError("Cannot compile widget list: %v", err)
-		return 0
+		util.Logger.Fatal(err)
 	}
 
 	// Check if args is set
@@ -87,7 +88,6 @@ func RenderTemplate(L *glua.LState) int {
 		// Convert table to map
 		args := TableToMap(tableValue.(*glua.LTable))
 
-		// Set widgets
 		args["widgets"] = widgets
 
 		// Render template with args
@@ -96,9 +96,7 @@ func RenderTemplate(L *glua.LState) int {
 	}
 
 	// Render template without args
-	util.Template.RenderTemplate(w, req, templateName, map[string]interface{}{
-		"widgets": widgets,
-	})
+	util.Template.RenderTemplate(w, req, templateName, nil)
 
 	return 0
 }

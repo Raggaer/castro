@@ -1,5 +1,6 @@
-local data = {}
+function widget()
 
+local data = {}
 
 data["logged"] = session:isLogged()
 
@@ -8,3 +9,5 @@ if data["logged"] then
 end
 
 return data, false
+
+end

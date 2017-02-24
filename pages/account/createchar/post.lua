@@ -1,3 +1,5 @@
+function post()
+
 if not session:isLogged() then
     http:redirect("/")
     return
@@ -44,3 +46,5 @@ end
 db:execute("INSERT INTO players (name, account_id, vocation, town_id, conditions) VALUES (?, ?, ?, ?, '')", http.postValues["character-name"], account.ID, xml:vocationByName(http.postValues["character-vocation"]).ID, otbm:townByName(http.postValues["character-town"]).ID)
 session:setFlash("success", "Character created")
 http:redirect("/subtopic/account/dashboard")
+
+    end

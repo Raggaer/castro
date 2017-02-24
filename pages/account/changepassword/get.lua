@@ -1,3 +1,5 @@
+function get()
+
 if not session:isLogged() then
     http:redirect("/")
     return
@@ -9,3 +11,5 @@ data["validationError"] = session:getFlash("validationError")
 data["success"] = session:getFlash("success")
 
 http:render("changepassword.html", data)
+
+end

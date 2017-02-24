@@ -1,3 +1,4 @@
+function get()
 local data = {}
 
 data.list, cache = db:query("SELECT po.player_id as id, p.name, p.level AS level, p.vocation AS vocation FROM players_online AS po INNER JOIN players AS p ON p.id = po.player_id ORDER BY p.name", true)
@@ -11,3 +12,4 @@ if not cache then
 end
 
 http:render("online.html", data)
+end

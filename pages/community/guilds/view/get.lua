@@ -1,3 +1,4 @@
+function get()
 local data = {}
 local cache = false
 
@@ -46,3 +47,4 @@ if data.invitations ~= nil then
 end
 
 http:render("viewguild.html", data)
+    end
