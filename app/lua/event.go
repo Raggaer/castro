@@ -1,18 +1,39 @@
 package lua
 
 import (
+	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
 	"time"
 )
 
-// SetEventMetaTable sets the event metatable of the given state
+// getEventChannel retrieves a channel from the user data
+func getEventChannel(luaState *lua.LState) chan int {
+	// Get the metatable
+	table := luaState.GetTypeMetatable("event")
+
+	// Get user data field
+	data := luaState.GetField(table, "__channel")
+
+	return data.(*lua.LUserData).Value.(chan int)
+}
+
 func SetEventMetaTable(luaState *lua.LState) {
-	// Create and set the crypto metatable
+	// Create and set the event metatable
 	eventMetaTable := luaState.NewTypeMetatable(EventMetaTableName)
 	luaState.SetGlobal(EventMetaTableName, eventMetaTable)
 
 	// Set all event metatable functions
 	luaState.SetFuncs(eventMetaTable, eventMethods)
+}
+
+// SetEventsMetaTable sets the event metatable of the given state
+func SetEventsMetaTable(luaState *lua.LState) {
+	// Create and set the events metatable
+	eventMetaTable := luaState.NewTypeMetatable(EventsMetaTableName)
+	luaState.SetGlobal(EventsMetaTableName, eventMetaTable)
+
+	// Set all events metatable functions
+	luaState.SetFuncs(eventMetaTable, eventsMethods)
 }
 
 // AddEvent adds a background job
@@ -21,8 +42,8 @@ func AddEvent(L *lua.LState) int {
 	f := L.Get(2)
 
 	// Check valid function type
-	if f.Type() != lua.LTFunction {
-		L.ArgError(1, "Invalid function type. Expected function")
+	if f.Type() != lua.LTString {
+		L.ArgError(1, "Invalid function type. Expected string")
 		return 0
 	}
 
@@ -43,21 +64,83 @@ func AddEvent(L *lua.LState) int {
 		return 0
 	}
 
-	go executeEvent(f.(*lua.LFunction), duration)
+	go executeEvent(f.String(), duration)
+
+	return 0
+}
+
+// StopEvent stops the given background event
+func StopEvent(L *lua.LState) int {
+	// Get channel
+	ch := getEventChannel(L)
+
+	// Signal stop
+	ch <- 0
 
 	return 0
 }
 
 // executeEvents runs the lua background event
-func executeEvent(f *lua.LFunction, duration time.Duration) {
+func executeEvent(file string, duration time.Duration) {
 	// Create a state
 	state := lua.NewState()
 
 	// Close state
 	defer state.Close()
 
-	// Push function
-	state.Push(f)
+	// Create event metatable
+	SetEventMetaTable(state)
+
+	// Create storage metatable
+	SetStorageMetaTable(state)
+
+	// Create time metatable
+	SetTimeMetaTable(state)
+
+	// Create url metatable
+	SetURLMetaTable(state)
+
+	// Create debug metatable
+	SetDebugMetaTable(state)
+
+	// Create XML metatable
+	SetXMLMetaTable(state)
+
+	// Create captcha metatable
+	SetCaptchaMetaTable(state)
+
+	// Create crypto metatable
+	SetCryptoMetaTable(state)
+
+	// Create validator metatable
+	SetValidatorMetaTable(state)
+
+	// Create database metatable
+	SetDatabaseMetaTable(state)
+
+	// Create config metatable
+	SetConfigMetaTable(state)
+
+	// Create map metatable
+	SetMapMetaTable(state)
+
+	// Create mail metatable
+	SetMailMetaTable(state)
+
+	// Create cache metatable
+	SetCacheMetaTable(state)
+
+	// Create reflect metatable
+	SetReflectMetaTable(state)
+
+	// Create json metatable
+	SetJSONMetaTable(state)
+
+	// Create event channel
+	eventChannel := make(chan int, 100)
+
+	// Close event channel
+	defer close(eventChannel)
 
 	// Create ticker
 	tick := time.NewTicker(duration)
@@ -65,16 +148,37 @@ func executeEvent(f *lua.LFunction, duration time.Duration) {
 	// Close ticker
 	defer tick.Stop()
 
+	// Get event metatable
+	meta := state.GetTypeMetatable(EventMetaTableName)
+
+	// Set event channel user data
+	channelUserData := state.NewUserData()
+	channelUserData.Value = eventChannel
+	state.SetField(meta, "__channel", channelUserData)
+
+	// Push function
+	if err := state.DoFile(file); err != nil {
+		util.Logger.Errorf("Cannot run event: %v", err)
+		return
+	}
+
 	// Run background task
 	for {
 		select {
 		case <-tick.C:
 
 			// Execute function
-			state.Call(0, 0)
+			state.CallByParam(lua.P{
+				Fn:      state.GetGlobal("run"),
+				Protect: !util.Config.IsDev(),
+			})
 
-			// Push function
-			state.Push(f)
+		case i := <-eventChannel:
+
+			// Stop signal
+			if i == 0 {
+				return
+			}
 		}
 	}
 }

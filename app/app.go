@@ -69,7 +69,8 @@ func executeInitFile() {
 	// Close state
 	defer luaState.Close()
 
-	lua.SetEventMetaTable(luaState)
+	// Create events metatable
+	lua.SetEventsMetaTable(luaState)
 
 	// Create storage metatable
 	lua.SetStorageMetaTable(luaState)
