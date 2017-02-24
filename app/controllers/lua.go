@@ -78,9 +78,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Get state from the pool
 	s, err := lua.PageList.Get(filepath.Join("pages", pageName, r.Method+".lua"))
 
-	// Create HTTP metatable
-	lua.SetHTTPMetaTable(s)
-
 	if err != nil {
 		// Set error header
 		w.WriteHeader(500)
@@ -92,6 +89,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		return
 	}
+
+	// Create HTTP metatable
+	lua.SetHTTPMetaTable(s)
 
 	defer lua.PageList.Put(s, filepath.Join("pages", pageName, r.Method+".lua"))
 

@@ -3,6 +3,7 @@ package lua
 import (
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
+	"strings"
 	"sync"
 )
 
@@ -55,13 +56,19 @@ func (s *stateList) Load(dir string) error {
 			return err
 		}
 
-		s.List[subtopic] = append(s.List[subtopic], state)
+		// Set lowercase path
+		path := strings.ToLower(subtopic)
+
+		s.List[path] = append(s.List[path], state)
 	}
 
 	return nil
 }
 
 func (s *stateList) Get(path string) (*glua.LState, error) {
+	// Set path as lowercase
+	path = strings.ToLower(path)
+
 	// Lock mutex
 	s.rw.Lock()
 	defer s.rw.Unlock()
@@ -89,6 +96,9 @@ func (s *stateList) Get(path string) (*glua.LState, error) {
 }
 
 func (s *stateList) Put(state *glua.LState, path string) {
+	// Set path as lowercase
+	path = strings.ToLower(path)
+
 	// Lock mutex
 	s.rw.Lock()
 	defer s.rw.Unlock()
