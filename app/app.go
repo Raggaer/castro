@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"time"
 
@@ -56,6 +57,64 @@ func Start() {
 
 	// Wait for the tasks
 	wait.Wait()
+
+	// Execute the init lua file
+	executeInitFile()
+}
+
+func executeInitFile() {
+	// Get lua state
+	luaState := glua.NewState()
+
+	// Create storage metatable
+	lua.SetStorageMetaTable(luaState)
+
+	// Create time metatable
+	lua.SetTimeMetaTable(luaState)
+
+	// Create url metatable
+	lua.SetURLMetaTable(luaState)
+
+	// Create debug metatable
+	lua.SetDebugMetaTable(luaState)
+
+	// Create XML metatable
+	lua.SetXMLMetaTable(luaState)
+
+	// Create captcha metatable
+	lua.SetCaptchaMetaTable(luaState)
+
+	// Create crypto metatable
+	lua.SetCryptoMetaTable(luaState)
+
+	// Create validator metatable
+	lua.SetValidatorMetaTable(luaState)
+
+	// Create database metatable
+	lua.SetDatabaseMetaTable(luaState)
+
+	// Create config metatable
+	lua.SetConfigMetaTable(luaState)
+
+	// Create map metatable
+	lua.SetMapMetaTable(luaState)
+
+	// Create mail metatable
+	lua.SetMailMetaTable(luaState)
+
+	// Create cache metatable
+	lua.SetCacheMetaTable(luaState)
+
+	// Create reflect metatable
+	lua.SetReflectMetaTable(luaState)
+
+	// Create json metatable
+	lua.SetJSONMetaTable(luaState)
+
+	// Execute init file
+	if err := luaState.DoFile(filepath.Join("engine", "init.lua")); err != nil {
+		util.Logger.Fatalf("Cannot execute init lua file: %v", err)
+	}
 }
 
 func loadWidgets(wg *sync.WaitGroup) {
