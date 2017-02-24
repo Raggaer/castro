@@ -66,6 +66,11 @@ func executeInitFile() {
 	// Get lua state
 	luaState := glua.NewState()
 
+	// Close state
+	defer luaState.Close()
+
+	lua.SetEventMetaTable(luaState)
+
 	// Create storage metatable
 	lua.SetStorageMetaTable(luaState)
 

@@ -116,6 +116,9 @@ var (
 	widgetMethods = map[string]glua.LGFunction{
 		"render": RenderWidgetTemplate,
 	}
+	eventMethods = map[string]glua.LGFunction{
+		"add": AddEvent,
+	}
 )
 
 // Get retrieves a lua state from the pool if no states are available we create one
@@ -139,6 +142,9 @@ func (p *luaStatePool) Get() *glua.LState {
 
 // GetApplicationState returns a page configured lua state
 func getApplicationState(luaState *glua.LState) {
+	// Create event metatable
+	SetEventMetaTable(luaState)
+
 	// Create storage metatable
 	SetStorageMetaTable(luaState)
 
