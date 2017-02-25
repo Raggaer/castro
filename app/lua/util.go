@@ -7,8 +7,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"log"
 )
 
 type castroInterfaceField struct {
@@ -73,8 +71,6 @@ func MapToTable(m map[string]interface{}) *lua.LTable {
 	// Loop map
 	for key, element := range m {
 
-		log.Println(key)
-
 		switch element.(type) {
 		case float64:
 			resultTable.RawSetString(key, lua.LNumber(element.(float64)))
@@ -90,8 +86,6 @@ func MapToTable(m map[string]interface{}) *lua.LTable {
 
 			// Get table from map
 			tble := MapToTable(element.(map[string]interface{}))
-
-			log.Println(key)
 
 			resultTable.RawSetString(key, tble)
 
