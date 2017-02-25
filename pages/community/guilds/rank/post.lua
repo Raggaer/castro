@@ -1,3 +1,5 @@
+require "guild"
+
 function post()
     if not session:isLogged() then
         http:redirect("/")
@@ -11,17 +13,7 @@ function post()
         return
     end
 
-    local characters = db:query("SELECT id FROM players WHERE account_id = ?", session:loggedAccount().ID)
-    local owner = false
-
-    for _, val in pairs(characters) do
-        if val.id == tonumber(guild.ownerid) then
-            owner = true
-            break
-        end
-    end
-
-    if not owner then
+    if not isGuildOwner(session:loggedAccount().ID, guild) then
         http:redirect("/")
         return
     end
