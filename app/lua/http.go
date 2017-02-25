@@ -21,9 +21,6 @@ func SetWidgetHTTPMetaTable(luaState *glua.LState) {
 	// Create and set HTTP metatable
 	httpMetaTable := luaState.NewTypeMetatable(HTTPMetaTableName)
 	luaState.SetGlobal(HTTPMetaTableName, httpMetaTable)
-
-	// Set all HTTP metatable functions
-	luaState.SetFuncs(httpMetaTable, httpWidgetMethods)
 }
 
 // SetHTTPUserData sets the http metatable user data

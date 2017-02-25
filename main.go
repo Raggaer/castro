@@ -24,7 +24,7 @@ import (
 )
 
 var (
-	// VERSION is the application current version. Changed at compile time
+	// VERSION is the application current version
 	VERSION string
 
 	// BUILD_DATE date of application compilation
@@ -113,9 +113,6 @@ Compiled at: %v
 
 	// Close database handle when the main function ends
 	defer database.DB.Close()
-
-	// Show running port
-	util.Logger.Infof("Starting Castro http server on port :%v", util.Config.Port)
 
 	// Create castro server
 	server := http.Server{

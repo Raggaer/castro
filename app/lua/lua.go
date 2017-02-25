@@ -36,8 +36,7 @@ var (
 		"redirect": Redirect,
 		"render":   RenderTemplate,
 	}
-	httpWidgetMethods = map[string]glua.LGFunction{}
-	validatorMethods  = map[string]glua.LGFunction{
+	validatorMethods = map[string]glua.LGFunction{
 		"validate":       Validate,
 		"blackList":      BlackList,
 		"validUsername":  ValidUsername,

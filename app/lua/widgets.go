@@ -74,11 +74,11 @@ func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string
 		// Return state
 		defer WidgetList.Put(state, filepath.Join("widgets", widget.Name, widget.Name+".lua"))
 
-		// Set widget HTTP metatable
-		SetWidgetHTTPMetaTable(state)
-
 		// Set widget metatable
 		setWidgetMetaTable(state)
+
+		// Set widget HTTP metatable
+		SetWidgetHTTPMetaTable(state)
 
 		// Set HTTP user data
 		SetHTTPUserData(state, w, req)

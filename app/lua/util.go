@@ -14,8 +14,7 @@ type castroInterfaceField struct {
 	Type reflect.Kind
 }
 
-// GetStructVariables loads all the global variables
-// from a lua file into a struct using reflect
+// GetStructVariables loads all the global variables from a lua file into a struct using reflect
 func GetStructVariables(src interface{}, L *lua.LState) error {
 	// Get base element
 	v := reflect.ValueOf(src).Elem()
