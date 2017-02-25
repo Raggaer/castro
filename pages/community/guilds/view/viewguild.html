@@ -1,6 +1,6 @@
 {{ template "header.html" }}
 <h3>Guild: {{ .guild.guildname }}</h3>
-<p>{{ .guild.motd }}</p>
+<p>{{ nl2br .guild.motd }}</p>
 <hr>
 {{ if .validationError }}
 <div class="alert alert-danger" role="alert">

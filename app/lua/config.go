@@ -87,8 +87,7 @@ func SetConfigMetaTable(luaState *lua.LState) {
 	luaState.SetFuncs(configMetaTable, configMethods)
 }
 
-// LoadConfig loads the lua configuration file using
-// lua vm to get the global variables
+// LoadConfig loads the lua configuration file using lua vm to get the global variables
 func LoadConfig(path string, dest *Configuration) error {
 	// Create new state
 	L := lua.NewState()

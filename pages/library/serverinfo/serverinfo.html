@@ -1,0 +1,45 @@
+{{ template "header.html" }}
+<h3>Server Information</h3>
+<hr>
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th colspan="2">Basic information</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Skills rate</th>
+            <td>{{ .skill }}x</td>
+        </tr>
+        <tr>
+            <th>Magic rate</th>
+            <td>{{ .magic }}x</td>
+        </tr>
+        <tr>
+            <th>Loot rate</th>
+            <td>{{ .loot }}x</td>
+        </tr>
+    </tbody>
+</table>
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th colspan="3">Experience stages</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range $index, $element := .stages.stages.stage }}
+        <tr>
+            {{ $maxlevel := index $element "-maxlevel" }}
+            {{ if $maxlevel }}
+            <th>From level {{ index $element "-minlevel" }} to level {{ $maxlevel }}</th>
+            {{ else }}
+            <th>From level {{ index $element "-minlevel" }} ~</th>
+            {{ end }}
+            <td>x{{ index $element "-multiplier" }}</td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+{{ template "footer.html" . }} 

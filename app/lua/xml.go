@@ -6,6 +6,7 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
 	"io/ioutil"
+	"log"
 	"time"
 )
 
@@ -90,6 +91,12 @@ func UnmarshalXMLFile(L *lua.LState) int {
 
 	// Convert result to table
 	r := MapToTable(result)
+
+	r.RawGetString("stages").(*lua.LTable).RawGetString("stage").(*lua.LTable).ForEach(func(k lua.LValue, kk lua.LValue) {
+		kk.(*lua.LTable).ForEach(func(k lua.LValue, kk lua.LValue) {
+			log.Println(k, kk)
+		})
+	})
 
 	// Save result to cache
 	util.Cache.Add(

@@ -102,7 +102,9 @@ func RenderTemplate(L *glua.LState) int {
 	}
 
 	// Render template without args
-	util.Template.RenderTemplate(w, req, templateName, nil)
+	util.Template.RenderTemplate(w, req, templateName, map[string]interface{}{
+		"widgets": widgets,
+	})
 
 	return 0
 }
