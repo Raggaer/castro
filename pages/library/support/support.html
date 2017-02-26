@@ -9,7 +9,9 @@
     <tbody>
         {{ range $player := $element }}
         <tr>
-            <th>{{ $player.name }}</th>
+            <th>
+                {{ $player.name }}
+            </th>
             <td>{{ $player.lastlogin.Result }}</td>
         </tr>
         {{ end }}

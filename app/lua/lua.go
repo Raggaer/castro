@@ -35,6 +35,7 @@ var (
 	httpMethods = map[string]glua.LGFunction{
 		"redirect": Redirect,
 		"render":   RenderTemplate,
+		"write":    WriteResponse,
 	}
 	validatorMethods = map[string]glua.LGFunction{
 		"validate":       Validate,

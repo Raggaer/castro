@@ -1,0 +1,10 @@
+{{ template "header.html" }}
+<h3>Buypoints using PayPal</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+dfg
+{{ template "footer.html" . }} 

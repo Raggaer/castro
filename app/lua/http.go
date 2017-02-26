@@ -68,6 +68,26 @@ func getRequestAndResponseWriter(L *glua.LState) (*http.Request, http.ResponseWr
 	return req, w
 }
 
+// WriteResponse writes string to the response writer
+func WriteResponse(L *glua.LState) int {
+	// Get HTTP request and HTTP response writer
+	_, w := getRequestAndResponseWriter(L)
+
+	// Get data
+	data := L.Get(2)
+
+	// Check valid data type
+	if data.Type() != glua.LTString {
+		L.ArgError(1, "Invalid data type. Expected string")
+		return 0
+	}
+
+	// Write to response writer
+	w.Write([]byte(data.String()))
+
+	return 0
+}
+
 // RenderTemplate renders the given template with the given data as a LUA table
 func RenderTemplate(L *glua.LState) int {
 	// Get HTTP request and HTTP response writer
@@ -109,8 +129,7 @@ func RenderTemplate(L *glua.LState) int {
 	return 0
 }
 
-// Redirect redirects the user to the given
-// location with a 302 header
+// Redirect redirects the user to the given location with a header
 func Redirect(L *glua.LState) int {
 	// Get HTTP request and HTTP response writer
 	req, w := getRequestAndResponseWriter(L)
@@ -124,8 +143,16 @@ func Redirect(L *glua.LState) int {
 		return 0
 	}
 
+	// Get status code
+	header := L.ToInt(3)
+
+	// Set default header
+	if header == 0 {
+		header = 302
+	}
+
 	// Redirect to the desired location
-	http.Redirect(w, req, dest.String(), 302)
+	http.Redirect(w, req, dest.String(), header)
 
 	return 0
 }
