@@ -214,42 +214,45 @@ func StructToTable(s interface{}) *lua.LTable {
 		// Get field name
 		fieldName := elem.Type().Field(i).Name
 
+		// Interface layer
+		inter := field.Interface()
+
 		// Switch field type
-		switch field.Interface().(type) {
+		switch inter.(type) {
 		case string:
 
 			// Set value as string
-			t.RawSetString(fieldName, lua.LString(field.Interface().(string)))
+			t.RawSetString(fieldName, lua.LString(inter.(string)))
 
 		case int64:
 
 			// Set value as number
-			t.RawSetString(fieldName, lua.LNumber(field.Interface().(int64)))
+			t.RawSetString(fieldName, lua.LNumber(inter.(int64)))
 
 		case uint32:
 
 			// Set value as number
-			t.RawSetString(fieldName, lua.LNumber(field.Interface().(uint32)))
+			t.RawSetString(fieldName, lua.LNumber(inter.(uint32)))
 
 		case int:
 
 			// Set value as number
-			t.RawSetString(fieldName, lua.LNumber(field.Interface().(int)))
+			t.RawSetString(fieldName, lua.LNumber(inter.(int)))
 
 		case float64:
 
 			// Set value as number
-			t.RawSetString(fieldName, lua.LNumber(field.Interface().(float64)))
+			t.RawSetString(fieldName, lua.LNumber(inter.(float64)))
 
 		case bool:
 
 			// Set value as bool
-			t.RawSetString(fieldName, lua.LBool(field.Interface().(bool)))
+			t.RawSetString(fieldName, lua.LBool(inter.(bool)))
 
 		case time.Time:
 
 			// Get time value
-			timeStamp := field.Interface().(time.Time).Unix()
+			timeStamp := inter.(time.Time).Unix()
 
 			// Set value as number
 			t.RawSetString(fieldName, lua.LNumber(timeStamp))
