@@ -76,7 +76,7 @@ func installApplication() error {
 
 	// Load config.lua file
 	if err := lua.LoadConfig(
-		filepath.Join(location),
+		filepath.Join(filepath.Join(location, "config.lua")),
 	); err != nil {
 		return err
 	}
