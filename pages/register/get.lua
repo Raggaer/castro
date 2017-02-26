@@ -6,7 +6,7 @@ end
 
 local data = {}
 
-data["serverName"] = config:get("ServerName")
+data["serverName"] = config:get("serverName")
 data["validationError"] = session:getFlash("validationError")
 
 http:render("register.html", data)

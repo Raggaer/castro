@@ -189,7 +189,7 @@ func loadHouses(wg *sync.WaitGroup) {
 
 func loadMap() {
 	// Parse OTBM file
-	m, err := otmap.Parse(filepath.Join(util.Config.Datapack, "data", "world", lua.Config.MapName+".otbm"))
+	m, err := otmap.Parse(filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"))
 
 	if err != nil {
 		util.Logger.Fatalf("Cannot parse OTBM file: %v", err)
@@ -207,7 +207,7 @@ func loadAppConfig() {
 
 func loadLUAConfig() {
 	// Load the LUA configuration file
-	if err := lua.LoadConfig(util.Config.Datapack, lua.Config); err != nil {
+	if err := lua.LoadConfig(filepath.Join(util.Config.Datapack, "config.lua")); err != nil {
 		util.Logger.Fatalf("Cannot read lua configuration file: %v", err)
 	}
 }
@@ -271,7 +271,7 @@ func connectDatabase() {
 	var err error
 
 	// Connect to the MySQL database
-	if database.DB, err = database.Open(lua.Config.MySQLUser, lua.Config.MySQLPass, lua.Config.MySQLDatabase); err != nil {
+	if database.DB, err = database.Open(lua.Config.GetGlobal("mysqlUser").String(), lua.Config.GetGlobal("mysqlPass").String(), lua.Config.GetGlobal("mysqlDatabase").String()); err != nil {
 		util.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
 }
@@ -322,10 +322,10 @@ func templateFuncs() template.FuncMap {
 			return template.URL(url.QueryEscape(t))
 		},
 		"serverName": func() string {
-			return lua.Config.ServerName
+			return lua.Config.GetGlobal("serverName").String()
 		},
 		"serverMotd": func() string {
-			return lua.Config.Motd
+			return lua.Config.GetGlobal("motd").String()
 		},
 		"widgetList": func() []*util.Widget {
 			return util.Widgets.List

@@ -74,19 +74,15 @@ func installApplication() error {
 		return err
 	}
 
-	// Configuration holder
-	cfg := lua.Configuration{}
-
 	// Load config.lua file
 	if err := lua.LoadConfig(
 		filepath.Join(location),
-		&cfg,
 	); err != nil {
 		return err
 	}
 
 	// Connect to database
-	db, err := database.Open(cfg.MySQLUser, cfg.MySQLPass, cfg.MySQLDatabase)
+	db, err := database.Open(lua.Config.GetGlobal("mysqlUser").String(), lua.Config.GetGlobal("mysqlPass").String(), lua.Config.GetGlobal("mysqlDatabase").String())
 
 	if err != nil {
 		return err
