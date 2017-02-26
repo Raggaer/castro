@@ -1,0 +1,19 @@
+{{ template "header.html" }}
+<h3>Server Support</h3>
+<hr>
+{{ range $index, $element := .list }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <th colspan="2">Support: {{ $index }}</th>
+    </thead>
+    <tbody>
+        {{ range $player := $element }}
+        <tr>
+            <th>{{ $player.name }}</th>
+            <td>{{ $player.lastlogin.Result }}</td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+{{ end }}
+{{ template "footer.html" . }} 
