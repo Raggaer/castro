@@ -1,4 +1,4 @@
-![Castro AAC](https://i.gyazo.com/f328c60ee8c219b94a521e3e51fa66e7.png)
+![Castro AAC](https://i.gyazo.com/3498de87f7cc275777c6ff92585692f4.png)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/Raggaer/castro)](https://goreportcard.com/report/github.com/Raggaer/castro)
 [![lICENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/Raggaer/castro/blob/master/LICENSE)
