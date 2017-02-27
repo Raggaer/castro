@@ -26,9 +26,9 @@
                 <td>{{ $element.title }}</td>
                 <td>{{ $element.created_at.Result }}</td>
                 <td>{{ $element.updated_at.Result }}</td>
-                <td><a class="btn btn-primary btn-xs" href="{{ url "subtopic" "admin" "articles" "edit" }}?id={{ $element.id }}">Edit</a></td>
+                <td><a class="btn btn-primary btn-xs" role="button" href="{{ url "subtopic" "admin" "articles" "edit" }}?id={{ $element.id }}">Edit</a></td>
                 <td>
-                    <button type="submit" id="{{ $element.id }}" class="btn btn-danger btn-xs" onclick="document.getElementById('delete_id').setAttribute('value', {{ $element.id }})">Delete</button>
+                    <button type="submit" name="delete" role="button" value="{{ $element.id }}" class="btn btn-danger btn-xs">Delete</button>
                </td>
             </tr>
             {{ end }}
