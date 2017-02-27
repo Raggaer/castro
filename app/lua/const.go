@@ -1,6 +1,10 @@
 package lua
 
 const (
+	// PayPalMetaTableName the name of the paypal metatable
+	PayPalMetaTableName = "paypal"
+
+	// EventMetaTableName the name of the current event metatable
 	EventMetaTableName = "event"
 
 	// EventsMetaTableName the name of the widget metatable

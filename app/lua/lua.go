@@ -122,6 +122,7 @@ var (
 	eventMethods = map[string]glua.LGFunction{
 		"stop": StopEvent,
 	}
+	paypalMethods = map[string]glua.LGFunction{}
 )
 
 // Get retrieves a lua state from the pool if no states are available we create one
@@ -145,6 +146,9 @@ func (p *luaStatePool) Get() *glua.LState {
 
 // GetApplicationState returns a page configured lua state
 func getApplicationState(luaState *glua.LState) {
+	// Create paypal metatable
+	SetPayPalMetaTable(luaState)
+
 	// Create events metatable
 	SetEventsMetaTable(luaState)
 
@@ -229,8 +233,7 @@ func getApplicationState(luaState *glua.LState) {
 
 // Put saves a lua state back to the pool
 func (p *luaStatePool) Put(state *glua.LState) {
-	// Lock and unlock our mutex to prevent
-	// data race
+	// Lock and unlock our mutex to prevent data race
 	p.m.Lock()
 	defer p.m.Unlock()
 
