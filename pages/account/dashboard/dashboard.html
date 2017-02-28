@@ -63,7 +63,7 @@
     </tr>
     </thead>
     <tbody>
-    {{ range $index, $element := queryResults .list }}
+    {{ range $index, $element := .list }}
     <tr>
         <th scope="row">{{ $index }}</th>
         <td>

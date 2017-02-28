@@ -35,7 +35,7 @@
         </tr>
     </thead>
     <tbody>
-    {{ range $index, $element := queryResults .list }}
+    {{ range $index, $element := .list }}
     <tr>
         <td>
             <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a>

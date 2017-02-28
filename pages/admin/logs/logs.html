@@ -2,7 +2,7 @@
 <h3>Website logs</h3>
 <hr>
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-{{ range $index, $element := queryResults .logs }}
+{{ range $index, $element := .logs }}
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="heading-{{ $index }}">
             <h4 class="panel-title">

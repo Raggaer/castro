@@ -8,7 +8,7 @@
 			<th>Name</th><th>Vocation</th><th>Level</th>
 		</thead>
 		<tbody>
-			{{ range $index, $element := queryResults .list }}
+			{{ range $index, $element := .list }}
 				<tr>
 					<td><a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a></td>
 					<td>{{ $element.vocation.Name }}</td>

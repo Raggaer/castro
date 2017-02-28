@@ -21,7 +21,7 @@
             <tr><th>Title</th><th>Created</th><th>Updated</th><th colspan="2">Action</th></tr>
         </thead>
         <tbody>
-            {{ range $index, $element := queryResults .articles }}
+            {{ range $index, $element := .articles }}
             <tr>
                 <td>{{ $element.title }}</td>
                 <td>{{ $element.created_at.Result }}</td>

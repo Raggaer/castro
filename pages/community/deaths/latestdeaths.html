@@ -9,7 +9,7 @@
         </tr>
 	</thead>
 	<tbody>
-		{{ range $index, $element := queryResults .deaths }}
+		{{ range $index, $element := .deaths }}
 		<tr>
 			<td><a href="{{ url "subtopic" "community" "view"}}?name={{ urlEncode $element.victim }}">{{ $element.victim }}</a> was killed at level {{ $element.level }} by {{ if eqNumber $element.is_player 1 }} <a href="{{ url "subtopic" "community" "view"}}?name={{ urlEncode $element.killed_by }}">{{ $element.killed_by }}</a>{{ else }}{{ $element.killed_by }}{{ end }}{{ if eqNumber $element.unjustified 1 }} <span style="color: red; font-style: italic;">unjustified</span>{{ end }}</td>
     		<td>{{ unixToDate $element.time }}</td>
