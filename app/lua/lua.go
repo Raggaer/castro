@@ -123,6 +123,13 @@ var (
 		"stop": StopEvent,
 	}
 	paypalMethods = map[string]glua.LGFunction{}
+	imgMethods    = map[string]glua.LGFunction{
+		"new": NewGoImage,
+	}
+	goimageMethods = map[string]glua.LGFunction{
+		"writeText": WriteGoImageText,
+		"save":      SaveGoImage,
+	}
 )
 
 // Get retrieves a lua state from the pool if no states are available we create one
@@ -146,6 +153,9 @@ func (p *luaStatePool) Get() *glua.LState {
 
 // GetApplicationState returns a page configured lua state
 func getApplicationState(luaState *glua.LState) {
+	// Create image metatable
+	SetImageMetaTable(luaState)
+
 	// Create paypal metatable
 	SetPayPalMetaTable(luaState)
 

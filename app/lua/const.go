@@ -1,6 +1,12 @@
 package lua
 
 const (
+	// GoImageMetaTableName the name of the goimage metatable
+	GoImageMetaTableName = "goimage"
+
+	// ImageMetaTableName the name of the image metatable
+	ImageMetaTableName = "image"
+
 	// PayPalMetaTableName the name of the paypal metatable
 	PayPalMetaTableName = "paypal"
 
