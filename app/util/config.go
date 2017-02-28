@@ -34,6 +34,7 @@ type SSLConfig struct {
 
 // MailConfig struct used for the mail configuration options
 type MailConfig struct {
+	Enabled  bool
 	Server   string
 	Port     int
 	Username string

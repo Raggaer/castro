@@ -59,6 +59,7 @@ func (s *stateList) Load(dir string) error {
 		// Set lowercase path
 		path := strings.ToLower(subtopic)
 
+		// Add state to the pool
 		s.List[path] = append(s.List[path], state)
 	}
 

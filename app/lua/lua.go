@@ -248,6 +248,36 @@ func getApplicationState(luaState *glua.LState) {
 			filepath.Join(f, "engine", "?.lua"),
 		),
 	)
+
+	// Set config field
+	setConfigGlobal(luaState)
+}
+
+// setConfigGlobal sets the config global value
+func setConfigGlobal(L *glua.LState) {
+	// Create table
+	tbl := L.NewTable()
+
+	// Set main value
+	L.SetField(tbl, "Main", StructToTable(util.Config))
+
+	// Set PayPal value
+	L.SetField(tbl, "PayPal", StructToTable(&util.Config.PayPal))
+
+	// Set Captcha value
+	L.SetField(tbl, "Captcha", StructToTable(&util.Config.Captcha))
+
+	// Set Mail value
+	L.SetField(tbl, "Mail", StructToTable(&util.Config.Mail))
+
+	// Set Custom value
+	L.SetField(tbl, "Custom", MapToTable(util.Config.Custom))
+
+	// Set SSL value
+	L.SetField(tbl, "SSL", StructToTable(&util.Config.SSL))
+
+	// Set global value
+	L.SetGlobal("app", tbl)
 }
 
 // Put saves a lua state back to the pool
