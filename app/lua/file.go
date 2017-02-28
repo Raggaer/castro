@@ -15,6 +15,7 @@ func SetFileMetaTable(luaState *lua.LState) {
 	luaState.SetFuncs(fileMetaTable, fileMethods)
 }
 
+// CheckFileExists checks if the given file exists
 func CheckFileExists(L *lua.LState) int {
 	// Get file info
 	_, err := os.Stat(L.ToString(2))
@@ -25,8 +26,8 @@ func CheckFileExists(L *lua.LState) int {
 		return 1
 	}
 
-	// If file does not exists push false
-	if err == os.ErrNotExist {
+	// Check if file does not exists then push false
+	if os.IsNotExist(err) {
 		L.Push(lua.LBool(false))
 		return 1
 	}

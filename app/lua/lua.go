@@ -112,7 +112,9 @@ var (
 		"getVocation":     GetPlayerVocation,
 		"getTown":         GetPlayerTown,
 		"getSex":          GetPlayerGender,
-		"getPremiumDays":  nil,
+		"getLevel":        GetPlayerLevel,
+		"getPremiumDays":  GetPlayerPremiumDays,
+		"getName":         GetPlayerName,
 	}
 	widgetMethods = map[string]glua.LGFunction{
 		"render": RenderWidgetTemplate,

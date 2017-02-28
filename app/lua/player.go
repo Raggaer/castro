@@ -20,7 +20,8 @@ func PlayerConstructor(L *lua.LState) int {
 
 		// Get player by ID
 		if err := database.DB.Get(&player, "SELECT id, sex, accound_id, name, level, vocation, town_id FROM players WHERE id = ?", L.ToInt64(1)); err != nil {
-			L.RaiseError("Cannot get player for ID: %v. Error: %v", L.ToInt64(1), err)
+			L.Push(lua.LNil)
+			return 1
 		}
 
 		// Create player metatable
@@ -37,9 +38,10 @@ func PlayerConstructor(L *lua.LState) int {
 	// Data holder
 	player := models.Player{}
 
-	// Get player by ID
+	// Get player by name
 	if err := database.DB.Get(&player, "SELECT id, sex, account_id, name, level, vocation, town_id FROM players WHERE name = ?", L.ToString(1)); err != nil {
-		L.RaiseError("Cannot get player for name: %v. Error: %v", L.ToInt64(1), err)
+		L.Push(lua.LNil)
+		return 1
 	}
 
 	// Create player metatable
@@ -210,30 +212,6 @@ func GetPlayerVocation(L *lua.LState) int {
 	return 0
 }
 
-// GetPlayerTown gets the player town
-func GetPlayerTown(L *lua.LState) int {
-	// Get player struct
-	player := getPlayerObject(L)
-
-	// Loop server towns
-	for _, town := range util.OTBMap.Towns {
-
-		// Check town
-		if town.ID == player.Town_id {
-
-			// Convert and push town to lua table
-			L.Push(StructToTable(&town))
-
-			return 1
-		}
-	}
-
-	// Town is not found
-	L.RaiseError("Cannot find player town")
-
-	return 0
-}
-
 // GetPlayerGender gets the player gender
 func GetPlayerGender(L *lua.LState) int {
 	// Get player struct
@@ -241,6 +219,71 @@ func GetPlayerGender(L *lua.LState) int {
 
 	// Push gender as number
 	L.Push(lua.LNumber(player.Sex))
+
+	return 1
+}
+
+// GetPlayerPremiumDays gets the player number of premium days
+func GetPlayerPremiumDays(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Premium days holder
+	days := 0
+
+	// Get premium days
+	if err := database.DB.Get(&days, "SELECT premdays FROM accounts WHERE id = ?", player.Account_id); err != nil {
+		L.RaiseError("Cannot get player premium days: %v", err)
+		return 0
+	}
+
+	// Push days as number
+	L.Push(lua.LNumber(days))
+
+	return 1
+}
+
+// GetPlayerTown gets the player town
+func GetPlayerTown(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Loop towns
+	for _, town := range util.OTBMap.Towns {
+
+		// Check for player town
+		if town.ID == player.Town_id {
+
+			// Push town as table
+			L.Push(StructToTable(&town))
+
+			return 1
+		}
+	}
+
+	L.RaiseError("Cannot find player town")
+
+	return 0
+}
+
+// GetPlayerLevel gets the player level
+func GetPlayerLevel(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Push player level as number
+	L.Push(lua.LNumber(player.Level))
+
+	return 1
+}
+
+// GetPlayerName gets the player name
+func GetPlayerName(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Push player name as string
+	L.Push(lua.LString(player.Name))
 
 	return 1
 }
