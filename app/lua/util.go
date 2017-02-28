@@ -1,6 +1,7 @@
 package lua
 
 import (
+	"fmt"
 	"github.com/yuin/gopher-lua"
 	"net/url"
 	"reflect"
@@ -107,9 +108,31 @@ func TableToMap(table *lua.LTable) map[string]interface{} {
 		switch lv := v.(type) {
 		case *lua.LTable:
 
-			// Convert table to map
-			n := TableToMap(v.(*lua.LTable))
-			m[index] = n
+			// Get current table
+			tbl := v.(*lua.LTable)
+
+			// Check for lua table
+			if tbl.MaxN() == 0 {
+
+				// Convert table to map
+				n := TableToMap(tbl)
+				m[index] = n
+
+			} else {
+
+				// Data holder
+				ret := make([]interface{}, 0, tbl.MaxN())
+
+				// Loop table
+				tbl.ForEach(func(i lua.LValue, v lua.LValue) {
+
+					// Append to array
+					ret = append(ret, ValueToGo(v))
+				})
+
+				// Set array
+				m[index] = ret
+			}
 
 		case lua.LNumber:
 
@@ -145,6 +168,38 @@ func URLValuesToTable(m url.Values) *lua.LTable {
 		)
 	}
 	return &t
+}
+
+// ValueToGo converts a lua value to a go type
+func ValueToGo(lv lua.LValue) interface{} {
+	switch v := lv.(type) {
+	case *lua.LNilType:
+		return nil
+	case lua.LBool:
+		return bool(v)
+	case lua.LString:
+		return string(v)
+	case lua.LNumber:
+		return float64(v)
+	case *lua.LTable:
+		maxn := v.MaxN()
+		if maxn == 0 { // table
+			ret := make(map[interface{}]interface{})
+			v.ForEach(func(key, value lua.LValue) {
+				keystr := fmt.Sprint(ValueToGo(key))
+				ret[keystr] = ValueToGo(value)
+			})
+			return ret
+		} else { // array
+			ret := make([]interface{}, 0, maxn)
+			for i := 1; i <= maxn; i++ {
+				ret = append(ret, ValueToGo(v.RawGetInt(i)))
+			}
+			return ret
+		}
+	default:
+		return v
+	}
 }
 
 // StructToTable converts a go struct pointer to a lua table
