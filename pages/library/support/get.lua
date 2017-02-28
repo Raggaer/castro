@@ -7,8 +7,10 @@ function get()
     for _, group in pairs(groups.groups.group) do
         if tonumber(group["-access"]) >= 1 then
             data.list[group["-name"]] = db:query("SELECT name, lastlogin FROM players WHERE group_id = ?", group["-id"])
-            for _, player in pairs(data.list[group["-name"]]) do
-                player.lastlogin = time:parseUnix(player.lastlogin)
+            if data.list[group["-name"]] then
+                for _, player in pairs(data.list[group["-name"]]) do
+                    player.lastlogin = time:parseUnix(player.lastlogin)
+                end
             end
         end
     end
