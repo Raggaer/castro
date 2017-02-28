@@ -12,6 +12,10 @@ function string.parseBBCode(str)
 	end
 
 	-- Parse BB tags
+	str = str:gsub("%[ol%](.-)%[/ol%]", [[<ol>%1</ol>]])
+	str = str:gsub("%[ul%](.-)%[/ul%]", [[<ul>%1</ul>]])
+	str = str:gsub("%[list%](.-)%[/list%]", [[<ul>%1</ul>]])
+	str = str:gsub("%[%*%](.-)\n", [[<li>%1</li>]])
 	str = str:gsub("%[right%](.-)%[/right%]", [[<div style="float:right;">%1</div>]])
 	str = str:gsub("%[noparse%](.-)%[/noparse%]", noParse)
 	str = str:gsub("%[url=(.-)%](.-)%[/url%]", [[<a href="%1" target="_BLANK">%2</a>]])
