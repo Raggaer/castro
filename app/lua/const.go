@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// FileMetaTableName the name of the file metatable
+	FileMetaTableName = "file"
+
 	// GoImageMetaTableName the name of the goimage metatable
 	GoImageMetaTableName = "goimage"
 

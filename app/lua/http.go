@@ -156,3 +156,23 @@ func Redirect(L *glua.LState) int {
 
 	return 0
 }
+
+// ServeFile serves the given file
+func ServeFile(L *glua.LState) int {
+	// Get file path
+	path := L.Get(2)
+
+	// Check valid path type
+	if path.Type() != glua.LTString {
+		L.ArgError(1, "Invalid path type. Expected string")
+		return 0
+	}
+
+	// Get request and response
+	req, w := getRequestAndResponseWriter(L)
+
+	// Serve file
+	http.ServeFile(w, req, path.String())
+
+	return 0
+}

@@ -76,12 +76,24 @@ func WriteGoImageText(L *lua.LState) int {
 		L.ToInt(5),
 		L.ToInt(6),
 	); err != nil {
-
 		L.RaiseError("Cannot write string to image: %v", err)
 		return 0
 	}
 
 	return 0
+}
+
+// SetBackgroundGoImage sets the background of a goimage
+func SetBackgroundGoImage(L *lua.LState) int {
+	// Get goimage
+	img := getGoImage(L)
+
+	if err := img.SetBackGroundImage(L.ToString(2)); err != nil {
+		L.RaiseError("Cannot set background image: %v", err)
+		return 0
+	}
+
+	return 1
 }
 
 // SaveGoImage saves the given goimage

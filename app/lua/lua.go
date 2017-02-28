@@ -33,9 +33,10 @@ var (
 		"get": GetConfigLuaValue,
 	}
 	httpMethods = map[string]glua.LGFunction{
-		"redirect": Redirect,
-		"render":   RenderTemplate,
-		"write":    WriteResponse,
+		"redirect":  Redirect,
+		"render":    RenderTemplate,
+		"write":     WriteResponse,
+		"serveFile": ServeFile,
 	}
 	validatorMethods = map[string]glua.LGFunction{
 		"validate":       Validate,
@@ -127,8 +128,13 @@ var (
 		"new": NewGoImage,
 	}
 	goimageMethods = map[string]glua.LGFunction{
-		"writeText": WriteGoImageText,
-		"save":      SaveGoImage,
+		"writeText":     WriteGoImageText,
+		"save":          SaveGoImage,
+		"setBackground": SetBackgroundGoImage,
+	}
+	fileMethods = map[string]glua.LGFunction{
+		"mod":    GetFileModTime,
+		"exists": CheckFileExists,
 	}
 )
 
@@ -153,6 +159,9 @@ func (p *luaStatePool) Get() *glua.LState {
 
 // GetApplicationState returns a page configured lua state
 func getApplicationState(luaState *glua.LState) {
+	// Create file metatable
+	SetFileMetaTable(luaState)
+
 	// Create image metatable
 	SetImageMetaTable(luaState)
 

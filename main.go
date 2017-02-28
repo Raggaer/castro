@@ -69,7 +69,6 @@ Compiled at: %v
 	// Declare application endpoints
 	router.GET("/", controllers.LuaPage)
 	router.POST("/", controllers.LuaPage)
-	router.GET("/signature/:name", controllers.Signature)
 	router.POST("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/pprof/heap", wrapHandler(pprof.Handler("heap")))

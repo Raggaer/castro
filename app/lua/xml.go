@@ -9,8 +9,7 @@ import (
 	"time"
 )
 
-// SetXMLMetaTable sets the xml metatable of the given
-// lua state
+// SetXMLMetaTable sets the xml metatable of the given lua state
 func SetXMLMetaTable(luaState *lua.LState) {
 	// Create and set the xml metatable
 	xmlMetaTable := luaState.NewTypeMetatable(XMLMetaTableName)
