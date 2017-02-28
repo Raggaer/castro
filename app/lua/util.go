@@ -184,7 +184,7 @@ func ValueToGo(lv lua.LValue) interface{} {
 	case *lua.LTable:
 		maxn := v.MaxN()
 		if maxn == 0 { // table
-			ret := make(map[interface{}]interface{})
+			ret := make(map[string]interface{})
 			v.ForEach(func(key, value lua.LValue) {
 				keystr := fmt.Sprint(ValueToGo(key))
 				ret[keystr] = ValueToGo(value)
