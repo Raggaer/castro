@@ -17,9 +17,9 @@
             <th>Two-factor</th>
             <td>
                 {{ if .twofa }}
-                <button class="btn btn-danger btn-xs">Disable</button>
+                <button class="btn btn-success btn-xs">Enabled</button>
                 {{ else }}
-                <a role="button" href="{{ url "subtopic" "account" "twofa" }}" class="btn btn-success btn-xs">Enable</a>
+                <a role="button" href="{{ url "subtopic" "account" "twofa" "enable" }}" class="btn btn-danger btn-xs">Disabled</a>
                 {{ end }}
             </td>
         </tr>

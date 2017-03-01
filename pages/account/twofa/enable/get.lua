@@ -23,5 +23,5 @@ function get()
 
     session:setFlash("twofa-key", secretKey)
 
-    http:render("twofa.html", data)
+    http:render("enabletwofa.html", data)
 end
