@@ -30,6 +30,8 @@
 				<button type="button" id="i" class="btn btn-default" title="Italic" onClick="wrapSimpleBBCode(this)"><span class="glyphicon glyphicon-italic" aria-hidden="true"></span></button>
 				<button type="button" id="b" class="btn btn-default" title="Bold" onClick="wrapSimpleBBCode(this)"><span class="glyphicon glyphicon-bold" aria-hidden="true"></span></button>
 				<button type="button" id="u" class="btn btn-default" title="Underline" onClick="wrapSimpleBBCode(this)"><span style="text-decoration: underline;" aria-hidden="true">U</span></button>
+				<button type="button" id="ul" class="btn btn-default" title="&#8226; Unordered list" onClick="wrapSimpleBBCode(this, '\n[*]', '\n')"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></button>
+				<button type="button" id="ol" class="btn btn-default" title="1. Ordered list" onClick="wrapSimpleBBCode(this, '\n[*]', '\n')"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
 			</div>
 			<div class="btn-group" role="group">
 				<button type="button" id="left" class="btn btn-default" title="Align left" onClick="wrapSimpleBBCode(this)"><span class="glyphicon glyphicon-align-left" aria-hidden="true"></span></button>
@@ -90,13 +92,19 @@
 {{ template "footer.html" . }}
 <script>
 // [tag]Affected text[/tag] (b, i, u...)
-function wrapSimpleBBCode(e){
+function wrapSimpleBBCode(e, before, after){
 	var textarea = document.getElementById("article-text");
 	var tag = e.getAttribute("id");
 	var len = textarea.value.length;
 	var start = textarea.selectionStart;
 	var end = textarea.selectionEnd;
 	var selection = textarea.value.substring(start, end);
+	if (typeof before == "string") {
+		selection = before+selection;
+	}
+	if (typeof after == "string") {
+		selection = selection+after;
+	}
 	var replace = "["+tag+"]"+selection+"[/"+tag+"]";
 	textarea.value = textarea.value.substring(0,start) + replace +
 	textarea.value.substring(end,len);
