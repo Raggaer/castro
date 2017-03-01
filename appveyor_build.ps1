@@ -1,3 +1,7 @@
+$initCommand = 'go get'
+
+iex $initCommand
+
 echo "Building for Windows"
 $env:GOOS = "windows"
 

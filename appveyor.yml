@@ -20,8 +20,12 @@ install:
 build_script:
   - ps: .\appveyor_build.ps1
 
+test: off
+
 artifacts:
   - path: buildOutput\castro.exe
     name: Windows build
   - path: buildOutput\castro
     name: Linux build
+
+deploy: off
