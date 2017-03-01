@@ -9,3 +9,4 @@ logs/*.json
 projectFilesBackup
 fdvdv.png
 pages/test/
+buildOutput/
