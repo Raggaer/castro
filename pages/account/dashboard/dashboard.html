@@ -8,6 +8,25 @@
 {{ end }}
 <table class="table table-striped">
     <thead class="thead-inverse">
+        <tr>
+            <th colspan="2">Account security</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Two-factor</th>
+            <td>
+                {{ if .twofa }}
+                <button class="btn btn-danger btn-xs">Disable</button>
+                {{ else }}
+                <a role="button" href="{{ url "subtopic" "account" "twofa" }}" class="btn btn-success btn-xs">Enable</a>
+                {{ end }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table class="table table-striped">
+    <thead class="thead-inverse">
     <tr>
         <th colspan="2">Account information</th>
     </tr>

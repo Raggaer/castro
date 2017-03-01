@@ -2,13 +2,13 @@ package lua
 
 import (
 	"github.com/asaskevich/govalidator"
+	"github.com/dgryski/dgoogauth"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
 	"regexp"
 )
 
-// methods holds all the validation methods related to
-// govalidator
+// methods holds all the validation methods related to govalidator
 var methods = map[string]govalidator.Validator{
 	"IsURL":          govalidator.IsURL,
 	"IsAlpha":        govalidator.IsAlpha,
@@ -31,6 +31,42 @@ func SetValidatorMetaTable(luaState *lua.LState) {
 
 	// Set all validator metatable functions
 	luaState.SetFuncs(validMetaTable, validatorMethods)
+}
+
+// CheckQRCode checks if the given QR token is valid for the given secret key
+func CheckQRCode(L *lua.LState) int {
+	// Get token
+	token := L.ToString(2)
+
+	// Get secret key
+	secret := L.ToString(3)
+
+	// Create two-factor config
+	otpConfig := &dgoogauth.OTPConfig{
+		Secret:      secret,
+		WindowSize:  3,
+		HotpCounter: 0,
+	}
+
+	// Validate token
+	s, err := otpConfig.Authenticate(token)
+
+	if err != nil {
+
+		// Check for invalid code
+		if err == dgoogauth.ErrInvalidCode {
+			L.Push(lua.LBool(false))
+			return 1
+		}
+
+		L.RaiseError("Cannot authenticate token: %v", err)
+		return 0
+	}
+
+	// Push status of validation as bool
+	L.Push(lua.LBool(s))
+
+	return 1
 }
 
 // ValidGuildName checks if the given guild name is valid

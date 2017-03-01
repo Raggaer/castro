@@ -43,9 +43,11 @@ type MailConfig struct {
 
 // PayPalConfig struct used for the paypal configuration options
 type PayPalConfig struct {
-	Enabled   bool
-	PublicKey string
-	SecretKey string
+	Enabled           bool
+	PublicKey         string
+	SecretKey         string
+	Currency          string
+	PointsPerCurrency int
 }
 
 // Configuration struct used for the main Castro config file TOML file

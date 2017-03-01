@@ -2,7 +2,10 @@ package lua
 
 import (
 	"crypto/sha1"
+	"encoding/base64"
 	"fmt"
+	"github.com/dchest/uniuri"
+	"github.com/skip2/go-qrcode"
 	"github.com/yuin/gopher-lua"
 )
 
@@ -37,6 +40,53 @@ func Sha1Hash(L *lua.LState) int {
 			fmt.Sprintf("%x", data),
 		),
 	)
+
+	return 1
+}
+
+// RandomString generates a random string with the given length
+func RandomString(L *lua.LState) int {
+	// Get length
+	length := L.Get(2)
+
+	// Valid length type
+	if length.Type() != lua.LTNumber {
+		L.ArgError(1, "Invalid length type. Expected number")
+		return 0
+	}
+
+	// Push random string
+	L.Push(lua.LString(uniuri.NewLenChars(L.ToInt(2), []byte("abcdefghijklmnropqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"))))
+
+	return 1
+}
+
+// GenerateAuthSecretKey generates a valid authentication secret key
+func GenerateAuthSecretKey(L *lua.LState) int {
+	// Push random key
+	L.Push(lua.LString(uniuri.NewLenChars(16, []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"))))
+
+	return 1
+}
+
+// GenerateQRCode generates a QR code for the given string and returns a base64 encoded image
+func GenerateQRCode(L *lua.LState) int {
+	// Get string to encode
+	msg := L.ToString(2)
+
+	// Create QR code
+	code, err := qrcode.Encode(msg, qrcode.Medium, 256)
+
+	if err != nil {
+		L.RaiseError("Cannot create QR code: %v", err)
+		return 0
+	}
+
+	// Base64 encode the byte array
+	encoded := base64.StdEncoding.EncodeToString(code)
+
+	// Push as string
+	L.Push(lua.LString(encoded))
 
 	return 1
 }

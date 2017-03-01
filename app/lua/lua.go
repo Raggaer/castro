@@ -22,7 +22,10 @@ var (
 	}
 
 	cryptoMethods = map[string]glua.LGFunction{
-		"sha1": Sha1Hash,
+		"sha1":         Sha1Hash,
+		"randomString": RandomString,
+		"qr":           GenerateQRCode,
+		"qrKey":        GenerateAuthSecretKey,
 	}
 	mysqlMethods = map[string]glua.LGFunction{
 		"query":       Query,
@@ -46,6 +49,7 @@ var (
 		"validVocation":  ValidVocation,
 		"validGuildName": ValidGuildName,
 		"validGuildRank": ValidGuildRank,
+		"validQRToken":   CheckQRCode,
 	}
 	sessionMethods = map[string]glua.LGFunction{
 		"isLogged":      IsLogged,

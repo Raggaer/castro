@@ -1,0 +1,27 @@
+{{ template "header.html" }}
+<h3>Two-factor authentication</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+<img src="{{ safeURL .url }}">
+<p>
+    Scan the given QR code with your phone using any compatible <b>Google authenticator application</b>. Enter the provided token on the text-box below to enable two-factor for your account.
+</p>
+<p>
+    When two-factor is enabled you will need to provide a token every time you log-in. You can disable two-factor at any time on your account dashboard.
+</p>
+<hr>
+<form method="post">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <div class="form-group">
+        <label for="input-token">Authenticator token</label>
+        <input type="text" class="form-control" id="input-token" name="token" placeholder="Authenticator token">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Enable</button>
+    </div>
+</form>
+{{ template "footer.html" . }}

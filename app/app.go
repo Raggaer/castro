@@ -289,6 +289,9 @@ func templateFuncs() template.FuncMap {
 		"isDev": func() bool {
 			return util.Config.IsDev()
 		},
+		"safeURL": func(s string) template.URL {
+			return template.URL(s)
+		},
 		"url": func(args ...interface{}) template.URL {
 			u := fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port)
 			for _, arg := range args {

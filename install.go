@@ -178,7 +178,9 @@ func createConfigFile(name, location string) error {
 			Time:   time.Minute,
 		},
 		PayPal: util.PayPalConfig{
-			Enabled: false,
+			Enabled:           false,
+			Currency:          "EUR",
+			PointsPerCurrency: 10,
 		},
 		Custom: make(map[string]interface{}),
 	})

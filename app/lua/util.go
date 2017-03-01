@@ -1,6 +1,7 @@
 package lua
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/yuin/gopher-lua"
 	"net/url"
@@ -261,6 +262,22 @@ func StructToTable(s interface{}) *lua.LTable {
 
 			// Set value as number
 			t.RawSetString(fieldName, lua.LNumber(timeStamp))
+
+		case sql.NullString:
+
+			// Get null string
+			str := inter.(sql.NullString)
+
+			// Check if string is not NULL
+			if str.Valid {
+
+				// Set value as string
+				t.RawSetString(fieldName, lua.LString(str.String))
+			} else {
+
+				// Set value as nil
+				t.RawSetString(fieldName, lua.LNil)
+			}
 		}
 	}
 
