@@ -17,13 +17,17 @@ To create a custom page head to the `pages` folder and create a new directory wi
  
 To create a custom widget head to the `widgets` folder and create a new directory with your widget name. Castro will look for `:name.html` and `:name.lua` files inside your widget directory
 
-Examples of both systems can be found on the github source
+**For detailed information check out the project wiki**
 
 # Setup
 
 Running Castro for the first time will generate a **config.toml** file. Thats the main configuration file for Castro.
 
 Castro will then get everything it needs from your server folder. Reading your **config.lua** and other files (otbm, xml)
+
+# Compiling
+
+Check out our wiki to see how to compile Castro. You can however get the latest commit build at [appveyor](https://ci.appveyor.com/project/Raggaer/castro/build/artifacts) for Linux-amd64 and Windows-amd64 only
 
 # License
 
