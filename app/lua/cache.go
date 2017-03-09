@@ -31,10 +31,10 @@ func GetCacheValue(L *lua.LState) int {
 	// Get value from cache
 	v, found := util.Cache.Get(key.String())
 
-	// If there is no value return error
+	// If there is no value return nil
 	if !found {
-		L.ArgError(1, "No cache value found using the given key")
-		return 0
+		L.Push(lua.LNil)
+		return 1
 	}
 
 	// Switch cache value type
