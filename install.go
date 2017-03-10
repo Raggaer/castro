@@ -12,6 +12,7 @@ import (
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
+	glua "github.com/yuin/gopher-lua"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -142,6 +143,68 @@ func installApplication() error {
 
 // createConfigFile encodes a configuration file with the given name and location
 func createConfigFile(name, location string) error {
+	// Get lua state
+	luaState := glua.NewState()
+
+	// Close state
+	defer luaState.Close()
+
+	// Create events metatable
+	lua.SetEventsMetaTable(luaState)
+
+	// Create storage metatable
+	lua.SetStorageMetaTable(luaState)
+
+	// Create time metatable
+	lua.SetTimeMetaTable(luaState)
+
+	// Create url metatable
+	lua.SetURLMetaTable(luaState)
+
+	// Create debug metatable
+	lua.SetDebugMetaTable(luaState)
+
+	// Create XML metatable
+	lua.SetXMLMetaTable(luaState)
+
+	// Create captcha metatable
+	lua.SetCaptchaMetaTable(luaState)
+
+	// Create crypto metatable
+	lua.SetCryptoMetaTable(luaState)
+
+	// Create validator metatable
+	lua.SetValidatorMetaTable(luaState)
+
+	// Create database metatable
+	lua.SetDatabaseMetaTable(luaState)
+
+	// Create config metatable
+	lua.SetConfigMetaTable(luaState)
+
+	// Create map metatable
+	lua.SetMapMetaTable(luaState)
+
+	// Create mail metatable
+	lua.SetMailMetaTable(luaState)
+
+	// Create cache metatable
+	lua.SetCacheMetaTable(luaState)
+
+	// Create reflect metatable
+	lua.SetReflectMetaTable(luaState)
+
+	// Create json metatable
+	lua.SetJSONMetaTable(luaState)
+
+	// Set config metatable
+	lua.SetConfigGlobal(luaState)
+
+	// Execute init file
+	if err := luaState.DoFile(filepath.Join("engine", "install.lua")); err != nil {
+		return err
+	}
+
 	// Create configuration file handle
 	configFile, err := os.Create(name)
 	if err != nil {
@@ -182,6 +245,6 @@ func createConfigFile(name, location string) error {
 			Currency:          "EUR",
 			PointsPerCurrency: 10,
 		},
-		Custom: make(map[string]interface{}),
+		Custom: lua.TableToMap(luaState.Get(-1).(*glua.LTable)),
 	})
 }

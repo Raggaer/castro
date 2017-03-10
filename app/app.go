@@ -2,21 +2,20 @@ package app
 
 import (
 	"fmt"
-	glua "github.com/yuin/gopher-lua"
-	"html/template"
-	"time"
-
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/otmap"
+	glua "github.com/yuin/gopher-lua"
+	"html/template"
 	"log"
 	"net/url"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 // Start the main execution point for Castro
@@ -117,7 +116,6 @@ func executeInitFile() {
 	// Create json metatable
 	lua.SetJSONMetaTable(luaState)
 
-	// Set config metatable
 	lua.SetConfigGlobal(luaState)
 
 	// Execute init file
