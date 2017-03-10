@@ -117,6 +117,9 @@ func executeInitFile() {
 	// Create json metatable
 	lua.SetJSONMetaTable(luaState)
 
+	// Set config metatable
+	lua.SetConfigGlobal(luaState)
+
 	// Execute init file
 	if err := luaState.DoFile(filepath.Join("engine", "init.lua")); err != nil {
 		util.Logger.Fatalf("Cannot execute init lua file: %v", err)

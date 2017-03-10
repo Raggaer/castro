@@ -256,11 +256,11 @@ func getApplicationState(luaState *glua.LState) {
 	)
 
 	// Set config field
-	setConfigGlobal(luaState)
+	SetConfigGlobal(luaState)
 }
 
-// setConfigGlobal sets the config global value
-func setConfigGlobal(L *glua.LState) {
+// SetConfigGlobal sets the config global value
+func SetConfigGlobal(L *glua.LState) {
 	// Create table
 	tbl := L.NewTable()
 

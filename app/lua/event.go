@@ -136,6 +136,9 @@ func executeEvent(file string, duration time.Duration) {
 	// Create json metatable
 	SetJSONMetaTable(state)
 
+	// Set config metatable
+	SetConfigGlobal(state)
+
 	// Create event channel
 	eventChannel := make(chan int, 100)
 
