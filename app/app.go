@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/url"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 	"sync"
@@ -286,6 +287,9 @@ func templateFuncs() template.FuncMap {
 				}
 			}
 			return ""
+		},
+		"isMap": func(i interface{}) bool {
+			return reflect.TypeOf(i).Kind() == reflect.Map
 		},
 		"isDev": func() bool {
 			return util.Config.IsDev()
