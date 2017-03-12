@@ -214,6 +214,9 @@ func createConfigFile(name, location string) error {
 	// Close file handle
 	defer configFile.Close()
 
+	// Get lua file table
+	tbl := luaState.ToTable(-1)
+
 	// Encode the given configuration struct into the file
 	return toml.NewEncoder(configFile).Encode(util.Configuration{
 		Mode:     "dev",
@@ -245,6 +248,6 @@ func createConfigFile(name, location string) error {
 			Currency:          "EUR",
 			PointsPerCurrency: 10,
 		},
-		Custom: lua.TableToMap(luaState.Get(-1).(*glua.LTable)),
+		Custom: lua.TableToMap(tbl),
 	})
 }
