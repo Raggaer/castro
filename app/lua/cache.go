@@ -76,7 +76,7 @@ func SetCacheValue(L *lua.LState) int {
 	// Get optional time value
 	t := L.Get(4)
 
-	// Duration placeholder
+	// Duration time placeholder. Cache default time
 	dur := util.Config.Cache.Default
 
 	if t.Type() == lua.LTString {
