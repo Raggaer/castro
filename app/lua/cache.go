@@ -73,21 +73,24 @@ func SetCacheValue(L *lua.LState) int {
 		return 0
 	}
 
-	// Get time value
+	// Get optional time value
 	t := L.Get(4)
 
-	// Check for valid time string
-	if t.Type() != lua.LTString {
-		L.ArgError(3, "Invalid time format. Unexpected format")
-		return 0
-	}
+	// Duration placeholder
+	dur := util.Config.Cache.Default
 
-	// Parse time
-	dur, err := time.ParseDuration(t.String())
+	if t.Type() == lua.LTString {
 
-	if err != nil {
-		L.ArgError(3, "Invalid time format. Unexpected format")
-		return 0
+		// Parse time
+		d, err := time.ParseDuration(t.String())
+
+		if err != nil {
+			L.ArgError(3, "Invalid time format. Unexpected format")
+			return 0
+		}
+
+		// Set cache placeholder
+		dur = d
 	}
 
 	// Switch cache value type
