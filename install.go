@@ -244,9 +244,8 @@ func createConfigFile(name, location string) error {
 			Time:   time.Minute,
 		},
 		PayPal: util.PayPalConfig{
-			Enabled:           false,
-			Currency:          "EUR",
-			PointsPerCurrency: 10,
+			Enabled:  false,
+			Currency: "EUR",
 		},
 		Custom: lua.TableToMap(tbl),
 	})
