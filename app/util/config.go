@@ -47,6 +47,7 @@ type PayPalConfig struct {
 	PublicKey string
 	SecretKey string
 	Currency  string
+	SandBox   bool
 }
 
 // Configuration struct used for the main Castro config file TOML file

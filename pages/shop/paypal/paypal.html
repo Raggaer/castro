@@ -17,11 +17,11 @@
     <tbody>
     {{ range $index, $package := .list }}
     <tr>
-        <td>{{ $package.name }}</td>
+        <td><a href="#">{{ $package.name }}</a></td>
         <td>{{ $package.price }} {{ $package.currency }}</td>
         <td>{{ $package.points }}</td>
     </tr>
     {{ end }}
     </tbody>
 </table>
-{{ template "footer.html" . }} 
+{{ template "footer.html" . }}

@@ -12,6 +12,9 @@ import (
 
 // LuaPage executes the given lua page
 func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	// Create application paypal REST client
+	lua.CreatePaypalClient(util.Config.PayPal.SandBox)
+
 	// Check if request is POST
 	if r.Method == http.MethodPost {
 

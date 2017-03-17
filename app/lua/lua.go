@@ -129,8 +129,10 @@ var (
 	eventMethods = map[string]glua.LGFunction{
 		"stop": StopEvent,
 	}
-	paypalMethods = map[string]glua.LGFunction{}
-	imgMethods    = map[string]glua.LGFunction{
+	paypalMethods = map[string]glua.LGFunction{
+		"createPayment": CreatePaypalPayment,
+	}
+	imgMethods = map[string]glua.LGFunction{
 		"new": NewGoImage,
 	}
 	goimageMethods = map[string]glua.LGFunction{
