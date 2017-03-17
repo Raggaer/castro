@@ -12,4 +12,5 @@ end
 -- PayPal package list
 paypalList = {}
 
+-- Package name, package price, package given points
 paypalList["Test Package"] = paypalPackage("Test Package", 12, 20)

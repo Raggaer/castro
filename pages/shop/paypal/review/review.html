@@ -1,0 +1,40 @@
+{{ template "header.html" }}
+<h3>Buypoints using PayPal</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th colspan="2">Payment review</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Package name</th>
+            <td>{{ .pkg.name }}</td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>{{ .pkg.price }}</td>
+        </tr>
+        <tr>
+            <th>Points</th>
+            <td>{{ .pkg.points }}</td>
+        </tr>
+    </tbody>
+</table>
+<p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lobortis nulla a varius iaculis. Ut a molestie neque. Suspendisse viverra rhoncus pulvinar. Ut laoreet dolor ligula, a euismod orci imperdiet ac. Etiam leo ligula, auctor ut ultricies ac, finibus nec ante. Phasellus ac commodo eros. Sed id egestas ligula. Curabitur urna nibh, ornare in sapien et, fermentum pretium neque. Curabitur imperdiet nulla purus, eu porta est dapibus a. Quisque vehicula posuere mollis. Vestibulum dolor nulla, porta et finibus in, cursus sed est. Curabitur mi ligula, posuere quis consectetur vitae, accumsan et libero. Praesent dignissim molestie urna, id dignissim orci vestibulum id. Nullam non eleifend urna. Fusce egestas, erat a bibendum fringilla, leo neque malesuada nibh, at maximus risus magna rhoncus erat.
+</p>
+<form method="post">
+    <input type="hidden" name="paymentId" value="{{ .paymentId }}">
+    <input type="hidden" name="payerId" value="{{ .payerId }}">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <input type="submit" value="Purchase" name="Purchase" class="btn btn-xs btn-success">
+    <a role="button" href="{{ url "subtopic" "shop" "paypal" }}" class="btn btn-xs btn-danger">Cancel</a>
+</form>
+{{ template "footer.html" . }}

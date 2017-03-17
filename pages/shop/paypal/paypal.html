@@ -6,12 +6,18 @@
     <strong>Error!</strong> {{ .validationError }}
 </div>
 {{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
 <table class="table table-striped">
     <thead class="thead-inverse">
     <tr>
         <th>Package</th>
         <th>Price</th>
         <th>Points</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -20,6 +26,17 @@
         <td><a href="#">{{ $package.name }}</a></td>
         <td>{{ $package.price }} {{ $package.currency }}</td>
         <td>{{ $package.points }}</td>
+        <td>
+            {{ if $.logged }}
+            <form method="post">
+                <input type="hidden" name="pkg" value="{{ $package.name }}">
+                <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                <input type="submit" value="Purchase" name="Purchase" class="btn btn-xs btn-default">
+            </form>
+            {{ else }}
+            <a href="{{ url "subtopic" "login" }}">Login to purchase</a>
+            {{ end }}
+        </td>
     </tr>
     {{ end }}
     </tbody>

@@ -83,8 +83,9 @@ var (
 		"send": SendMail,
 	}
 	cacheMethods = map[string]glua.LGFunction{
-		"get": GetCacheValue,
-		"set": SetCacheValue,
+		"get":    GetCacheValue,
+		"set":    SetCacheValue,
+		"delete": DeleteCacheValue,
 	}
 	debugMethods = map[string]glua.LGFunction{
 		"value": DebugValue,
@@ -130,7 +131,9 @@ var (
 		"stop": StopEvent,
 	}
 	paypalMethods = map[string]glua.LGFunction{
-		"createPayment": CreatePaypalPayment,
+		"createPayment":      CreatePaypalPayment,
+		"paymentInformation": GetPaypalPayment,
+		"executePayment":     ExecutePaypalPayment,
 	}
 	imgMethods = map[string]glua.LGFunction{
 		"new": NewGoImage,
@@ -286,6 +289,12 @@ func SetConfigGlobal(L *glua.LState) {
 
 	// Set global value
 	L.SetGlobal("app", tbl)
+
+	// Set default fields
+	L.SetField(tbl, "URL", glua.LString(util.Config.URL))
+	L.SetField(tbl, "Port", glua.LNumber(util.Config.Port))
+	L.SetField(tbl, "Mode", glua.LString(util.Config.Mode))
+	L.SetField(tbl, "Datapack", glua.LString(util.Config.Datapack))
 }
 
 // Put saves a lua state back to the pool

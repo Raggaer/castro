@@ -1,7 +1,6 @@
 package lua
 
 import (
-	"fmt"
 	"github.com/raggaer/castro/app/util"
 	"github.com/raggaer/gopaypal"
 	"github.com/yuin/gopher-lua"
@@ -46,14 +45,7 @@ func SetPayPalMetaTable(luaState *lua.LState) {
 // CreatePaypalPayment creates a paypal payment returning the payment URL
 func CreatePaypalPayment(L *lua.LState) int {
 	// Get payment price
-	price := L.ToInt(4)
-
-	// HTTP mode
-	mode := "http"
-
-	if util.Config.SSL.Enabled {
-		mode = "https"
-	}
+	price := L.ToInt(3)
 
 	// Create paypal payment
 	payment := gopaypal.Payment{
@@ -71,11 +63,11 @@ func CreatePaypalPayment(L *lua.LState) int {
 					},
 				},
 				Description: L.ToString(2),
-				Custom:      "test",
+				Custom:      L.ToString(4),
 				ItemList: gopaypal.ItemList{
 					Items: []gopaypal.Item{
 						{
-							Name:     L.ToString(3),
+							Name:     L.ToString(2),
 							Price:    strconv.Itoa(price),
 							Currency: util.Config.PayPal.Currency,
 							Quantity: 1,
@@ -85,8 +77,8 @@ func CreatePaypalPayment(L *lua.LState) int {
 			},
 		},
 		RedirectURL: gopaypal.RedirectURL{
-			ReturnURL: fmt.Sprintf("%v://%v:%v/%v", mode, util.Config.URL, util.Config.Port, "subtopic/shop/paypal"),
-			CancelURL: fmt.Sprintf("%v://%v:%v/%v", mode, util.Config.URL, util.Config.Port, "subtopic/shop/paypal"),
+			ReturnURL: L.ToString(6),
+			CancelURL: L.ToString(5),
 		},
 	}
 
@@ -111,5 +103,85 @@ func CreatePaypalPayment(L *lua.LState) int {
 	}
 
 	L.RaiseError("Cannot find approval_url payment link")
+	return 0
+}
+
+// GetPaypalPayment gets a paypal approved payment
+func GetPaypalPayment(L *lua.LState) int {
+	// Get payment identifier
+	id := L.Get(2)
+
+	// Check valid identifier
+	if id.Type() != lua.LTString {
+		L.ArgError(1, "Invalid payment identifier type. Expected string")
+		return 0
+	}
+
+	// Get payment information
+	info, err := client.PaymentInformation(id.String())
+
+	if err != nil {
+		L.RaiseError("Cannot get paypal payment information: %v", err)
+		return 0
+	}
+
+	// Validate approved payment
+	if len(info.Transactions) > 1 {
+		L.Push(lua.LNil)
+		return 1
+	}
+
+	// Result table
+	tbl := L.NewTable()
+
+	// Get payment price
+	price, err := strconv.ParseFloat(info.Transactions[0].Amount.Total, 10)
+
+	if err != nil {
+		L.RaiseError("Cannot get payment price: %v", err)
+		return 0
+	}
+
+	// Set payment fields
+	tbl.RawSetString("State", lua.LString(info.State))
+	tbl.RawSetString("Custom", lua.LString(info.Transactions[0].Custom))
+	tbl.RawSetString("Price", lua.LNumber(price))
+	tbl.RawSetString("Name", lua.LString(info.Transactions[0].Description))
+	tbl.RawSetString("PaymentID", lua.LString(id.String()))
+	tbl.RawSetString("PayerID", lua.LString(info.Payer.Info.ID))
+	tbl.RawSetString("PayerStatus", lua.LString(info.Payer.Status))
+
+	// Push result table
+	L.Push(tbl)
+
+	return 1
+}
+
+func ExecutePaypalPayment(L *lua.LState) int {
+	// Get payment identifier
+	id := L.Get(2)
+
+	// Check valid identifier
+	if id.Type() != lua.LTString {
+		L.ArgError(1, "Invalid payment identifier type. Expected string")
+		return 0
+	}
+
+	// Get payer identifier
+	payerID := L.Get(3)
+
+	// Check valid identifier
+	if payerID.Type() != lua.LTString {
+		L.ArgError(2, "Invalid payer identifier type. Expected string")
+	}
+
+	// Execute paypal payment
+	_, err := client.ExecutePayment(id.String(), payerID.String())
+
+	if err != nil {
+		L.RaiseError("Cannot execute paypal payment: %v", err)
+		return 0
+	}
+
 	return 0
 }

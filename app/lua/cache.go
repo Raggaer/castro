@@ -136,3 +136,19 @@ func SetCacheValue(L *lua.LState) int {
 
 	return 0
 }
+
+// DeleteCacheValue removes a key from the cache storage
+func DeleteCacheValue(L *lua.LState) int {
+	// Get cache key
+	key := L.Get(2)
+
+	if key.Type() != lua.LTString {
+		L.ArgError(1, "Invalid cache key type. Expected string")
+		return 0
+	}
+
+	// Delete element from the cache
+	util.Cache.Delete(key.String())
+
+	return 0
+}
