@@ -71,7 +71,11 @@ Compiled at: %v
 	router.POST("/", controllers.LuaPage)
 	router.POST("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
-	router.GET("/pprof/heap", wrapHandler(pprof.Handler("heap")))
+
+	// Register pprof router only on development mode
+	if util.Config.IsDev() {
+		router.GET("/pprof/heap", wrapHandler(pprof.Handler("heap")))
+	}
 
 	// Create the session storage
 	util.SessionStore = securecookie.New(
