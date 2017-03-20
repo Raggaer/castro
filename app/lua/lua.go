@@ -95,7 +95,8 @@ var (
 		"encode": EncodeURL,
 	}
 	timeMethods = map[string]glua.LGFunction{
-		"parseUnix": ParseUnixTimestamp,
+		"parseUnix":     ParseUnixTimestamp,
+		"parseDuration": ParseDurationString,
 	}
 	reflectMethods = map[string]glua.LGFunction{
 		"getGlobal": nil,

@@ -170,8 +170,7 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 	}
 }
 
-// Render executes the given template. if the app is running
-// on dev mode all the templates will be reloaded
+// Render executes the given template. if the app is running on dev mode all the templates will be reloaded
 func (t Tmpl) Render(wr io.Writer, name string, args interface{}) error {
 	// Check if app is running on dev mode
 	if Config.IsDev() {

@@ -98,3 +98,28 @@ func ParseUnixTimestamp(L *lua.LState) int {
 
 	return 1
 }
+
+// ParseDurationString parses the given duration string to return the time in seconds
+func ParseDurationString(L *lua.LState) int {
+	// Get duration string
+	dur := L.Get(2)
+
+	// Check valid duration
+	if dur.Type() != lua.LTString {
+		L.ArgError(1, "Invalid time duration string. Expected string")
+		return 0
+	}
+
+	// Parse duration string
+	duration, err := time.ParseDuration(dur.String())
+
+	if err != nil {
+		L.RaiseError("Cannot parse duration: %v", err)
+		return 0
+	}
+
+	// Push duration seconds
+	L.Push(lua.LNumber(duration.Seconds()))
+
+	return 1
+}
