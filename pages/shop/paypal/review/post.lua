@@ -11,7 +11,7 @@ function post()
         return
     end
 
-    local payment = cache:get("paypal_payment_" .. http.postValues["paymentId"])
+    local payment = db:singleQuery("SELECT payment_id, state, payer_id, package_name, custom FROM castro_paypal_payments WHERE id = ? AND custom = ?", http.postValues["id"], session:loggedAccount().Name)
 
     if payment == nil then
         session:setFlash("validationError", "Invalid payment")
@@ -19,7 +19,13 @@ function post()
         return
     end
 
-    local pkg = paypalList[payment.Name]
+    if payment.state ~= "created" then
+        session:setFlash("validationError", "Invalid payment state. Please approve the payment first")
+        http:redirect("/subtopic/shop/paypal")
+        return
+    end
+
+    local pkg = paypalList[payment["package_name"]]
 
     if pkg == nil then
         session:setFlash("validationError", "Invalid package")
@@ -27,13 +33,16 @@ function post()
         return
     end
 
-    paypal:executePayment(payment.PaymentID, payment.PayerID)
+    if paypal:executePayment(payment["payment_id"], payment["payer_id"]) == false then
+        session:setFlash("validationError", "Invalid payment")
+        http:redirect("/subtopic/shop/paypal")
+        return
+    end
 
-    db:execute("UPDATE castro_accounts a, accounts b SET a.points = points + ? WHERE a.account_id = b.id AND b.name = ?", pkg.points, payment.Custom)
+    db:execute("UPDATE castro_accounts a, accounts b SET a.points = points + ? WHERE a.account_id = b.id AND b.name = ?", pkg.points, payment.custom)
+    db:execute("UPDATE castro_paypal_payments SET state = ? WHERE id = ?", "executed", http.postValues["id"])
 
-    cache:delete("paypal_payment_" .. http.postValues["paymentId"])
-
-    session:setFlash("success", "Package purchased. " .. pkg.points .. " points given")
+    session:setFlash("success", "Package " .. pkg.name .. " purchased. " .. pkg.points .. " points given")
 
     http:redirect("/subtopic/shop/paypal")
 end

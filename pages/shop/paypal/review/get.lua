@@ -11,26 +11,22 @@ function get()
         return
     end
 
-    local info = cache:get("paypal_payment_" .. http.getValues["paymentId"])
+    local info = db:singleQuery("SELECT id, package_name as Name, state as State, payment_id, payer_id, custom, created_at FROM castro_paypal_payments WHERE payment_id = ? AND custom = ?", http.getValues["paymentId"], session:loggedAccount().Name)
+    local identifier = 0
 
     if info == nil then
         info = paypal:paymentInformation(http.getValues["paymentId"])
 
-        cache:set("paypal_payment_" .. http.getValues["paymentId"], info, "30m")
+        identifier = db:execute("INSERT INTO castro_paypal_payments (package_name, state, payment_id, payer_id, custom, created_at) VALUES (?, ?, ?, ?, ?, ?)", info.Name, info.State, info.PaymentID, info.PayerID, info.Custom, os.time())
     end
 
     if info == nil then
-        http:redirect("/")
-        return
-    end
-
-    if session:loggedAccount().Name ~= info.Custom then
         http:redirect("/")
         return
     end
 
     if info.State ~= "created" then
-        session:setFlash("validationError", "Invalid payment state")
+        session:setFlash("validationError", "Invalid payment state. Payment is not created")
         http:redirect("/subtopic/shop/paypal")
         return
     end
@@ -45,8 +41,12 @@ function get()
     local data = {}
 
     data.pkg = package
-    data.paymentId = http.getValues["paymentId"]
-    data.payerId = http.getValues["PayerID"]
+
+    if identifier == 0 then
+        data.id = info.id
+    else
+        data.id = identifier
+    end
 
     http:render("review.html", data)
 end
