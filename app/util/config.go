@@ -28,6 +28,7 @@ type CacheConfig struct {
 // SSLConfig struct used for the ssl configuration options
 type SSLConfig struct {
 	Enabled bool
+	Auto    bool
 	Cert    string
 	Key     string
 }

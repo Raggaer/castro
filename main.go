@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"crypto/tls"
 	"encoding/gob"
 	"github.com/didip/tollbooth"
 	"github.com/didip/tollbooth/thirdparty/tollbooth_negroni"
@@ -17,6 +18,7 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"github.com/urfave/negroni"
 	"github.com/yuin/gopher-lua"
+	"golang.org/x/crypto/acme/autocert"
 	"log"
 	"net/http/pprof"
 	_ "net/http/pprof"
@@ -128,12 +130,27 @@ Compiled at: %v
 	// Check if Castro should run on SSL mode
 	if util.Config.SSL.Enabled {
 
+		// Check if user is using auto-certificate
+		if util.Config.SSL.Auto {
+
+			// Create auto-certificate manager
+			m := autocert.Manager{
+				Prompt:     autocert.AcceptTOS,
+				HostPolicy: autocert.HostWhitelist(util.Config.URL),
+			}
+
+			// Set server TLS option
+			server.TLSConfig = &tls.Config{
+				GetCertificate: m.GetCertificate,
+			}
+		}
+
 		// If SSL is enabled listen with cert and key
 		if err := server.ListenAndServeTLS(
 			util.Config.SSL.Cert,
 			util.Config.SSL.Key,
 		); err != nil {
-			util.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
+			util.Logger.Fatalf("Cannot start Castro HTTPS server: %v", err)
 		}
 	} else {
 
