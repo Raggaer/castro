@@ -166,7 +166,7 @@ func loadAppLogger() {
 func loadVocations(wg *sync.WaitGroup) {
 	// Load server vocations
 	if err := util.LoadVocations(
-		filepath.Join(util.Config.Datapack, "data", "xml", "vocations.xml"),
+		filepath.Join(util.Config.Datapack, "data", "XML", "vocations.xml"),
 		util.ServerVocationList,
 	); err != nil {
 		util.Logger.Fatalf("Cannot load map house list: %v", err)

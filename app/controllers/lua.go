@@ -32,11 +32,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		if err := lua.PageList.Load("pages"); err != nil {
 			// Set error header
 			w.WriteHeader(500)
-
-			// If AAC is running on development mode log error
-			if util.Config.IsDev() || util.Config.IsLog() {
-				util.Logger.Errorf("Cannot load subtopic %v: %v", ps.ByName("page"), err)
-			}
+			util.Logger.Errorf("Cannot load subtopic %v: %v", ps.ByName("page"), err)
 
 			return
 		}
@@ -45,11 +41,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		if err := lua.WidgetList.Load("widgets"); err != nil {
 			// Set error header
 			w.WriteHeader(500)
-
-			// If AAC is running on development mode log error
-			if util.Config.IsDev() || util.Config.IsLog() {
-				util.Logger.Errorf("Cannot load widgets when executing %v subtopic: %v", ps.ByName("page"), err)
-			}
+			util.Logger.Errorf("Cannot load widgets when executing %v subtopic: %v", ps.ByName("page"), err)
 
 			return
 		}
@@ -61,11 +53,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if !ok {
 		// Set error header
 		w.WriteHeader(500)
-
-		// If AAC is running on development mode log error
-		if util.Config.IsDev() || util.Config.IsLog() {
-			util.Logger.Error("Cannot get session as map")
-		}
+		util.Logger.Error("Cannot get session as map")
 
 		return
 	}
@@ -84,11 +72,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if err != nil {
 		// Set error header
 		w.WriteHeader(500)
-
-		// If AAC is running on development mode log error
-		if util.Config.IsDev() || util.Config.IsLog() {
-			util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
-		}
+		util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
 
 		return
 	}
@@ -115,58 +99,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Set error header
 		w.WriteHeader(500)
-
-		// If AAC is running on development mode log error
-		if util.Config.IsDev() || util.Config.IsLog() {
-			util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
-		}
-
-		return
+		util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
 	}
-
-	return
-
-	/*
-		// Get state from the pool
-		luaState := lua.Pool.Get()
-
-		// Defer the state put method
-		defer lua.Pool.Put(luaState)
-
-		// Set the state user data
-		lua.SetHTTPUserData(luaState, w, r)
-
-		// Set session user data
-		lua.SetSessionMetaTableUserData(luaState, session)
-
-		// Get function for the subtopic
-		source, err := lua.Subtopics.Get("pages", pageName, r.Method)
-
-		if err != nil {
-			// Set error header
-			w.WriteHeader(500)
-
-			// If AAC is running on development mode log error
-			if util.Config.IsDev() || util.Config.IsLog() {
-				util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
-			}
-
-			return
-		}
-
-		// Execute function
-		if err := luaState.DoString(source); err != nil {
-			// Set error header
-			w.WriteHeader(500)
-
-			// If AAC is running on development mode log error
-			if util.Config.IsDev() || util.Config.IsLog() {
-				util.Logger.Errorf("Cannot execute %v subtopic: %v", pageName, err)
-			}
-
-			return
-		}
-
-		// Remove top stack value
-		luaState.Pop(-1)*/
 }

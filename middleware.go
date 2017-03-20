@@ -46,9 +46,10 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 
 		// Create cookie
 		c := &http.Cookie{
-			Name:  util.Config.Cookies.Name,
-			Value: encoded,
-			Path:  "/",
+			Name:   util.Config.Cookies.Name,
+			Value:  encoded,
+			Path:   "/",
+			Secure: util.Config.SSL.Enabled,
 		}
 
 		// Set cookie

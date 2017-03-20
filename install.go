@@ -227,7 +227,7 @@ func createConfigFile(name, location string) error {
 			Enabled: false,
 		},
 		Cookies: util.CookieConfig{
-			Name:     "castro",
+			Name:     fmt.Sprintf("castro-%v", uniuri.NewLen(5)),
 			MaxAge:   1000000,
 			HashKey:  uniuri.NewLen(32),
 			BlockKey: uniuri.NewLen(32),

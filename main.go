@@ -121,7 +121,7 @@ Compiled at: %v
 
 	// Create castro server
 	server := http.Server{
-		Addr:         fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port),
+		Addr:         fmt.Sprintf(":%v", util.Config.Port),
 		Handler:      n,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
@@ -137,6 +137,7 @@ Compiled at: %v
 			m := autocert.Manager{
 				Prompt:     autocert.AcceptTOS,
 				HostPolicy: autocert.HostWhitelist(util.Config.URL),
+				Cache:      autocert.DirCache("tls"),
 			}
 
 			// Set server TLS option
@@ -144,6 +145,8 @@ Compiled at: %v
 				GetCertificate: m.GetCertificate,
 			}
 		}
+
+		go httpsRedirect(server)
 
 		// If SSL is enabled listen with cert and key
 		if err := server.ListenAndServeTLS(
@@ -166,4 +169,11 @@ func wrapHandler(h http.Handler) httprouter.Handle {
 	return func(rw http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 		h.ServeHTTP(rw, req)
 	}
+}
+
+// httpsRedirect gets all non-https traffic and redirects to https
+func httpsRedirect(s http.Server) {
+	// Listen for non-https connections
+	//s.Addr
+
 }
