@@ -22,6 +22,7 @@ import (
 	"log"
 	"net/http/pprof"
 	_ "net/http/pprof"
+	"strings"
 	"time"
 )
 
@@ -60,7 +61,7 @@ Compiled at: %v
 			log.Fatal(err)
 		}
 
-		fmt.Printf("Configuration file created (%v) . Installation process is now done", configFileName)
+		fmt.Printf("Configuration file created (%v) . Installation process is now done\r\n", configFileName)
 
 		return
 	}
@@ -135,9 +136,15 @@ Compiled at: %v
 
 			// Create auto-certificate manager
 			m := autocert.Manager{
-				Prompt:     autocert.AcceptTOS,
-				HostPolicy: autocert.HostWhitelist(util.Config.URL),
-				Cache:      autocert.DirCache("tls"),
+				Prompt: autocert.AcceptTOS,
+				Cache:  autocert.DirCache("tls"),
+			}
+
+			// Set auto-certificate hosts
+			if strings.HasPrefix(util.Config.URL, "www") {
+				m.HostPolicy = autocert.HostWhitelist(util.Config.URL, strings.Replace(util.Config.URL, "www.", "", 1))
+			} else {
+				m.HostPolicy = autocert.HostWhitelist(util.Config.URL, "www."+util.Config.URL)
 			}
 
 			// Set server TLS option

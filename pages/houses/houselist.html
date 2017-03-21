@@ -5,7 +5,7 @@
     <div class="form-group">
         <select name="town" class="form-control" id="select-town">
             {{ range $index, $element := .towns }}
-            <option value="{{ $element.ID }}">{{ $element.Name }}</option>
+                <option {{ if eq $element.Name $.current.Name }} selected {{ end }} value="{{ $element.ID }}">{{ $element.Name }}</option>
             {{ end }}
         </select>
     </div>
@@ -21,6 +21,7 @@
         </tr>
     </thead>
     <tbody>
+    {{ if .list }}
         {{ range $index, $element := .list }}
         <tr>
             <td>
@@ -29,6 +30,11 @@
             <td>{{ $element.Size }}</td>
         </tr>
         {{ end }}
+    {{ else }}
+    <tr>
+        <td colspan="2">No houses match this criteria</td>
+    </tr>
+    {{ end }}
     </tbody>
 </table>
 {{ template "footer.html" . }} 

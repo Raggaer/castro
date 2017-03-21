@@ -82,17 +82,23 @@
     </tr>
     </thead>
     <tbody>
-    {{ range $index, $element := .list }}
-    <tr>
-        <th scope="row">{{ $index }}</th>
-        <td>
-            <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">
-            {{ $element.name }}
-            </a>
-        </td>
-        <td>{{ vocation $element.vocation }}</td>
-        <td>{{ $element.level }}</td>
-    </tr>
+    {{ if .list }}
+        {{ range $index, $element := .list }}
+        <tr>
+            <th scope="row">{{ $index }}</th>
+            <td>
+                <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">
+                {{ $element.name }}
+                </a>
+            </td>
+            <td>{{ vocation $element.vocation }}</td>
+            <td>{{ $element.level }}</td>
+        </tr>
+        {{ end }}
+    {{ else }}
+        <tr>
+            <td colspan="4">No characters made yet</td>
+        </tr>
     {{ end }}
     </tbody>
 </table>
