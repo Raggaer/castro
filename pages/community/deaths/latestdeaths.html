@@ -1,20 +1,25 @@
 {{ template "header.html" }}
 <h3>Latest deaths</h3>
 <hr>
-{{ if .deaths }}
 <table class="table table-striped">
 	<thead class="thead-inverse">
 	    <tr>
-            <th colspan="2"></th>
+            <th colspan="2">Latest Deaths</th>
         </tr>
 	</thead>
 	<tbody>
+	{{ if .deaths }}
 		{{ range $index, $element := .deaths }}
 		<tr>
 			<td><a href="{{ url "subtopic" "community" "view"}}?name={{ urlEncode $element.victim }}">{{ $element.victim }}</a> was killed at level {{ $element.level }} by {{ if eqNumber $element.is_player 1 }} <a href="{{ url "subtopic" "community" "view"}}?name={{ urlEncode $element.killed_by }}">{{ $element.killed_by }}</a>{{ else }}{{ $element.killed_by }}{{ end }}{{ if eqNumber $element.unjustified 1 }} <span style="color: red; font-style: italic;">unjustified</span>{{ end }}</td>
     		<td>{{ unixToDate $element.time }}</td>
 		</tr>
 		{{ end }}
+	{{ else }}
+	<tr>
+		<td colspan="2">No character died yet</td>
+	</tr>
+	{{ end }}
 	</tbody>
 </table>
 <ul class="pagination pagination-sm">
@@ -27,7 +32,4 @@
 	<li><a href="{{ url "subtopic" "community" "deaths" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
 	{{ end }}
 </ul>
-{{ else }}
-<p>Nobody has died yet.</p>
-{{ end }}
 {{ template "footer.html" . }}

@@ -146,7 +146,8 @@ Compiled at: %v
 			}
 		}
 
-		go httpsRedirect(server)
+		// Listen to non-https connections
+		go httpsRedirect()
 
 		// If SSL is enabled listen with cert and key
 		if err := server.ListenAndServeTLS(
@@ -172,8 +173,20 @@ func wrapHandler(h http.Handler) httprouter.Handle {
 }
 
 // httpsRedirect gets all non-https traffic and redirects to https
-func httpsRedirect(s http.Server) {
-	// Listen for non-https connections
-	//s.Addr
+func httpsRedirect() {
+	// Create router
+	mux := httprouter.New()
+	mux.GET("/*filepath", controllers.SSLRedirect)
 
+	// Create server
+	server := http.Server{
+		Addr:         fmt.Sprintf(":%v", 80),
+		Handler:      mux,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	if err := server.ListenAndServe(); err != nil {
+		util.Logger.Fatalf("Cannot start HTTP redirect server: %v", err)
+	}
 }
