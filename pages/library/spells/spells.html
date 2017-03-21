@@ -1,66 +1,93 @@
 {{ template "header.html" }}
 <h3>Spell List</h3>
 <hr>
-<table class="table table-striped">
-    <thead class="thead-inverse">
-        <tr>
-            <th colspan="4">Instant spells</th>
-        </tr>
-        <tr>
-            <td>Type</td>
-            <td>Words</td>
-            <td>Vocations</td>
-            <td>Level</td>
-        </tr>
-    </thead>
-    <tbody>
-    {{ range $index, $spell := .list.spells.instant }}
-    <tr>
-        <td>{{ index $spell "-group" }}</td>
-        <td>{{ index $spell "-words" }}</td>
-        <td>
-            {{ range $vocation := index $spell "vocation" }}
-                {{ if isMap $vocation }}
-                <li style="list-style: none;">{{ index $vocation "-name" }}</li>
-                {{ else }}
-                <li style="list-style: none;">{{ $vocation }}</li>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#instant" aria-controls="instant" role="tab" data-toggle="tab">Instant</a></li>
+        <li role="presentation"><a href="#conjure" aria-controls="conjure" role="tab" data-toggle="tab">Conjure</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="instant">
+            <table id="spells-instant" class="table table-striped">
+                <thead class="thead-inverse">
+                <tr>
+                    <th colspan="4">Instant spells</th>
+                </tr>
+                <tr>
+                    <td>Type</td>
+                    <td>Words</td>
+                    <td>Vocations</td>
+                    <td>Level</td>
+                </tr>
+                </thead>
+                <tbody>
+                {{ range $index, $spell := .list.spells.instant }}
+                <tr>
+                    <td>{{ index $spell "-group" }}</td>
+                    <td>{{ index $spell "-words" }}</td>
+                    <td>
+                        {{ range $vocation := index $spell "vocation" }}
+                        {{ if isMap $vocation }}
+                        <li style="list-style: none;">{{ index $vocation "-name" }}</li>
+                        {{ else }}
+                        <li style="list-style: none;">{{ $vocation }}</li>
+                        {{ end }}
+                        {{ end }}
+                    </td>
+                    <td>{{ index $spell "-lvl" }}</td>
+                </tr>
                 {{ end }}
-            {{ end }}
-        </td>
-        <td>{{ index $spell "-lvl" }}</td>
-    </tr>
-    {{ end }}
-    </tbody>
-</table>
-<table class="table table-striped">
-    <thead class="thead-inverse">
-    <tr>
-        <th colspan="4">Conjure spells</th>
-    </tr>
-    <tr>
-        <td>Name</td>
-        <td>Words</td>
-        <td>Vocations</td>
-        <td>Level</td>
-    </tr>
-    </thead>
-    <tbody>
-    {{ range $index, $spell := .list.spells.conjure }}
-    <tr>
-        <td>{{ index $spell "-name" }}</td>
-        <td>{{ index $spell "-words" }}</td>
-        <td>
-            {{ range $vocation := index $spell "vocation" }}
-            {{ if isMap $vocation }}
-            <li style="list-style: none;">{{ index $vocation "-name" }}</li>
-            {{ else }}
-            <li style="list-style: none;">{{ $vocation }}</li>
-            {{ end }}
-            {{ end }}
-        </td>
-        <td>{{ index $spell "-lvl" }}</td>
-    </tr>
-    {{ end }}
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="conjure">
+            <table id="spells-conjure" class="table table-striped">
+                <thead class="thead-inverse">
+                <tr>
+                    <th colspan="4">Conjure spells</th>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>Words</td>
+                    <td>Vocations</td>
+                    <td>Level</td>
+                </tr>
+                </thead>
+                <tbody>
+                {{ range $index, $spell := .list.spells.conjure }}
+                <tr>
+                    <td>{{ index $spell "-name" }}</td>
+                    <td>{{ index $spell "-words" }}</td>
+                    <td>
+                        {{ range $vocation := index $spell "vocation" }}
+                        {{ if isMap $vocation }}
+                        <li style="list-style: none;">{{ index $vocation "-name" }}</li>
+                        {{ else }}
+                        <li style="list-style: none;">{{ $vocation }}</li>
+                        {{ end }}
+                        {{ end }}
+                    </td>
+                    <td>{{ index $spell "-lvl" }}</td>
+                </tr>
+                {{ end }}
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="messages">...</div>
+        <div role="tabpanel" class="tab-pane" id="settings">...</div>
+    </div>
+
 {{ template "footer.html" . }}
+<script>
+    $(document).ready(function(){
+        var instant = $('#spells-instant').DataTable({
+            "autoWidth": false
+        });
+        var conjure = $('#spells-conjure').DataTable({
+            "autoWidth": false
+        });
+    });
+</script>

@@ -42,6 +42,14 @@ type MailConfig struct {
 	Password string
 }
 
+// PaygolConfig struct used for the paygol configuration options
+type PaygolConfig struct {
+	Enabled  bool
+	Service  int
+	Currency string
+	Language string
+}
+
 // PayPalConfig struct used for the paypal configuration options
 type PayPalConfig struct {
 	Enabled   bool
@@ -61,6 +69,7 @@ type Configuration struct {
 	Captcha   CaptchaConfig
 	SSL       SSLConfig
 	PayPal    PayPalConfig
+	PayGol    PaygolConfig
 	Cookies   CookieConfig
 	Cache     CacheConfig
 	RateLimit RateLimiterConfig

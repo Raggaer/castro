@@ -285,6 +285,9 @@ func SetConfigGlobal(L *glua.LState) {
 	// Set Custom value
 	L.SetField(tbl, "Custom", MapToTable(util.Config.Custom))
 
+	// Set PayGol value
+	L.SetField(tbl, "PayGol", StructToTable(&util.Config.PayGol))
+
 	// Set SSL value
 	L.SetField(tbl, "SSL", StructToTable(&util.Config.SSL))
 
