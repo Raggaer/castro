@@ -35,16 +35,22 @@
         </tr>
     </thead>
     <tbody>
-    {{ range $index, $element := .list }}
-    <tr>
-        <td>
-            <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a>
-        </td>
-        <td>
-            <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.owner }}">{{ $element.owner }}</a>
-        </td>
-        <td>{{ $element.creation.Result }}</td>
-    </tr>
+    {{ if .list }}
+        {{ range $index, $element := .list }}
+        <tr>
+            <td>
+                <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a>
+            </td>
+            <td>
+                <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.owner }}">{{ $element.owner }}</a>
+            </td>
+            <td>{{ $element.creation.Result }}</td>
+        </tr>
+        {{ end }}
+    {{ else }}
+        <tr>
+            <td colspan="3">No guilds made yet</td>
+        </tr>
     {{ end }}
     </tbody>
 </table>
