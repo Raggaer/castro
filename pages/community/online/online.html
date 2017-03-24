@@ -1,6 +1,14 @@
 {{ template "header.html" }}
 <h3>Who is online</h3>
 <hr>
+{{ if .chart }}
+<div style="width: 100%; display: block; margin: auto;">
+	<div class="col-xs-10 col-md-8 col-lg-6" style="margin: auto !important; float: none !important;">
+		<canvas id="onlineChart" width="300" height="200"></canvas>
+	</div>
+</div>
+<br>
+{{ end }}
 <p>There are currently {{ .count }} players online on {{ serverName }}.</p>
 {{ if .list }}
 	<table class="table table-striped table-hover">
@@ -17,5 +25,26 @@
 			{{ end }}
 		</tbody>
 	</table>
+{{ end }}
+{{ if .chart }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+<script>
+var data = {{ .chart }};
+data = JSON.parse(data);
+var ctx = document.getElementById("onlineChart");
+var onlineChart = new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+</script>
 {{ end }}
 {{ template "footer.html" . }}
