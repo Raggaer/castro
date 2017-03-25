@@ -18,6 +18,8 @@ $linuxCommand = 'go build -o buildOutput\castro_linux_amd64 -ldflags "-X main.VE
 
 iex $linuxCommand
 
+$linuxCommand = 'go build -o buildOutput\castro_linux_arm64 -ldflags "-X main.VERSION=$env:APPVEYOR_BUILD_VERSION -X main.BUILD_DATE=$date"'
+
 echo "Building for Linux arm64"
 $env:GOOS = "linux"
 $env:GOARCH = "arm64"
