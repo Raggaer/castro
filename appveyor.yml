@@ -23,9 +23,11 @@ build_script:
 test: off
 
 artifacts:
-  - path: buildOutput\castro.exe
-    name: Windows build
-  - path: buildOutput\castro
-    name: Linux build
+  - path: buildOutput\castro_win_amd64.exe
+    name: Windows amd64 build
+  - path: buildOutput\castro_linux_amd64
+    name: Linux amd64 build
+  - path: buildOutput\castro_linux_arm64
+    name: Linux arm64 build
 
 deploy: off
