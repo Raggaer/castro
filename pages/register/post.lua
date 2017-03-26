@@ -4,7 +4,7 @@ function post()
         return
     end
 
-    if captcha:isEnabled() then
+    if app.Captcha.Enabled then
         if not captcha:verify(http.postValues["g-recaptcha-response"]) then
             session:setFlash("validationError", "Invalid captcha answer")
             http:redirect("/subtopic/register")

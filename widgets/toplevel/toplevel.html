@@ -2,7 +2,7 @@
     <h5>Top players</h5>
     <hr class="white-hr">
     <ul>
-        {{ if not .top }}
+        {{ if .top }}
             {{ range $index, $element := .top }}
                 <li><a class="light" href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a> ({{ $element.level }})</li>
             {{ end }}

@@ -27,6 +27,11 @@ type stateList struct {
 	Type string
 }
 
+type PluginFunction struct {
+	Name string
+	F    glua.LGFunction
+}
+
 // Load loads the given state list
 func (s *stateList) Load(dir string) error {
 	// Lock mutex

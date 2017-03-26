@@ -5,7 +5,7 @@
     <div class="form-group">
         <select name="town" class="form-control" id="select-town">
             {{ range $index, $element := .towns }}
-                <option {{ if eq $element.Name $.current.Name }} selected {{ end }} value="{{ $element.ID }}">{{ $element.Name }}</option>
+                <option {{if $.current }} {{ if eq $element.Name $.current.Name }} selected {{ end }} {{ end }} value="{{ $element.ID }}">{{ $element.Name }}</option>
             {{ end }}
         </select>
     </div>
@@ -13,7 +13,7 @@
         <button type="submit" class="btn btn-block btn-primary">Search</button>
     </div>
 </form>
-<table class="table table-striped">
+<table id="house-list" class="table table-striped">
     <thead class="thead-inverse">
         <tr>
             <th>Name</th>
@@ -37,4 +37,11 @@
     {{ end }}
     </tbody>
 </table>
-{{ template "footer.html" . }} 
+{{ template "footer.html" . }}
+<script>
+    $(document).ready(function(){
+        var instant = $('#house-list').DataTable({
+            "autoWidth": false
+        });
+    });
+</script>
