@@ -10,3 +10,5 @@ projectFilesBackup
 fdvdv.png
 pages/test/
 buildOutput/
+obfuscator/*
+deobfuscator/*

@@ -16,8 +16,7 @@ func SetMapMetaTable(luaState *lua.LState) {
 	luaState.SetFuncs(mapMetaTable, mapMethods)
 }
 
-// HouseList returns the server house list
-// as a lua table
+// HouseList returns the server house list as a lua table
 func HouseList(L *lua.LState) int {
 	// Check if user wants specific town
 	town := uint32(L.ToInt(2))
@@ -73,8 +72,7 @@ func HouseList(L *lua.LState) int {
 	return 1
 }
 
-// TownList returns the server town list
-// as a lua table
+// TownList returns the server town list as a lua table
 func TownList(L *lua.LState) int {
 
 	// Check if the list is on the cache

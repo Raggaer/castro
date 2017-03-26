@@ -26,9 +26,17 @@ const (
 	znoteTableName = "znote"
 )
 
+// znoteTable main znote installation table to look for
 type znoteTable struct {
 	Version   int
 	Installed int64
+}
+
+// znoteAccount main znote accounts table
+type znoteAccount struct {
+	ID uint64
+	Account_id uint64
+	Points uint
 }
 
 // isInstalled check if application is installed
@@ -136,6 +144,33 @@ func installApplication() error {
 	}
 
 	fmt.Println("Missing tables created")
+
+	// Check if znote is installed
+	z, err := isZnoteInstalled(db)
+
+	if err != nil {
+		return err
+	}
+
+	if z {
+
+		// Znote accounts placeholder
+		znoteAccounts := []znoteAccount{}
+
+		// Get znote accounts
+		if err := db.Select(&znoteAccounts, "SELECT id, account_id, points FROM znote_accounts ORDER BY id"); err != nil {
+			return err
+		}
+
+		// Loop znote accounts
+		for _, acc := range znoteAccounts {
+
+			// Insert castro account from znote account
+			if _, err := db.Exec("INSERT INTO castro_accounts (account_id, points) VALUES (?, ?)", acc.Account_id, acc.Points); err != nil {
+				return err
+			}
+		}
+	}
 
 	// Create configuration file
 	return createConfigFile(configFileName, location)
