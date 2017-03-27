@@ -34,9 +34,9 @@ type znoteTable struct {
 
 // znoteAccount main znote accounts table
 type znoteAccount struct {
-	ID uint64
+	ID         uint64
 	Account_id uint64
-	Points uint
+	Points     uint
 }
 
 // isInstalled check if application is installed

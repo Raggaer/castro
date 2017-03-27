@@ -3,6 +3,7 @@ package lua
 import (
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -175,4 +176,40 @@ func ServeFile(L *glua.LState) int {
 	http.ServeFile(w, req, path.String())
 
 	return 0
+}
+
+// GetRequest performs a HTTP GET request
+func GetRequest(L *glua.LState) int {
+	// Get url
+	url := L.Get(2)
+
+	// Check valid url
+	if url.Type() != glua.LTString {
+		L.ArgError(1, "Invalid url type. Expected string")
+		return 0
+	}
+
+	// Make get request
+	resp, err := http.Get(url.String())
+
+	if err != nil {
+		L.RaiseError("Cannot perform get request: %v", err)
+		return 0
+	}
+
+	// Close response body
+	defer resp.Body.Close()
+
+	// Read from response
+	buff, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		L.RaiseError("Cannot read response body: %v", err)
+		return 0
+	}
+
+	// P
+	L.Push(glua.LString(string(buff)))
+
+	return 1
 }
