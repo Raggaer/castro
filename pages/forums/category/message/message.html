@@ -1,0 +1,42 @@
+{{ template "header.html" }}
+<h3>
+    Thread: {{ .info.title }}
+    {{ if .logged }}
+    <div class="pull-right">
+        <a role="button" href="{{ url "subtopic" "forums" "category" "message" "new" }}?id={{ .info.id }}" class="btn btn-primary">New Message</a>
+    </div>
+    {{ end }}
+</h3>
+<hr>
+{{ if not .list }}
+<p>No messages</p>
+{{ else }}
+<div class="container-forum">
+    {{ range $index, $element := .list }}
+    <div id="message-box" class="row">
+        <div class="col-md-3" id="message-info">
+            <p>Name: <a class="light" href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a></p>
+            <p>Level: {{ $element.level }}</p>
+            <p>Vocation: {{ $element.voc.Name }}</p>
+        </div>
+        <div class="col-md-9">
+            {{ nl2br $element.msg }}
+        </div>
+    </div>
+    {{ end }}
+</div>
+<center>
+    <ul class="pagination pagination-sm">
+        {{ if .paginator.prev }}
+        <li><a href="{{ url "subtopic" "forums" "category" "message" }}?id={{ .info.id }}&page={{ .paginator.firstpage.num }}">First</a></li>
+        <li><a href="{{ url "subtopic" "forums" "category" "message" }}?id={{ .info.id }}&page={{ .paginator.prevnumber }}">&lt;</a></li>
+        {{ end }}
+        </li>
+        {{ if .paginator.last }}
+        <li><a href="{{ url "subtopic" "forums" "category" "message" }}?id={{ .info.id }}&page={{ .paginator.lastnumber }}">&gt;</a></li>
+        <li><a href="{{ url "subtopic" "forums" "category" "message" }}?id={{ .info.id }}&page={{ .paginator.lastpage.num }}">Last</a></li>
+        {{ end }}
+    </ul>
+</center>
+{{ end }}
+{{ template "footer.html" . }}

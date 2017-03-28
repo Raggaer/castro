@@ -1,0 +1,42 @@
+{{ template "header.html" }}
+<h3>
+    Forum: {{ .info.title }}
+    {{ if .logged }}
+    <div class="pull-right">
+        <button type="button" class="btn btn-primary">New Post</button>
+    </div>
+    {{ end }}
+</h3>
+<hr>
+<p>{{ .info.description }}</p>
+<hr>
+{{ if not .list }}
+<p>No category posts</p>
+{{ else }}
+<table id="list" class="table table-striped">
+    <thead class="thead-inverse">
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>At</th>
+    </tr>
+    </thead>
+    <tbody>
+        {{ range $index, $element := .list }}
+        <tr>
+            <td><a href="{{ url "subtopic" "forums" "category" "message" }}?id={{ $element.id }}">{{ $element.title }}</a></td>
+            <td><a class="light" href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a></td>
+            <td>{{ $element.created.Result }}</td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+{{ end }}
+{{ template "footer.html" . }}
+<script>
+    $(document).ready(function(){
+        var instant = $('#list').DataTable({
+            "autoWidth": false
+        });
+    });
+</script>

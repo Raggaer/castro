@@ -52,9 +52,23 @@
     color: white;
 }
 
+#message-info {
+    background-color: #34383B;
+    color: #D2D3CE;
+    padding: 10px;
+}
+
+.container-forum {
+    padding: 15px;
+}
+
 .progress {
     margin-bottom: 1px;
     padding: 0px !important;
+}
+
+#message-box + #message-box {
+    margin-top: 10px;
 }
 
 .progress-bar {
