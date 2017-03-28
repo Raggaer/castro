@@ -1,8 +1,16 @@
 {{ template "header.html" }}
 <h3>
-    New message for: {{ .info.title }}
+    Forum: {{ .info.title }}
 </h3>
 <hr>
+{{ if .preview }}
+<div class="news-box">
+    <p>
+        {{ nl2br .preview }}
+    </p>
+</div>
+<hr>
+{{ end }}
 {{ if .validationError }}
 <div class="alert alert-danger" role="alert">
     <strong>Error!</strong> {{ .validationError }}
@@ -13,15 +21,11 @@
     <strong>Success!</strong> {{ .success }}
 </div>
 {{ end }}
-{{ if .preview }}
-<div class="news-box">
-    <p>
-        {{ nl2br .preview }}
-    </p>
+<form action="{{ url "subtopic" "forums" "category" "new" }}?id={{ .info.id }}" method="post">
+<div class="form-group">
+    <label>Message title</label>
+    <input  class="form-control" type="text" name="title" value="{{ .msg.title }}" placeholder="Message title">
 </div>
-<hr>
-{{ end }}
-<form action="{{ url "subtopic" "forums" "category" "message" "new" }}?id={{ .info.id }}" method="post">
 <div class="form-group">
     <label>Message author</label>
     <select name="char" class="form-control">
@@ -50,11 +54,11 @@
             <button type="button" id="youtube" class="btn btn-default" title="Insert YouTube video" data-toggle="modal" data-target=".youtube-modal"><span class="glyphicon glyphicon-film" aria-hidden="true"></span></button>
         </div>
     </div>
-    <textarea id ="article-text" class="form-control" rows="8" name="text" placeholder="Message" spellcheck="true">{{ .msg }}</textarea>
+    <textarea id ="article-text" class="form-control" rows="8" name="text" placeholder="Message" spellcheck="true">{{ .msg.text }}</textarea>
 </div>
 <button type="submit" class="btn btn-primary" name="action" value="send">Send</button>
 <button type="submit" class="btn btn-info" name="action" value="preview">Preview</button>
-<a class="btn btn-warning" href="{{ url "subtopic" "forums" "category" "message" }}?id={{ .info.id }}">Cancel</a>
+<a class="btn btn-warning" href="{{ url "subtopic" "forums" "category" }}?forum={{ urlEncode .info.title }}">Cancel</a>
 </form>
 
 <div class="modal fade img-modal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel">

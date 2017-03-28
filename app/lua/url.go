@@ -19,16 +19,10 @@ func SetURLMetaTable(luaState *lua.LState) {
 // DecodeURL decodes the given string uri
 func DecodeURL(L *lua.LState) int {
 	// Get uri
-	uri := L.Get(2)
-
-	// Check for valid uri type
-	if uri.Type() != lua.LTString {
-		L.ArgError(1, "Invalid uri type. Expected string")
-		return 0
-	}
+	uri := L.ToString(2)
 
 	// Decode uri
-	decoded, err := url.QueryUnescape(uri.String())
+	decoded, err := url.QueryUnescape(uri)
 
 	if err != nil {
 		util.Logger.Errorf("Cannot decode uri: %v", err)

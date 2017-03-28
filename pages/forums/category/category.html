@@ -8,6 +8,16 @@
     {{ end }}
 </h3>
 <hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
 <p>{{ .info.description }}</p>
 <hr>
 {{ if not .list }}

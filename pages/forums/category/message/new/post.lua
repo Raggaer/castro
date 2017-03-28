@@ -45,6 +45,18 @@ function post()
         return
     end
 
+    if http.postValues.text:len() <= 4 then
+        session:setFlash("validationError", "Post message too short (4 characters or more)")
+        http:redirect("/subtopic/forums/category/message/new?id=" .. data.info.id)
+        return
+    end
+
+    if http.postValues.text:len() > 255 then
+        session:setFlash("validationError", "Post message too large (255 characters or less)")
+        http:redirect("/subtopic/forums/category/message/new?id=" .. data.info.id)
+        return
+    end
+
     local msgid = db:execute(
         "INSERT INTO castro_forum_message (post_id, message, author, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
         http.getValues.id,
