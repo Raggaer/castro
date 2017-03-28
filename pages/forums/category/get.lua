@@ -1,4 +1,9 @@
 function get()
+    if not app.Custom.Forum.Enabled then
+        http:redirect("/")
+        return
+    end
+
     local data = {}
 
     data.logged = session:isLogged()

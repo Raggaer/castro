@@ -1,6 +1,11 @@
 require "bbcode"
 
 function post()
+    if not app.Custom.Forum.Enabled then
+        http:redirect("/")
+        return
+    end
+
     if not session:isLogged() then
         http:redirect("/subtopic/forums")
         return

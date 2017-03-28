@@ -1,4 +1,9 @@
 function get()
+    if not app.Custom.Forum.Enabled then
+        http:redirect("/")
+        return
+    end
+
     local data = {}
 
     data.list = db:query("SELECT id, title, description FROM castro_forum_category ORDER BY id")

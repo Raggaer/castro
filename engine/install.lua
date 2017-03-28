@@ -12,6 +12,7 @@ custom.OnlineChart = {
 
 -- Forum options
 custom.Forum = {
+	Enabled = false,
 	SpamCooldown = 15,
 	MessagesPerThread = 10
 }

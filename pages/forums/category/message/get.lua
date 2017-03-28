@@ -2,6 +2,11 @@ require "bbcode"
 require "paginator"
 
 function get()
+    if not app.Custom.Forum.Enabled then
+        http:redirect("/")
+        return
+    end
+
     local page = 0
 
     if http.getValues.page ~= nil then
