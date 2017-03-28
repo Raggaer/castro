@@ -15,8 +15,10 @@ function get()
 
     local data = {}
     local messageCount = db:singleQuery("SELECT COUNT(*) as total FROM castro_forum_message WHERE post_id = ?", http.getValues.id)
-    local pg = paginator(page, 10, tonumber(messageCount.total))
+    local pg = paginator(page, tonumber(app.Custom.Forum.MessagesPerThread), tonumber(messageCount.total))
 
+    data["validationError"] = session:getFlash("validationError")
+    data["success"] = session:getFlash("success")
     data.paginator = pg
     data.logged = session:isLogged()
     data.info = db:singleQuery("SELECT id, title FROM castro_forum_post WHERE id = ?", http.getValues.id)
@@ -26,7 +28,7 @@ function get()
         return
     end
 
-    data.list = db:query("SELECT a.message as msg, b.level as level, b.vocation as voc, b.name as name, a.created_at as created FROM castro_forum_message a, players b WHERE a.author = b.id AND a.post_id = ? ORDER BY a.created_at LIMIT ?, ?",  http.getValues.id, pg.limit, pg.offset)
+    data.list = db:query("SELECT a.id as id, a.message as msg, b.level as level, b.vocation as voc, b.name as name, a.created_at as created FROM castro_forum_message a, players b WHERE a.author = b.id AND a.post_id = ? ORDER BY a.created_at LIMIT ?, ?",  http.getValues.id, pg.limit, pg.offset)
 
     if data.list ~= nil then
         for i, msg in pairs(data.list) do

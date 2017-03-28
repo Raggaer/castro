@@ -8,6 +8,16 @@
     {{ end }}
 </h3>
 <hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
 {{ if not .list }}
 <p>No messages</p>
 {{ else }}
@@ -19,7 +29,7 @@
             <p>Level: {{ $element.level }}</p>
             <p>Vocation: {{ $element.voc.Name }}</p>
         </div>
-        <div class="col-md-9">
+        <div id="message-{{ $element.id }}" class="col-md-9">
             {{ nl2br $element.msg }}
         </div>
     </div>

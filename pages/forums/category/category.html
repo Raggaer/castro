@@ -3,7 +3,7 @@
     Forum: {{ .info.title }}
     {{ if .logged }}
     <div class="pull-right">
-        <button type="button" class="btn btn-primary">New Post</button>
+        <a href="{{ url "subtopic" "forums" "category" "new" }}?id={{ .info.id }}" role="button" class="btn btn-primary">New Post</a>
     </div>
     {{ end }}
 </h3>

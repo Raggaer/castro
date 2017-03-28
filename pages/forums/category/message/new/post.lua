@@ -1,4 +1,5 @@
 require "bbcode"
+require "paginator"
 
 function post()
     if not session:isLogged() then
@@ -6,6 +7,7 @@ function post()
         return
     end
 
+    local account = session:loggedAccount()
     local data = {}
 
     data.info = db:singleQuery("SELECT id, title FROM castro_forum_post WHERE id = ?", http.getValues.id)
@@ -15,7 +17,16 @@ function post()
         return
     end
 
+    if session:get("forum_cd") ~= nil then
+        if session:get("forum_cd") > os.time() then
+            session:setFlash("validationError", "Please wait " .. session:get("forum_cd") - os.time() .. " seconds")
+            http:redirect("/subtopic/forums/category/message?id=" .. data.info.id)
+            return
+        end
+    end
+
     if http.postValues.action == "preview" then
+        data.characters = db:query("SELECT name, vocation, level FROM players WHERE account_id = ? ORDER BY id DESC", account.ID)
         data.msg = http.postValues.text
         data.preview = http.postValues.text:parseBBCode()
         http:render("newmessage.html", data)
@@ -27,14 +38,14 @@ function post()
         return
     end
 
-    local character = db:singleQuery("SELECT id FROM players WHERE name = ?", url:decode(http.postValues.char))
+    local character = db:singleQuery("SELECT id FROM players WHERE name = ? AND account_id = ?", url:decode(http.postValues.char), account.ID)
 
     if character == nil then
         http:redirect("/subtopic/forums")
         return
     end
 
-    db:execute(
+    local msgid = db:execute(
         "INSERT INTO castro_forum_message (post_id, message, author, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
         http.getValues.id,
         http.postValues.text,
@@ -43,5 +54,9 @@ function post()
         os.time()
     )
 
-    http:redirect("/subtopic/forums/category/message?id=" .. data.info.id)
+    local messageCount = db:singleQuery("SELECT COUNT(*) as total FROM castro_forum_message WHERE post_id = ?", http.getValues.id)
+
+    session:set("forum_cd", os.time() + app.Custom.Forum.SpamCooldown)
+    session:setFlash("success", "Message created")
+    http:redirect("/subtopic/forums/category/message?id=" .. data.info.id .. "&page=" ..  math.floor(messageCount.total / app.Custom.Forum.MessagesPerThread) .. "#message-" .. msgid)
 end

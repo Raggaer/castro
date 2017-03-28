@@ -2,7 +2,7 @@ function get()
     local data = {}
 
     data.logged = session:isLogged()
-    data.info = db:singleQuery("SELECT title, description FROM castro_forum_category WHERE title = ?", url:decode(http.getValues.forum))
+    data.info = db:singleQuery("SELECT id, title, description FROM castro_forum_category WHERE title = ?", url:decode(http.getValues.forum))
 
     if data.info == nil then
         http:redirect("/subtopic/forums")

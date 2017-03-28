@@ -274,7 +274,7 @@ func GetSessionData(L *lua.LState) int {
 		// Push element as table
 		L.Push(tble)
 	default:
-		L.RaiseError("Unexpected data format")
+		L.Push(lua.LNil)
 	}
 
 	return 1
