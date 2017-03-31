@@ -178,6 +178,35 @@ func ServeFile(L *glua.LState) int {
 	return 0
 }
 
+// SetHeaders sets the given http header to the response writer
+func SetHeader(L *glua.LState) int {
+	// Get header key
+	key := L.Get(2)
+
+	// Check valid key
+	if key.Type() != glua.LTString {
+		L.ArgError(1, "Invalid key type. Expected string")
+		return 0
+	}
+
+	// Get value
+	val := L.Get(3)
+
+	// Check valid value
+	if val.Type() != glua.LTString {
+		L.ArgError(2, "Invalid key type. Expected string")
+		return 0
+	}
+
+	// Get response writer
+	_, w := getRequestAndResponseWriter(L)
+
+	// Set header
+	w.Header().Set(key.String(), val.String())
+
+	return 0
+}
+
 // GetRequest performs a HTTP GET request
 func GetRequest(L *glua.LState) int {
 	// Get url
@@ -208,7 +237,7 @@ func GetRequest(L *glua.LState) int {
 		return 0
 	}
 
-	// P
+	// Push response
 	L.Push(glua.LString(string(buff)))
 
 	return 1
