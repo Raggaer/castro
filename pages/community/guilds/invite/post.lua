@@ -27,6 +27,12 @@ function post()
         return
     end
 
+    if db:singleQuery("SELECT 1 FROM guild_invites WHERE player_id = ? AND guild_id = ?", invite.id, guild.id) ~= nil then
+        session:setFlash("validationError", "Character already invited")
+        http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
+        return
+    end
+
     if not isGuildOwner(session:loggedAccount().ID, guild) then
         http:redirect("/")
         return
