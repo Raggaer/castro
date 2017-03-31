@@ -149,6 +149,10 @@ var (
 		"mod":    GetFileModTime,
 		"exists": CheckFileExists,
 	}
+	envMethods = map[string]glua.LGFunction{
+		"set": SetEnvVariable,
+		"get": GetEnvVariable,
+	}
 )
 
 // Get retrieves a lua state from the pool if no states are available we create one
@@ -172,6 +176,9 @@ func (p *luaStatePool) Get() *glua.LState {
 
 // GetApplicationState returns a page configured lua state
 func getApplicationState(luaState *glua.LState) {
+	// Create env metatable
+	SetEnvMetaTable(luaState)
+
 	// Create file metatable
 	SetFileMetaTable(luaState)
 

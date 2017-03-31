@@ -199,7 +199,7 @@ func ValueToGo(lv lua.LValue) interface{} {
 			return ret
 		}
 	default:
-		return v
+		return nil
 	}
 }
 

@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// EnvMetaTableName the name of the env metatable
+	EnvMetaTableName = "env"
+
 	// FileMetaTableName the name of the file metatable
 	FileMetaTableName = "file"
 
