@@ -1,0 +1,31 @@
+{{ template "header.html" }}
+<h3>Guild wars</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .list }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <td>Aggressor</td><td>Score</td><td>Defender</td><td>Started</td><td>Details</td>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range $index, $war := .list }}
+        <tr>
+            <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name1 }}">{{ $war.name1 }}</a></td>
+            <td>{{ $war.guild1_kills }} - {{ $war.guild2_kills }}</td>
+            <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name2 }}">{{ $war.name2 }}</a></td>
+            <td>{{unixToDate $war.started }}</td>
+            <td><a href="{{ url "subtopic" "community" "guilds" "wars" "view" }}?id={{ $war.id }}">View</a></td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+{{ else }}
+<p>There are no active wars.</p>
+{{ end }}
+{{ template "footer.html" . }}

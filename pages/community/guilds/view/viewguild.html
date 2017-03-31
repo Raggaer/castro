@@ -56,6 +56,26 @@
     </tr>
     </tbody>
 </table>
+{{ if .wars.Active }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th colspan="5">Current wars</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range $index, $war := .wars.Active }}
+        <tr>
+            <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name1 }}">{{ $war.name1 }}</a></td>
+            <td>{{ $war.guild1_kills }} - {{ $war.guild2_kills }}</td>
+            <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name2 }}">{{ $war.name2 }}</a></td>
+            <td>{{unixToDate $war.started }}</td>
+            <td><a href="{{ url "subtopic" "community" "guilds" "wars" "view" }}?id={{ $war.id }}">View</a></td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+{{ end }}
 <div id="guild-tabs">
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#members" aria-controls="members" role="tab" data-toggle="tab">Members</a></li>
@@ -64,6 +84,7 @@
         <li role="presentation"><a href="#motd" aria-controls="motd" role="tab" data-toggle="tab">Motd</a></li>
         <li role="presentation"><a href="#ranks" aria-controls="ranks" role="tab" data-toggle="tab">Ranks</a></li>
         <li role="presentation"><a href="#invite" aria-controls="invite" role="tab" data-toggle="tab">Invite</a></li>
+        <li role="presentation"><a href="#wars" aria-controls="wars" role="tab" data-toggle="tab">Wars</a></li>
         {{ end }}
     </ul>
     <div class="tab-content">
@@ -183,6 +204,114 @@
                     <button type="submit" class="btn btn-primary">Invite</button>
                 </div>
             </form>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="wars">
+            <form action="{{ url "subtopic" "community" "guilds" "wars" "invite" }}" method="POST">
+                <input type="hidden" name="guild1" value="{{ .guild.id }}">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" name="invite-guild" class="form-control" placeholder="Guild to invite">
+                        <span class="input-group-btn">
+                            <button type="submit" name="invite" value="0" class="btn btn-primary">Send invitation</button>
+                        </span>
+                    </div>
+                </div>
+                {{ if .wars.Pending }}
+                {{ $gid := .guild.id }}
+                <table class="table table-striped">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th colspan="2">Pending war invitations</th>
+                            <!--<th style="text-align: right;">Action</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $index, $war := .wars.Pending }}
+                        <tr>
+                            <td>
+                                {{ if eqNumber $war.guild1 $gid }}
+                                <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name2 }}">{{ $war.name2 }}</a>
+                                {{ else }}
+                                <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name1 }}">{{ $war.name1 }}</a>
+                                {{ end }}
+                            </td>
+                            <td style="text-align: right;">
+                                {{ if eqNumber $war.guild1 $gid }}
+                                <button type="submit" name="cancel" value="{{ $war.id }}" class="btn btn-xs btn-danger">Cancel</button>
+                                {{ else }}
+                                <button type="submit" name="accept" value="{{ $war.id }}" class="btn btn-xs btn-primary">Accept</button>
+                                <button type="submit" name="reject" value="{{ $war.id }}" class="btn btn-xs btn-danger">Reject</button>
+                                {{ end }}
+                            </td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+                {{ else }}
+                <p>There are no pending war invitations.</p>
+                {{ end }}
+            </form>
+            {{ if .wars.Ended }}
+            <table class="table table-striped">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th colspan="5">Ended wars</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range $index, $war := .wars.Ended }}
+                    <tr>
+                        <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name1 }}">{{ $war.name1 }}</a></td>
+                        <td>{{ $war.guild1_kills }} - {{ $war.guild2_kills }}</td>
+                        <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name2 }}">{{ $war.name2 }}</a></td>
+                        <td>{{unixToDate $war.started }}</td>
+                        <td><a href="{{ url "subtopic" "community" "guilds" "wars" "view" }}?id={{ $war.id }}">View</a></td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+            {{ end }}
+            {{ if .wars.Canceled }}
+            <table class="table table-striped">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th colspan="5">Canceled wars</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range $index, $war := .wars.Canceled }}
+                    <tr>
+                        <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name1 }}">{{ $war.name1 }}</a></td>
+                        <td>{{ $war.guild1_kills }} - {{ $war.guild2_kills }}</td>
+                        <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name2 }}">{{ $war.name2 }}</a></td>
+                        <td>{{unixToDate $war.started }}</td>
+                        <td><a href="{{ url "subtopic" "community" "guilds" "wars" "view" }}?id={{ $war.id }}">View</a></td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+            {{ end }}
+            {{ if .wars.Rejected }}
+            <table class="table table-striped">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th colspan="5">Rejected wars</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range $index, $war := .wars.Rejected }}
+                    <tr>
+                        <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name1 }}">{{ $war.name1 }}</a></td>
+                        <td>{{ $war.guild1_kills }} - {{ $war.guild2_kills }}</td>
+                        <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $war.name2 }}">{{ $war.name2 }}</a></td>
+                        <td>{{unixToDate $war.started }}</td>
+                        <td><a href="{{ url "subtopic" "community" "guilds" "wars" "view" }}?id={{ $war.id }}">View</a></td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+            {{ end }}
         </div>
         {{ end }}
     </div>

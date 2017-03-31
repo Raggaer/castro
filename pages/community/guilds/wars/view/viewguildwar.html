@@ -1,0 +1,36 @@
+{{ template "header.html" }}
+<h3>War: <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode .war.name1 }}">{{ .war.name1 }}</a> versus <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode .war.name2 }}">{{ .war.name2 }}</a> {{ .war.guild1_kills }} - {{ .war.guild2_kills }}</h3>
+<hr>
+{{ if .war }}
+    <p>Leaders: {{ .war.leader }}</p>
+    <p>Status: {{ .war.status_name }}</p>
+    {{ if .kills }}
+    <table id="guildwar_kills" class="table table-striped table-hover">
+        <thead class="thead-inverse">
+            <tr>
+                <td>Killer guild</td><td>Killer</td><td>Victim</td><td>Time</td>
+            </tr>
+        </thead>
+        <tbody>
+        {{ range $index, $kill := .kills }}
+        <tr>
+            <td><a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode $kill.killerguild }}">{{ $kill.killerguild }}</a></td>
+            <td><a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $kill.killer }}">{{ $kill.killer }}</a></td>
+            <td><a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $kill.target }}">{{ $kill.target }}</a></td>
+            <td>{{ unixToDate $kill.time }}</td>
+        </tr>
+        {{ end }}
+        </tbody>
+    </table>
+    {{ end }}
+{{ else }}
+<p>Something went wrong.</p>
+{{ end }}
+{{ template "footer.html" . }}
+<script>
+    $(document).ready(function(){
+        var kills = $('#guildwar_kills').DataTable({
+            "autoWidth": false
+        });
+    });
+</script>

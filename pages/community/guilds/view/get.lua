@@ -1,3 +1,5 @@
+require "guild"
+
 function get()
     local data = {}
 
@@ -29,6 +31,7 @@ function get()
     data.memberlist = db:query("SELECT a.name, a.level, c.name as rank FROM guild_membership b, players a, guild_ranks c WHERE c.id = b.rank_id AND b.player_id = a.id AND b.guild_id = ? ORDER BY c.level DESC", data.guild.id)
     data.success = session:getFlash("success")
     data.validationError = session:getFlash("validationError")
+    data.wars = getWarsByGuild(data.guild.id)
 
     if data.owner then
         data.ranks = db:query("SELECT name, level FROM guild_ranks WHERE guild_id = ? ORDER BY level DESC", data.guild.id)
