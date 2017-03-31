@@ -17,6 +17,7 @@ func getEventChannel(luaState *lua.LState) chan int {
 	return data.(*lua.LUserData).Value.(chan int)
 }
 
+// SetEventMetaTable sets the event metatable for the given state
 func SetEventMetaTable(luaState *lua.LState) {
 	// Create and set the event metatable
 	eventMetaTable := luaState.NewTypeMetatable(EventMetaTableName)
@@ -87,6 +88,12 @@ func executeEvent(file string, duration time.Duration) {
 
 	// Close state
 	defer state.Close()
+
+	// Create file metatable
+	SetFileMetaTable(state)
+
+	// Create env metatable
+	SetEnvMetaTable(state)
 
 	// Create event metatable
 	SetEventMetaTable(state)

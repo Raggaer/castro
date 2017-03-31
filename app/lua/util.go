@@ -191,13 +191,16 @@ func ValueToGo(lv lua.LValue) interface{} {
 				ret[keystr] = ValueToGo(value)
 			})
 			return ret
-		} else { // array
-			ret := make([]interface{}, 0, maxn)
-			for i := 1; i <= maxn; i++ {
-				ret = append(ret, ValueToGo(v.RawGetInt(i)))
-			}
-			return ret
 		}
+
+		ret := make([]interface{}, 0, maxn)
+
+		for i := 1; i <= maxn; i++ {
+			ret = append(ret, ValueToGo(v.RawGetInt(i)))
+		}
+
+		return ret
+
 	default:
 		return nil
 	}

@@ -27,7 +27,7 @@ Castro will then get everything it needs from your server folder. Reading your *
 
 # Compiling
 
-Check out our wiki to see how to compile Castro. You can however get the latest commit build at [appveyor](https://ci.appveyor.com/project/Raggaer/castro/build/artifacts) for Linux-amd64 and Windows-amd64 only
+Check out our wiki to see how to compile Castro. You can however get the latest commit build at [appveyor](https://ci.appveyor.com/project/Raggaer/castro/build/artifacts)
 
 # License
 
