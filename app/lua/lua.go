@@ -43,6 +43,8 @@ var (
 		"get":       GetRequest,
 		"setHeader": SetHeader,
 		"postForm":  PostFormRequest,
+		"getHeader": GetHeader,
+		"getRemoteAddress": GetRemoteAddress,
 	}
 	validatorMethods = map[string]glua.LGFunction{
 		"validate":       Validate,

@@ -199,10 +199,10 @@ func SetHeader(L *glua.LState) int {
 	}
 
 	// Get response writer
-	_, w := getRequestAndResponseWriter(L)
+	req, _ := getRequestAndResponseWriter(L)
 
 	// Set header
-	w.Header().Set(key.String(), val.String())
+	req.Header.Set(key.String(), val.String())
 
 	return 0
 }
@@ -281,6 +281,37 @@ func PostFormRequest(L *glua.LState) int {
 
 	// Push response body
 	L.Push(glua.LString(string(buff)))
+
+	return 1
+}
+
+// GetHeader returns the given request header
+func GetHeader(L *glua.LState) int {
+	// Get header key
+	key := L.Get(2)
+
+	// Check valid key
+	if key.Type() != glua.LTString {
+		L.ArgError(1, "Invalid key type. Expected string")
+		return 0
+	}
+
+	// Get request
+	req, _ := getRequestAndResponseWriter(L)
+
+	// Get header
+	L.Push(glua.LString(req.Header.Get(key.String())))
+
+	return 1
+}
+
+// GetRemoteAddress returns the request remote address
+func GetRemoteAddress(L *glua.LState) int {
+	// Get request
+	req, _ := getRequestAndResponseWriter(L)
+
+	// Push remote address
+	L.Push(glua.LString(req.RemoteAddr))
 
 	return 1
 }
