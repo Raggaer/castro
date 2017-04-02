@@ -42,6 +42,7 @@ var (
 		"serveFile": ServeFile,
 		"get":       GetRequest,
 		"setHeader": SetHeader,
+		"postForm":  PostFormRequest,
 	}
 	validatorMethods = map[string]glua.LGFunction{
 		"validate":       Validate,

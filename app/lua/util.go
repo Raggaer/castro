@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/gopher-lua"
 	"net/url"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -169,6 +170,46 @@ func URLValuesToTable(m url.Values) *lua.LTable {
 		)
 	}
 	return &t
+}
+
+func TableToURLValues(t *lua.LTable) url.Values {
+	// Data holder
+	m := make(map[string][]string)
+
+	// Loop table
+	t.ForEach(func(key lua.LValue, lv lua.LValue) {
+
+		switch v := lv.(type) {
+		case *lua.LNilType:
+			m[key.String()] = []string{"0"}
+		case lua.LBool:
+			m[key.String()] = []string{strconv.FormatBool(bool(v))}
+		case lua.LString:
+			m[key.String()] = []string{string(v)}
+		case lua.LNumber:
+			m[key.String()] = []string{strconv.FormatFloat(float64(v), 'E', -1, 64)}
+		case *lua.LTable:
+			maxn := v.MaxN()
+			if maxn == 0 { // table
+
+				m[key.String()] = []string{}
+
+				v.ForEach(func(key, value lua.LValue) {
+
+					m[key.String()] = append(m[key.String()], value.String())
+				})
+			} else {
+
+				m[key.String()] = []string{}
+
+				for i := 1; i <= maxn; i++ {
+					m[key.String()] = append(m[key.String()], v.RawGetInt(i).String())
+				}
+			}
+		}
+	})
+
+	return m
 }
 
 // ValueToGo converts a lua value to a go type

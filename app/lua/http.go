@@ -242,3 +242,45 @@ func GetRequest(L *glua.LState) int {
 
 	return 1
 }
+
+// PostRequest performs a HTTP POST request
+func PostFormRequest(L *glua.LState) int {
+	// Get url
+	url := L.Get(2)
+
+	// Check valid url
+	if url.Type() != glua.LTString {
+		L.ArgError(1, "Invalid url type. Expected string")
+		return 0
+	}
+
+	// Get post data
+	data := L.ToTable(3)
+
+	// Get url values
+	values := TableToURLValues(data)
+
+	// Post form
+	resp, err := http.PostForm(url.String(), values)
+
+	if err != nil {
+		L.RaiseError("Cannot post form: %v", err)
+		return 0
+	}
+
+	// Close response body
+	defer resp.Body.Close()
+
+	// Read from response
+	buff, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		L.RaiseError("Cannot read response body: %v", err)
+		return 0
+	}
+
+	// Push response body
+	L.Push(glua.LString(string(buff)))
+
+	return 1
+}
