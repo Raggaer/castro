@@ -16,7 +16,7 @@ type CookieConfig struct {
 // PluginConfig struct used for the plugin listener
 type PluginConfig struct {
 	Enabled  bool
-	TestMode bool
+	Username string
 	Origin   string
 }
 
@@ -68,6 +68,7 @@ type PayPalConfig struct {
 
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
+	Version      string
 	Mode         string
 	Port         int
 	URL          string

@@ -1,10 +1,12 @@
 package lua
 
 import (
+	"bytes"
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 // SetHTTPMetaTable sets the http metatable on the given lua state
@@ -312,6 +314,108 @@ func GetRemoteAddress(L *glua.LState) int {
 
 	// Push remote address
 	L.Push(glua.LString(req.RemoteAddr))
+
+	return 1
+}
+
+// CreateRequestClient creates a HTTP client
+func CreateRequestClient(L *glua.LState) int {
+	// Get data table
+	data := L.ToTable(2)
+
+	// Get timeout duration
+	timeout := data.RawGetString("timeout")
+
+	// Timeout duration holder
+	timeoutDuration := time.Duration(0)
+
+	if timeout.Type() == glua.LTString {
+
+		// Parse duration
+		d, err := time.ParseDuration(timeout.String())
+
+		if err != nil {
+			L.RaiseError("Cannot format timeout duration: %v", err)
+			return 0
+		}
+
+		timeoutDuration = d
+	}
+
+	// Get request method
+	method := data.RawGetString("method")
+
+	if method.Type() != glua.LTString {
+		L.RaiseError("Invalid request method type. Expected string")
+		return 0
+	}
+
+	// Get request url
+	url := data.RawGetString("url")
+
+	if url.Type() != glua.LTString {
+		L.RaiseError("Invalid request url type. Expected string")
+		return 0
+	}
+
+	// Get request data
+	content := data.RawGetString("data")
+
+	// Create client
+	client := &http.Client{
+		Timeout: timeoutDuration,
+	}
+
+	// Create request
+	req, err := http.NewRequest(
+		method.String(),
+		url.String(),
+		bytes.NewBufferString(content.String()),
+	)
+
+	if err != nil {
+		L.RaiseError("Cannot create http request: %v", err)
+		return 0
+	}
+
+	// Get request headers
+	headerTable := data.RawGetString("headers")
+
+	if headerTable.Type() == glua.LTTable {
+
+		// Loop header table
+		headerTable.(*glua.LTable).ForEach(func(key glua.LValue, v glua.LValue) {
+
+			// Check valid header
+			if key.Type() == glua.LTString && v.Type() == glua.LTString {
+
+				// Set header
+				req.Header.Set(key.String(), v.String())
+			}
+		})
+	}
+
+	// Execute request
+	resp, err := client.Do(req)
+
+	if err != nil {
+		L.RaiseError("Cannot execute http request: %v", err)
+		return 0
+	}
+
+	// Close response body
+	defer resp.Body.Close()
+
+	// Read response
+	responseContent, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		L.RaiseError("Cannot read http response: %v", err)
+		return 0
+	}
+
+	// Push response as string
+	L.Push(glua.LString(string(responseContent)))
 
 	return 1
 }
