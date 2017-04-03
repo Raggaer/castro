@@ -143,8 +143,6 @@ func installApplication() error {
 		}
 	}
 
-	fmt.Println("Missing tables created")
-
 	// Check if znote is installed
 	z, err := isZnoteInstalled(db)
 

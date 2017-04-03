@@ -23,4 +23,5 @@ function get()
     end
 
     db:execute("UPDATE castro_accounts AS a, (SELECT id FROM accounts WHERE name = ?) AS b  SET a.points = a.points + ? WHERE a.account_id = b.id", custom, points)
+    db:execute("INSERT INTO castro_paygol_payments (transaction_id, custom, price, points, created_at) VALUES (?, ?, ?, ?, ?)", transaction_id, custom, price, points, os.time())
 end
