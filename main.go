@@ -10,7 +10,6 @@ import (
 	"github.com/didip/tollbooth/thirdparty/tollbooth_negroni"
 	"github.com/gorilla/securecookie"
 	"github.com/julienschmidt/httprouter"
-	"github.com/phyber/negroni-gzip/gzip"
 	"github.com/raggaer/castro/app"
 	"github.com/raggaer/castro/app/controllers"
 	"github.com/raggaer/castro/app/database"
@@ -92,7 +91,6 @@ Compiled at: %v
 		newSessionHandler(),
 		newMicrotimeHandler(),
 		newCsrfHandler(),
-		gzip.Gzip(gzip.DefaultCompression),
 		negroni.NewStatic(http.Dir("public/")),
 	)
 

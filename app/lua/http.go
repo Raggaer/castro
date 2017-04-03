@@ -5,6 +5,7 @@ import (
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"time"
 )
@@ -312,8 +313,16 @@ func GetRemoteAddress(L *glua.LState) int {
 	// Get request
 	req, _ := getRequestAndResponseWriter(L)
 
+	// Get and split address
+	host, _, err := net.SplitHostPort(req.RemoteAddr)
+
+	if err != nil {
+		L.RaiseError("Cannot split host and port: %v", err)
+		return 0
+	}
+
 	// Push remote address
-	L.Push(glua.LString(req.RemoteAddr))
+	L.Push(glua.LString(host))
 
 	return 1
 }
