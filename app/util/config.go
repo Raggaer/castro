@@ -13,7 +13,14 @@ type CookieConfig struct {
 	BlockKey string
 }
 
-// RateLimiterConfig struct used for the rate limiting configration options
+// PluginConfig struct used for the plugin listener
+type PluginConfig struct {
+	Enabled  bool
+	TestMode bool
+	Origin   string
+}
+
+// RateLimiterConfig struct used for the rate limiting configuration options
 type RateLimiterConfig struct {
 	Number int64
 	Time   time.Duration
@@ -61,19 +68,20 @@ type PayPalConfig struct {
 
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
-	Mode      string
-	Port      int
-	URL       string
-	Datapack  string
-	Mail      MailConfig
-	Captcha   CaptchaConfig
-	SSL       SSLConfig
-	PayPal    PayPalConfig
-	PayGol    PaygolConfig
-	Cookies   CookieConfig
-	Cache     CacheConfig
-	RateLimit RateLimiterConfig
-	Custom    map[string]interface{}
+	Mode         string
+	Port         int
+	URL          string
+	Datapack     string
+	PluginConfig PluginConfig
+	Mail         MailConfig
+	Captcha      CaptchaConfig
+	SSL          SSLConfig
+	PayPal       PayPalConfig
+	PayGol       PaygolConfig
+	Cookies      CookieConfig
+	Cache        CacheConfig
+	RateLimit    RateLimiterConfig
+	Custom       map[string]interface{}
 }
 
 // Config holds the main configuration file

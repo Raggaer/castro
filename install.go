@@ -258,9 +258,6 @@ func createConfigFile(name, location string) error {
 		Port:     8080,
 		URL:      "localhost",
 		Datapack: location,
-		Captcha: util.CaptchaConfig{
-			Enabled: false,
-		},
 		Cookies: util.CookieConfig{
 			Name:     fmt.Sprintf("castro-%v", uniuri.NewLen(5)),
 			MaxAge:   1000000,
@@ -271,16 +268,9 @@ func createConfigFile(name, location string) error {
 			Default: time.Minute * 5,
 			Purge:   time.Minute,
 		},
-		SSL: util.SSLConfig{
-			Enabled: false,
-		},
 		RateLimit: util.RateLimiterConfig{
 			Number: 100,
 			Time:   time.Minute,
-		},
-		PayPal: util.PayPalConfig{
-			Enabled:  false,
-			Currency: "EUR",
 		},
 		Custom: lua.TableToMap(tbl),
 	})

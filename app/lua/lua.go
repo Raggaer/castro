@@ -36,14 +36,14 @@ var (
 		"get": GetConfigLuaValue,
 	}
 	httpMethods = map[string]glua.LGFunction{
-		"redirect":  Redirect,
-		"render":    RenderTemplate,
-		"write":     WriteResponse,
-		"serveFile": ServeFile,
-		"get":       GetRequest,
-		"setHeader": SetHeader,
-		"postForm":  PostFormRequest,
-		"getHeader": GetHeader,
+		"redirect":         Redirect,
+		"render":           RenderTemplate,
+		"write":            WriteResponse,
+		"serveFile":        ServeFile,
+		"get":              GetRequest,
+		"setHeader":        SetHeader,
+		"postForm":         PostFormRequest,
+		"getHeader":        GetHeader,
 		"getRemoteAddress": GetRemoteAddress,
 	}
 	validatorMethods = map[string]glua.LGFunction{
