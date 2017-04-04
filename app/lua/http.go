@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"time"
+	"strings"
 )
 
 // SetHTTPMetaTable sets the http metatable on the given lua state
@@ -423,8 +424,21 @@ func CreateRequestClient(L *glua.LState) int {
 		return 0
 	}
 
+	// Header holder
+	headers := L.NewTable()
+
+	// Loop response header
+	for k, v := range resp.Header {
+
+		// Set header
+		headers.RawSetString(k, glua.LString(strings.Join(v, ", ")))
+	}
+
 	// Push response as string
 	L.Push(glua.LString(string(responseContent)))
 
-	return 1
+	// Push headers as table
+	L.Push(headers)
+
+	return 2
 }
