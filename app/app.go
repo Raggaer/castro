@@ -246,7 +246,7 @@ func loadHouses(wg *sync.WaitGroup) {
 
 func loadMap() {
 	// Parse OTBM file
-	m, err := otmap.Parse(filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"))
+	m, err := otmap.Parse(filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"), true)
 
 	if err != nil {
 		util.Logger.Fatalf("Cannot parse OTBM file: %v", err)

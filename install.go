@@ -16,6 +16,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"strings"
+	"github.com/raggaer/castro/app/models"
 )
 
 const (
@@ -165,6 +166,24 @@ func installApplication() error {
 
 			// Insert castro account from znote account
 			if _, err := db.Exec("INSERT INTO castro_accounts (account_id, points) VALUES (?, ?)", acc.Account_id, acc.Points); err != nil {
+				return err
+			}
+		}
+	} else {
+
+		// Normal accounts placeholder
+		accountList := []models.Account{}
+
+		// Get all accounts
+		if err := db.Select(&accountList, "SELECT id FROM accounts ORDER BY id"); err != nil {
+			return err
+		}
+
+		// Loop accounts
+		for _, acc := range accountList {
+
+			// Insert castro account from normal account
+			if _, err := db.Exec("INSERT INTO castro_accounts (account_id) VALUES (?)", acc.ID); err != nil {
 				return err
 			}
 		}
