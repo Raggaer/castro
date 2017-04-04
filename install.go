@@ -11,12 +11,12 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
+	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
-	"github.com/raggaer/castro/app/models"
 )
 
 const (
@@ -187,6 +187,14 @@ func installApplication() error {
 				return err
 			}
 		}
+	}
+
+	// Encode server map
+	if err := util.EncodeMap(
+		filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String() + ".otbm"),
+		filepath.Join("engine", lua.Config.GetGlobal("mapName").String() + ".castro"),
+	); err != nil {
+		return err
 	}
 
 	// Create configuration file

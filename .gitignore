@@ -12,3 +12,4 @@ pages/test/
 buildOutput/
 obfuscator/*
 deobfuscator/*
+engine/*.castro

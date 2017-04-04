@@ -6,7 +6,6 @@ import (
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
-	"github.com/raggaer/otmap"
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"log"
@@ -64,6 +63,33 @@ func Start() {
 
 	// Execute the init lua file
 	executeInitFile()
+}
+
+func loadMap() {
+	// Check if map is encoded
+	_, err := os.Stat(filepath.Join("engine", lua.Config.GetGlobal("mapName").String() + ".castro"))
+
+	// Map is not decoded
+	if err != nil {
+
+		// Decode map
+		if err := util.EncodeMap(
+			filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String() + ".otbm"),
+			filepath.Join("engine", lua.Config.GetGlobal("mapName").String() + ".castro"),
+		); err != nil {
+			util.Logger.Fatalf("Cannot encode server map: %v", err)
+		}
+	}
+
+	// Decode map
+	m, err := util.DecodeMap(filepath.Join("engine", lua.Config.GetGlobal("mapName").String() + ".castro"))
+
+	if err != nil {
+		util.Logger.Fatalf("Cannot decode server map: %v", err)
+	}
+
+	// Set global
+	util.OTBMap = m
 }
 
 func executeMigrations() {
@@ -242,17 +268,6 @@ func loadHouses(wg *sync.WaitGroup) {
 
 	// Tell the wait group we are done
 	wg.Done()
-}
-
-func loadMap() {
-	// Parse OTBM file
-	m, err := otmap.Parse(filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"), true)
-
-	if err != nil {
-		util.Logger.Fatalf("Cannot parse OTBM file: %v", err)
-	}
-
-	util.OTBMap = m
 }
 
 func loadAppConfig() {

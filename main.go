@@ -37,6 +37,7 @@ func main() {
 	// Register gob data
 	gob.Register(&models.CsrfToken{})
 	gob.Register(&lua.LTable{})
+	gob.Register(&util.CastroMap{})
 
 	// Show credits and application name
 	fmt.Printf(`
