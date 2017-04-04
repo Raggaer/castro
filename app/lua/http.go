@@ -423,8 +423,34 @@ func CreateRequestClient(L *glua.LState) int {
 		return 0
 	}
 
+	// Header holder
+	headers := L.NewTable()
+
+	// Loop response header
+	for k, v := range resp.Header {
+
+		if len(v) > 1 {
+
+			h := L.NewTable()
+
+			for _, header := range v {
+
+				h.Append(glua.LString(header))
+			}
+
+			headers.RawSetString(k, h)
+
+			continue
+		}
+
+		headers.RawSetString(k, glua.LString(v[0]))
+	}
+
 	// Push response as string
 	L.Push(glua.LString(string(responseContent)))
 
-	return 1
+	// Push headers as table
+	L.Push(headers)
+
+	return 2
 }
