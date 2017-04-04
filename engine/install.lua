@@ -10,11 +10,4 @@ custom.OnlineChart = {
 	Display = 8,
 }
 
--- Forum options
-custom.Forum = {
-	Enabled = false,
-	SpamCooldown = 15,
-	MessagesPerThread = 10
-}
-
 return custom

@@ -11,6 +11,7 @@ import (
 	"html/template"
 	"log"
 	"net/url"
+	"os"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -58,8 +59,56 @@ func Start() {
 	// Wait for the tasks
 	wait.Wait()
 
+	// Execute migrations
+	executeMigrations()
+
 	// Execute the init lua file
 	executeInitFile()
+}
+
+func executeMigrations() {
+	// Create migration state
+	state := glua.NewState()
+
+	// Set database metatable
+	lua.SetDatabaseMetaTable(state)
+
+	// Close state
+	defer state.Close()
+
+	// Walk migrations directory
+	if err := filepath.Walk("migrations", func(path string, info os.FileInfo, err error) error {
+
+		// Check if lua file
+		if !strings.HasSuffix(path, ".lua") {
+			return nil
+		}
+
+		// Do lua file
+		if err := state.DoFile(path); err != nil {
+			return err
+		}
+
+		// Call migration function
+		if err := state.CallByParam(
+			glua.P{
+				Fn:      state.GetGlobal("migration"),
+				NRet:    0,
+				Protect: !util.Config.IsDev(),
+			},
+		); err != nil {
+			return err
+		}
+
+		// Pop state
+		state.Pop(-1)
+
+		return nil
+
+	}); err != nil {
+
+		util.Logger.Fatalf("Cannot run migration files: %v", err)
+	}
 }
 
 func executeInitFile() {
@@ -68,6 +117,9 @@ func executeInitFile() {
 
 	// Close state
 	defer luaState.Close()
+
+	// Create http metatable
+	lua.SetHTTPMetaTable(luaState)
 
 	// Create env metatable
 	lua.SetEnvMetaTable(luaState)

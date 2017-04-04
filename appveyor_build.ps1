@@ -1,4 +1,4 @@
-If (Test-Path "buildOutput"){
+If (Test-Path "buildOutput") {
 	Remove-Item "buildOutput" -recurse
 }
 
@@ -41,6 +41,7 @@ Copy-Item install buildOutput\data\install -recurse
 Copy-Item public buildOutput\data\public -recurse
 Copy-Item views buildOutput\data\views -recurse
 Copy-Item engine buildOutput\data\engine -recurse
+Copy-Item migrations buildOutput\data\migrations -recurse
 
 New-Item -ItemType Directory -Force -Path "buildOutput\data\logs"
 

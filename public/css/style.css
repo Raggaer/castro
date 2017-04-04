@@ -67,8 +67,13 @@
     padding: 0px !important;
 }
 
+#message-box {
+    padding-top: 20px;
+}
+
 #message-box + #message-box {
     margin-top: 25px;
+    border-top: 1px solid #34383B;
 }
 
 .progress-bar {

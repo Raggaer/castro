@@ -88,8 +88,8 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Set session user data
 	lua.SetSessionMetaTableUserData(s, session)
 
+	// Call file function
 	if err := s.CallByParam(
-
 		glua.P{
 			Fn:      s.GetGlobal(strings.ToLower(r.Method)),
 			NRet:    0,

@@ -252,11 +252,12 @@ func createConfigFile(name, location string) error {
 
 	// Encode the given configuration struct into the file
 	return toml.NewEncoder(configFile).Encode(util.Configuration{
-		Version:  VERSION,
-		Mode:     "dev",
-		Port:     8080,
-		URL:      "localhost",
-		Datapack: location,
+		Version:      VERSION,
+		CheckUpdates: true,
+		Mode:         "dev",
+		Port:         8080,
+		URL:          "localhost",
+		Datapack:     location,
 		Cookies: util.CookieConfig{
 			Name:     fmt.Sprintf("castro-%v", uniuri.NewLen(5)),
 			MaxAge:   1000000,

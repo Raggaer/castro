@@ -69,6 +69,7 @@ type PayPalConfig struct {
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
 	Version      string
+	CheckUpdates bool
 	Mode         string
 	Port         int
 	URL          string
