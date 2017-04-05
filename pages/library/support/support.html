@@ -11,7 +11,7 @@
             {{ range $player := $element }}
             <tr>
                 <th>
-                    {{ $player.name }}
+                    <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $player.name }}">{{ $player.name }}</a>
                 </th>
                 <td>{{ $player.lastlogin.Result }}</td>
             </tr>
