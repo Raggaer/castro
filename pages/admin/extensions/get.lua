@@ -5,5 +5,14 @@ function get()
         return
     end
 
-    http:render("extensions.html", nil)
+    if not app.Plugin.Enabled then
+        http:redirect("/")
+        return
+    end
+
+    local data = {}
+
+    data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/test"))
+
+    http:render("extensions.html", data)
 end

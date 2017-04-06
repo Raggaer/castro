@@ -283,6 +283,9 @@ func SetConfigGlobal(L *glua.LState) {
 	// Create table
 	tbl := L.NewTable()
 
+	// Set Plugin value
+	L.SetField(tbl, "Plugin", StructToTable(&util.Config.Plugin))
+
 	// Set main value
 	L.SetField(tbl, "Main", StructToTable(util.Config))
 

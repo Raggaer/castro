@@ -74,7 +74,7 @@ type Configuration struct {
 	Port         int
 	URL          string
 	Datapack     string
-	PluginConfig PluginConfig
+	Plugin       PluginConfig
 	Mail         MailConfig
 	Captcha      CaptchaConfig
 	SSL          SSLConfig

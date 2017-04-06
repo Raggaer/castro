@@ -1,5 +1,36 @@
 {{ template "header.html" }}
 <h3>Extensions</h3>
 <hr>
-aaaaaa
+{{ if .list.message }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .list.message }}
+</div>
+{{ else }}
+<table class="table table-striped table-hover">
+    <thead class="thead-inverse">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Uploaded at</th>
+            <th>Last Update</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range $index, $element := .list.object }}
+            <tr>
+                <td>{{ $element.Name }}</td>
+                <td>
+                    {{ if $element.Paid }}
+                    <b>Paid</b>
+                    {{ else }}
+                    <b>Free</b>
+                    {{ end }}
+                </td>
+                <td>{{ $element.CreatedAt }}</td>
+                <td>{{ $element.UpdatedAt }}</td>
+            </tr>
+        {{ end }}
+    </tbody>
+</table>
+{{ end }}
 {{ template "footer.html" . }}
