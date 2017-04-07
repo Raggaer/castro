@@ -17,6 +17,7 @@ type CookieConfig struct {
 type PluginConfig struct {
 	Enabled  bool
 	Username string
+	Password string
 	Origin   string
 }
 

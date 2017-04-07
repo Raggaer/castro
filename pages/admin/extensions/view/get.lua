@@ -18,12 +18,15 @@ function get()
     data.info = json:unmarshal(http:get(app.Plugin.Origin .. "/plugin/view/" .. http.getValues.id))
 
     if data.info.Error then
-        http:redirect("/subtopic/extensions/list")
+        session:setFlash("Error", data.info.Message)
+        http:redirect("/subtopic/admin/extensions")
         return
     end
 
+    data.error = session:getFlash("Error")
     data.info.Description = data.info.Description:parseBBCode()
     data.info.Type = pluginTypeToString(data.info.Type)
+    data.origin = app.Plugin.Origin
 
     http:render("viewextension.html", data)
 end

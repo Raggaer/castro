@@ -12,6 +12,7 @@ function get()
 
     local data = {}
 
+    data.error = session:getFlash("Error")
     data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/plugin/list"))
 
     http:render("extensions.html", data)

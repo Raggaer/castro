@@ -1,6 +1,11 @@
 {{ template "header.html" }}
 <h3>Extension: {{ .info.Name }}</h3>
 <hr>
+{{ if .error }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .error }}
+</div>
+{{ end }}
 <table class="table table-striped table-hover">
     <thead class="thead-inverse">
         <tr>
@@ -47,7 +52,9 @@
 {{ if .info.Paid }}
 <a role="button" href="#" class="btn btn-info">Purchase</a>
 {{ else }}
-<a role="button" href="#" class="btn btn-success">Download</a>
+<a role="button" href="{{ url "subtopic" "admin" "extensions" "download" }}?id={{ .info.ID }}" class="btn btn-success">
+    <i class="fa fa-cloud-download" aria-hidden="true"></i> Download
+</a>
 {{ end }}
 <a role="button" href="{{ url "subtopic" "admin" "extensions" }}" class="btn btn-danger">Back</a>
 {{ template "footer.html" . }}

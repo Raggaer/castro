@@ -202,10 +202,10 @@ func SetHeader(L *glua.LState) int {
 	}
 
 	// Get response writer
-	req, _ := getRequestAndResponseWriter(L)
+	_, w := getRequestAndResponseWriter(L)
 
 	// Set header
-	req.Header.Set(key.String(), val.String())
+	w.Header().Set(key.String(), val.String())
 
 	return 0
 }
@@ -300,10 +300,10 @@ func GetHeader(L *glua.LState) int {
 	}
 
 	// Get request
-	req, _ := getRequestAndResponseWriter(L)
+	_, w := getRequestAndResponseWriter(L)
 
 	// Get header
-	L.Push(glua.LString(req.Header.Get(key.String())))
+	L.Push(glua.LString(w.Header().Get(key.String())))
 
 	return 1
 }
@@ -404,6 +404,18 @@ func CreateRequestClient(L *glua.LState) int {
 		})
 	}
 
+	// Get request authentication
+	authTable := data.RawGetString("authentication")
+
+	if authTable.Type() == glua.LTTable {
+
+		// Set request authentication
+		req.SetBasicAuth(
+			authTable.(*glua.LTable).RawGetString("username").String(),
+			authTable.(*glua.LTable).RawGetString("password").String(),
+		)
+	}
+
 	// Execute request
 	resp, err := client.Do(req)
 
@@ -452,5 +464,8 @@ func CreateRequestClient(L *glua.LState) int {
 	// Push headers as table
 	L.Push(headers)
 
-	return 2
+	// Push status code
+	L.Push(glua.LNumber(resp.StatusCode))
+
+	return 3
 }

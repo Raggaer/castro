@@ -1,6 +1,11 @@
 {{ template "header.html" }}
 <h3>Extensions</h3>
 <hr>
+{{ if .error }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .error }}
+</div>
+{{ end }}
 {{ if .list.error }}
 <div class="alert alert-danger" role="alert">
     <strong>Error!</strong> {{ .list.message }}
