@@ -1,7 +1,7 @@
 {{ template "header.html" }}
 <h3>Extensions</h3>
 <hr>
-{{ if .list.message }}
+{{ if .list.error }}
 <div class="alert alert-danger" role="alert">
     <strong>Error!</strong> {{ .list.message }}
 </div>
@@ -13,6 +13,7 @@
             <th>Type</th>
             <th>Uploaded at</th>
             <th>Last Update</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +29,9 @@
                 </td>
                 <td>{{ $element.CreatedAt }}</td>
                 <td>{{ $element.UpdatedAt }}</td>
+                <td>
+                    <a href="{{ url "subtopic" "admin" "extensions" "view" }}?id={{ $element.ID }}" role="button" class="btn btn-info btn-xs">View</a>
+                </td>
             </tr>
         {{ end }}
     </tbody>

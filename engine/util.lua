@@ -15,3 +15,14 @@ function runningURL()
 
     return string.format("%s://%s:%s", mode, app.URL, app.Port)
 end
+
+-- Return plugin type string
+function pluginTypeToString(plugin)
+    if plugin == 1 then
+        return "Page"
+    elseif plugin == 2 then
+        return "Widget"
+    elseif plugin == 3 then
+        return "Engine"
+    end
+end

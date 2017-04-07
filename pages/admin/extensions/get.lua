@@ -12,7 +12,7 @@ function get()
 
     local data = {}
 
-    data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/test"))
+    data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/plugin/list"))
 
     http:render("extensions.html", data)
 end

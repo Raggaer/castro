@@ -1,0 +1,53 @@
+{{ template "header.html" }}
+<h3>Extension: {{ .info.Name }}</h3>
+<hr>
+<table class="table table-striped table-hover">
+    <thead class="thead-inverse">
+        <tr>
+            <th colspan="2">Plugin information</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <td>{{ .info.Name }}</td>
+        </tr>
+        <tr>
+            <th>Author</th>
+            <td>
+                <a href="#">{{ .info.AuthorName }}</a>
+            </td>
+        </tr>
+        <tr>
+            <th>Type</th>
+            <td>
+                <b>
+                {{ if .info.Paid }}
+                Paid
+                {{ else }}
+                Free
+                {{ end }}
+                -
+                {{ .info.Type }} script
+                </b>
+            </td>
+        </tr>
+        <tr>
+            <th>Upload date</th>
+            <td>{{ .info.CreatedAt }}</td>
+        </tr>
+        <tr>
+            <th>Last update</th>
+            <td>{{ .info.UpdatedAt }}</td>
+        </tr>
+    </tbody>
+</table>
+<p>{{ nl2br .info.Description }}</p>
+<hr>
+{{ if .info.Paid }}
+<a role="button" href="#" class="btn btn-info">Purchase</a>
+{{ else }}
+<a role="button" href="#" class="btn btn-success">Download</a>
+{{ end }}
+<a role="button" href="{{ url "subtopic" "admin" "extensions" }}" class="btn btn-danger">Back</a>
+{{ template "footer.html" . }}
