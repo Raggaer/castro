@@ -123,3 +123,37 @@ func ParseDurationString(L *lua.LState) int {
 
 	return 1
 }
+
+// ParseDate parses the given date string with the given layout
+func ParseDate(L *lua.LState) int {
+	// Get date string
+	date := L.Get(2)
+
+	// Check valid duration
+	if date.Type() != lua.LTString {
+		L.ArgError(1, "Invalid time date string. Expected string")
+		return 0
+	}
+
+	// Get date layout
+	layout := L.Get(3)
+
+	// Check valid layout
+	if layout.Type() != lua.LTString {
+		L.ArgError(2, "Invalid time date layout. Expected string")
+		return 0
+	}
+
+	// Parse date string
+	s, err := time.Parse(layout.String(), date.String())
+
+	if err != nil {
+		L.RaiseError("Cannot parse date: %v", err)
+		return 0
+	}
+
+	// Push timestamp
+	L.Push(lua.LNumber(s.Unix()))
+
+	return 1
+}

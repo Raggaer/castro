@@ -6,6 +6,11 @@
     <strong>Error!</strong> {{ .error }}
 </div>
 {{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
 <table class="table table-striped table-hover">
     <thead class="thead-inverse">
         <tr>
@@ -55,6 +60,14 @@
 <a role="button" href="{{ url "subtopic" "admin" "extensions" "download" }}?id={{ .info.ID }}" class="btn btn-success">
     <i class="fa fa-cloud-download" aria-hidden="true"></i> Download
 </a>
+{{ end }}
+{{ if not .subscribed }}
+<form style="display: inline;" action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" method="post">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <button type="submit" href="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" class="btn btn-info">
+        <i class="fa fa-star" aria-hidden="true"></i> Subscribe
+    </button>
+</form>
 {{ end }}
 <a role="button" href="{{ url "subtopic" "admin" "extensions" }}" class="btn btn-danger">Back</a>
 {{ template "footer.html" . }}

@@ -23,10 +23,12 @@ function get()
         return
     end
 
+    data.success = session:getFlash("Success")
     data.error = session:getFlash("Error")
     data.info.Description = data.info.Description:parseBBCode()
     data.info.Type = pluginTypeToString(data.info.Type)
     data.origin = app.Plugin.Origin
+    data.subscribed = db:singleQuery("SELECT 1 FROM castro_extension_subscribe WHERE plugin_id = ?", data.info.ID) ~= nil
 
     http:render("viewextension.html", data)
 end
