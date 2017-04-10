@@ -54,27 +54,35 @@
 </table>
 <p>{{ nl2br .info.Description }}</p>
 <hr>
-{{ if .info.Paid }}
-<a role="button" href="#" class="btn btn-info">Purchase</a>
-{{ else }}
-<a role="button" href="{{ url "subtopic" "admin" "extensions" "download" }}?id={{ .info.ID }}" class="btn btn-success">
-    <i class="fa fa-cloud-download" aria-hidden="true"></i> Download
-</a>
-{{ end }}
-{{ if not .subscribed }}
-<form style="display: inline;" action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" method="post">
-    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
-    <button type="submit" class="btn btn-info">
-        <i class="fa fa-star" aria-hidden="true"></i> Subscribe
-    </button>
-</form>
-{{ else }}
-<form style="display: inline;" action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" method="post">
-<input type="hidden" name="_csrf" value="{{ .csrfToken }}">
-<button type="submit" class="btn btn-danger">
-<i class="fa fa-star" aria-hidden="true"></i> Unsubscribe
-</button>
-</form>
-{{ end }}
-<a role="button" href="{{ url "subtopic" "admin" "extensions" }}" class="btn btn-danger">Back</a>
+<div class="row">
+    <div class="col-md-2">
+        {{ if .info.Paid }}
+        <a role="button" href="#" class="btn btn-info">Purchase</a>
+        {{ else }}
+        <a role="button" href="{{ url "subtopic" "admin" "extensions" "download" }}?id={{ .info.ID }}" class="btn btn-success">
+            <i class="fa fa-cloud-download" aria-hidden="true"></i> Download
+        </a>
+        {{ end }}
+    </div>
+    <div class="col-md-2">
+    {{ if not .subscribed }}
+        <form style="display: inline;" action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" method="post">
+            <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+            <button type="submit" class="btn btn-info">
+                <i class="fa fa-star" aria-hidden="true"></i> Subscribe
+            </button>
+        </form>
+    {{ else }}
+        <form action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" method="post">
+            <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+            <button type="submit" class="btn btn-default">
+                <i class="fa fa-star" aria-hidden="true"></i> Unsubscribe
+            </button>
+        </form>
+    {{ end }}
+    </div>
+    <div class="col-md-2 pull-right">
+        <a role="button" href="{{ url "subtopic" "admin" "extensions" }}" class="btn btn-danger">Back</a>
+    </div>
+</div>
 {{ template "footer.html" . }}
