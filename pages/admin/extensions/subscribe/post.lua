@@ -19,14 +19,15 @@ function post()
     end
 
     if db:singleQuery("SELECT 1 FROM castro_extension_subscribe WHERE plugin_id = ?", info.ID) ~= nil then
-        session:setFlash("Error", "Already subscribed")
+        db:execute("DELETE FROM castro_extension_subscribe WHERE plugin_id = ?", info.ID)
+        session:setFlash("Success", "Unsubscribed from " .. info.Name)
         http:redirect("/subtopic/admin/extensions/view?id=" .. info.ID)
         return
     end
 
     local last = time:parseDate(info.UpdatedAt, "2006-01-02T15:04:05Z")
 
-    db:execute("INSERT INTO castro_extension_subscribe (plugin_id, updated_at) VALUES (?, ?)", info.ID, last)
+    db:execute("INSERT INTO castro_extension_subscribe (plugin_id, name, updated_at) VALUES (?, ?, ?)", info.ID, info.Name, last)
     session:setFlash("Success", "Subscribed to " .. info.Name)
     http:redirect("/subtopic/admin/extensions/view?id=" .. info.ID)
 end

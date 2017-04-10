@@ -64,9 +64,16 @@
 {{ if not .subscribed }}
 <form style="display: inline;" action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" method="post">
     <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
-    <button type="submit" href="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" class="btn btn-info">
+    <button type="submit" class="btn btn-info">
         <i class="fa fa-star" aria-hidden="true"></i> Subscribe
     </button>
+</form>
+{{ else }}
+<form style="display: inline;" action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" method="post">
+<input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+<button type="submit" class="btn btn-danger">
+<i class="fa fa-star" aria-hidden="true"></i> Unsubscribe
+</button>
 </form>
 {{ end }}
 <a role="button" href="{{ url "subtopic" "admin" "extensions" }}" class="btn btn-danger">Back</a>
