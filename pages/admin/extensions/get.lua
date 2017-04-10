@@ -26,7 +26,13 @@ function get()
     local data = {}
 
     data.error = session:getFlash("Error")
-    data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/plugin/list?page=" .. page))
+
+    if http.getValues.name == nil then
+        data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/plugin/list?page=" .. page))
+    else
+        data.author = http.getValues.name
+        data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/plugin/list?author=" .. http.getValues.name .. "&page=" .. page))
+    end
 
     if not data.list.Error then
         data.paginator = paginator(page, tonumber(data.list.PerPage), tonumber(data.list.Total))

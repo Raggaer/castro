@@ -25,7 +25,7 @@
         <tr>
             <th>Author</th>
             <td>
-                <a href="#">{{ .info.AuthorName }}</a>
+                <a href="{{ url "subtopic" "admin" "extensions" }}?name={{ urlEncode .info.AuthorName }}">{{ .info.AuthorName }}</a>
             </td>
         </tr>
         <tr>
