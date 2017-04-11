@@ -181,7 +181,7 @@ func ServeFile(L *glua.LState) int {
 	return 0
 }
 
-// SetHeaders sets the given http header to the response writer
+// SetHeader sets the given http header to the response writer
 func SetHeader(L *glua.LState) int {
 	// Get header key
 	key := L.Get(2)
@@ -246,7 +246,7 @@ func GetRequest(L *glua.LState) int {
 	return 1
 }
 
-// PostRequest performs a HTTP POST request
+// PostFormRequest performs a HTTP POST request
 func PostFormRequest(L *glua.LState) int {
 	// Get url
 	url := L.Get(2)

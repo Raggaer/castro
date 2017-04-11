@@ -155,7 +155,7 @@ func TableToMap(table *lua.LTable) map[string]interface{} {
 	return m
 }
 
-// URLValuesToTable converts a map[string][]string to a LUA table
+// URLValuesToTable converts a map[string][]string to a lua table
 func URLValuesToTable(m url.Values) *lua.LTable {
 	// Data holder
 	t := lua.LTable{}
@@ -172,6 +172,7 @@ func URLValuesToTable(m url.Values) *lua.LTable {
 	return &t
 }
 
+// TableToURLValues converts a lua table to a map[string][]string
 func TableToURLValues(t *lua.LTable) url.Values {
 	// Data holder
 	m := make(map[string][]string)
