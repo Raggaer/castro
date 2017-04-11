@@ -1,0 +1,220 @@
+{{ template "header.html" }}
+<h3>Banishments</h3>
+<hr>
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .admin }}
+<div id="ban-tabs">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#actions" aria-controls="actions" role="tab" data-toggle="tab">Actions</a></li>
+        <li role="presentation"><a href="#namelocks" aria-controls="namelocks" role="tab" data-toggle="tab">Namelocks</a></li>
+        <li role="presentation"><a href="#bans" aria-controls="bans" role="tab" data-toggle="tab">Active bans</a></li>
+        <li role="presentation"><a href="#ban-history" aria-controls="ban-history" role="tab" data-toggle="tab">Ban history</a></li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="actions">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Quick banishment</h4>
+                    <form action="{{ url "subtopic" "admin" "bans" }}" method="POST">
+                        <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                        <input type="hidden" name="banned_by" value="{{ .admin }}">
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label for="player_name">Player name</label>
+                            <input class="form-control" type ="text" name="player_name" />
+                        </div>
+                        <div class="form-group col-xs-12 col-md-6">
+                            <label for="type">Ban reason</label>
+                            <select class="form-control" name="quick_ban">
+                                {{ range $index, $ban := .quickBans }}
+                                <option value="{{ $ban.id }}">{{ $ban.reason }}</option>
+                                {{ end }}
+                            </select>
+                        </div>
+                        <div class="col-xs-12">
+                            <input type="submit" class="btn btn-default" value="Submit" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Custom banishment</h4>
+                    <form action="{{ url "subtopic" "admin" "bans" }}" method="POST">
+                        <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                        <input type="hidden" name="banned_by" value="{{ .admin }}">
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="player_name">Player name</label>
+                            <input class="form-control" type ="text" name="player_name" />
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="type">Ban type</label>
+                            <select name="ban_type" class="form-control">
+                                <option value="account_ban">Account Ban</option>
+                                <option value="ip_ban">IP Ban</option>
+                                <option value="account_ip_ban">Account and IP Ban</option>
+                                <option value="namelock">Namelock</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="ban_reason">Reason</label>
+                            <input class="form-control" type ="text" name="ban_reason" />
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="duration">Duration</label>
+                            <input type="text" name="ban_duration" class="form-control" />
+                            <span class="help-block">Can be left blank for namelock. Valid input is either seconds or a duration string, allowed time units are "h", "m", "s", "ms". Eg. "4h"</span>
+                        </div>
+                        <div class="col-xs-12">
+                            <input type="submit" class="btn btn-default" value="Submit" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="namelocks">
+            {{ if .namelocks }}
+            <form action="{{ url "subtopic" "admin" "bans" "unban" }}" method="POST">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                <table class="table table-striped" id="namelocks_table">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Name</th><th>Reason</th><th>Namelocked by</th><th>Date</th><th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $index, $namelock := .namelocks }}
+                        <tr>
+                            <td>{{ $namelock.name }}</td>
+                            <td>{{ nl2br $namelock.reason }}</td>
+                            <td>{{ $namelock.namelocked_by_name }}</td>
+                            <td>{{ $namelock.date }}</td>
+                            <td><button type="submit" class="btn btn-info btn-xs" name="lift_namelock" value="{{ $namelock.player_id }}">Remove namelock</button></td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </form>
+            {{ else }}
+            <p>There are no namelocked players at the moment.</p>
+            {{ end }}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="bans">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Account bans</h4>
+                    {{ if .account_bans }}
+                    <form action="{{ url "subtopic" "admin" "bans" "unban" }}" method="POST">
+                        <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                        <table class="table table-striped" id="account_bans_table">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>Account name</th><th>Reason</th><th>Banned by</th><th>Start</th><th>End</th><th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range $index, $ban := .account_bans }}
+                                <tr>
+                                    <td>{{ $ban.name }}</td>
+                                    <td>{{ nl2br $ban.reason }}</td>
+                                    <td>{{ $ban.banned_by_name }}</td>
+                                    <td>{{ $ban.start_date }}</td>
+                                    <td>{{ $ban.end_date }}</td>
+                                    <td><button type="submit" class="btn btn-info btn-xs" name="lift_account_ban" value="{{ $ban.account_id }}">Unban</button></td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </form>
+                    {{ else }}
+                    <p>There are no active account bans to display.</p>
+                    {{ end }}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>IP bans</h4>
+                    {{ if .ip_bans }}
+                    <form action="{{ url "subtopic" "admin" "bans" "unban" }}" method="POST">
+                        <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                        <table class="table table-striped" id="ip_bans_table">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>IP</th><th>Reason</th><th>Banned by</th><th>Start</th><th>End</th><th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range $index, $ban := .ip_bans }}
+                                <tr>
+                                    <td>{{ $ban.ip }}</td>
+                                    <td>{{ nl2br $ban.reason }}</td>
+                                    <td>{{ $ban.banned_by_name }}</td>
+                                    <td>{{ $ban.start_date }}</td>
+                                    <td>{{ $ban.end_date }}</td>
+                                    <td><button type="submit" class="btn btn-info btn-xs" name="lift_ip_ban" value="{{ $ban.ip }}">Unban</button></td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </form>
+                    {{ else }}
+                    <p>There are no active IP bans to display.</p>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="ban-history">
+            {{ if .ban_history }}
+            <table class="table table-striped" id="ban_history_table">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Account name</th><th>Reason</th><th>Banned by</th><th>Began</th><th>Ended</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range $index, $ban := .ban_history }}
+                    <tr>
+                        <td>{{ $ban.name }}</td>
+                        <td>{{ nl2br $ban.reason }}</td>
+                        <td>{{ $ban.banned_by_name }}</td>
+                        <td>{{ $ban.start_date }}</td>
+                        <td>{{ $ban.end_date }}</td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+            {{ else }}
+            <p>There is no ban history to display.</p>
+            {{ end }}
+        </div>
+    </div>
+</div>
+{{ end }}
+{{ template "footer.html" . }}
+<script>
+    $(document).ready(function(){
+        var namelocks = $('#namelocks_table').DataTable({
+            "autoWidth": false
+        });
+
+        var accBans = $('#account_bans_table').DataTable({
+            "autoWidth": false
+        });
+
+        var ipBans = $('#ip_bans_table').DataTable({
+            "autoWidth": false
+        });
+
+        var banHistory = $('#ban_history_table').DataTable({
+            "autoWidth": false
+        });
+    });
+</script>
