@@ -14,6 +14,7 @@ function get()
 
     c.method = "POST"
     c.url = app.Plugin.Origin .. "/plugin/view/" .. http.getValues.id .. "/download"
+    c.timeout = "5s"
     c.authentication = {}
     c.authentication.username = app.Plugin.Username
     c.authentication.password = app.Plugin.Password

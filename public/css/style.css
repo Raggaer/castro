@@ -100,29 +100,11 @@
 }
 
 body {
-
-
-}
-
-.background-image-filter {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(44,62,80,.2);
-}
-
-.background-image {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: -2;
     background-image:url(../images/bg.jpg);
     background-repeat:no-repeat;
-    background-size:100%;
-    background-color:#000;
-    width: 100%;
-    height: 100%;
+    background-size: cover;
+}
+
+#footer {
+    margin-bottom: 30px;
 }
