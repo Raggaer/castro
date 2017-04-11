@@ -26,6 +26,14 @@
             <a href="{{ url "subtopic" "library" "houses" }}?town={{ .info.town.ID }}">{{ .info.town.Name }}</a>
         </td>
     </tr>
+    {{ if .info.guild }}
+    <tr>
+        <th>{{ .info.rank }}</th>
+        <td>
+            <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode .info.guild }}">{{ .info.guild }}</a>
+        </td>
+    </tr>
+    {{ end }}
     </tbody>
 </table>
 <table class="table table-striped">

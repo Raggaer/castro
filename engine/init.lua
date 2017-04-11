@@ -19,6 +19,8 @@ if app.CheckUpdates and app.Version ~= "" then
             outdated = outdated + 1
         end
     end
-end
 
-print(">> Castro started at " .. time:parseUnix(os.time()).Result)
+    print(">> Castro started at " .. time:parseUnix(os.time()).Result .. " - Running " .. outdated .. " commits behind")
+else
+    print(">> Castro started at " .. time:parseUnix(os.time()).Result)
+end
