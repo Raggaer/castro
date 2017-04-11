@@ -1,0 +1,29 @@
+{{ template "header.html" }}
+<h2>Castro AAC contributors</h2>
+<hr>
+{{if .contributors }}
+<div class="row">
+    {{ range $index, $contributor := .contributors }}
+    <div class="col-md-2 col-xs-3" style="text-align: center;">
+        <a href="{{ $contributor.html_url }}">
+            <img src="{{ $contributor.avatar_url }}" class="img-fluid img-thumbnail rounded">
+            <br />
+            {{ $contributor.login }} <span class="label label-info">{{ $contributor.contributions }}</span>
+        </a>
+    </div>
+    {{ end }}
+</div>
+<br />
+{{ end }}
+<h3>Latest commits</h3>
+{{ if .commits }}
+<div class="list-group">
+    {{ range $index, $commit := .commits }}
+    <a href="{{ $commit.html_url }}" target="_blank" class="list-group-item">
+        <h4 class="list-group-item-heading">{{ $commit.commit.message }}</h4>
+        <p class="list-group-item-text">{{ nl2br $commit.commit.message }}<br><br>{{ $commit.commit.committer.date }} by {{ $commit.committer.login }}</p>
+    </a>
+    {{ end }}
+</div>
+{{ end }}
+{{ template "footer.html" . }}
