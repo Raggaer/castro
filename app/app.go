@@ -368,7 +368,7 @@ func templateFuncs() template.FuncMap {
 			return template.URL(s)
 		},
 		"url": func(args ...interface{}) template.URL {
-			u := fmt.Sprintf("%v:%v", util.Config.URL, util.Config.Port)
+			u := fmt.Sprintf("%v", util.Config.URL)
 			for _, arg := range args {
 				u = u + fmt.Sprintf("/%v", arg)
 			}

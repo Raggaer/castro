@@ -1,5 +1,5 @@
 {{ template "header.html" }}
-<h2>Castro AAC contributors</h2>
+<h3>Castro AAC contributors</h3>
 <hr>
 {{if .contributors }}
 <div class="row">
@@ -16,12 +16,13 @@
 <br />
 {{ end }}
 <h3>Latest commits</h3>
+<hr>
 {{ if .commits }}
 <div class="list-group">
     {{ range $index, $commit := .commits }}
     <a href="{{ $commit.html_url }}" target="_blank" class="list-group-item">
         <h4 class="list-group-item-heading">{{ $commit.commit.message }}</h4>
-        <p class="list-group-item-text">{{ nl2br $commit.commit.message }}<br><br>{{ $commit.commit.committer.date }} by {{ $commit.committer.login }}</p>
+        <p class="list-group-item-text">{{ $commit.commit.committer.date }} by {{ $commit.committer.login }}</p>
     </a>
     {{ end }}
 </div>

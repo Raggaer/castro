@@ -12,8 +12,8 @@
 <div class="container" id="footer">
     <div class="footer">
         <h6>
-            {{ if isDev }} <b>Development mode</b> | {{ end }}
-            Page generated in {{ .microtime }}. Engine by <a href="https://github.com/Raggaer/castro">Castro</a>.
+            {{ if isDev }} <b>Development mode</b> |
+            Page generated in {{ .microtime }} {{ end }} | {{ serverName }} - Engine by <a href="{{ url "subtopic" "credits" }}">Castro</a>.
         </h6>
     </div>
 </div> <!-- /container -->

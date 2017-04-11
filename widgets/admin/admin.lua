@@ -10,5 +10,4 @@ function widget()
     data.admin = session:loggedAccount().castro.Admin
 
     widgets:render("admin.html", data)
-
 end
