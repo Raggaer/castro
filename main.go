@@ -41,7 +41,7 @@ func main() {
 
 	// Show credits and application name
 	fmt.Printf(`
-Castro - Open Tibia automatic account creator
+Castro - High performance content management system for Open Tibia servers
 
 Running version: %v
 Compiled at: %v
