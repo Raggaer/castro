@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -360,15 +361,29 @@ func CreateRequestClient(L *glua.LState) int {
 	}
 
 	// Get request url
-	url := data.RawGetString("url")
+	requestUrl := data.RawGetString("url")
 
-	if url.Type() != glua.LTString {
+	if requestUrl.Type() != glua.LTString {
 		L.RaiseError("Invalid request url type. Expected string")
 		return 0
 	}
 
 	// Get request data
 	content := data.RawGetString("data")
+
+	// Data holder
+	contentString := url.Values{}
+
+	// Loop content table
+	if content.Type() == glua.LTTable {
+
+		// Loop content table
+		content.(*glua.LTable).ForEach(func(key glua.LValue, v glua.LValue) {
+
+			// Set field
+			contentString.Set(key.String(), v.String())
+		})
+	}
 
 	// Create client
 	client := &http.Client{
@@ -378,8 +393,8 @@ func CreateRequestClient(L *glua.LState) int {
 	// Create request
 	req, err := http.NewRequest(
 		method.String(),
-		url.String(),
-		bytes.NewBufferString(content.String()),
+		requestUrl.String(),
+		bytes.NewBufferString(contentString.Encode()),
 	)
 
 	if err != nil {

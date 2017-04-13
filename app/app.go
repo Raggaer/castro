@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"github.com/kardianos/osext"
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
@@ -67,22 +68,22 @@ func Start() {
 
 func loadMap() {
 	// Check if map is encoded
-	_, err := os.Stat(filepath.Join("engine", lua.Config.GetGlobal("mapName").String() + ".castro"))
+	_, err := os.Stat(filepath.Join("engine", lua.Config.GetGlobal("mapName").String()+".castro"))
 
 	// Map is not decoded
 	if err != nil {
 
 		// Decode map
 		if err := util.EncodeMap(
-			filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String() + ".otbm"),
-			filepath.Join("engine", lua.Config.GetGlobal("mapName").String() + ".castro"),
+			filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
+			filepath.Join("engine", lua.Config.GetGlobal("mapName").String()+".castro"),
 		); err != nil {
 			util.Logger.Fatalf("Cannot encode server map: %v", err)
 		}
 	}
 
 	// Decode map
-	m, err := util.DecodeMap(filepath.Join("engine", lua.Config.GetGlobal("mapName").String() + ".castro"))
+	m, err := util.DecodeMap(filepath.Join("engine", lua.Config.GetGlobal("mapName").String()+".castro"))
 
 	if err != nil {
 		util.Logger.Fatalf("Cannot decode server map: %v", err)
@@ -199,6 +200,25 @@ func executeInitFile() {
 	lua.SetJSONMetaTable(luaState)
 
 	lua.SetConfigGlobal(luaState)
+
+	// Get executable folder
+	f, err := osext.ExecutableFolder()
+
+	if err != nil {
+		util.Logger.Fatalf("Cannot get executable folder path: %v", err)
+	}
+
+	// Get package metatable
+	pkg := luaState.GetGlobal("package")
+
+	// Set path field
+	luaState.SetField(
+		pkg,
+		"path",
+		glua.LString(
+			filepath.Join(f, "engine", "?.lua"),
+		),
+	)
 
 	// Execute init file
 	if err := luaState.DoFile(filepath.Join("engine", "init.lua")); err != nil {
