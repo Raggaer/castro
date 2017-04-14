@@ -12,13 +12,6 @@ function get()
     end
 
     local info = db:singleQuery("SELECT id, package_name as Name, state as State, payment_id, payer_id, custom, created_at FROM castro_paypal_payments WHERE payment_id = ? AND custom = ?", http.getValues["paymentId"], session:loggedAccount().Name)
-    local identifier = 0
-
-    if info == nil then
-        info = paypal:paymentInformation(http.getValues["paymentId"])
-
-        identifier = db:execute("INSERT INTO castro_paypal_payments (package_name, state, payment_id, payer_id, custom, created_at) VALUES (?, ?, ?, ?, ?, ?)", info.Name, info.State, info.PaymentID, info.PayerID, info.Custom, os.time())
-    end
 
     if info == nil then
         http:redirect("/")
@@ -31,6 +24,16 @@ function get()
         return
     end
 
+    if info.created_at + (60*60*3) < os.time() then
+        session:setFlash("validationError", "Payment is 3 days old. Please create a new payment")
+        http:redirect("/subtopic/shop/paypal")
+        return
+    end
+
+    if info.payer_id == nil then
+        db:execute("UPDATE castro_paypal_payments SET payer_id = ? WHERE id = ?", http.getValues["PayerID"], info.id)
+    end
+
     local package = paypalList[info.Name]
 
     if package == nil then
@@ -41,12 +44,7 @@ function get()
     local data = {}
 
     data.pkg = package
-
-    if identifier == 0 then
-        data.id = info.id
-    else
-        data.id = identifier
-    end
+    data.id = info.id
 
     http:render("review.html", data)
 end

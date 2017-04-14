@@ -27,7 +27,7 @@ function post()
         Return URL (where to redirect when user approves the payment)
     ]]--
 
-    local url = paypal:createPayment(
+    local info = paypal:createPayment(
         package.name,
         package.price,
         session:loggedAccount().Name,
@@ -35,5 +35,6 @@ function post()
         runningURL() .. "/subtopic/shop/paypal/review"
     )
 
-    http:redirect(url)
+    db:execute("INSERT INTO castro_paypal_payments (package_name, state, payment_id, custom, created_at) VALUES (?, ?, ?, ?, ?)", info.Name, info.State, info.PaymentID, info.Custom, os.time())
+    http:redirect(info.Link)
 end

@@ -24,5 +24,7 @@ function pluginTypeToString(plugin)
         return "Widget"
     elseif plugin == 3 then
         return "Engine"
+    elseif plugin == 4 then
+        return "Template"
     end
 end

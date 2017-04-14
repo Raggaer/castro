@@ -8,8 +8,15 @@ High performance Open Tibia content management system written in **Go** using **
 
 Castro provides lua bindings using a pool of lua states. Each request gets a state from the pool. If there are no states available a new one is created and later saved on the pool.
 
-
 All pages and widgets (sidebar content) are done using the **Lua** bindings. This provides a great resource for newcomers to learn the Castro bindings. For more information the source code is available at [github](https://github.com/Raggaer/castro).
+
+- Extensible and solid lua support. Create your own logic using exclusively lua. Everything you need is exposed by Castro.
+- High performance. Great response times. Using Go standard HTTP library.
+- Self-contained application. Castro contains its own HTTP server. On click and its running.
+- Simple installation. This process is almost one click. Everything is gathered from your config and map files.
+- Plugin manager. Manage your extensions through Castro itself.
+- Clean templates. Logic is separated from templates. No more messy files.
+- Security. No more sqli or XSS issues.
 
 # Pages and widgets
 

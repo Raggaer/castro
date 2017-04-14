@@ -8,9 +8,7 @@ function get()
 
     local data = {}
 
-    data["validationError"] = session:getFlash("validationError")
     data["success"] = session:getFlash("success")
-
     data.validationError = session:getFlash("validationError")
     data.currency = app.PayPal.Currency
     data.list = paypalList

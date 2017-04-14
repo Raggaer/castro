@@ -11,9 +11,21 @@ function post()
         return
     end
 
-    local payment = db:singleQuery("SELECT payment_id, state, payer_id, package_name, custom FROM castro_paypal_payments WHERE id = ? AND custom = ?", http.postValues["id"], session:loggedAccount().Name)
+    local payment = db:singleQuery("SELECT created_at, payment_id, state, payer_id, package_name, custom FROM castro_paypal_payments WHERE id = ? AND custom = ?", http.postValues["id"], session:loggedAccount().Name)
+
+    if payment.created_at + (60*60*3) < os.time() then
+        session:setFlash("validationError", "Payment is 3 days old. Please create a new payment")
+        http:redirect("/subtopic/shop/paypal")
+        return
+    end
 
     if payment == nil then
+        session:setFlash("validationError", "Invalid payment")
+        http:redirect("/subtopic/shop/paypal")
+        return
+    end
+
+    if payment.payer_id == nil then
         session:setFlash("validationError", "Invalid payment")
         http:redirect("/subtopic/shop/paypal")
         return

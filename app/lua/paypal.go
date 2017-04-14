@@ -83,27 +83,41 @@ func CreatePaypalPayment(L *lua.LState) int {
 	}
 
 	// Create paypal payment
-	paymentResponse, err := client.CreatePayment(payment)
+	info, err := client.CreatePayment(payment)
 
 	if err != nil {
 		L.RaiseError("Cannot create paypal payment: %v", err)
 		return 0
 	}
 
-	// Loop payment links
-	for _, link := range paymentResponse.Links {
+	// Data table
+	tbl := L.NewTable()
 
-		// Push approval URL
+	// Set payment fields
+	tbl.RawSetString("State", lua.LString(info.State))
+	tbl.RawSetString("Custom", lua.LString(info.Transactions[0].Custom))
+	tbl.RawSetString("Price", lua.LNumber(price))
+	tbl.RawSetString("Name", lua.LString(info.Transactions[0].Description))
+	tbl.RawSetString("PaymentID", lua.LString(info.ID))
+	tbl.RawSetString("PayerStatus", lua.LString(info.Payer.Status))
+
+	// Loop payment links
+	for _, link := range info.Links {
+
+		// If link is approval add to main table
 		if link.Rel == "approval_url" {
 
-			L.Push(lua.LString(link.Href))
+			// Set approval link
+			tbl.RawSetString("Link", lua.LString(link.Href))
 
-			return 1
+			break
 		}
 	}
 
-	L.RaiseError("Cannot find approval_url payment link")
-	return 0
+	// Push data table
+	L.Push(tbl)
+
+	return 1
 }
 
 // GetPaypalPayment gets a paypal approved payment
