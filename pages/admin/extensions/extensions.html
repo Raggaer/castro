@@ -35,9 +35,8 @@
                 <thead class="thead-inverse">
                 <tr>
                     <th>Name</th>
-                    <th>Type</th>
+                    <th>Author</th>
                     <th>Uploaded at</th>
-                    <th>Last Update</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -45,15 +44,8 @@
                 {{ range $index, $element := .list.Data }}
                 <tr>
                     <td>{{ $element.Name }}</td>
-                    <td>
-                        {{ if $element.Paid }}
-                        <b>Paid</b>
-                        {{ else }}
-                        <b>Free</b>
-                        {{ end }}
-                    </td>
+                    <td>{{ $element.AuthorName }}</td>
                     <td>{{ $element.CreatedAt }}</td>
-                    <td>{{ $element.UpdatedAt }}</td>
                     <td>
                         <a href="{{ url "subtopic" "admin" "extensions" "view" }}?id={{ $element.ID }}" role="button" class="btn btn-info btn-xs">View</a>
                     </td>

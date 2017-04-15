@@ -3,6 +3,7 @@ require "util"
 function get()
     if not session:isAdmin() then
         http:redirect("/")
+        return
     end
 
     local logsfile = io.open("logs/" .. logFile)

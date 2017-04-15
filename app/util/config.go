@@ -13,6 +13,11 @@ type CookieConfig struct {
 	BlockKey string
 }
 
+// ShopConfig struct used for the shop configuration options
+type ShopConfig struct {
+	Enabled bool
+}
+
 // PluginConfig struct used for the plugin listener
 type PluginConfig struct {
 	Enabled  bool
@@ -81,6 +86,7 @@ type Configuration struct {
 	SSL          SSLConfig
 	PayPal       PayPalConfig
 	PayGol       PaygolConfig
+	Shop         ShopConfig
 	Cookies      CookieConfig
 	Cache        CacheConfig
 	RateLimit    RateLimiterConfig
