@@ -191,8 +191,8 @@ func installApplication() error {
 
 	// Encode server map
 	if err := util.EncodeMap(
-		filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String() + ".otbm"),
-		filepath.Join("engine", lua.Config.GetGlobal("mapName").String() + ".castro"),
+		filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
+		filepath.Join("engine", lua.Config.GetGlobal("mapName").String()+".castro"),
 	); err != nil {
 		return err
 	}
@@ -300,12 +300,12 @@ func createConfigFile(name, location string) error {
 			Time:   time.Minute,
 		},
 		Security: util.SecurityConfig{
-			NonceEnabled: true,
-			STS: "max-age=10000",
-			XSS: "1; mode=block",
-			Frame: "DENY",
-			ContentType: "nosniff",
-			ReferrerPolicy: "origin",
+			NonceEnabled:      true,
+			STS:               "max-age=10000",
+			XSS:               "1; mode=block",
+			Frame:             "DENY",
+			ContentType:       "nosniff",
+			ReferrerPolicy:    "origin",
 			CrossDomainPolicy: "none",
 			CSP: util.ContentSecurityPolicyConfig{
 				Default: []string{"none"},
@@ -314,18 +314,18 @@ func createConfigFile(name, location string) error {
 				},
 				Script: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
-					SRC: []string{"https://www.google.com", "https://code.jquery.com", "https://cdn.datatables.net", "https://www.gstatic.com"},
+					SRC:     []string{"https://www.google.com", "https://code.jquery.com", "https://cdn.datatables.net", "https://www.gstatic.com"},
 				},
 				Font: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
-					SRC: []string{"http://fonts.gstatic.com", "http://fonts.googleapis.com"},
+					SRC:     []string{"http://fonts.gstatic.com", "http://fonts.googleapis.com"},
 				},
 				Connect: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
 				},
 				Style: util.ContentSecurityPolicyType{
 					Default: []string{"unsafe-inline", "self"},
-					SRC: []string{"http://fonts.googleapis.com", "https://cdn.datatables.net"},
+					SRC:     []string{"http://fonts.googleapis.com", "https://cdn.datatables.net"},
 				},
 				Image: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
