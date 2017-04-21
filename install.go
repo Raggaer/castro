@@ -299,6 +299,39 @@ func createConfigFile(name, location string) error {
 			Number: 100,
 			Time:   time.Minute,
 		},
+		Security: util.SecurityConfig{
+			NonceEnabled: true,
+			STS: "max-age=10000",
+			XSS: "1; mode=block",
+			Frame: "DENY",
+			ContentType: "nosniff",
+			ReferrerPolicy: "origin",
+			CrossDomainPolicy: "none",
+			CSP: util.ContentSecurityPolicyConfig{
+				Default: []string{"none"},
+				Frame: util.ContentSecurityPolicyType{
+					SRC: []string{"https://www.google.com"},
+				},
+				Script: util.ContentSecurityPolicyType{
+					Default: []string{"self"},
+					SRC: []string{"https://www.google.com", "https://code.jquery.com", "https://cdn.datatables.net", "https://www.gstatic.com"},
+				},
+				Font: util.ContentSecurityPolicyType{
+					Default: []string{"self"},
+					SRC: []string{"http://fonts.gstatic.com", "http://fonts.googleapis.com"},
+				},
+				Connect: util.ContentSecurityPolicyType{
+					Default: []string{"self"},
+				},
+				Style: util.ContentSecurityPolicyType{
+					Default: []string{"unsafe-inline", "self"},
+					SRC: []string{"http://fonts.googleapis.com", "https://cdn.datatables.net"},
+				},
+				Image: util.ContentSecurityPolicyType{
+					Default: []string{"self"},
+				},
+			},
+		},
 		Custom: lua.TableToMap(tbl),
 	})
 }

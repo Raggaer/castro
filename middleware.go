@@ -32,11 +32,29 @@ func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, ne
 	if util.Config.SSL.Enabled {
 
 		// Set header
-		w.Header().Set("Strict-Transport-Security", "max-age=31536000")
+		w.Header().Set("Strict-Transport-Security", util.Config.Security.STS)
 	}
 
+	// Set X-XSS-Protection header
+	w.Header().Set("X-XSS-Protection", util.Config.Security.XSS)
+
 	// Set X-Frame-Options header
-	w.Header().Set("X-Frame-Options", "DENY")
+	w.Header().Set("X-Frame-Options", util.Config.Security.Frame)
+
+	// Set X-Content-Type-Options header
+	w.Header().Set("X-Content-Type-Options", util.Config.Security.ContentType)
+
+	// Set Referrer-Policy header
+	w.Header().Set("Referrer-Policy", util.Config.Security.ReferrerPolicy)
+
+	// Set X-Permitted-Cross-Domain-Policies header
+	w.Header().Set("X-Permitted-Cross-Domain-Policies", util.Config.Security.CrossDomainPolicy)
+
+	// Set Content-Security-Policy header
+	w.Header().Set(
+		"Content-Security-Policy",
+		util.Config.CSP(),
+	)
 
 	// Execute next handler
 	next(w, req)
@@ -72,7 +90,7 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 			Name:     util.Config.Cookies.Name,
 			Value:    encoded,
 			Path:     "/",
-			MaxAge: util.Config.Cookies.MaxAge,
+			MaxAge:   util.Config.Cookies.MaxAge,
 			Secure:   util.Config.SSL.Enabled,
 			HttpOnly: true,
 		}
@@ -156,10 +174,10 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 
 		// Create cookie
 		c := &http.Cookie{
-			Name:  util.Config.Cookies.Name,
-			Value: encoded,
-			Path:  "/",
-			MaxAge: util.Config.Cookies.MaxAge,
+			Name:     util.Config.Cookies.Name,
+			Value:    encoded,
+			Path:     "/",
+			MaxAge:   util.Config.Cookies.MaxAge,
 			Secure:   util.Config.SSL.Enabled,
 			HttpOnly: true,
 		}

@@ -72,6 +72,35 @@ type PayPalConfig struct {
 	SandBox   bool
 }
 
+// ContentSecurityPolicyType struct used for CSP fields
+type ContentSecurityPolicyType struct {
+	Default []string
+	SRC     []string
+}
+
+// ContentSecurityPolicyConfig struct used for CSP headers
+type ContentSecurityPolicyConfig struct {
+	Default []string
+	Frame   ContentSecurityPolicyType
+	Script  ContentSecurityPolicyType
+	Font    ContentSecurityPolicyType
+	Image   ContentSecurityPolicyType
+	Connect ContentSecurityPolicyType
+	Style   ContentSecurityPolicyType
+}
+
+// SecurityConfig struct used for the security of the application
+type SecurityConfig struct {
+	NonceEnabled      bool
+	XSS               string
+	STS               string
+	Frame             string
+	ContentType       string
+	ReferrerPolicy    string
+	CrossDomainPolicy string
+	CSP               ContentSecurityPolicyConfig
+}
+
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
 	Version      string
@@ -80,6 +109,7 @@ type Configuration struct {
 	Port         int
 	URL          string
 	Datapack     string
+	Security     SecurityConfig
 	Plugin       PluginConfig
 	Mail         MailConfig
 	Captcha      CaptchaConfig
@@ -119,3 +149,49 @@ func (c Configuration) IsDev() bool {
 func (c Configuration) IsLog() bool {
 	return c.Mode == "log"
 }
+
+// CSP returns a valid Content-Security-Policy header value
+func (c Configuration) CSP() string {
+	// Set default-src field
+	buff := getCSPField("default-src", c.Security.CSP.Default, nil)
+
+	// Set frame-src field
+	buff += getCSPField("frame-src", c.Security.CSP.Frame.Default, c.Security.CSP.Frame.SRC)
+
+	// Set script-src field
+	buff += getCSPField("script-src", c.Security.CSP.Script.Default, c.Security.CSP.Script.SRC)
+
+	// Set font-src field
+	buff += getCSPField("font-src", c.Security.CSP.Font.Default, c.Security.CSP.Font.SRC)
+
+	// Set connect-src field
+	buff += getCSPField("connect-src", c.Security.CSP.Connect.Default, c.Security.CSP.Connect.SRC)
+
+	// Set style-src field
+	buff += getCSPField("style-src", c.Security.CSP.Style.Default, c.Security.CSP.Style.SRC)
+
+	// Set img-src field
+	buff += getCSPField("img-src", c.Security.CSP.Image.Default, c.Security.CSP.Image.SRC)
+
+	return buff
+}
+
+func getCSPField(name string, def []string, src []string) string {
+	// Data holder
+	buff := name
+
+	// Loop default values
+	for _, d := range def {
+		buff += " '" + d + "' "
+	}
+
+	// Loop src values
+	for _, s := range src {
+		buff += " " + s + " "
+	}
+
+	return buff + ";"
+}
+
+/*"default-src 'none'; frame-src https://www.google.com; script-src 'nonce-TEST' 'self' https://www.google.com https://code.jquery.com https://cdn.datatables.net https://www.gstatic.com; font-src 'self' http://fonts.gstatic.com http://fonts.googleapis.com; connect-src 'self'; img-src 'self'; style-src 'unsafe-inline' 'self' http://fonts.googleapis.com https://cdn.datatables.net;",
+)*/
