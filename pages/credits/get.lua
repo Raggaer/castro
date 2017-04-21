@@ -1,5 +1,5 @@
 local contributors_url = "https://api.github.com/repos/Raggaer/castro/contributors"
-local commits_url = "https://api.github.com/repos/Raggaer/castro/commits?per_page=5"
+local commits_url = "https://api.github.com/repos/Raggaer/castro/commits?per_page=7"
 
 function get()
     local data = cache:get("github")

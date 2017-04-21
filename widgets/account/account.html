@@ -22,11 +22,11 @@
             <input type="text" class="form-control" id="input-account-name" name="account-name" placeholder="Account name">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" id="input-password" name="password" placeholder="Account password">
+            <input type="password" autocomplete="off" class="form-control" id="input-password" name="password" placeholder="Account password">
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Login</button>
-            <a href="{{ url "subtopic" "register" }}" role="button" class="btn btn-secondary">Register</a>
+            <a href="{{ url "subtopic" "register" }}" role="button" class="btn btn-default">Register</a>
         </div>
     </form>
     {{ end }}

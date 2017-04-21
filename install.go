@@ -329,6 +329,7 @@ func createConfigFile(name, location string) error {
 				},
 				Image: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
+					SRC:     []string{"https://*.githubusercontent.com", "data:"},
 				},
 			},
 		},

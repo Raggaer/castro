@@ -177,7 +177,7 @@ func GetPaypalPayment(L *lua.LState) int {
 	return 1
 }
 
-// ExecutePayPalPayment executes the given paypal payment
+// ExecutePaypalPayment executes the given paypal payment
 func ExecutePaypalPayment(L *lua.LState) int {
 	// Get payment identifier
 	id := L.Get(2)

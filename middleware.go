@@ -35,6 +35,9 @@ func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, ne
 		w.Header().Set("Strict-Transport-Security", util.Config.Security.STS)
 	}
 
+	// Set Engine header
+	w.Header().Set("Engine", "Castro")
+
 	// Set X-XSS-Protection header
 	w.Header().Set("X-XSS-Protection", util.Config.Security.XSS)
 
