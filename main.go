@@ -89,6 +89,7 @@ Compiled at: %v
 	// Create the middleware negroni instance with
 	// some application middleware
 	n := negroni.New(
+		newSecurityHandler(),
 		newSessionHandler(),
 		newMicrotimeHandler(),
 		newCsrfHandler(),

@@ -19,6 +19,29 @@ type csrfHandler struct{}
 // sessionHandler used for application session
 type sessionHandler struct{}
 
+// securityHandler used to set some headers
+type securityHandler struct{}
+
+// newSecurityHandler creates and returns a new securityHandler instance
+func newSecurityHandler() *securityHandler {
+	return &securityHandler{}
+}
+
+func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+	// Set Strict-Transport-Security header if SSL
+	if util.Config.SSL.Enabled {
+
+		// Set header
+		w.Header().Set("Strict-Transport-Security", "max-age=31536000")
+	}
+
+	// Set X-Frame-Options header
+	w.Header().Set("X-Frame-Options", "DENY")
+
+	// Execute next handler
+	next(w, req)
+}
+
 // newSessionHandler creates and returns a new sessionHandler instance
 func newSessionHandler() *sessionHandler {
 	return &sessionHandler{}
@@ -40,7 +63,7 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 		encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, v)
 
 		if err != nil {
-			util.Logger.Fatalf("Cannot encode cookie value: %v", err)
+			util.Logger.Errorf("Cannot encode cookie value: %v", err)
 			return
 		}
 
@@ -50,6 +73,7 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 			Value:  encoded,
 			Path:   "/",
 			Secure: util.Config.SSL.Enabled,
+			HttpOnly: true,
 		}
 
 		// Set cookie
@@ -74,7 +98,7 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 		&v,
 	); err != nil {
 
-		util.Logger.Fatalf("Cannot decode cookie value: %v", err)
+		util.Logger.Errorf("Cannot decode cookie value: %v", err)
 		return
 	}
 
@@ -126,7 +150,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, session)
 
 		if err != nil {
-			util.Logger.Fatalf("Cannot encode session: %v", err)
+			util.Logger.Errorf("Cannot encode session: %v", err)
 		}
 
 		// Create cookie
@@ -146,7 +170,6 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		next(w, req.WithContext(ctx))
 
 		return
-
 	}
 
 	// Check if valid token
@@ -165,7 +188,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, session)
 
 		if err != nil {
-			util.Logger.Fatalf("Cannot encode session: %v", err)
+			util.Logger.Errorf("Cannot encode session: %v", err)
 		}
 
 		// Create cookie

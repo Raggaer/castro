@@ -87,6 +87,9 @@ func WriteResponse(L *glua.LState) int {
 		return 0
 	}
 
+	// Set status code
+	w.WriteHeader(200)
+
 	// Write to response writer
 	w.Write([]byte(data.String()))
 
@@ -125,6 +128,9 @@ func RenderTemplate(L *glua.LState) int {
 		util.Template.RenderTemplate(w, req, templateName, args)
 		return 0
 	}
+
+	// Set status code
+	w.WriteHeader(200)
 
 	// Render template without args
 	util.Template.RenderTemplate(w, req, templateName, map[string]interface{}{
@@ -175,6 +181,9 @@ func ServeFile(L *glua.LState) int {
 
 	// Get request and response
 	req, w := getRequestAndResponseWriter(L)
+
+	// Set status code
+	w.WriteHeader(200)
 
 	// Serve file
 	http.ServeFile(w, req, path.String())
