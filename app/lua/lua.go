@@ -284,6 +284,9 @@ func SetConfigGlobal(L *glua.LState) {
 	// Create table
 	tbl := L.NewTable()
 
+	// Set Security table
+	L.SetField(tbl, "Security", StructToTable(&util.Config.Security))
+
 	// Set Shop table
 	L.SetField(tbl, "Shop", StructToTable(&util.Config.Shop))
 

@@ -110,3 +110,7 @@ body {
 #footer {
     margin-bottom: 30px;
 }
+
+a.title {
+    text-decoration: none;
+}
