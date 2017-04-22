@@ -1,11 +1,11 @@
 package util
 
 import (
+	"bytes"
 	"encoding/gob"
 	"encoding/xml"
 	"github.com/raggaer/otmap"
 	"io/ioutil"
-	"os"
 )
 
 var (
@@ -60,12 +60,12 @@ func LoadHouses(file string, list ServerHouses) error {
 }
 
 // EncodeMap encodes the server map to the given destination
-func EncodeMap(path, dest string) error {
+func EncodeMap(path string) ([]byte, error) {
 	// Parse server map
 	m, err := otmap.Parse(path, true)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Create castro map holder
@@ -74,37 +74,27 @@ func EncodeMap(path, dest string) error {
 		HouseFile: m.HouseFile,
 	}
 
-	// Create map file
-	f, err := os.Create(dest)
-
-	if err != nil {
-		return err
-	}
-
-	// Close map file
-	defer f.Close()
+	// Map buffer
+	buff := bytes.NewBuffer([]byte{})
 
 	// Create map encoder
-	encoder := gob.NewEncoder(f)
+	encoder := gob.NewEncoder(buff)
 
 	// Encode map
-	return encoder.Encode(&c)
-}
-
-// DecodeMap decodes the server map to the given destination
-func DecodeMap(path string) (*CastroMap, error) {
-	// Open map file
-	f, err := os.Open(path)
-
-	if err != nil {
+	if err := encoder.Encode(&c); err != nil {
 		return nil, err
 	}
 
-	// Close map file
-	defer f.Close()
+	return buff.Bytes(), nil
+}
+
+// DecodeMap decodes the server map to the given destination
+func DecodeMap(mapData []byte) (*CastroMap, error) {
+	// Map buffer
+	buff := bytes.NewBuffer(mapData)
 
 	// Create decoder
-	decoder := gob.NewDecoder(f)
+	decoder := gob.NewDecoder(buff)
 
 	// Map holder
 	m := CastroMap{}

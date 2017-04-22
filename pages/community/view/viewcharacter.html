@@ -34,6 +34,63 @@
         </td>
     </tr>
     {{ end }}
+    <tr>
+        <th>Last login</th>
+        <td>{{ .info.lastlogin.Result }}</td>
+    </tr>
+    <tr>
+        <th>Last logout</th>
+        <td>{{ .info.lastlogout.Result }}</td>
+    </tr>
+    </tbody>
+</table>
+<table class="table table-striped">
+    <thead class="thead-inverse">
+    <tr>
+        <th scope="row" colspan="9">Skills</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr class="skills">
+            <td>
+                <img class="img-circle" src="/images/skills/level.gif">
+            </td>
+            <td>
+                <img class="img-circle" src="/images/skills/ml.gif">
+            </td>
+            <td>
+                <img class="img-circle" src="/images/skills/sword.gif">
+            </td>
+            <td>
+                <img class="img-circle" src="/images/skills/axe.gif">
+            </td>
+            <td>
+                <img class="img-circle" src="/images/skills/club.gif">
+            </td>
+            <td>
+                <img class="img-circle" src="/images/skills/dist.gif">
+            </td>
+            <td>
+                <img class="img-circle" src="/images/skills/def.gif">
+            </td>
+            <td>
+                <img class="img-circle" src="/images/skills/fist.gif">
+            </td>
+            <td>
+                <img class="img-circle" src="/images/skills/fish.gif">
+            </td>
+        </tr>
+        <tr class="skills">
+            <td>{{ .info.level }}</td>
+            <td>{{ .info.maglevel }}</td>
+            <td>{{ .info.skill_sword }}</td>
+            <td>{{ .info.skill_axe }}</td>
+            <td>{{ .info.skill_club }}</td>
+            <td>{{ .info.skill_dist }}</td>
+            <td>{{ .info.skill_shielding }}</td>
+            <td>{{ .info.skill_fist }}</td>
+            <td>{{ .info.skill_fishing }}</td>
+        </tr>
     </tbody>
 </table>
 <table class="table table-striped">
@@ -43,14 +100,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <th>Last login</th>
-        <td>{{ .info.lastlogin.Result }}</td>
-    </tr>
-    <tr>
-        <th>Last logout</th>
-        <td>{{ .info.lastlogout.Result }}</td>
-    </tr>
+
     <tr>
         <th colspan="2">
             <div class="progress">

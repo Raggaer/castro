@@ -114,3 +114,7 @@ body {
 a.title {
     text-decoration: none;
 }
+
+tr.skills {
+    text-align: center;
+}

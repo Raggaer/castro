@@ -189,11 +189,19 @@ func installApplication() error {
 		}
 	}
 
+	fmt.Println(">> Encoding map file. This process can take several minutes")
+
 	// Encode server map
-	if err := util.EncodeMap(
+	mapData, err := util.EncodeMap(
 		filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
-		filepath.Join("engine", lua.Config.GetGlobal("mapName").String()+".castro"),
-	); err != nil {
+	)
+
+	if err != nil {
+		return err
+	}
+
+	// Save encoded map
+	if _, err := db.Exec("INSERT INTO castro_map (name, data, created_at, updated_at) VALUES (?, ?, ?, ?)", lua.Config.GetGlobal("mapName").String(), mapData, time.Now(), time.Now()); err != nil {
 		return err
 	}
 

@@ -4,8 +4,7 @@ import (
 	"time"
 )
 
-// Article struct used to represent castro
-// latest news
+// Article struct used to represent castro latest news
 type Article struct {
 	ID        int64
 	Title     string
