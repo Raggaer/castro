@@ -49,7 +49,7 @@ func isInstalled() bool {
 }
 
 // isZnoteInstalled checks if znote_aac is already installed
-func isZnoteInstalled(db *sqlx.DB) (bool, error) {
+func isZnoteInstalled(db *sqlx.Tx) (bool, error) {
 	// Check if table exists
 	if _, err := db.Exec("DESCRIBE " + znoteTableName); err != nil {
 
@@ -66,6 +66,15 @@ func isZnoteInstalled(db *sqlx.DB) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func accountExists(id uint64, db *sqlx.Tx) (bool, error) {
+	// Data holder
+	//exists := false
+
+	// Check if account exists
+	//if _, err := db.Select
+	return false, nil
 }
 
 // installApplication runs the installation process
@@ -92,24 +101,33 @@ func installApplication() error {
 	}
 
 	// Connect to database
-	db, err := database.Open(lua.Config.GetGlobal("mysqlUser").String(), lua.Config.GetGlobal("mysqlPass").String(), lua.Config.GetGlobal("mysqlDatabase").String())
+	conn, err := database.Open(lua.Config.GetGlobal("mysqlUser").String(), lua.Config.GetGlobal("mysqlPass").String(), lua.Config.GetGlobal("mysqlDatabase").String())
 
 	if err != nil {
 		return err
 	}
 
 	// Ping database
-	if err := db.Ping(); err != nil {
+	if err := conn.Ping(); err != nil {
 		return err
 	}
 
 	// Close database handle
-	defer db.Close()
+	defer conn.Close()
+
+	// Begin transaction
+	db, err := conn.Beginx()
+
+	if err != nil {
+		db.Rollback()
+		return err
+	}
 
 	// Get all sql files
 	tables, err := ioutil.ReadDir(filepath.Join("install"))
 
 	if err != nil {
+		db.Rollback()
 		return err
 	}
 
@@ -129,11 +147,13 @@ func installApplication() error {
 				buff, err := ioutil.ReadFile(filepath.Join("install", table.Name()))
 
 				if err != nil {
+					db.Rollback()
 					return err
 				}
 
 				// Execute query
 				if _, err := db.Exec(string(buff)); err != nil {
+					db.Rollback()
 					return err
 				}
 
@@ -148,16 +168,17 @@ func installApplication() error {
 	z, err := isZnoteInstalled(db)
 
 	if err != nil {
+		db.Rollback()
 		return err
 	}
 
 	if z {
-
 		// Znote accounts placeholder
 		znoteAccounts := []znoteAccount{}
 
 		// Get znote accounts
 		if err := db.Select(&znoteAccounts, "SELECT id, account_id, points FROM znote_accounts ORDER BY id"); err != nil {
+			db.Rollback()
 			return err
 		}
 
@@ -166,26 +187,28 @@ func installApplication() error {
 
 			// Insert castro account from znote account
 			if _, err := db.Exec("INSERT INTO castro_accounts (account_id, points) VALUES (?, ?)", acc.Account_id, acc.Points); err != nil {
+				db.Rollback()
 				return err
 			}
 		}
-	} else {
+	}
 
-		// Normal accounts placeholder
-		accountList := []models.Account{}
+	// Normal accounts placeholder
+	accountList := []models.Account{}
 
-		// Get all accounts
-		if err := db.Select(&accountList, "SELECT id FROM accounts ORDER BY id"); err != nil {
+	// Get all accounts
+	if err := db.Select(&accountList, "SELECT id FROM accounts ORDER BY id"); err != nil {
+		db.Rollback()
+		return err
+	}
+
+	// Loop accounts
+	for _, acc := range accountList {
+
+		// Insert castro account from normal account
+		if _, err := db.Exec("INSERT INTO castro_accounts (account_id) VALUES (?)", acc.ID); err != nil {
+			db.Rollback()
 			return err
-		}
-
-		// Loop accounts
-		for _, acc := range accountList {
-
-			// Insert castro account from normal account
-			if _, err := db.Exec("INSERT INTO castro_accounts (account_id) VALUES (?)", acc.ID); err != nil {
-				return err
-			}
 		}
 	}
 
@@ -197,11 +220,19 @@ func installApplication() error {
 	)
 
 	if err != nil {
+		db.Rollback()
 		return err
 	}
 
 	// Save encoded map
 	if _, err := db.Exec("INSERT INTO castro_map (name, data, created_at, updated_at) VALUES (?, ?, ?, ?)", lua.Config.GetGlobal("mapName").String(), mapData, time.Now(), time.Now()); err != nil {
+		db.Rollback()
+		return err
+	}
+
+	// Commit changes
+	if err := db.Commit(); err != nil {
+		db.Rollback()
 		return err
 	}
 
@@ -290,7 +321,7 @@ func createConfigFile(name, location string) error {
 		Version:      VERSION,
 		CheckUpdates: true,
 		Mode:         "dev",
-		Port:         8080,
+		Port:         80,
 		URL:          "localhost",
 		Datapack:     location,
 		Cookies: util.CookieConfig{

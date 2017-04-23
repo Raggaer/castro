@@ -283,8 +283,35 @@ func SetConfigGlobal(L *glua.LState) {
 	// Create table
 	tbl := L.NewTable()
 
+	// Create Security table
+	secTable := StructToTable(&util.Config.Security)
+
+	// Create CSP table
+	cspTable := StructToTable(&util.Config.Security.CSP)
+
+	// Set CSP Frame table
+	L.SetField(cspTable, "Frame", StructToTable(&util.Config.Security.CSP.Frame))
+
+	// Set CSP Script table
+	L.SetField(cspTable, "Script", StructToTable(&util.Config.Security.CSP.Script))
+
+	// Set CSP Font table
+	L.SetField(cspTable, "Font", StructToTable(&util.Config.Security.CSP.Font))
+
+	// Set CSP Connect table
+	L.SetField(cspTable, "Connect", StructToTable(&util.Config.Security.CSP.Connect))
+
+	// Set CSP Style table
+	L.SetField(cspTable, "Style", StructToTable(&util.Config.Security.CSP.Style))
+
+	// Set CSP Image table
+	L.SetField(cspTable, "Image", StructToTable(&util.Config.Security.CSP.Image))
+
+	// Set CSP table inside Security table
+	L.SetField(secTable, "CSP", cspTable)
+
 	// Set Security table
-	L.SetField(tbl, "Security", StructToTable(&util.Config.Security))
+	L.SetField(tbl, "Security", secTable)
 
 	// Set Shop table
 	L.SetField(tbl, "Shop", StructToTable(&util.Config.Shop))

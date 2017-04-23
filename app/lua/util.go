@@ -323,6 +323,24 @@ func StructToTable(s interface{}) *lua.LTable {
 				// Set value as nil
 				t.RawSetString(fieldName, lua.LNil)
 			}
+
+		case []string:
+
+			// Get string slice
+			strSlice := inter.([]string)
+
+			// Create table holder
+			holder := &lua.LTable{}
+
+			// Loop slice
+			for _, item := range strSlice {
+
+				// Append item to table
+				holder.Append(lua.LString(item))
+			}
+
+			// Set value
+			t.RawSetString(fieldName, holder)
 		}
 	}
 
