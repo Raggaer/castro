@@ -27,11 +27,11 @@ function get()
 
     data.error = session:getFlash("Error")
 
-    if http.getValues.name == nil then
+    if http.getValues.author == nil then
         data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/plugin/list?page=" .. page))
     else
-        data.author = http.getValues.name
-        data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/plugin/list?author=" .. http.getValues.name .. "&page=" .. page))
+        data.author = true
+        data.list = json:unmarshal(http:get(app.Plugin.Origin .. "/plugin/list?author=" .. http.getValues.author .. "&page=" .. page))
     end
 
     if not data.list.Error then

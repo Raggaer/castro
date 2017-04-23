@@ -2,7 +2,8 @@
 <h3>
     Extensions
     {{ if .author }}
-    made by {{ .author }}
+    {{ $author := index .list.Data 0 }}
+    made by {{ $author.AuthorName }}
     {{ end }}
 </h3>
 <hr>
@@ -16,13 +17,7 @@
     <strong>Error!</strong> {{ .list.Message }}
 </div>
 {{ else }}
-<div id="extension-tabs">
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#list" aria-controls="list" role="tab" data-toggle="tab">List</a></li>
-        <li role="presentation"><a href="#sub" aria-controls="subscriptions" role="tab" data-toggle="tab">Subscriptions</a></li>
-    </ul>
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="list">
+
             <p>
                 Navigate through the extensions. You can get more information about a given extension, download or even subscribe.
             </p>
@@ -36,7 +31,8 @@
                 <tr>
                     <th>Name</th>
                     <th>Author</th>
-                    <th>Uploaded at</th>
+                    <th>Views</th>
+                    <th>Downloads</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -44,8 +40,9 @@
                 {{ range $index, $element := .list.Data }}
                 <tr>
                     <td>{{ $element.Name }}</td>
-                    <td>{{ $element.AuthorName }}</td>
-                    <td>{{ $element.CreatedAt }}</td>
+                    <td><a href="{{ url "subtopic" "admin" "extensions" }}?author={{ $element.Author }}">{{ $element.AuthorName }}</a></td>
+                    <td>{{ $element.Views }}</td>
+                    <td>{{ $element.Downloads }}</td>
                     <td>
                         <a href="{{ url "subtopic" "admin" "extensions" "view" }}?id={{ $element.ID }}" role="button" class="btn btn-info btn-xs">View</a>
                     </td>
@@ -69,49 +66,6 @@
                 No plugins
             </p>
             {{ end }}
-        </div>
-        <div role="tabpanel" class="tab-pane" id="sub">
-            <p>
-                You will be prompted when a subscription needs an update at Castro start-up
-            </p>
-            <hr>
-            {{ if .subs }}
-            <table class="table table-striped table-hover">
-                <thead class="thead-inverse">
-                    <tr>
-                        <th>Name</th>
-                        <th>Last update</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {{ range $index, $element := .subs }}
-                <tr>
-                    <td>{{ $element.name }}</td>
-                    <td>{{ $element.up.Result }}</td>
-                    <td>
-                        <a href="{{ url "subtopic" "admin" "extensions" "view" }}?id={{ $element.id }}" role="button" class="btn btn-info btn-xs">View</a>
-                    </td>
-                    <td>
-                        <form style="display: inline;" action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ $element.id }}" method="post">
-                            <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
-                            <button type="submit" class="btn btn-danger btn-xs">
-                                <i class="fa fa-star" aria-hidden="true"></i> Unsubscribe
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                {{ end }}
-                </tbody>
-            </table>
-            {{ else }}
-            <p>
-                No subscriptions made
-            </p>
-            {{ end }}
-        </div>
-    </div>
-</div>
+
 {{ end }}
 {{ template "footer.html" . }}

@@ -163,8 +163,7 @@ var (
 
 // Get retrieves a lua state from the pool if no states are available we create one
 func (p *luaStatePool) Get() *glua.LState {
-	// Lock and unlock our mutex to prevent
-	// data race
+	// Lock and unlock our mutex to prevent data race
 	p.m.Lock()
 	defer p.m.Unlock()
 

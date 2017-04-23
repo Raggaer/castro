@@ -46,7 +46,7 @@ func SetHTTPUserData(luaState *glua.LState, w http.ResponseWriter, r *http.Reque
 	httpR.Value = r
 	luaState.SetField(httpMetaTable, HTTPRequestName, httpR)
 
-	// Set GET values as LUA table
+	// Set GET values as lua table
 	luaState.SetField(httpMetaTable, HTTPGetValuesName, URLValuesToTable(r.URL.Query()))
 
 	// Check if request is POST

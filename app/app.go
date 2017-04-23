@@ -1,11 +1,13 @@
 package app
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/kardianos/osext"
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
+	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
@@ -18,8 +20,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"github.com/raggaer/castro/app/models"
-	"database/sql"
 )
 
 // Start the main execution point for Castro
@@ -69,36 +69,11 @@ func Start() {
 }
 
 func loadMap() {
-	// Check if map is encoded
-	/*_, err := os.Stat(filepath.Join("engine", lua.Config.GetGlobal("mapName").String()+".castro"))
-
-	// Map is not decoded
-	if err != nil {
-
-		// Decode map
-		if err := util.EncodeMap(
-			filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
-			filepath.Join("engine", lua.Config.GetGlobal("mapName").String()+".castro"),
-		); err != nil {
-			util.Logger.Fatalf("Cannot encode server map: %v", err)
-		}
-	}
-
-	// Decode map
-	m, err := util.DecodeMap(filepath.Join("engine", lua.Config.GetGlobal("mapName").String()+".castro"))
-
-	if err != nil {
-		util.Logger.Fatalf("Cannot decode server map: %v", err)
-	}
-
-	// Set global
-	util.OTBMap = m*/
-
 	// Map holder
 	m := models.Map{}
 
 	// Check if map is encoded
-	err := database.DB.Get(&m, "SELECT id, name, data, created_at, updated_at FROM castro_map WHERE name = ?", lua.Config.GetGlobal("mapName").String());
+	err := database.DB.Get(&m, "SELECT id, name, data, created_at, updated_at FROM castro_map WHERE name = ?", lua.Config.GetGlobal("mapName").String())
 
 	if err != nil && err != sql.ErrNoRows {
 		util.Logger.Fatalf("Cannot retrieve map from database: %v", err)
@@ -108,6 +83,30 @@ func loadMap() {
 	if err == sql.ErrNoRows {
 
 		fmt.Println(">> Encoding map. This process can take several minutes")
+
+		// Encode map
+		mapData, err := util.EncodeMap(
+			filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
+		)
+
+		if err != nil {
+			util.Logger.Fatalf("Cannot encode map file: %v", err)
+		}
+
+		// Update map struct
+		m.Name = lua.Config.GetGlobal("mapName").String()
+		m.Data = mapData
+		m.Created_at = time.Now()
+		m.Updated_at = time.Now()
+
+		// Save map
+		if _, err := database.DB.Exec("INSERT INTO castro_map (name, data, created_at, updated_at) VALUES (?, ?, ?, ?)", m.Name, m.Data, m.Created_at, m.Updated_at); err != nil {
+			util.Logger.Fatalf("Cannot save encoded map file: %v", err)
+		}
+	}
+
+	// Check if map is old
+	if time.Now().Add(time.Hour * 24).Before(m.Updated_at) {
 
 		// Encode map
 		mapData, err := util.EncodeMap(

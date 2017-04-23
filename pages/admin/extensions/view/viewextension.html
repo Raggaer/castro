@@ -25,20 +25,24 @@
         <tr>
             <th>Author</th>
             <td>
-                <a href="{{ url "subtopic" "admin" "extensions" }}?name={{ urlEncode .info.AuthorName }}">{{ .info.AuthorName }}</a>
+                <a href="{{ url "subtopic" "admin" "extensions" }}?author={{ .info.Author }}">{{ .info.AuthorName }}</a>
             </td>
         </tr>
         <tr>
             <th>Type</th>
             <td>
                 <b>
-                {{ if .info.Paid }}
-                Paid
-                {{ else }}
-                Free
-                {{ end }}
-                -
-                {{ .info.Type }} script
+                    {{ if .info.Market }}
+                        <a href="http://opentibia.net">OpenTibia market</a>
+                    {{ else }}
+                        {{ if .info.Paid }}
+                        Paid
+                        {{ else }}
+                        Free
+                        {{ end }}
+                        -
+                        {{ .info.Type }} script
+                    {{ end }}
                 </b>
             </td>
         </tr>
@@ -47,8 +51,8 @@
             <td>{{ .info.CreatedAt }}</td>
         </tr>
         <tr>
-            <th>Last update</th>
-            <td>{{ .info.UpdatedAt }}</td>
+            <th>Views and downloads</th>
+            <td>{{ .info.Views }} - {{ .info.Downloads }}</td>
         </tr>
     </tbody>
 </table>
@@ -56,30 +60,17 @@
 <hr>
 <div class="row">
     <div class="col-md-2">
-        {{ if .info.Paid }}
-        <a role="button" href="#" class="btn btn-info">Purchase</a>
+        {{ if .info.Market }}
+        <a role="button" href="{{ .info.URL }}" class="btn btn-info">Download</a>
         {{ else }}
-        <a role="button" href="{{ url "subtopic" "admin" "extensions" "download" }}?id={{ .info.ID }}" class="btn btn-success">
-            <i class="fa fa-cloud-download" aria-hidden="true"></i> Download
-        </a>
+            {{ if .info.Paid }}
+            <a role="button" href="#" class="btn btn-info">Purchase</a>
+            {{ else }}
+            <a role="button" href="{{ url "subtopic" "admin" "extensions" "download" }}?id={{ .info.ID }}" class="btn btn-success">
+                <i class="fa fa-cloud-download" aria-hidden="true"></i> Download
+            </a>
+            {{ end }}
         {{ end }}
-    </div>
-    <div class="col-md-2">
-    {{ if not .subscribed }}
-        <form style="display: inline;" action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" method="post">
-            <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
-            <button type="submit" class="btn btn-info">
-                <i class="fa fa-star" aria-hidden="true"></i> Subscribe
-            </button>
-        </form>
-    {{ else }}
-        <form action="{{ url "subtopic" "admin" "extensions" "subscribe" }}?id={{ .info.ID }}" method="post">
-            <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
-            <button type="submit" class="btn btn-default">
-                <i class="fa fa-star" aria-hidden="true"></i> Unsubscribe
-            </button>
-        </form>
-    {{ end }}
     </div>
     <div class="col-md-2 pull-right">
         <a role="button" href="{{ url "subtopic" "admin" "extensions" }}" class="btn btn-danger">Back</a>
