@@ -94,7 +94,7 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 			Value:    encoded,
 			Path:     "/",
 			MaxAge:   util.Config.Cookies.MaxAge,
-			Secure:   util.Config.SSL.Enabled,
+			Secure:   util.Config.IsSSL(),
 			HttpOnly: true,
 		}
 
@@ -181,7 +181,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 			Value:    encoded,
 			Path:     "/",
 			MaxAge:   util.Config.Cookies.MaxAge,
-			Secure:   util.Config.SSL.Enabled,
+			Secure:   util.Config.IsSSL(),
 			HttpOnly: true,
 		}
 

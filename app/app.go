@@ -439,6 +439,9 @@ func templateFuncs() template.FuncMap {
 			for _, arg := range args {
 				u = u + fmt.Sprintf("/%v", arg)
 			}
+			if util.Config.SSL.Proxy {
+				return template.URL("https://" + u)
+			}
 			if util.Config.SSL.Enabled {
 				return template.URL("https://" + u)
 			}

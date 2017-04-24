@@ -14,7 +14,7 @@ func SessionCookie(v string) *http.Cookie {
 		Name:     Config.Cookies.Name,
 		Value:    v,
 		Path:     "/",
-		Secure:   Config.SSL.Enabled,
+		Secure:   Config.IsSSL(),
 		MaxAge:   Config.Cookies.MaxAge,
 		HttpOnly: true,
 	}

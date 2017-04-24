@@ -42,6 +42,7 @@ type CacheConfig struct {
 type SSLConfig struct {
 	Enabled bool
 	Auto    bool
+	Proxy   bool
 	Cert    string
 	Key     string
 }
@@ -193,5 +194,14 @@ func getCSPField(name string, def []string, src []string) string {
 	return buff + ";"
 }
 
-/*"default-src 'none'; frame-src https://www.google.com; script-src 'nonce-TEST' 'self' https://www.google.com https://code.jquery.com https://cdn.datatables.net https://www.gstatic.com; font-src 'self' http://fonts.gstatic.com http://fonts.googleapis.com; connect-src 'self'; img-src 'self'; style-src 'unsafe-inline' 'self' http://fonts.googleapis.com https://cdn.datatables.net;",
-)*/
+// SSL returns if the server is behind SSL
+func (c Configuration) IsSSL() bool {
+	if c.SSL.Enabled {
+		return true
+	}
+	if c.SSL.Proxy {
+		return true
+	}
+
+	return false
+}
