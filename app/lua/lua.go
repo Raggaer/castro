@@ -124,7 +124,7 @@ var (
 		"setStorageValue": SetPlayerStorageValue,
 		"getVocation":     GetPlayerVocation,
 		"getTown":         GetPlayerTown,
-		"getSex":          GetPlayerGender,
+		"getGender":       GetPlayerGender,
 		"getLevel":        GetPlayerLevel,
 		"getPremiumDays":  GetPlayerPremiumDays,
 		"getName":         GetPlayerName,
@@ -133,7 +133,7 @@ var (
 		"render": RenderWidgetTemplate,
 	}
 	eventsMethods = map[string]glua.LGFunction{
-		"add": AddEvent,
+		"tick": AddEvent,
 	}
 	eventMethods = map[string]glua.LGFunction{
 		"stop": StopEvent,

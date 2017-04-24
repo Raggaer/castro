@@ -69,7 +69,6 @@ func WriteGoImageText(L *lua.LState) int {
 
 	// Write text to the image
 	if err := img.WriteText(
-
 		L.ToString(2),
 		textColor,
 		float64(L.ToInt(4)),

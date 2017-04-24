@@ -5,7 +5,7 @@ if app.Mode == "dev" then
 end
 
 if app.Custom.OnlineChart.Enabled then
-	events:add("engine/onlinechart.lua", app.Custom.OnlineChart.Interval)
+	events:tick("engine/onlinechart.lua", app.Custom.OnlineChart.Interval)
 end
 
 if app.CheckUpdates and app.Version ~= "" then
