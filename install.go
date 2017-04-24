@@ -68,13 +68,16 @@ func isZnoteInstalled(db *sqlx.Tx) (bool, error) {
 	return true, nil
 }
 
-func accountExists(id uint64, db *sqlx.Tx) (bool, error) {
+func accountExists(id uint64, db *sqlx.Tx) bool {
 	// Data holder
-	//exists := false
+	exists := false
 
 	// Check if account exists
-	//if _, err := db.Select
-	return false, nil
+	if err := db.Select(&exists, "SELECT EXISTS (SELECT 1 FROM castro_accounts WHERE account_id = ?)", id); err != nil {
+		return false
+	}
+
+	return exists
 }
 
 // installApplication runs the installation process
