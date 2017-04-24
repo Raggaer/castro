@@ -8,6 +8,7 @@ import (
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"golang.org/x/net/context"
+	"github.com/ulule/limiter"
 )
 
 // microtimeHandler used to record all requests time spent
@@ -22,6 +23,50 @@ type sessionHandler struct{}
 // securityHandler used to set some headers
 type securityHandler struct{}
 
+// rateLimitHandler used for rate-limiting
+type rateLimitHandler struct {
+	Limiter *limiter.Limiter
+}
+
+// newRateLimitHandler creates and returns a new rateLimitHandler instance
+func newRateLimitHandler(limiter *limiter.Limiter) *rateLimitHandler {
+	return &rateLimitHandler{limiter}
+}
+
+func (r *rateLimitHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+	// IP data holder
+	ip := ""
+
+	// Check if behind proxy
+	if util.Config.SSL.Proxy {
+
+		// Get address from X-Forwarded-For
+		ip = req.Header.Get("X-Forwarded-For")
+
+	} else {
+
+		// Get address from RemoteAddress
+		ip = req.RemoteAddr
+	}
+
+	// Get rate-limit context
+	ctx, err := r.Limiter.Get(ip)
+
+	if err != nil {
+		http.Error(w, "Cannot get rate-limit instance", 500)
+		return
+	}
+
+	// Check for limit
+	if ctx.Reached {
+		http.Error(w, "Rate-limit reached", 500)
+		return
+	}
+
+	// Execute next handler
+	next(w, req)
+}
+
 // newSecurityHandler creates and returns a new securityHandler instance
 func newSecurityHandler() *securityHandler {
 	return &securityHandler{}
@@ -29,7 +74,7 @@ func newSecurityHandler() *securityHandler {
 
 func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
 	// Set Strict-Transport-Security header if SSL
-	if util.Config.SSL.Enabled {
+	if util.Config.IsSSL() {
 
 		// Set header
 		w.Header().Set("Strict-Transport-Security", util.Config.Security.STS)

@@ -6,8 +6,6 @@ import (
 
 	"crypto/tls"
 	"encoding/gob"
-	"github.com/didip/tollbooth"
-	"github.com/didip/tollbooth/thirdparty/tollbooth_negroni"
 	"github.com/gorilla/securecookie"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app"
@@ -23,6 +21,7 @@ import (
 	_ "net/http/pprof"
 	"strings"
 	"time"
+	"github.com/ulule/limiter"
 )
 
 var (
@@ -69,6 +68,20 @@ Compiled at: %v
 	// Run main app entry point
 	app.Start()
 
+	// Create rate-limiter instance
+	rate := limiter.Rate{
+		Period: util.Config.RateLimit.Time,
+		Limit:  util.Config.RateLimit.Number,
+	}
+
+	log.Println(util.Config.RateLimit.Number, util.Config.RateLimit.Time, util.Config.Cache.Default)
+
+	// Create rate-limiter storage
+	store := limiter.NewMemoryStore()
+
+	// Create rate-limiter
+	limiter := limiter.NewLimiter(store, rate)
+
 	// Declare application endpoints
 	router.GET("/", controllers.LuaPage)
 	router.POST("/", controllers.LuaPage)
@@ -86,9 +99,9 @@ Compiled at: %v
 		[]byte(util.Config.Cookies.BlockKey),
 	)
 
-	// Create the middleware negroni instance with
-	// some application middleware
+	// Create the middleware negroni instance with some application middleware
 	n := negroni.New(
+		newRateLimitHandler(limiter),
 		newSecurityHandler(),
 		newSessionHandler(),
 		newMicrotimeHandler(),
@@ -100,19 +113,6 @@ Compiled at: %v
 	if util.Config.IsDev() || util.Config.IsLog() {
 		n.Use(negroni.NewLogger())
 
-	} else {
-
-		// Create rate-limiter
-		limiter := tollbooth.NewLimiter(
-			util.Config.RateLimit.Number,
-			util.Config.RateLimit.Time,
-		)
-
-		// Set IP lookup header values
-		limiter.IPLookups = []string{"X-Forwarded-For", "RemoteAddr", "X-Real-IP"}
-
-		// Use rate-limiter on production mode
-		n.Use(tollbooth_negroni.LimitHandler(limiter))
 	}
 
 	// Disable httprouter not found handler
