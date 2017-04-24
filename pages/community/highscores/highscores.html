@@ -43,7 +43,7 @@
     {{ if .list }}
     {{ range $index, $element := .list }}
     <tr>
-        <td>1</td>
+        <td>{{ $index }}</td>
         <td>
             <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">
             {{ $element.name }}

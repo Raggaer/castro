@@ -3,7 +3,6 @@ package util
 import (
 	"bytes"
 	"fmt"
-	"github.com/kataras/go-errors"
 	"github.com/raggaer/castro/app/models"
 	"html/template"
 	"io"
@@ -13,6 +12,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"errors"
 )
 
 var (

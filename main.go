@@ -102,13 +102,17 @@ Compiled at: %v
 
 	} else {
 
+		// Create rate-limiter
+		limiter := tollbooth.NewLimiter(
+			util.Config.RateLimit.Number,
+			util.Config.RateLimit.Time,
+		)
+
+		// Set IP lookup header values
+		limiter.IPLookups = []string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"}
+
 		// Use rate-limiter on production mode
-		n.Use(tollbooth_negroni.LimitHandler(
-			tollbooth.NewLimiter(
-				util.Config.RateLimit.Number,
-				util.Config.RateLimit.Time,
-			),
-		))
+		n.Use(tollbooth_negroni.LimitHandler(limiter))
 	}
 
 	// Disable httprouter not found handler
