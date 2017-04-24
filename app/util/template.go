@@ -2,6 +2,7 @@ package util
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"github.com/raggaer/castro/app/models"
 	"html/template"
@@ -12,7 +13,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"errors"
 )
 
 var (

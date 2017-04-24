@@ -109,7 +109,7 @@ Compiled at: %v
 		)
 
 		// Set IP lookup header values
-		limiter.IPLookups = []string{"RemoteAddr", "X-Forwarded-For", "X-Real-IP"}
+		limiter.IPLookups = []string{"X-Forwarded-For", "RemoteAddr", "X-Real-IP"}
 
 		// Use rate-limiter on production mode
 		n.Use(tollbooth_negroni.LimitHandler(limiter))
