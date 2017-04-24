@@ -9,6 +9,7 @@ Castro provides a list of already defined functions you can use on your template
 - [vocation](#vocation)
 - [serverName](#servername)
 - [serverMotd](#serverMotd)
+- [nl2br](#nl2br)
 
 # vocation
 
@@ -32,5 +33,13 @@ Returns the `config.lua` server motd
 
 ```html
 {{ serverMotd }}
+```
+
+#nl2br
+
+Similar to the `PHP` function. It converts all newlines to `<br>`. Useful for textareas for example.
+
+```html
+{{ nl2br .text }}
 ```
 
