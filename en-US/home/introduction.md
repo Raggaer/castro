@@ -10,6 +10,8 @@ Castro provides lua bindings using a pool of lua states. Each request gets a sta
 
 ## Features
 
+Castro provides lua bindings using a pool of lua states. Each request gets a state from the pool. If there are no states available a new one is created and later saved on the pool.
+
 - Standalone application.
     - Castro can run by itself without Apache or NGINX.
 - Extensible and solid lua support.
