@@ -8,33 +8,9 @@ High performance Open Tibia content management system written in **Go** using **
 
 Castro provides lua bindings using a pool of lua states. Each request gets a state from the pool. If there are no states available a new one is created and later saved on the pool.
 
-All pages and widgets (sidebar content) are done using the **Lua** bindings. This provides a great resource for newcomers to learn the Castro bindings. For more information the source code is available at [github](https://github.com/Raggaer/castro).
+# Documentation
 
-- Extensible and solid lua support. Create your own logic using exclusively lua. Everything you need is exposed by Castro.
-- High performance. Great response times. Using Go standard HTTP library.
-- Self-contained application. Castro contains its own HTTP server. On click and its running.
-- Simple installation. This process is almost one click. Everything is gathered from your config and map files.
-- Plugin manager. Manage your extensions through Castro itself.
-- Clean templates. Logic is separated from templates. No more messy files.
-- Security. No more sqli or XSS issues.
-
-# Pages and widgets
-
-To create a custom page head to the `pages` folder and create a new directory with your page name. The name is equivalent to `/subtopic/:name`. GET requests are mapped to the `get.lua` file and POST request to `post.lua`
- 
-To create a custom widget head to the `widgets` folder and create a new directory with your widget name. Castro will look for `:name.html` and `:name.lua` files inside your widget directory
-
-**For detailed information check out the project wiki**
-
-# Setup
-
-Running Castro for the first time will generate a **config.toml** file. Thats the main configuration file for Castro.
-
-Castro will then get everything it needs from your server folder. Reading your **config.lua** and other files (otbm, xml)
-
-# Compiling
-
-Check out our wiki to see how to compile Castro. You can however get the latest commit build at [appveyor](https://ci.appveyor.com/project/Raggaer/castro/build/artifacts)
+Everything you might need [is here](https://docs.raggaer.pw/)
 
 # License
 
