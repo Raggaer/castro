@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// LogMetaTableName the name of the log metatable
+	LogMetaTableName = "log"
+
 	// EnvMetaTableName the name of the env metatable
 	EnvMetaTableName = "env"
 

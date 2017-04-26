@@ -159,6 +159,11 @@ var (
 		"set": SetEnvVariable,
 		"get": GetEnvVariable,
 	}
+	logMethods = map[string]glua.LGFunction{
+		"error": LogError,
+		"fatal": LogFatal,
+		"info":  LogInfo,
+	}
 )
 
 // Get retrieves a lua state from the pool if no states are available we create one
@@ -181,6 +186,9 @@ func (p *luaStatePool) Get() *glua.LState {
 
 // GetApplicationState returns a page configured lua state
 func getApplicationState(luaState *glua.LState) {
+	// Create log metatable
+	SetLogMetaTable(luaState)
+
 	// Create env metatable
 	SetEnvMetaTable(luaState)
 

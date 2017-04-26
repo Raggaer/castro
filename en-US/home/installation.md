@@ -22,7 +22,7 @@ Make sure you have [Go](https://golang.org/) installed. More information about t
 
 ### Getting castro
 
-You can run `go get github.com/raggaer/castro` to get the latest commit. However it is recommended that you download the latest version source and extract it on `GOPATH/src/github.com/raggaer/castro`
+You can run `go get github.com/raggaer/castro` to get the latest commit. However it is recommended that you download the latest released version source and extract it on `GOPATH/src/github.com/raggaer/castro`
 
 ### Building
 

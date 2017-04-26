@@ -280,8 +280,7 @@ func ValidTown(L *lua.LState) int {
 	return 1
 }
 
-// ValidUsername checks if the given username contains only
-// letters and spaces
+// ValidUsername checks if the given username contains only letters and spaces
 func ValidUsername(L *lua.LState) int {
 	// Get string to validate
 	v := L.Get(2)
@@ -306,8 +305,7 @@ func ValidUsername(L *lua.LState) int {
 	return 1
 }
 
-// Validate executes the given govalidator func
-// and returns its output
+// Validate executes the given govalidator func and returns its output
 func Validate(L *lua.LState) int {
 	// Get function name
 	name := L.Get(2)

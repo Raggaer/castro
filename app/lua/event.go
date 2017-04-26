@@ -89,6 +89,9 @@ func executeEvent(file string, duration time.Duration) {
 	// Close state
 	defer state.Close()
 
+	// Create log metatable
+	SetLogMetaTable(state)
+
 	// Create file metatable
 	SetFileMetaTable(state)
 

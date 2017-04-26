@@ -13,6 +13,7 @@ import (
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
+	"github.com/ulule/limiter"
 	"github.com/urfave/negroni"
 	"github.com/yuin/gopher-lua"
 	"golang.org/x/crypto/acme/autocert"
@@ -21,7 +22,6 @@ import (
 	_ "net/http/pprof"
 	"strings"
 	"time"
-	"github.com/ulule/limiter"
 )
 
 var (
@@ -73,8 +73,6 @@ Compiled at: %v
 		Period: util.Config.RateLimit.Time,
 		Limit:  util.Config.RateLimit.Number,
 	}
-
-	log.Println(util.Config.RateLimit.Number, util.Config.RateLimit.Time, util.Config.Cache.Default)
 
 	// Create rate-limiter storage
 	store := limiter.NewMemoryStore()

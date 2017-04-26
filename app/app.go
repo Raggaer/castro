@@ -106,7 +106,9 @@ func loadMap() {
 	}
 
 	// Check if map is old
-	if time.Now().Add(time.Hour * 24).Before(m.Updated_at) {
+	if m.Updated_at.Add(time.Hour).Before(time.Now()) {
+
+		fmt.Println(">> Encoded map is outdated. Generating new map data")
 
 		// Encode map
 		mapData, err := util.EncodeMap(
@@ -124,7 +126,7 @@ func loadMap() {
 		m.Updated_at = time.Now()
 
 		// Save map
-		if _, err := database.DB.Exec("INSERT INTO castro_map (name, data, created_at, updated_at) VALUES (?, ?, ?, ?)", m.Name, m.Data, m.Created_at, m.Updated_at); err != nil {
+		if _, err := database.DB.Exec("UPDATE castro_map SET data = ?, created_at = ?, updated_at = ? WHERE name = ?", m.Data, m.Created_at, m.Updated_at, m.Name); err != nil {
 			util.Logger.Fatalf("Cannot save encoded map file: %v", err)
 		}
 	}
@@ -191,6 +193,9 @@ func executeInitFile() {
 
 	// Close state
 	defer luaState.Close()
+
+	// Create log metatable
+	lua.SetLogMetaTable(luaState)
 
 	// Create http metatable
 	lua.SetHTTPMetaTable(luaState)

@@ -7,8 +7,8 @@ import (
 	"github.com/dchest/uniuri"
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
-	"golang.org/x/net/context"
 	"github.com/ulule/limiter"
+	"golang.org/x/net/context"
 )
 
 // microtimeHandler used to record all requests time spent

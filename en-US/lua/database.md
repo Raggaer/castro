@@ -6,8 +6,8 @@ Name: database
 
 Provides access to the server database. Using prepared statements
 
-* [db:singleQuery(query, args, cache)](#singlequery)
-* [db:query(query, args, cache)](#query)
+* [db:singleQuery(query, args, cache = false)](#singlequery)
+* [db:query(query, args, cache = false)](#query)
 * [db:execute(query)](#execute)
 
 # singleQuery

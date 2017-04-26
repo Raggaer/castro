@@ -68,7 +68,7 @@ func isZnoteInstalled(db *sqlx.Tx) (bool, error) {
 	return true, nil
 }
 
-func accountExists(id uint64, db *sqlx.Tx) bool {
+func accountExists(id int64, db *sqlx.Tx) bool {
 	// Data holder
 	exists := false
 
@@ -207,6 +207,11 @@ func installApplication() error {
 
 	// Loop accounts
 	for _, acc := range accountList {
+
+		// Check if account exists
+		if accountExists(acc.ID, db) {
+			continue
+		}
 
 		// Insert castro account from normal account
 		if _, err := db.Exec("INSERT INTO castro_accounts (account_id) VALUES (?)", acc.ID); err != nil {
