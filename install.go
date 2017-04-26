@@ -357,11 +357,11 @@ func createConfigFile(name, location string) error {
 			CSP: util.ContentSecurityPolicyConfig{
 				Default: []string{"none"},
 				Frame: util.ContentSecurityPolicyType{
-					SRC: []string{"https://www.google.com"},
+					SRC: []string{"http://pay.fortumo.com", "https://www.google.com"},
 				},
 				Script: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
-					SRC:     []string{"https://www.google.com", "https://code.jquery.com", "https://cdn.datatables.net", "https://www.gstatic.com"},
+					SRC:     []string{"https://ajax.googleapis.com", "https://assets.fortumo.com", "https://www.google.com", "https://code.jquery.com", "https://cdn.datatables.net", "https://www.gstatic.com"},
 				},
 				Font: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
@@ -372,11 +372,11 @@ func createConfigFile(name, location string) error {
 				},
 				Style: util.ContentSecurityPolicyType{
 					Default: []string{"unsafe-inline", "self"},
-					SRC:     []string{"http://fonts.googleapis.com", "https://cdn.datatables.net"},
+					SRC:     []string{"https://assets.fortumo.com", "http://fonts.googleapis.com", "https://cdn.datatables.net"},
 				},
 				Image: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
-					SRC:     []string{"https://*.githubusercontent.com", "data:"},
+					SRC:     []string{"https://assets.fortumo.com", "https://*.githubusercontent.com", "data:"},
 				},
 			},
 		},

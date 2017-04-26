@@ -73,6 +73,13 @@ type PayPalConfig struct {
 	SandBox   bool
 }
 
+// FortumoConfig struct used for the fortumo configuration options
+type FortumoConfig struct {
+	Enabled bool
+	Service string
+	Secret  string
+}
+
 // ContentSecurityPolicyType struct used for CSP fields
 type ContentSecurityPolicyType struct {
 	Default []string
@@ -117,6 +124,7 @@ type Configuration struct {
 	SSL          SSLConfig
 	PayPal       PayPalConfig
 	PayGol       PaygolConfig
+	Fortumo      FortumoConfig
 	Shop         ShopConfig
 	Cookies      CookieConfig
 	Cache        CacheConfig

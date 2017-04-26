@@ -23,6 +23,7 @@ var (
 
 	cryptoMethods = map[string]glua.LGFunction{
 		"sha1":         Sha1Hash,
+		"md5":          Md5Hash,
 		"randomString": RandomString,
 		"qr":           GenerateQRCode,
 		"qrKey":        GenerateAuthSecretKey,
@@ -332,6 +333,9 @@ func SetConfigGlobal(L *glua.LState) {
 
 	// Set PayPal value
 	L.SetField(tbl, "PayPal", StructToTable(&util.Config.PayPal))
+
+	// Set Fortumo value
+	L.SetField(tbl, "Fortumo", StructToTable(&util.Config.Fortumo))
 
 	// Set Captcha value
 	L.SetField(tbl, "Captcha", StructToTable(&util.Config.Captcha))

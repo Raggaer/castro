@@ -1,0 +1,16 @@
+{{ template "header.html" }}
+<h3>Buypoints using Fortumo</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+<a id="fmp-button" href="#" rel="{{ .serviceId }}/{{ .accountId }}"><img src="https://assets.fortumo.com/fmp/fortumopay_150x50_red.png" width="150" height="50" alt="Mobile Payments by Fortumo" border="0" /></a>
+{{ template "footer.html" . }}
+<script src='https://assets.fortumo.com/fmp/fortumopay.js' type='text/javascript'></script>

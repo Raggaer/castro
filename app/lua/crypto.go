@@ -1,6 +1,7 @@
 package lua
 
 import (
+	"crypto/md5"
 	"crypto/sha1"
 	"encoding/base64"
 	"fmt"
@@ -33,6 +34,31 @@ func Sha1Hash(L *lua.LState) int {
 
 	// Hash string using sha1
 	data := sha1.Sum([]byte(str.String()))
+
+	// Convert byte array to string and push tu stack
+	L.Push(
+		lua.LString(
+			fmt.Sprintf("%x", data),
+		),
+	)
+
+	return 1
+}
+
+// Md5Hash returns the md5 hash of the given string
+func Md5Hash(L *lua.LState) int {
+	// Get string to be hashed
+	str := L.Get(2)
+
+	// Check for valid string type
+	if str.Type() != lua.LTString {
+
+		L.ArgError(1, "Invalid string format. Expected string")
+		return 0
+	}
+
+	// Hash string using sha1
+	data := md5.Sum([]byte(str.String()))
 
 	// Convert byte array to string and push tu stack
 	L.Push(

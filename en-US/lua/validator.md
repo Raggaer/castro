@@ -11,6 +11,7 @@ Provides access to data validation functions.
 - [validator:validGuildRank(rank)](#validguildrank)
 - [validator:validVocation(name or id, base = false)](#validvocation)
 - [validator:validTown(name or id)](#validtown)
+- [validator:validUsername(name)](#validusername)
 
 # validQRToken
 
@@ -58,7 +59,7 @@ local valid = validator:validVocation("Sorcerer")
 
 ```lua
 local valid = validator:validVocation(10)
--- valid = false
+-- valid = true
 ```
 
 # validTown
@@ -72,8 +73,19 @@ local valid = validator:validTown("Thais")
 
 ```lua
 local valid = validator:validTown(10)
--- valid = false
+-- valid = true
 ```
 
 # validUsername
+
+Validates the given character name. Must compile against this regular expression: 
+
+```
+^[a-zA-Z ]+$
+```
+
+```lua
+local valid = validator:validUsername("Not_valid!")
+-- valid = false
+```
 
