@@ -356,7 +356,8 @@ func SetConfigGlobal(L *glua.LState) {
 	L.SetGlobal("app", tbl)
 
 	// Set default fields
-	L.SetField(tbl, "Version", glua.LString(util.Config.Version))
+	L.SetField(tbl, "Version", glua.LString(util.VERSION))
+	L.SetField(tbl, "BuildDate", glua.LString(util.BUILD_DATE))
 	L.SetField(tbl, "CheckUpdates", glua.LBool(util.Config.CheckUpdates))
 	L.SetField(tbl, "URL", glua.LString(util.Config.URL))
 	L.SetField(tbl, "Port", glua.LNumber(util.Config.Port))

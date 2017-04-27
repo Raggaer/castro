@@ -111,7 +111,6 @@ type SecurityConfig struct {
 
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
-	Version      string
 	CheckUpdates bool
 	Mode         string
 	Port         int
@@ -132,8 +131,16 @@ type Configuration struct {
 	Custom       map[string]interface{}
 }
 
-// Config holds the main configuration file
-var Config *Configuration
+var (
+	// Config holds the main configuration file
+	Config *Configuration
+
+	// VERSION current version of the build
+	VERSION string
+
+	// BUILD_DATE date of the build
+	BUILD_DATE string
+)
 
 func init() {
 	Config = &Configuration{}

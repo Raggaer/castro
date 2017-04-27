@@ -21,6 +21,8 @@ if app.CheckUpdates and app.Version ~= "" then
     end
 
     print(">> Castro started at " .. time:parseUnix(os.time()).Result .. " - Running " .. outdated .. " commits behind")
+    log:info("Castro started at " .. time:parseUnix(os.time()).Result .. " - Running " .. outdated .. " commits behind")
 else
     print(">> Castro started at " .. time:parseUnix(os.time()).Result)
+    log:info("Castro started at " .. time:parseUnix(os.time()).Result)
 end

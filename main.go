@@ -24,14 +24,6 @@ import (
 	"time"
 )
 
-var (
-	// VERSION is the application current version
-	VERSION string
-
-	// BUILD_DATE date of application compilation
-	BUILD_DATE string
-)
-
 func main() {
 	// Register gob data
 	gob.Register(&models.CsrfToken{})
@@ -45,7 +37,7 @@ Castro - High performance content management system for Open Tibia servers
 Running version: %v
 Compiled at: %v
 
-`, VERSION, BUILD_DATE)
+`, util.VERSION, util.BUILD_DATE)
 
 	// Declare our new http router
 	router := httprouter.New()

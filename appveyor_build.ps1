@@ -13,7 +13,7 @@ echo "Building for Windows amd64"
 $env:GOOS = "windows"
 $env:GOARCH = "amd64"
 
-$winCommand = 'go build -v -o buildOutput\castro_win_amd64.exe -ldflags "-X main.VERSION=$version -X main.BUILD_DATE=$date"'
+$winCommand = 'go build -v -o buildOutput\castro_win_amd64.exe -ldflags "-X github.com/raggaer/castro/app/util.VERSION=$version -X github.com/raggaer/castro/app/util.BUILD_DATE=$date"'
 
 iex $winCommand
 
@@ -21,11 +21,11 @@ echo "Building for Linux amd64"
 $env:GOOS = "linux"
 $env:GOARCH = "amd64"
 
-$linuxCommand = 'go build -v -o buildOutput\castro_linux_amd64 -ldflags "-X main.VERSION=$version -X main.BUILD_DATE=$date"'
+$linuxCommand = 'go build -v -o buildOutput\castro_linux_amd64 -ldflags "-X github.com/raggaer/castro/app/util.VERSION=$version -X github.com/raggaer/castro/app/util.BUILD_DATE=$date"'
 
 iex $linuxCommand
 
-$linuxCommand = 'go build -v -o buildOutput\castro_linux_arm64 -ldflags "-X main.VERSION=$version -X main.BUILD_DATE=$date"'
+$linuxCommand = 'go build -v -o buildOutput\castro_linux_arm64 -ldflags "-X github.com/raggaer/castro/app/util.VERSION=$version -X github.com/raggaer/castro/app/util.BUILD_DATE=$date"'
 
 echo "Building for Linux arm64"
 $env:GOOS = "linux"

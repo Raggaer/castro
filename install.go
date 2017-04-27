@@ -326,7 +326,6 @@ func createConfigFile(name, location string) error {
 
 	// Encode the given configuration struct into the file
 	return toml.NewEncoder(configFile).Encode(util.Configuration{
-		Version:      VERSION,
 		CheckUpdates: true,
 		Mode:         "dev",
 		Port:         80,
