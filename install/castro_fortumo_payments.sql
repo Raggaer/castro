@@ -1,4 +1,4 @@
-CREATE TABLE `cloaka`.`castro_fortumo_payments` (
+CREATE TABLE `castro_fortumo_payments` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `account` VARCHAR(45) NULL,
   `points` INT NULL,

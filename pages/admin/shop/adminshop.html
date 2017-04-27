@@ -17,7 +17,9 @@
     <tbody>
     {{ range $index, $element := .list }}
     <tr>
-        <td>{{ $element.name }}</td>
+        <td>
+            <a href="{{ url "subtopic" "admin" "shop" "category" }}?id={{ $element.id }}">{{ $element.name }}</a>
+        </td>
         <td>{{ $element.created_at.Result }}</td>
         <td>
             <a role="button" href="{{ url "subtopic" "admin" "shop" "category" "edit" }}?id={{ $element.id }}" class="btn btn-success btn-xs">Edit</a>

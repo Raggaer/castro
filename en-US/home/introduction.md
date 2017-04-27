@@ -31,6 +31,11 @@ Castro provides lua bindings using a pool of lua states. Each request gets a sta
     - Highly customizable Content Security Policy.
     - Prepared statements.
     - Template data is escaped by default.
+- Shop
+    - Highly customizable web integrated shop.
+    - PayPal payment processing using REST API.
+    - Fortumo support.
+    - PayGol support.
 
 ## Development status
 

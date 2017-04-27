@@ -1,0 +1,32 @@
+{{ template "header.html" }}
+<h3>Shop offers for: {{ .category.name }}</h3>
+<hr>
+<a role="button" href="{{ url "subtopic" "admin" "shop" "offer" "new" }}" class="btn btn-primary">New offer</a>
+<hr>
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <p>
+            {{ nl2br .category.description }}
+        </p>
+    </div>
+</div>
+<div id="ban-tabs">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#offers" aria-controls="offers" role="tab" data-toggle="tab">Offers</a></li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="offers">
+            {{ if .list }}
+            f
+            {{ else }}
+            <p>No offers for this category</p>
+            {{ end }}
+        </div>
+    </div>
+</div>
+{{ template "footer.html" . }}
