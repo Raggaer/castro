@@ -20,5 +20,13 @@ function get()
         end
     end
 
+    data.codes = db:query("SELECT code, valid_till, unlimited FROM castro_shop_discounts ORDER BY created_at DESC")
+
+    if data.codes ~= nil then
+        for i, code in pairs(data.codes) do
+            data.codes[i].valid_till = time:parseUnix(tonumber(code.valid_till))
+        end
+    end
+
     http:render("adminshop.html", data)
 end

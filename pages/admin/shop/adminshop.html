@@ -1,41 +1,90 @@
 {{ template "header.html" }}
-<h3>Shop categories</h3>
-<hr>
-<a role="button" href="{{ url "subtopic" "admin" "shop" "category" "new" }}" class="btn btn-primary">New category</a>
+<h3>Shop admin</h3>
 <hr>
 {{ if .success }}
 <div class="alert alert-success" role="alert">
     <strong>Success!</strong> {{ .success }}
 </div>
 {{ end }}
-{{ if .list }}
-<table class="table table-striped table-hover">
-    <thead class="thead-inverse">
-        <th>Name</th>
-        <th colspan="3">Created</th>
-    </thead>
-    <tbody>
-    {{ range $index, $element := .list }}
-    <tr>
-        <td>
-            <a href="{{ url "subtopic" "admin" "shop" "category" }}?id={{ $element.id }}">{{ $element.name }}</a>
-        </td>
-        <td>{{ $element.created_at.Result }}</td>
-        <td>
-            <a role="button" href="{{ url "subtopic" "admin" "shop" "category" "edit" }}?id={{ $element.id }}" class="btn btn-success btn-xs">Edit</a>
-        </td>
-        <td>
-            <form method="post">
-                <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
-                <input type="hidden" name="id" value="{{ $element.id }}">
-                <button type="submit" class="btn btn-danger btn-xs">Delete</button>
-            </form>
-        </td>
-    </tr>
-    {{ end }}
-    </tbody>
-</table>
-{{ else }}
-<p>No shop categories</p>
-{{ end }}
+<div id="ban-tabs">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#categories" aria-controls="categories" role="tab" data-toggle="tab">Categories</a></li>
+        <li role="presentation"><a href="#discount" aria-controls="discount" role="tab" data-toggle="tab">Discount codes</a></li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="categories">
+            <a role="button" href="{{ url "subtopic" "admin" "shop" "category" "new" }}" class="btn btn-primary">New category</a>
+            <hr>
+            {{ if .list }}
+            <table class="table table-striped table-hover">
+                <thead class="thead-inverse">
+                    <th>Name</th>
+                    <th colspan="3">Created</th>
+                </thead>
+                <tbody>
+                {{ range $index, $element := .list }}
+                <tr>
+                    <td>
+                        <a href="{{ url "subtopic" "admin" "shop" "category" }}?id={{ $element.id }}">{{ $element.name }}</a>
+                    </td>
+                    <td>{{ $element.created_at.Result }}</td>
+                    <td>
+                        <a role="button" href="{{ url "subtopic" "admin" "shop" "category" "edit" }}?id={{ $element.id }}" class="btn btn-success btn-xs">Edit</a>
+                    </td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                            <input type="hidden" name="id" value="{{ $element.id }}">
+                            <button type="submit" class="btn btn-danger btn-xs">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{ end }}
+                </tbody>
+            </table>
+            {{ else }}
+            <p>No shop categories</p>
+            {{ end }}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="discount">
+            <a role="button" href="{{ url "subtopic" "admin" "shop" "discount" "new" }}" class="btn btn-primary">New code</a>
+            <hr>
+            {{ if .codes }}
+            <table class="table table-striped table-hover">
+                <thead class="thead-inverse">
+                <th>Code</th>
+                <th>Unlimited</th>
+                <th colspan="2">Valid until</th>
+                </thead>
+                <tbody>
+                {{ range $index, $element := .codes }}
+                <tr>
+                    <td>
+                        {{ $element.code }}
+                    </td>
+                    <td>
+                        {{ if $element.unlimited }}
+                        Unlimited
+                        {{ else }}
+                        Limited
+                        {{ end }}
+                    </td>z
+                    <td>{{ $element.valid_till.Result }}</td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                            <input type="hidden" name="id" value="{{ $element.id }}">
+                            <button type="submit" class="btn btn-danger btn-xs">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{ end }}
+                </tbody>
+            </table>
+            {{ else }}
+            <p>No discount codes</p>
+            {{ end }}
+        </div>
+    </div>
+</div>
 {{ template "footer.html" . }}

@@ -1,0 +1,59 @@
+{{ template "header.html" }}
+<h3>New shop discount code</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+<form action="{{ url "subtopic" "admin" "shop" "discount" "new" }}" method="post">
+<input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <div class="form-group">
+        <label for="code">Discount code</label>
+        <input id="code" class="form-control" type="text" name="code" placeholder="Discount code">
+        <p class="help-block">
+            The code your users will submit at shop checkout
+        </p>
+    </div>
+    <div class="form-group">
+        <label for="code">Discount %</label>
+        <input id="amount" class="form-control" type="number" name="amount" placeholder="Discount percentage amount">
+        <p class="help-block">
+            The % of the discount
+        </p>
+    </div>
+    <div class="form-group">
+        <label for="code">Discount code valid until</label>
+        <input id="until" class="form-control" type="date" min="{{ .current }}" name="until" placeholder="Discount code valid until">
+        <p class="help-block">
+            When the discount code will stop working
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="checkbox">
+                <input id="unlimited" type="radio" value="1" name="unlimited"> Unlimited player uses
+                <p class="help-block">
+                    Players can use this code on every transaction
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="checkbox">
+                <input id="uses" type="radio" value="0" name="unlimited"> Limited player uses
+                <p class="help-block">
+                    Players can use this code a limited number of transactions
+                </p>
+            </div>
+        </div>
+    </div>
+    <div id="uses-group" class="form-group">
+        <label for="code">Discount code limited player uses</label>
+        <input id="code-uses" class="form-control" type="number" name="code-uses" placeholder="Number of limited player transactions">
+    </div>
+    <div class="form-group">
+        <button class="btn btn-success" type="submit">Create code</button>
+    </div>
+</form>
+{{ template "footer.html" . }}
+<script src="/js/new-discount.js"></script>
