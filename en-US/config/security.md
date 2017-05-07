@@ -2,6 +2,8 @@
 name: Security
 ---
 
+# Security
+
 Provides access to the security layer of Castro. Most of these values should never be touched.
 
 - [XSS](#xss)
