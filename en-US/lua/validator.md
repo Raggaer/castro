@@ -12,6 +12,8 @@ Provides access to data validation functions.
 - [validator:validVocation(name or id, base = false)](#validvocation)
 - [validator:validTown(name or id)](#validtown)
 - [validator:validUsername(name)](#validusername)
+- [validator:blackList(data, tokens)](#blacklist)
+- [validator:validate(method, data)](#validate)
 
 # validQRToken
 
@@ -89,3 +91,29 @@ local valid = validator:validUsername("Not_valid!")
 -- valid = false
 ```
 
+# blackList
+
+Validates the given data to check if any token exists.
+
+```lua
+local valid = validator:blackList("This is _not_ allowed!", "-!")
+--- valid = false
+```
+
+# validate
+
+Calls a validator method. The list of valid methods are the following:
+
+- IsURL
+- IsAlpha
+- IsAlphanumeric
+- IsEmail
+- IsJson
+- IsNull
+- IsEmpty
+- IsASCII
+- IsUpperCase
+- IsLowerCase
+- IsInt
+
+This function takes a string as a second argument. All methods return `true` or `false`

@@ -155,13 +155,13 @@ Compiled at: %v
 			util.Config.Configuration.SSL.Cert,
 			util.Config.Configuration.SSL.Key,
 		); err != nil {
-			util.Logger.Fatalf("Cannot start Castro HTTPS server: %v", err)
+			util.Logger.Logger.Fatalf("Cannot start Castro HTTPS server: %v", err)
 		}
 	} else {
 
 		// Listen without using ssl
 		if err := server.ListenAndServe(); err != nil {
-			util.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
+			util.Logger.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
 		}
 	}
 }
@@ -188,6 +188,6 @@ func httpsRedirect() {
 	}
 
 	if err := server.ListenAndServe(); err != nil {
-		util.Logger.Fatalf("Cannot start HTTP redirect server: %v", err)
+		util.Logger.Logger.Fatalf("Cannot start HTTP redirect server: %v", err)
 	}
 }

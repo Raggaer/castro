@@ -138,7 +138,7 @@ func GetPaypalPayment(L *lua.LState) int {
 
 		// Log if development mode
 		if util.Config.Configuration.IsDev() {
-			util.Logger.Errorf("Cannot get paypal payment information: %v", err)
+			util.Logger.Logger.Errorf("Cannot get paypal payment information: %v", err)
 		}
 
 		L.Push(lua.LNil)
@@ -202,7 +202,7 @@ func ExecutePaypalPayment(L *lua.LState) int {
 	if err != nil {
 		// Log if development mode
 		if util.Config.Configuration.IsDev() {
-			util.Logger.Errorf("Cannot execute paypal payment: %v", err)
+			util.Logger.Logger.Errorf("Cannot execute paypal payment: %v", err)
 		}
 
 		L.Push(lua.LBool(false))

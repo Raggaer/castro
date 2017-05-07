@@ -21,7 +21,7 @@ func LogError(L *lua.LState) int {
 	content := L.Get(2)
 
 	// Log content
-	util.Logger.Errorf("%v", content.String())
+	util.Logger.Logger.Errorf("%v", content.String())
 
 	return 0
 }
@@ -32,7 +32,7 @@ func LogFatal(L *lua.LState) int {
 	content := L.Get(2)
 
 	// Log content
-	util.Logger.Fatalf("%v", content.String())
+	util.Logger.Logger.Fatalf("%v", content.String())
 
 	return 0
 }
@@ -43,7 +43,7 @@ func LogInfo(L *lua.LState) int {
 	content := L.Get(2)
 
 	// Log content
-	util.Logger.Infof("%v", content.String())
+	util.Logger.Logger.Infof("%v", content.String())
 
 	return 0
 }

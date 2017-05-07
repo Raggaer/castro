@@ -44,7 +44,7 @@ func Execute(L *lua.LState) int {
 
 	// Log query on development mode
 	if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
-		util.Logger.Infof("execute: "+strings.Replace(query.String(), "?", "%v", -1), args...)
+		util.Logger.Logger.Infof("execute: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
 	// Execute query
@@ -149,7 +149,7 @@ func SingleQuery(L *lua.LState) int {
 
 	// Log query on development mode
 	if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
-		util.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
+		util.Logger.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
 	// Execute query
@@ -281,7 +281,7 @@ func Query(L *lua.LState) int {
 
 	// Log query on development mode
 	if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
-		util.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
+		util.Logger.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
 	// Execute query

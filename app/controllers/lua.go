@@ -32,7 +32,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		if err := util.LoadConfig("config.toml"); err != nil {
 			// Set error header
 			w.WriteHeader(500)
-			util.Logger.Errorf("Cannot load config file: %v", err)
+			util.Logger.Logger.Errorf("Cannot load config file: %v", err)
 
 			return
 		}
@@ -41,7 +41,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		if err := lua.PageList.Load("pages"); err != nil {
 			// Set error header
 			w.WriteHeader(500)
-			util.Logger.Errorf("Cannot load subtopic %v: %v", ps.ByName("page"), err)
+			util.Logger.Logger.Errorf("Cannot load subtopic %v: %v", ps.ByName("page"), err)
 
 			return
 		}
@@ -50,7 +50,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		if err := lua.WidgetList.Load("widgets"); err != nil {
 			// Set error header
 			w.WriteHeader(500)
-			util.Logger.Errorf("Cannot load widgets when executing %v subtopic: %v", ps.ByName("page"), err)
+			util.Logger.Logger.Errorf("Cannot load widgets when executing %v subtopic: %v", ps.ByName("page"), err)
 
 			return
 		}
@@ -62,7 +62,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if !ok {
 		// Set error header
 		w.WriteHeader(500)
-		util.Logger.Error("Cannot get session as map")
+		util.Logger.Logger.Error("Cannot get session as map")
 
 		return
 	}
@@ -81,7 +81,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if err != nil {
 		// Set error header
 		w.WriteHeader(500)
-		util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
+		util.Logger.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
 
 		return
 	}
@@ -108,6 +108,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Set error header
 		w.WriteHeader(500)
-		util.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
+		util.Logger.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
 	}
 }

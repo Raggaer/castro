@@ -126,13 +126,13 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 
 		// Reload all templates
 		if err := t.LoadTemplates("views/"); err != nil {
-			Logger.Error(err.Error())
+			Logger.Logger.Error(err.Error())
 			return
 		}
 
 		// Reload all templates
 		if err := t.LoadTemplates("pages/"); err != nil {
-			Logger.Error(err.Error())
+			Logger.Logger.Error(err.Error())
 			return
 		}
 	}
@@ -166,7 +166,7 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 
 	// Render template and log error
 	if err := t.Tmpl.ExecuteTemplate(w, name, args); err != nil {
-		Logger.Error(err.Error())
+		Logger.Logger.Error(err.Error())
 	}
 }
 

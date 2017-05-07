@@ -27,7 +27,7 @@ func DebugValue(L *lua.LState) int {
 	for val.Type() != lua.LTNil {
 
 		// Debug statement
-		util.Logger.Debugf("type: %v, value: %v", val.Type().String(), val.String())
+		util.Logger.Logger.Debugf("type: %v, value: %v", val.Type().String(), val.String())
 
 		// Increment value index
 		i++

@@ -6,10 +6,10 @@ Name: captcha
 
 Provides access to Google reCAPTCHA functions. You must have a valid private and public key on your `config.toml`.
 
-- [captcha:isEnabled()](#enabled)
+- [captcha:isEnabled()](#isenabled)
 - [captcha:verify(data)](#verify)
 
-# enabled
+# isEnabled
 
 Checks if the captcha system is enabled.
 

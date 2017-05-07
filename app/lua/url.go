@@ -25,7 +25,7 @@ func DecodeURL(L *lua.LState) int {
 	decoded, err := url.QueryUnescape(uri)
 
 	if err != nil {
-		util.Logger.Errorf("Cannot decode uri: %v", err)
+		util.Logger.Logger.Errorf("Cannot decode uri: %v", err)
 
 		// Push nil
 		L.Push(lua.LNil)

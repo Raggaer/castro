@@ -98,11 +98,13 @@ func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, ne
 	// Set X-Permitted-Cross-Domain-Policies header
 	w.Header().Set("X-Permitted-Cross-Domain-Policies", util.Config.Configuration.Security.CrossDomainPolicy)
 
-	// Set Content-Security-Policy header
-	w.Header().Set(
-		"Content-Security-Policy",
-		util.Config.Configuration.CSP(),
-	)
+	if util.Config.Configuration.Security.CSP.Enabled {
+		// Set Content-Security-Policy header
+		w.Header().Set(
+			"Content-Security-Policy",
+			util.Config.Configuration.CSP(),
+		)
+	}
 
 	// Execute next handler
 	next(w, req)
@@ -129,7 +131,7 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 		encoded, err := util.SessionStore.Encode(util.Config.Configuration.Cookies.Name, v)
 
 		if err != nil {
-			util.Logger.Errorf("Cannot encode cookie value: %v", err)
+			util.Logger.Logger.Errorf("Cannot encode cookie value: %v", err)
 			return
 		}
 
@@ -165,7 +167,7 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 		&v,
 	); err != nil {
 
-		util.Logger.Errorf("Cannot decode cookie value: %v", err)
+		util.Logger.Logger.Errorf("Cannot decode cookie value: %v", err)
 		return
 	}
 
@@ -217,7 +219,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		encoded, err := util.SessionStore.Encode(util.Config.Configuration.Cookies.Name, session)
 
 		if err != nil {
-			util.Logger.Errorf("Cannot encode session: %v", err)
+			util.Logger.Logger.Errorf("Cannot encode session: %v", err)
 		}
 
 		// Create cookie
@@ -258,7 +260,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		encoded, err := util.SessionStore.Encode(util.Config.Configuration.Cookies.Name, session)
 
 		if err != nil {
-			util.Logger.Errorf("Cannot encode session: %v", err)
+			util.Logger.Logger.Errorf("Cannot encode session: %v", err)
 		}
 
 		// Create cookie

@@ -76,7 +76,7 @@ func loadMap() {
 	err := database.DB.Get(&m, "SELECT id, name, data, created_at, updated_at FROM castro_map WHERE name = ?", lua.Config.GetGlobal("mapName").String())
 
 	if err != nil && err != sql.ErrNoRows {
-		util.Logger.Fatalf("Cannot retrieve map from database: %v", err)
+		util.Logger.Logger.Fatalf("Cannot retrieve map from database: %v", err)
 	}
 
 	// Check if map is not encoded
@@ -90,7 +90,7 @@ func loadMap() {
 		)
 
 		if err != nil {
-			util.Logger.Fatalf("Cannot encode map file: %v", err)
+			util.Logger.Logger.Fatalf("Cannot encode map file: %v", err)
 		}
 
 		// Update map struct
@@ -101,7 +101,7 @@ func loadMap() {
 
 		// Save map
 		if _, err := database.DB.Exec("INSERT INTO castro_map (name, data, created_at, updated_at) VALUES (?, ?, ?, ?)", m.Name, m.Data, m.Created_at, m.Updated_at); err != nil {
-			util.Logger.Fatalf("Cannot save encoded map file: %v", err)
+			util.Logger.Logger.Fatalf("Cannot save encoded map file: %v", err)
 		}
 	}
 
@@ -116,7 +116,7 @@ func loadMap() {
 		)
 
 		if err != nil {
-			util.Logger.Fatalf("Cannot encode map file: %v", err)
+			util.Logger.Logger.Fatalf("Cannot encode map file: %v", err)
 		}
 
 		// Update map struct
@@ -127,7 +127,7 @@ func loadMap() {
 
 		// Save map
 		if _, err := database.DB.Exec("UPDATE castro_map SET data = ?, created_at = ?, updated_at = ? WHERE name = ?", m.Data, m.Created_at, m.Updated_at, m.Name); err != nil {
-			util.Logger.Fatalf("Cannot save encoded map file: %v", err)
+			util.Logger.Logger.Fatalf("Cannot save encoded map file: %v", err)
 		}
 	}
 
@@ -135,7 +135,7 @@ func loadMap() {
 	castroMap, err := util.DecodeMap(m.Data)
 
 	if err != nil {
-		util.Logger.Fatalf("Cannot decode map file: %v", err)
+		util.Logger.Logger.Fatalf("Cannot decode map file: %v", err)
 	}
 
 	// Set map global
@@ -183,7 +183,7 @@ func executeMigrations() {
 
 	}); err != nil {
 
-		util.Logger.Fatalf("Cannot run migration files: %v", err)
+		util.Logger.Logger.Fatalf("Cannot run migration files: %v", err)
 	}
 }
 
@@ -257,7 +257,7 @@ func executeInitFile() {
 	f, err := osext.ExecutableFolder()
 
 	if err != nil {
-		util.Logger.Fatalf("Cannot get executable folder path: %v", err)
+		util.Logger.Logger.Fatalf("Cannot get executable folder path: %v", err)
 	}
 
 	// Get package metatable
@@ -274,14 +274,14 @@ func executeInitFile() {
 
 	// Execute init file
 	if err := luaState.DoFile(filepath.Join("engine", "init.lua")); err != nil {
-		util.Logger.Fatalf("Cannot execute init lua file: %v", err)
+		util.Logger.Logger.Fatalf("Cannot execute init lua file: %v", err)
 	}
 }
 
 func loadWidgets(wg *sync.WaitGroup) {
 	// Load subtopic list
 	if err := lua.WidgetList.Load("widgets"); err != nil {
-		util.Logger.Fatalf("Cannot load application widget list: %v", err)
+		util.Logger.Logger.Fatalf("Cannot load application widget list: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -291,7 +291,7 @@ func loadWidgets(wg *sync.WaitGroup) {
 func loadSubtopics(wg *sync.WaitGroup) {
 	// Load subtopic list
 	if err := lua.PageList.Load("pages"); err != nil {
-		util.Logger.Fatalf("Cannot load application subtopic list: %v", err)
+		util.Logger.Logger.Fatalf("Cannot load application subtopic list: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -307,13 +307,13 @@ func loadAppLogger() {
 	}
 
 	// Set logger output variable
-	util.LoggerOutput = f
+	util.Logger.LoggerOutput = f
 
 	// Set last logger day
-	util.LastLoggerDay = day
+	util.Logger.LastLoggerDay = day
 
 	// Create main application logger instance
-	util.Logger = util.CreateLogger(f)
+	util.Logger.Logger = util.CreateLogger(f)
 }
 
 func loadVocations(wg *sync.WaitGroup) {
@@ -322,7 +322,7 @@ func loadVocations(wg *sync.WaitGroup) {
 		filepath.Join(util.Config.Configuration.Datapack, "data", "XML", "vocations.xml"),
 		util.ServerVocationList,
 	); err != nil {
-		util.Logger.Fatalf("Cannot load map house list: %v", err)
+		util.Logger.Logger.Fatalf("Cannot load map house list: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -335,7 +335,7 @@ func loadHouses(wg *sync.WaitGroup) {
 		filepath.Join(util.Config.Configuration.Datapack, "data", "world", util.OTBMap.HouseFile),
 		util.ServerHouseList,
 	); err != nil {
-		util.Logger.Fatalf("Cannot load map house list: %v", err)
+		util.Logger.Logger.Fatalf("Cannot load map house list: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -345,14 +345,14 @@ func loadHouses(wg *sync.WaitGroup) {
 func loadAppConfig() {
 	// Load the TOML configuration file
 	if err := util.LoadConfig("config.toml"); err != nil {
-		util.Logger.Fatalf("Cannot read configuration file: %v", err)
+		util.Logger.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
 }
 
 func loadLUAConfig() {
 	// Load the LUA configuration file
 	if err := lua.LoadConfig(filepath.Join(util.Config.Configuration.Datapack, "config.lua")); err != nil {
-		util.Logger.Fatalf("Cannot read lua configuration file: %v", err)
+		util.Logger.Logger.Fatalf("Cannot read lua configuration file: %v", err)
 	}
 }
 
@@ -366,7 +366,7 @@ func createCache() {
 func loadWidgetList(wg *sync.WaitGroup) {
 	// Load widget list
 	if err := util.Widgets.Load("widgets/"); err != nil {
-		util.Logger.Fatalf("Cannot load widget list: %v", err)
+		util.Logger.Logger.Fatalf("Cannot load widget list: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -383,12 +383,12 @@ func appTemplates(wg *sync.WaitGroup) {
 
 	// Load templates
 	if err := util.Template.LoadTemplates("views/"); err != nil {
-		util.Logger.Fatalf("Cannot load templates: %v", err)
+		util.Logger.Logger.Fatalf("Cannot load templates: %v", err)
 	}
 
 	// Load subtopic templates
 	if err := util.Template.LoadTemplates("pages/"); err != nil {
-		util.Logger.Error(err.Error())
+		util.Logger.Logger.Error(err.Error())
 		return
 	}
 
@@ -404,7 +404,7 @@ func widgetTemplates(wg *sync.WaitGroup) {
 
 	// Load widget templates
 	if err := util.WidgetTemplate.LoadTemplates("widgets/"); err != nil {
-		util.Logger.Fatalf("Cannot load widget templates: %v", err)
+		util.Logger.Logger.Fatalf("Cannot load widget templates: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -416,7 +416,7 @@ func connectDatabase() {
 
 	// Connect to the MySQL database
 	if database.DB, err = database.Open(lua.Config.GetGlobal("mysqlUser").String(), lua.Config.GetGlobal("mysqlPass").String(), lua.Config.GetGlobal("mysqlDatabase").String()); err != nil {
-		util.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
+		util.Logger.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
 }
 

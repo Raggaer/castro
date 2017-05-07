@@ -90,6 +90,7 @@ type ContentSecurityPolicyType struct {
 // ContentSecurityPolicyConfig struct used for CSP headers
 type ContentSecurityPolicyConfig struct {
 	Default []string
+	Enabled bool
 	Frame   ContentSecurityPolicyType
 	Script  ContentSecurityPolicyType
 	Font    ContentSecurityPolicyType
@@ -132,6 +133,7 @@ type Configuration struct {
 	Custom       map[string]interface{}
 }
 
+// ConfigurationFile struct used to store a configuration pointer
 type ConfigurationFile struct {
 	rw            sync.RWMutex
 	Configuration *Configuration
@@ -220,7 +222,7 @@ func getCSPField(name string, def []string, src []string) string {
 	return buff + ";"
 }
 
-// SSL returns if the server is behind SSL
+// IsSSL returns if the server is behind SSL
 func (c Configuration) IsSSL() bool {
 	if c.SSL.Enabled {
 		return true

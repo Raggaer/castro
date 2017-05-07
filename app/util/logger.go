@@ -7,19 +7,27 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 )
 
 var (
+	Logger = &ApplicationLogger{}
+)
+
+// ApplicationLogger struct for application logging to files
+type ApplicationLogger struct {
+	rw sync.RWMutex
+
 	// Logger main logger instance of the app
-	Logger = logrus.New()
+	Logger *logrus.Logger
 
 	// LoggerOutput output file
 	LoggerOutput *os.File
 
 	// LastLoggerDay save last day the logger was created
 	LastLoggerDay time.Time
-)
+}
 
 // CreateLogFile creates a log file with the current time
 func CreateLogFile() (*os.File, time.Time, error) {
@@ -56,15 +64,14 @@ func CreateLogger(out io.Writer) *logrus.Logger {
 		// Show panic message
 		log.Printf(
 			"Fatal error encountered. Castro will now exit. For more information check %v",
-			filepath.Join("logs", fmt.Sprintf("%v-%v-%v.json", LastLoggerDay.Year(), LastLoggerDay.Month(), LastLoggerDay.Day())),
+			filepath.Join("logs", fmt.Sprintf("%v-%v-%v.json", Logger.LastLoggerDay.Year(), Logger.LastLoggerDay.Month(), Logger.LastLoggerDay.Day())),
 		)
 	})
 
 	return l
 }
 
-// RenewLogger runs a routine to check if the logger needs to be renewed
-// if true a new logger file is created
+// RenewLogger runs a routine to check if the logger needs to be renewed if true a new logger file is created
 func RenewLogger() {
 	// Create time ticker
 	ticker := time.NewTicker(time.Hour * 24)
@@ -77,28 +84,33 @@ func RenewLogger() {
 		select {
 		case <-ticker.C:
 
-			Logger.Info("Creating new log file")
+			// Lock mutex
+			Logger.rw.Lock()
+			Logger.rw.Unlock()
+
+			Logger.Logger.Info("Creating new log file")
 
 			// Create new log file
 			f, day, err := CreateLogFile()
 
 			if err != nil {
-				Logger.Fatalf("Cannot renew log file: %v", err)
+				Logger.Logger.Fatalf("Cannot renew log file: %v", err)
 			}
 
-			// Set las logger day
-			LastLoggerDay = day
+			// Save old logger file handle
+			old := Logger.LoggerOutput
 
-			// Save olg logger file handle
-			old := LoggerOutput
-
-			// Create a new logger
-			Logger = CreateLogger(f)
+			// Create logger
+			Logger = &ApplicationLogger{
+				Logger:        CreateLogger(f),
+				LastLoggerDay: day,
+				LoggerOutput:  f,
+			}
 
 			// Close old logger file handle
 			old.Close()
 
-			Logger.Info("Created new log file")
+			Logger.Logger.Info("Created new log file")
 		}
 	}
 }

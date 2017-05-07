@@ -113,7 +113,7 @@ func RenderTemplate(L *glua.LState) int {
 	widgets, err := compileWidgetList(req, w, session)
 
 	if err != nil {
-		util.Logger.Errorf("Cannot compile widget list: %v", err)
+		util.Logger.Logger.Errorf("Cannot compile widget list: %v", err)
 	}
 
 	// Check if args is set

@@ -258,7 +258,7 @@ func getApplicationState(luaState *glua.LState) {
 
 	// Set last log file name
 	luaState.SetGlobal("logFile", glua.LString(
-		fmt.Sprintf("%v-%v-%v.json", util.LastLoggerDay.Year(), util.LastLoggerDay.Month(), util.LastLoggerDay.Day()),
+		fmt.Sprintf("%v-%v-%v.json", util.Logger.LastLoggerDay.Year(), util.Logger.LastLoggerDay.Month(), util.Logger.LastLoggerDay.Day()),
 	))
 
 	// Set server path
@@ -268,7 +268,7 @@ func getApplicationState(luaState *glua.LState) {
 	f, err := osext.ExecutableFolder()
 
 	if err != nil {
-		util.Logger.Fatalf("Cannot get executable folder path: %v", err)
+		util.Logger.Logger.Fatalf("Cannot get executable folder path: %v", err)
 	}
 
 	// Get package metatable

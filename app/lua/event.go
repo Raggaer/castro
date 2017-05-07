@@ -171,7 +171,7 @@ func executeEvent(file string, duration time.Duration) {
 
 	// Push function
 	if err := state.DoFile(file); err != nil {
-		util.Logger.Errorf("Cannot run event: %v", err)
+		util.Logger.Logger.Errorf("Cannot run event: %v", err)
 		return
 	}
 
