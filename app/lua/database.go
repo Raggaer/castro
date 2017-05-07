@@ -43,7 +43,7 @@ func Execute(L *lua.LState) int {
 	}
 
 	// Log query on development mode
-	if util.Config.IsDev() || util.Config.IsLog() {
+	if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
 		util.Logger.Infof("execute: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
@@ -148,7 +148,7 @@ func SingleQuery(L *lua.LState) int {
 	}
 
 	// Log query on development mode
-	if util.Config.IsDev() || util.Config.IsLog() {
+	if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
 		util.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
@@ -184,7 +184,7 @@ func SingleQuery(L *lua.LState) int {
 
 	// If user wants to use cache save table
 	if saveToCache {
-		util.Cache.Add(cacheKey, results, util.Config.Cache.Default)
+		util.Cache.Add(cacheKey, results, util.Config.Configuration.Cache.Default)
 	}
 
 	// If there are no results return nil
@@ -280,7 +280,7 @@ func Query(L *lua.LState) int {
 	}
 
 	// Log query on development mode
-	if util.Config.IsDev() || util.Config.IsLog() {
+	if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
 		util.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
@@ -316,7 +316,7 @@ func Query(L *lua.LState) int {
 
 	// If user wants to use cache save table
 	if saveToCache {
-		util.Cache.Add(cacheKey, results, util.Config.Cache.Default)
+		util.Cache.Add(cacheKey, results, util.Config.Configuration.Cache.Default)
 	}
 
 	// If there are no results return nil

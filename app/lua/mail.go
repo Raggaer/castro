@@ -59,7 +59,7 @@ func SendMail(L *lua.LState) int {
 	m := gomail.NewMessage()
 
 	// Set from header
-	m.SetHeader("From", util.Config.Mail.Username)
+	m.SetHeader("From", util.Config.Configuration.Mail.Username)
 
 	// Set to header
 	m.SetHeader("To", to)
@@ -72,10 +72,10 @@ func SendMail(L *lua.LState) int {
 
 	// Create dialer
 	d := gomail.NewDialer(
-		util.Config.Mail.Server,
-		util.Config.Mail.Port,
-		util.Config.Mail.Username,
-		util.Config.Mail.Password,
+		util.Config.Configuration.Mail.Server,
+		util.Config.Configuration.Mail.Port,
+		util.Config.Configuration.Mail.Username,
+		util.Config.Configuration.Mail.Password,
 	)
 
 	// Send email

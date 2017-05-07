@@ -94,7 +94,7 @@ func (w *Widget) Execute(luaState *glua.LState) error {
 	if err := luaState.CallByParam(glua.P{
 		Fn:      luaState.GetGlobal("widget"),
 		NRet:    0,
-		Protect: !Config.IsDev(),
+		Protect: !Config.Configuration.IsDev(),
 	}); err != nil {
 		return err
 	}

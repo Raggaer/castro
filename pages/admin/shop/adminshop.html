@@ -54,6 +54,7 @@
                 <thead class="thead-inverse">
                 <th>Code</th>
                 <th>Unlimited</th>
+                <th></th>
                 <th colspan="2">Valid until</th>
                 </thead>
                 <tbody>
@@ -68,8 +69,15 @@
                         {{ else }}
                         Limited
                         {{ end }}
-                    </td>z
+                    </td>
                     <td>{{ $element.valid_till.Result }}</td>
+                    <td>
+                        {{ if $element.available }}
+                        <button class="btn btn-xs btn-success">Active</button>
+                        {{ else }}
+                        <button class="btn btn-xs btn-warning">Ended</button>
+                        {{ end }}
+                    </td>
                     <td>
                         <form method="post">
                             <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">

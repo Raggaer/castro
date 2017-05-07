@@ -183,7 +183,7 @@ func executeEvent(file string, duration time.Duration) {
 			// Execute function
 			state.CallByParam(lua.P{
 				Fn:      state.GetGlobal("run"),
-				Protect: !util.Config.IsDev(),
+				Protect: !util.Config.Configuration.IsDev(),
 			})
 
 		case i := <-eventChannel:

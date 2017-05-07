@@ -63,7 +63,7 @@ func HouseList(L *lua.LState) int {
 	util.Cache.Add(
 		fmt.Sprintf("house_list_%v", town),
 		tbl,
-		util.Config.Cache.Default,
+		util.Config.Configuration.Cache.Default,
 	)
 
 	// Push table to stack
@@ -100,7 +100,7 @@ func TownList(L *lua.LState) int {
 	}
 
 	// Save list to cache
-	util.Cache.Add("town_list", result, util.Config.Cache.Default)
+	util.Cache.Add("town_list", result, util.Config.Configuration.Cache.Default)
 
 	// Push result
 	L.Push(result)
@@ -145,7 +145,7 @@ func GetTownByName(L *lua.LState) int {
 			util.Cache.Add(
 				fmt.Sprintf("town_%v", name.String()),
 				twn,
-				util.Config.Cache.Default,
+				util.Config.Configuration.Cache.Default,
 			)
 
 			// Convert town to lua table and push
@@ -199,7 +199,7 @@ func GetTownByID(L *lua.LState) int {
 			util.Cache.Add(
 				fmt.Sprintf("town_%v", town.Name),
 				twn,
-				util.Config.Cache.Default,
+				util.Config.Configuration.Cache.Default,
 			)
 
 			// Convert town to lua table and push

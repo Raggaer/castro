@@ -262,7 +262,7 @@ func getApplicationState(luaState *glua.LState) {
 	))
 
 	// Set server path
-	luaState.SetGlobal("serverPath", glua.LString(util.Config.Datapack))
+	luaState.SetGlobal("serverPath", glua.LString(util.Config.Configuration.Datapack))
 
 	// Get executable folder
 	f, err := osext.ExecutableFolder()
@@ -293,28 +293,28 @@ func SetConfigGlobal(L *glua.LState) {
 	tbl := L.NewTable()
 
 	// Create Security table
-	secTable := StructToTable(&util.Config.Security)
+	secTable := StructToTable(&util.Config.Configuration.Security)
 
 	// Create CSP table
-	cspTable := StructToTable(&util.Config.Security.CSP)
+	cspTable := StructToTable(&util.Config.Configuration.Security.CSP)
 
 	// Set CSP Frame table
-	L.SetField(cspTable, "Frame", StructToTable(&util.Config.Security.CSP.Frame))
+	L.SetField(cspTable, "Frame", StructToTable(&util.Config.Configuration.Security.CSP.Frame))
 
 	// Set CSP Script table
-	L.SetField(cspTable, "Script", StructToTable(&util.Config.Security.CSP.Script))
+	L.SetField(cspTable, "Script", StructToTable(&util.Config.Configuration.Security.CSP.Script))
 
 	// Set CSP Font table
-	L.SetField(cspTable, "Font", StructToTable(&util.Config.Security.CSP.Font))
+	L.SetField(cspTable, "Font", StructToTable(&util.Config.Configuration.Security.CSP.Font))
 
 	// Set CSP Connect table
-	L.SetField(cspTable, "Connect", StructToTable(&util.Config.Security.CSP.Connect))
+	L.SetField(cspTable, "Connect", StructToTable(&util.Config.Configuration.Security.CSP.Connect))
 
 	// Set CSP Style table
-	L.SetField(cspTable, "Style", StructToTable(&util.Config.Security.CSP.Style))
+	L.SetField(cspTable, "Style", StructToTable(&util.Config.Configuration.Security.CSP.Style))
 
 	// Set CSP Image table
-	L.SetField(cspTable, "Image", StructToTable(&util.Config.Security.CSP.Image))
+	L.SetField(cspTable, "Image", StructToTable(&util.Config.Configuration.Security.CSP.Image))
 
 	// Set CSP table inside Security table
 	L.SetField(secTable, "CSP", cspTable)
@@ -323,34 +323,34 @@ func SetConfigGlobal(L *glua.LState) {
 	L.SetField(tbl, "Security", secTable)
 
 	// Set Shop table
-	L.SetField(tbl, "Shop", StructToTable(&util.Config.Shop))
+	L.SetField(tbl, "Shop", StructToTable(&util.Config.Configuration.Shop))
 
 	// Set Plugin value
-	L.SetField(tbl, "Plugin", StructToTable(&util.Config.Plugin))
+	L.SetField(tbl, "Plugin", StructToTable(&util.Config.Configuration.Plugin))
 
 	// Set main value
-	L.SetField(tbl, "Main", StructToTable(util.Config))
+	L.SetField(tbl, "Main", StructToTable(util.Config.Configuration))
 
 	// Set PayPal value
-	L.SetField(tbl, "PayPal", StructToTable(&util.Config.PayPal))
+	L.SetField(tbl, "PayPal", StructToTable(&util.Config.Configuration.PayPal))
 
 	// Set Fortumo value
-	L.SetField(tbl, "Fortumo", StructToTable(&util.Config.Fortumo))
+	L.SetField(tbl, "Fortumo", StructToTable(&util.Config.Configuration.Fortumo))
 
 	// Set Captcha value
-	L.SetField(tbl, "Captcha", StructToTable(&util.Config.Captcha))
+	L.SetField(tbl, "Captcha", StructToTable(&util.Config.Configuration.Captcha))
 
 	// Set Mail value
-	L.SetField(tbl, "Mail", StructToTable(&util.Config.Mail))
+	L.SetField(tbl, "Mail", StructToTable(&util.Config.Configuration.Mail))
 
 	// Set Custom value
-	L.SetField(tbl, "Custom", MapToTable(util.Config.Custom))
+	L.SetField(tbl, "Custom", MapToTable(util.Config.Configuration.Custom))
 
 	// Set PayGol value
-	L.SetField(tbl, "PayGol", StructToTable(&util.Config.PayGol))
+	L.SetField(tbl, "PayGol", StructToTable(&util.Config.Configuration.PayGol))
 
 	// Set SSL value
-	L.SetField(tbl, "SSL", StructToTable(&util.Config.SSL))
+	L.SetField(tbl, "SSL", StructToTable(&util.Config.Configuration.SSL))
 
 	// Set global value
 	L.SetGlobal("app", tbl)
@@ -358,11 +358,11 @@ func SetConfigGlobal(L *glua.LState) {
 	// Set default fields
 	L.SetField(tbl, "Version", glua.LString(util.VERSION))
 	L.SetField(tbl, "BuildDate", glua.LString(util.BUILD_DATE))
-	L.SetField(tbl, "CheckUpdates", glua.LBool(util.Config.CheckUpdates))
-	L.SetField(tbl, "URL", glua.LString(util.Config.URL))
-	L.SetField(tbl, "Port", glua.LNumber(util.Config.Port))
-	L.SetField(tbl, "Mode", glua.LString(util.Config.Mode))
-	L.SetField(tbl, "Datapack", glua.LString(util.Config.Datapack))
+	L.SetField(tbl, "CheckUpdates", glua.LBool(util.Config.Configuration.CheckUpdates))
+	L.SetField(tbl, "URL", glua.LString(util.Config.Configuration.URL))
+	L.SetField(tbl, "Port", glua.LNumber(util.Config.Configuration.Port))
+	L.SetField(tbl, "Mode", glua.LString(util.Config.Configuration.Mode))
+	L.SetField(tbl, "Datapack", glua.LString(util.Config.Configuration.Datapack))
 }
 
 // Put saves a lua state back to the pool

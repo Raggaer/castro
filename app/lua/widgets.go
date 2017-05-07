@@ -90,7 +90,7 @@ func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string
 		if err := state.CallByParam(lua.P{
 			Fn:      state.GetGlobal("widget"),
 			NRet:    0,
-			Protect: !util.Config.IsDev(),
+			Protect: !util.Config.Configuration.IsDev(),
 		}); err != nil {
 			return nil, err
 		}

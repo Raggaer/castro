@@ -38,7 +38,7 @@ func (r *rateLimitHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, n
 	ip := ""
 
 	// Check if behind proxy
-	if util.Config.SSL.Proxy {
+	if util.Config.Configuration.SSL.Proxy {
 
 		// Get address from X-Forwarded-For
 		ip = req.Header.Get("X-Forwarded-For")
@@ -74,34 +74,34 @@ func newSecurityHandler() *securityHandler {
 
 func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
 	// Set Strict-Transport-Security header if SSL
-	if util.Config.IsSSL() {
+	if util.Config.Configuration.IsSSL() {
 
 		// Set header
-		w.Header().Set("Strict-Transport-Security", util.Config.Security.STS)
+		w.Header().Set("Strict-Transport-Security", util.Config.Configuration.Security.STS)
 	}
 
 	// Set Engine header
 	w.Header().Set("Engine", "Castro")
 
 	// Set X-XSS-Protection header
-	w.Header().Set("X-XSS-Protection", util.Config.Security.XSS)
+	w.Header().Set("X-XSS-Protection", util.Config.Configuration.Security.XSS)
 
 	// Set X-Frame-Options header
-	w.Header().Set("X-Frame-Options", util.Config.Security.Frame)
+	w.Header().Set("X-Frame-Options", util.Config.Configuration.Security.Frame)
 
 	// Set X-Content-Type-Options header
-	w.Header().Set("X-Content-Type-Options", util.Config.Security.ContentType)
+	w.Header().Set("X-Content-Type-Options", util.Config.Configuration.Security.ContentType)
 
 	// Set Referrer-Policy header
-	w.Header().Set("Referrer-Policy", util.Config.Security.ReferrerPolicy)
+	w.Header().Set("Referrer-Policy", util.Config.Configuration.Security.ReferrerPolicy)
 
 	// Set X-Permitted-Cross-Domain-Policies header
-	w.Header().Set("X-Permitted-Cross-Domain-Policies", util.Config.Security.CrossDomainPolicy)
+	w.Header().Set("X-Permitted-Cross-Domain-Policies", util.Config.Configuration.Security.CrossDomainPolicy)
 
 	// Set Content-Security-Policy header
 	w.Header().Set(
 		"Content-Security-Policy",
-		util.Config.CSP(),
+		util.Config.Configuration.CSP(),
 	)
 
 	// Execute next handler
@@ -115,7 +115,7 @@ func newSessionHandler() *sessionHandler {
 
 func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
 	// Get application cookie
-	cookie, err := req.Cookie(util.Config.Cookies.Name)
+	cookie, err := req.Cookie(util.Config.Configuration.Cookies.Name)
 
 	if err != nil {
 
@@ -126,7 +126,7 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 		v["issuer"] = "Castro"
 
 		// Encode cookie value
-		encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, v)
+		encoded, err := util.SessionStore.Encode(util.Config.Configuration.Cookies.Name, v)
 
 		if err != nil {
 			util.Logger.Errorf("Cannot encode cookie value: %v", err)
@@ -135,11 +135,11 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 
 		// Create cookie
 		c := &http.Cookie{
-			Name:     util.Config.Cookies.Name,
+			Name:     util.Config.Configuration.Cookies.Name,
 			Value:    encoded,
 			Path:     "/",
-			MaxAge:   util.Config.Cookies.MaxAge,
-			Secure:   util.Config.IsSSL(),
+			MaxAge:   util.Config.Configuration.Cookies.MaxAge,
+			Secure:   util.Config.Configuration.IsSSL(),
 			HttpOnly: true,
 		}
 
@@ -160,7 +160,7 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 
 	// Decode cookie
 	if err := util.SessionStore.Decode(
-		util.Config.Cookies.Name,
+		util.Config.Configuration.Cookies.Name,
 		cookie.Value,
 		&v,
 	); err != nil {
@@ -214,7 +214,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		session["csrf-token"] = &tkn
 
 		// Encode session
-		encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, session)
+		encoded, err := util.SessionStore.Encode(util.Config.Configuration.Cookies.Name, session)
 
 		if err != nil {
 			util.Logger.Errorf("Cannot encode session: %v", err)
@@ -222,11 +222,11 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 
 		// Create cookie
 		c := &http.Cookie{
-			Name:     util.Config.Cookies.Name,
+			Name:     util.Config.Configuration.Cookies.Name,
 			Value:    encoded,
 			Path:     "/",
-			MaxAge:   util.Config.Cookies.MaxAge,
-			Secure:   util.Config.IsSSL(),
+			MaxAge:   util.Config.Configuration.Cookies.MaxAge,
+			Secure:   util.Config.Configuration.IsSSL(),
 			HttpOnly: true,
 		}
 
@@ -255,7 +255,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 		token.At = time.Now()
 
 		// Encode session
-		encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, session)
+		encoded, err := util.SessionStore.Encode(util.Config.Configuration.Cookies.Name, session)
 
 		if err != nil {
 			util.Logger.Errorf("Cannot encode session: %v", err)

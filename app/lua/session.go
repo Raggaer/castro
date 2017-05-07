@@ -49,7 +49,7 @@ func updateSessionData(L *lua.LState) {
 	session := getSessionData(L)
 
 	// Encode session map
-	encoded, err := util.SessionStore.Encode(util.Config.Cookies.Name, session)
+	encoded, err := util.SessionStore.Encode(util.Config.Configuration.Cookies.Name, session)
 
 	if err != nil {
 		util.Logger.Fatalf("Cannot encode cookie value: %v", err)

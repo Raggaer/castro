@@ -19,7 +19,7 @@ func SetCaptchaMetaTable(luaState *lua.LState) {
 func IsEnabled(L *lua.LState) int {
 	// Push captcha status
 	L.Push(
-		lua.LBool(util.Config.Captcha.Enabled),
+		lua.LBool(util.Config.Configuration.Captcha.Enabled),
 	)
 
 	return 1

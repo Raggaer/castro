@@ -11,11 +11,11 @@ var SessionStore *securecookie.SecureCookie
 // SessionCookie returns a session cookie pointer
 func SessionCookie(v string) *http.Cookie {
 	return &http.Cookie{
-		Name:     Config.Cookies.Name,
+		Name:     Config.Configuration.Cookies.Name,
 		Value:    v,
 		Path:     "/",
-		Secure:   Config.IsSSL(),
-		MaxAge:   Config.Cookies.MaxAge,
+		Secure:   Config.Configuration.IsSSL(),
+		MaxAge:   Config.Configuration.Cookies.MaxAge,
 		HttpOnly: true,
 	}
 }

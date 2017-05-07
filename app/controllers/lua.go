@@ -13,7 +13,7 @@ import (
 // LuaPage executes the given lua page
 func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Create application paypal REST client
-	lua.CreatePaypalClient(util.Config.PayPal.SandBox)
+	lua.CreatePaypalClient(util.Config.Configuration.PayPal.SandBox)
 
 	// Check if request is POST
 	if r.Method == http.MethodPost {
@@ -25,8 +25,17 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 	}
 
-	// If development mode reload pages and widgets
-	if util.Config.IsDev() {
+	// If development mode reload pages, widgets and config file
+	if util.Config.Configuration.IsDev() {
+
+		// Reload config file
+		if err := util.LoadConfig("config.toml"); err != nil {
+			// Set error header
+			w.WriteHeader(500)
+			util.Logger.Errorf("Cannot load config file: %v", err)
+
+			return
+		}
 
 		// Reload pages
 		if err := lua.PageList.Load("pages"); err != nil {
@@ -93,7 +102,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		glua.P{
 			Fn:      s.GetGlobal(strings.ToLower(r.Method)),
 			NRet:    0,
-			Protect: !util.Config.IsDev(),
+			Protect: !util.Config.Configuration.IsDev(),
 		},
 	); err != nil {
 

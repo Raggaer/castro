@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/BurntSushi/toml"
+	"sync"
 	"time"
 )
 
@@ -131,9 +132,14 @@ type Configuration struct {
 	Custom       map[string]interface{}
 }
 
+type ConfigurationFile struct {
+	rw            sync.RWMutex
+	Configuration *Configuration
+}
+
 var (
 	// Config holds the main configuration file
-	Config *Configuration
+	Config *ConfigurationFile
 
 	// VERSION current version of the build
 	VERSION string
@@ -143,13 +149,18 @@ var (
 )
 
 func init() {
-	Config = &Configuration{}
+	Config = &ConfigurationFile{}
+	Config.Configuration = &Configuration{}
 }
 
 // LoadConfig loads the configuration file to the given interface pointer
-func LoadConfig(data string, dest interface{}) error {
+func LoadConfig(path string) error {
+	// Lock mutex
+	Config.rw.Lock()
+	defer Config.rw.Unlock()
+
 	// Decode the given file to the given interface
-	if _, err := toml.DecodeFile(data, dest); err != nil {
+	if _, err := toml.DecodeFile(path, Config.Configuration); err != nil {
 		return err
 	}
 

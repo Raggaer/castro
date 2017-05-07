@@ -16,8 +16,8 @@ func CreatePaypalClient(sandbox bool) {
 	if !sandbox {
 
 		client = gopaypal.NewClient(
-			util.Config.PayPal.PublicKey,
-			util.Config.PayPal.SecretKey,
+			util.Config.Configuration.PayPal.PublicKey,
+			util.Config.Configuration.PayPal.SecretKey,
 			gopaypal.LiveURL,
 		)
 
@@ -26,8 +26,8 @@ func CreatePaypalClient(sandbox bool) {
 
 	// Create application client for sandbox settings
 	client = gopaypal.NewClient(
-		util.Config.PayPal.PublicKey,
-		util.Config.PayPal.SecretKey,
+		util.Config.Configuration.PayPal.PublicKey,
+		util.Config.Configuration.PayPal.SecretKey,
 		gopaypal.SandBoxURL,
 	)
 }
@@ -57,7 +57,7 @@ func CreatePaypalPayment(L *lua.LState) int {
 			{
 				Amount: gopaypal.Amount{
 					Total:    strconv.Itoa(price),
-					Currency: util.Config.PayPal.Currency,
+					Currency: util.Config.Configuration.PayPal.Currency,
 					Details: gopaypal.Details{
 						SubTotal: strconv.Itoa(price),
 					},
@@ -69,7 +69,7 @@ func CreatePaypalPayment(L *lua.LState) int {
 						{
 							Name:     L.ToString(2),
 							Price:    strconv.Itoa(price),
-							Currency: util.Config.PayPal.Currency,
+							Currency: util.Config.Configuration.PayPal.Currency,
 							Quantity: 1,
 						},
 					},
@@ -137,7 +137,7 @@ func GetPaypalPayment(L *lua.LState) int {
 	if err != nil {
 
 		// Log if development mode
-		if util.Config.IsDev() {
+		if util.Config.Configuration.IsDev() {
 			util.Logger.Errorf("Cannot get paypal payment information: %v", err)
 		}
 
@@ -201,7 +201,7 @@ func ExecutePaypalPayment(L *lua.LState) int {
 
 	if err != nil {
 		// Log if development mode
-		if util.Config.IsDev() {
+		if util.Config.Configuration.IsDev() {
 			util.Logger.Errorf("Cannot execute paypal payment: %v", err)
 		}
 

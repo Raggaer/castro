@@ -24,6 +24,7 @@ function get()
 
     if data.codes ~= nil then
         for i, code in pairs(data.codes) do
+            data.codes[i].available = os.time() > tonumber(code.valid_till)
             data.codes[i].valid_till = time:parseUnix(tonumber(code.valid_till))
         end
     end

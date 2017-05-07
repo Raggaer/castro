@@ -86,7 +86,7 @@ func loadMap() {
 
 		// Encode map
 		mapData, err := util.EncodeMap(
-			filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
+			filepath.Join(util.Config.Configuration.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
 		)
 
 		if err != nil {
@@ -112,7 +112,7 @@ func loadMap() {
 
 		// Encode map
 		mapData, err := util.EncodeMap(
-			filepath.Join(util.Config.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
+			filepath.Join(util.Config.Configuration.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
 		)
 
 		if err != nil {
@@ -170,7 +170,7 @@ func executeMigrations() {
 			glua.P{
 				Fn:      state.GetGlobal("migration"),
 				NRet:    0,
-				Protect: !util.Config.IsDev(),
+				Protect: !util.Config.Configuration.IsDev(),
 			},
 		); err != nil {
 			return err
@@ -319,7 +319,7 @@ func loadAppLogger() {
 func loadVocations(wg *sync.WaitGroup) {
 	// Load server vocations
 	if err := util.LoadVocations(
-		filepath.Join(util.Config.Datapack, "data", "XML", "vocations.xml"),
+		filepath.Join(util.Config.Configuration.Datapack, "data", "XML", "vocations.xml"),
 		util.ServerVocationList,
 	); err != nil {
 		util.Logger.Fatalf("Cannot load map house list: %v", err)
@@ -332,7 +332,7 @@ func loadVocations(wg *sync.WaitGroup) {
 func loadHouses(wg *sync.WaitGroup) {
 	// Load server houses
 	if err := util.LoadHouses(
-		filepath.Join(util.Config.Datapack, "data", "world", util.OTBMap.HouseFile),
+		filepath.Join(util.Config.Configuration.Datapack, "data", "world", util.OTBMap.HouseFile),
 		util.ServerHouseList,
 	); err != nil {
 		util.Logger.Fatalf("Cannot load map house list: %v", err)
@@ -344,14 +344,14 @@ func loadHouses(wg *sync.WaitGroup) {
 
 func loadAppConfig() {
 	// Load the TOML configuration file
-	if err := util.LoadConfig("config.toml", util.Config); err != nil {
+	if err := util.LoadConfig("config.toml"); err != nil {
 		util.Logger.Fatalf("Cannot read configuration file: %v", err)
 	}
 }
 
 func loadLUAConfig() {
 	// Load the LUA configuration file
-	if err := lua.LoadConfig(filepath.Join(util.Config.Datapack, "config.lua")); err != nil {
+	if err := lua.LoadConfig(filepath.Join(util.Config.Configuration.Datapack, "config.lua")); err != nil {
 		util.Logger.Fatalf("Cannot read lua configuration file: %v", err)
 	}
 }
@@ -360,7 +360,7 @@ func createCache() {
 	// Create a new cache instance with the given options
 	// first parameter is the default item duration on the cache
 	// second parameter is the tick time to purge all dead cache items
-	util.Cache = cache.New(util.Config.Cache.Default, util.Config.Cache.Purge)
+	util.Cache = cache.New(util.Config.Configuration.Cache.Default, util.Config.Configuration.Cache.Purge)
 }
 
 func loadWidgetList(wg *sync.WaitGroup) {
@@ -434,20 +434,20 @@ func templateFuncs() template.FuncMap {
 			return reflect.TypeOf(i).Kind() == reflect.Map
 		},
 		"isDev": func() bool {
-			return util.Config.IsDev()
+			return util.Config.Configuration.IsDev()
 		},
 		"safeURL": func(s string) template.URL {
 			return template.URL(s)
 		},
 		"url": func(args ...interface{}) template.URL {
-			u := fmt.Sprintf("%v", util.Config.URL)
+			u := fmt.Sprintf("%v", util.Config.Configuration.URL)
 			for _, arg := range args {
 				u = u + fmt.Sprintf("/%v", arg)
 			}
-			if util.Config.SSL.Proxy {
+			if util.Config.Configuration.SSL.Proxy {
 				return template.URL("https://" + u)
 			}
-			if util.Config.SSL.Enabled {
+			if util.Config.Configuration.SSL.Enabled {
 				return template.URL("https://" + u)
 			}
 			return template.URL("http://" + u)
@@ -484,10 +484,10 @@ func templateFuncs() template.FuncMap {
 			return util.Widgets.List
 		},
 		"captchaKey": func() string {
-			return util.Config.Captcha.Public
+			return util.Config.Configuration.Captcha.Public
 		},
 		"captchaEnabled": func() bool {
-			return util.Config.Captcha.Enabled
+			return util.Config.Configuration.Captcha.Enabled
 		},
 		"eqNumber": func(a, b float64) bool {
 			return a == b

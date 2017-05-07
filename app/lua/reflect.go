@@ -56,7 +56,7 @@ func GetGlobal(L *lua.LState) int {
 	util.Cache.Add(
 		fmt.Sprintf("reflect_global_%v", val),
 		v,
-		util.Config.Cache.Default,
+		util.Config.Configuration.Cache.Default,
 	)
 
 	// Push value

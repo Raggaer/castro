@@ -62,8 +62,8 @@ Compiled at: %v
 
 	// Create rate-limiter instance
 	rate := limiter.Rate{
-		Period: util.Config.RateLimit.Time,
-		Limit:  util.Config.RateLimit.Number,
+		Period: util.Config.Configuration.RateLimit.Time,
+		Limit:  util.Config.Configuration.RateLimit.Number,
 	}
 
 	// Create rate-limiter storage
@@ -79,14 +79,14 @@ Compiled at: %v
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
 
 	// Register pprof router only on development mode
-	if util.Config.IsDev() {
+	if util.Config.Configuration.IsDev() {
 		router.GET("/pprof/heap", wrapHandler(pprof.Handler("heap")))
 	}
 
 	// Create the session storage
 	util.SessionStore = securecookie.New(
-		[]byte(util.Config.Cookies.HashKey),
-		[]byte(util.Config.Cookies.BlockKey),
+		[]byte(util.Config.Configuration.Cookies.HashKey),
+		[]byte(util.Config.Configuration.Cookies.BlockKey),
 	)
 
 	// Create the middleware negroni instance with some application middleware
@@ -100,7 +100,7 @@ Compiled at: %v
 	)
 
 	// Use negroni logger only in development mode
-	if util.Config.IsDev() || util.Config.IsLog() {
+	if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
 		n.Use(negroni.NewLogger())
 
 	}
@@ -116,17 +116,17 @@ Compiled at: %v
 
 	// Create castro server
 	server := http.Server{
-		Addr:         fmt.Sprintf(":%v", util.Config.Port),
+		Addr:         fmt.Sprintf(":%v", util.Config.Configuration.Port),
 		Handler:      n,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
 	// Check if Castro should run on SSL mode
-	if util.Config.SSL.Enabled {
+	if util.Config.Configuration.SSL.Enabled {
 
 		// Check if user is using auto-certificate
-		if util.Config.SSL.Auto {
+		if util.Config.Configuration.SSL.Auto {
 
 			// Create auto-certificate manager
 			m := autocert.Manager{
@@ -135,10 +135,10 @@ Compiled at: %v
 			}
 
 			// Set auto-certificate hosts
-			if strings.HasPrefix(util.Config.URL, "www") {
-				m.HostPolicy = autocert.HostWhitelist(util.Config.URL, strings.Replace(util.Config.URL, "www.", "", 1))
+			if strings.HasPrefix(util.Config.Configuration.URL, "www") {
+				m.HostPolicy = autocert.HostWhitelist(util.Config.Configuration.URL, strings.Replace(util.Config.Configuration.URL, "www.", "", 1))
 			} else {
-				m.HostPolicy = autocert.HostWhitelist(util.Config.URL, "www."+util.Config.URL)
+				m.HostPolicy = autocert.HostWhitelist(util.Config.Configuration.URL, "www."+util.Config.Configuration.URL)
 			}
 
 			// Set server TLS option
@@ -152,8 +152,8 @@ Compiled at: %v
 
 		// If SSL is enabled listen with cert and key
 		if err := server.ListenAndServeTLS(
-			util.Config.SSL.Cert,
-			util.Config.SSL.Key,
+			util.Config.Configuration.SSL.Cert,
+			util.Config.Configuration.SSL.Key,
 		); err != nil {
 			util.Logger.Fatalf("Cannot start Castro HTTPS server: %v", err)
 		}

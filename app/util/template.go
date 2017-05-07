@@ -71,7 +71,7 @@ func (t *Tmpl) FuncMap(f template.FuncMap) {
 // RenderWidget renders the given widget template
 func (t Tmpl) RenderWidget(req *http.Request, name string, args map[string]interface{}) (*bytes.Buffer, error) {
 	// Check if app is running on dev mode
-	if Config.IsDev() {
+	if Config.Configuration.IsDev() {
 
 		// Lock mutex
 		t.rw.Lock()
@@ -112,7 +112,7 @@ func (t Tmpl) RenderWidget(req *http.Request, name string, args map[string]inter
 // RenderTemplate render the given template passing some values and loading all templates if in development mode
 func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name string, args map[string]interface{}) {
 	// Check if app is running on dev mode
-	if Config.IsDev() {
+	if Config.Configuration.IsDev() {
 
 		// Lock mutex
 		t.rw.Lock()
@@ -173,7 +173,7 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 // Render executes the given template. if the app is running on dev mode all the templates will be reloaded
 func (t Tmpl) Render(wr io.Writer, name string, args interface{}) error {
 	// Check if app is running on dev mode
-	if Config.IsDev() {
+	if Config.Configuration.IsDev() {
 
 		// Lock mutex
 		t.rw.Lock()

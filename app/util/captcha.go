@@ -27,7 +27,7 @@ func VerifyCaptcha(answer string) (bool, error) {
 	resp, err := http.PostForm(captchaURL,
 		url.Values{
 			"secret": {
-				Config.Captcha.Secret,
+				Config.Configuration.Captcha.Secret,
 			},
 			"response": {
 				answer,
