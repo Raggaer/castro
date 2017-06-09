@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/raggaer/castro/app/models"
+	"github.com/raggaer/castro/app/database"
 	"html/template"
 	"io"
 	"net/http"
@@ -59,6 +60,65 @@ func (t *Tmpl) LoadTemplates(dir string) error {
 	return err
 }
 
+// LoadExtensionTemplates parses and loads all extension templates into the given variable
+func (t *Tmpl) LoadExtensionTemplates(extType string) error {
+	// Lock mutex
+	t.rw.Lock()
+	defer t.rw.Unlock()
+
+	// Get extensions from database
+	rows, err := database.DB.Queryx(strings.Replace("SELECT extension_id FROM castro_extension_? WHERE enabled = 1", "?", extType, -1))
+
+	if err != nil {
+		return err
+	}
+
+	// Close rows
+	defer rows.Close()
+
+	// Loop rows
+	for rows.Next() {
+
+		// Hold extension id
+		var extension_id string
+
+		if err := rows.Scan(&extension_id); err != nil {
+			return err
+		}
+
+		dir := filepath.Join("extensions", extension_id, extType)
+
+		// Make sure that directory exist
+		if _, err = os.Stat(dir); err != nil {
+			if os.IsNotExist(err) {
+				Logger.Logger.Errorf("Missing %v directory in extension %v", extType, extension_id)
+			}
+			continue
+		}
+
+		// Walk over the directory
+		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+
+			// Check if file has .html extension
+			if strings.HasSuffix(info.Name(), ".html") {
+				if t.Tmpl, err = t.Tmpl.ParseFiles(path); err != nil {
+					return err
+				}
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			// Log error
+			Logger.Logger.Errorf("Cannot load extension template: %v", err)
+			continue
+		}
+	}
+
+	return nil
+}
+
 // FuncMap returns the template map of functions
 func (t *Tmpl) FuncMap(f template.FuncMap) {
 	// Lock mutex
@@ -86,6 +146,11 @@ func (t Tmpl) RenderWidget(req *http.Request, name string, args map[string]inter
 		// Reload all templates
 		if err := t.LoadTemplates("widgets/"); err != nil {
 			return nil, err
+		}
+
+		// Reload extension templates
+		if err := t.LoadExtensionTemplates("widgets"); err != nil {
+			Logger.Logger.Error(err.Error())
 		}
 	}
 
@@ -134,6 +199,11 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 		if err := t.LoadTemplates("pages/"); err != nil {
 			Logger.Logger.Error(err.Error())
 			return
+		}
+
+		// Reload all extension templates
+		if err := t.LoadExtensionTemplates("pages"); err != nil {
+			Logger.Logger.Error(err.Error())
 		}
 	}
 

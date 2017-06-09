@@ -6,6 +6,9 @@ import (
 	"html/template"
 	"io/ioutil"
 	"sync"
+	"path/filepath"
+	"os"
+	"github.com/raggaer/castro/app/database"
 )
 
 var (
@@ -55,6 +58,71 @@ func (w *WidgetList) Load(path string) error {
 		// Check if file is a directory
 		if file.IsDir() {
 
+			// Append widget
+			w.List = append(w.List, &Widget{
+				Name: file.Name(),
+				rw:   &sync.RWMutex{},
+			})
+		}
+	}
+
+	return nil
+}
+
+// LoadExtensions loads all the extension widgets
+func (w *WidgetList) LoadExtensions() error {
+	// Lock widget list
+	w.rw.Lock()
+
+	// Unlock widget list
+	defer w.rw.Unlock()
+
+	// Execute query
+	rows, err := database.DB.Queryx("SELECT extension_id FROM castro_extension_widgets WHERE enabled = 1")
+
+	if err != nil {
+		return err
+	}
+
+	// Close rows
+	defer rows.Close()
+
+	// Loop rows
+	for rows.Next() {
+
+		// Hold extension id
+		var extension_id string
+
+		if err := rows.Scan(&extension_id); err != nil {
+			return err
+		}
+
+		// Extension widget directory
+		dir := filepath.Join("extensions", extension_id, "widgets")
+
+		// Skip if directory does not exist
+		if _, err = os.Stat(dir); err != nil {
+			if os.IsNotExist(err) {
+				Logger.Logger.Errorf("Missing widgets directory in extension %v", extension_id)
+			}
+			continue
+		}
+
+		// Load all directories of the widget directory
+		widgets, err := ioutil.ReadDir(dir)
+
+		if err != nil {
+			Logger.Logger.Errorf("Error loading widget from extension %v: %v", extension_id, err)
+			continue
+		}
+
+		// Loop folder items
+		for _, file := range widgets {
+
+			// Check if file is a directory
+			if !file.IsDir() {
+				continue
+			}
 			// Append widget
 			w.List = append(w.List, &Widget{
 				Name: file.Name(),

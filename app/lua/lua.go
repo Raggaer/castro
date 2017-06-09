@@ -153,8 +153,9 @@ var (
 		"setBackground": SetBackgroundGoImage,
 	}
 	fileMethods = map[string]glua.LGFunction{
-		"mod":    GetFileModTime,
-		"exists": CheckFileExists,
+		"mod":            GetFileModTime,
+		"exists":         CheckFileExists,
+		"getDirectories": GetDirectories,
 	}
 	envMethods = map[string]glua.LGFunction{
 		"set": SetEnvVariable,

@@ -72,3 +72,26 @@ function orderedPairs(t)
     -- in order
     return orderedNext, t, nil
 end
+
+-- Trim leading and trailing whitespace from string
+function string:trim()
+   return self:match("^()%s*$") and "" or self:match("^%s*(.*%S)" )
+end
+
+-- Split a string into a table on separator
+function string:split(sep)
+   local fields, pattern = {}, string.format("([^%s]+)", sep)
+   self:gsub(pattern, function(c) fields[#fields+1] = c:trim() end)
+   return fields
+end
+
+-- Unmarshal json from file
+function json:unmarshalFile(path)
+    local f, e = io.open(path, "r")
+    if not f then
+        return nil, e
+    end
+    local t = self:unmarshal(f:read("*a"))
+    f:close()
+    return t
+end

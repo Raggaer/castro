@@ -1,5 +1,7 @@
 -- This file will be executed at start-up
 
+require "extensionhooks"
+
 if app.Mode == "dev" then
     print(">> Running on development mode. Never have development mode open to the public")
 end
@@ -7,6 +9,9 @@ end
 if app.Custom.OnlineChart.Enabled then
 	events:tick("engine/onlinechart.lua", app.Custom.OnlineChart.Interval)
 end
+
+-- Run extensions onStartup event
+executeHook("onStartup")
 
 if app.CheckUpdates and app.Version ~= "" then
     local commitData = json:unmarshal(http:get("https://api.github.com/repos/Raggaer/castro/commits"))

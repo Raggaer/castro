@@ -13,3 +13,4 @@ buildOutput/
 obfuscator/*
 deobfuscator/*
 engine/*.castro
+extensions/*/

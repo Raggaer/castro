@@ -1,4 +1,5 @@
 require "bbcode"
+require "extensionhooks"
 
 function editArticle(editMode)
 	-- Block access for anyone who is not admin
@@ -36,9 +37,11 @@ function editArticle(editMode)
 	if article.action == "new" then
 		db:execute("INSERT INTO castro_articles (title, text, created_at) VALUES (?, ?, NOW())", article.title, article.text)
 		session:setFlash("success", "Article posted.")
+		executeHook("onNewArticle", article, session:loggedAccount())
 	elseif article.action == "edit" then
 		db:execute("UPDATE castro_articles SET title = ?, text = ?, updated_at = NOW() WHERE id = ?", article.title, article.text, article.id)
 		session:setFlash("success", "Article updated.")
+        executeHook("onEditArticle", article, session:loggedAccount())
 	end
 
 	http:redirect("/subtopic/admin/articles/list")
