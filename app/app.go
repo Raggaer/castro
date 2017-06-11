@@ -194,11 +194,11 @@ func executeInitFile() {
 	// Close state
 	defer luaState.Close()
 
+	// Create http metatable
+	lua.SetRegularHTTPMetaTable(luaState)
+
 	// Create log metatable
 	lua.SetLogMetaTable(luaState)
-
-	// Create http metatable
-	lua.SetHTTPMetaTable(luaState)
 
 	// Create env metatable
 	lua.SetEnvMetaTable(luaState)

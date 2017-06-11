@@ -48,7 +48,7 @@ var (
 		"getRemoteAddress": GetRemoteAddress,
 		"curl":             CreateRequestClient,
 	}
-	httpEventMethods = map[string]glua.LGFunction{
+	httpRegularMethods = map[string]glua.LGFunction{
 		"curl":     CreateRequestClient,
 		"postForm": PostFormRequest,
 		"get":      GetRequest,

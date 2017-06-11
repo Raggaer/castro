@@ -89,7 +89,7 @@ func executeEvent(file string, duration time.Duration) {
 	// Close state
 	defer state.Close()
 
-	SetEventHTTPMetaTable(state)
+	SetRegularHTTPMetaTable(state)
 
 	// Create log metatable
 	SetLogMetaTable(state)
