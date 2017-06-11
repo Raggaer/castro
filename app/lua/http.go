@@ -21,6 +21,16 @@ func SetHTTPMetaTable(luaState *glua.LState) {
 	luaState.SetFuncs(httpMetaTable, httpMethods)
 }
 
+// SetEventHTTPMetaTable sets the event http metatable removing some http methods
+func SetEventHTTPMetaTable(luaState *glua.LState) {
+	// Create and set HTTP metatable
+	httpMetaTable := luaState.NewTypeMetatable(HTTPMetaTableName)
+	luaState.SetGlobal(HTTPMetaTableName, httpMetaTable)
+
+	// Set all HTTP metatable functions
+	luaState.SetFuncs(httpMetaTable, httpEventMethods)
+}
+
 // SetWidgetHTTPMetaTable sets the widget http metatable on the given lua state
 func SetWidgetHTTPMetaTable(luaState *glua.LState) {
 	// Create and set HTTP metatable

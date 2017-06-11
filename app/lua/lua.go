@@ -48,6 +48,11 @@ var (
 		"getRemoteAddress": GetRemoteAddress,
 		"curl":             CreateRequestClient,
 	}
+	httpEventMethods = map[string]glua.LGFunction{
+		"curl":     CreateRequestClient,
+		"postForm": PostFormRequest,
+		"get":      GetRequest,
+	}
 	validatorMethods = map[string]glua.LGFunction{
 		"validate":       Validate,
 		"blackList":      BlackList,
