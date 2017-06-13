@@ -17,6 +17,12 @@ function post()
         return
     end
 
+    if http.postValues["until"] == "" then
+        session:setFlash("validationError", "Invlaid discount until time")
+        http:redirect("/subtopic/admin/shop/discount/new")
+        return
+    end
+
     local validUntil = time:parseDate(http.postValues["until"], "2006-01-02")
     local unlimited = tonumber(http.postValues.unlimited) == 1
 

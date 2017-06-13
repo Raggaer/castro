@@ -8,6 +8,9 @@ function widget()
         data["account"] = session:loggedAccount()
     end
 
-    widgets:render("account.html", data)
+    data.paypal = app.PayPal.Enabled
+    data.paygol = app.PayGol.Enabled
+    data.fortumo = app.Fortumo.Enabled
 
+    widgets:render("account.html", data)
 end

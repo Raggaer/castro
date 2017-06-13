@@ -11,7 +11,15 @@
     <ul>
         <li><a class="light" href="{{ url "subtopic" "account" "dashboard" }}">Dashboard</a></li>
         <li><a class="light" href="{{ url "subtopic" "account" "createchar" }}">Create character</a></li>
+        {{ if .paypal }}
         <li><a class="light" href="{{ url "subtopic" "account" "paypal" }}">PayPal payments</a></li>
+        {{ end }}
+        {{ if .paygol }}
+        <li><a class="light" href="{{ url "subtopic" "account" "paypal" }}">PayGol payments</a></li>
+        {{ end }}
+        {{ if .fortumo }}
+        <li><a class="light" href="{{ url "subtopic" "account" "paypal" }}">Fortumo payments</a></li>
+        {{ end }}
     </ul>
     {{ else }}
     <h5>Login</h5>
