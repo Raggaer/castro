@@ -30,6 +30,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Reload config file
 		if err := util.LoadConfig("config.toml"); err != nil {
+
 			// Set error header
 			w.WriteHeader(500)
 			util.Logger.Logger.Errorf("Cannot load config file: %v", err)
@@ -39,6 +40,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Reload pages
 		if err := lua.PageList.Load("pages"); err != nil {
+
 			// Set error header
 			w.WriteHeader(500)
 			util.Logger.Logger.Errorf("Cannot load subtopic %v: %v", ps.ByName("page"), err)
@@ -48,6 +50,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Reload widgets
 		if err := lua.WidgetList.Load("widgets"); err != nil {
+
 			// Set error header
 			w.WriteHeader(500)
 			util.Logger.Logger.Errorf("Cannot load widgets when executing %v subtopic: %v", ps.ByName("page"), err)
@@ -79,6 +82,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	s, err := lua.PageList.Get(filepath.Join("pages", pageName, r.Method+".lua"))
 
 	if err != nil {
+
 		// Set error header
 		w.WriteHeader(500)
 		util.Logger.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
@@ -86,10 +90,11 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
+	// Return state to the pool
+	defer lua.PageList.Put(s, filepath.Join("pages", pageName, r.Method+".lua"))
+
 	// Create HTTP metatable
 	lua.SetHTTPMetaTable(s)
-
-	defer lua.PageList.Put(s, filepath.Join("pages", pageName, r.Method+".lua"))
 
 	// Set the state user data
 	lua.SetHTTPUserData(s, w, r)

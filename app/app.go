@@ -3,7 +3,6 @@ package app
 import (
 	"database/sql"
 	"fmt"
-	"github.com/kardianos/osext"
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
@@ -194,83 +193,8 @@ func executeInitFile() {
 	// Close state
 	defer luaState.Close()
 
-	// Create http metatable
-	lua.SetRegularHTTPMetaTable(luaState)
-
-	// Create log metatable
-	lua.SetLogMetaTable(luaState)
-
-	// Create env metatable
-	lua.SetEnvMetaTable(luaState)
-
-	// Create events metatable
-	lua.SetEventsMetaTable(luaState)
-
-	// Create storage metatable
-	lua.SetStorageMetaTable(luaState)
-
-	// Create time metatable
-	lua.SetTimeMetaTable(luaState)
-
-	// Create url metatable
-	lua.SetURLMetaTable(luaState)
-
-	// Create debug metatable
-	lua.SetDebugMetaTable(luaState)
-
-	// Create XML metatable
-	lua.SetXMLMetaTable(luaState)
-
-	// Create captcha metatable
-	lua.SetCaptchaMetaTable(luaState)
-
-	// Create crypto metatable
-	lua.SetCryptoMetaTable(luaState)
-
-	// Create validator metatable
-	lua.SetValidatorMetaTable(luaState)
-
-	// Create database metatable
-	lua.SetDatabaseMetaTable(luaState)
-
-	// Create config metatable
-	lua.SetConfigMetaTable(luaState)
-
-	// Create map metatable
-	lua.SetMapMetaTable(luaState)
-
-	// Create mail metatable
-	lua.SetMailMetaTable(luaState)
-
-	// Create cache metatable
-	lua.SetCacheMetaTable(luaState)
-
-	// Create reflect metatable
-	lua.SetReflectMetaTable(luaState)
-
-	// Create json metatable
-	lua.SetJSONMetaTable(luaState)
-
-	lua.SetConfigGlobal(luaState)
-
-	// Get executable folder
-	f, err := osext.ExecutableFolder()
-
-	if err != nil {
-		util.Logger.Logger.Fatalf("Cannot get executable folder path: %v", err)
-	}
-
-	// Get package metatable
-	pkg := luaState.GetGlobal("package")
-
-	// Set path field
-	luaState.SetField(
-		pkg,
-		"path",
-		glua.LString(
-			filepath.Join(f, "engine", "?.lua"),
-		),
-	)
+	// Get application ready state
+	lua.GetApplicationState(luaState)
 
 	// Execute init file
 	if err := luaState.DoFile(filepath.Join("engine", "init.lua")); err != nil {

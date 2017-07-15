@@ -126,6 +126,7 @@ var (
 		"getAccountId":    GetPlayerAccountID,
 		"isOnline":        IsPlayerOnline,
 		"getBankBalance":  GetPlayerBankBalance,
+		"setBankBalance":  SetPlayerBankBalance,
 		"getStorageValue": GetPlayerStorageValue,
 		"setStorageValue": SetPlayerStorageValue,
 		"getVocation":     GetPlayerVocation,
@@ -191,7 +192,10 @@ func (p *luaStatePool) Get() *glua.LState {
 }
 
 // GetApplicationState returns a page configured lua state
-func getApplicationState(luaState *glua.LState) {
+func GetApplicationState(luaState *glua.LState) {
+	// Create http metatable
+	SetRegularHTTPMetaTable(luaState)
+
 	// Create log metatable
 	SetLogMetaTable(luaState)
 
@@ -390,7 +394,7 @@ func (p *luaStatePool) New() *glua.LState {
 	)
 
 	// Set castro metatables
-	getApplicationState(state)
+	GetApplicationState(state)
 
 	// Return the lua state
 	return state

@@ -113,6 +113,23 @@ func GetPlayerBankBalance(L *lua.LState) int {
 	return 1
 }
 
+// SetPlayerBankBalance sets a player bank balance
+func SetPlayerBankBalance(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Retrieve bank balance number
+	newBalance := L.ToInt(2)
+
+	// Update bank balance
+	if _, err := database.DB.Exec("UPDATE players SET balance = ? WHERE id = ?", newBalance, player.ID); err != nil {
+		L.RaiseError("Cannot update player balance: %v")
+		return 0
+	}
+
+	return 0
+}
+
 // IsPlayerOnline checks if the given player is online
 func IsPlayerOnline(L *lua.LState) int {
 	// Get player struct
@@ -122,7 +139,10 @@ func IsPlayerOnline(L *lua.LState) int {
 	online := false
 
 	// Get online value
-	database.DB.Get(&online, "SELECT 1 FROM players_online WHERE player_id = ?", player.ID)
+	if err := database.DB.Get(&online, "SELECT 1 FROM players_online WHERE player_id = ?", player.ID); err != nil {
+		L.RaiseError("Cannot check if player is online: %v", err)
+		return 0
+	}
 
 	// Push online value
 	L.Push(lua.LBool(online))
@@ -148,7 +168,10 @@ func GetPlayerStorageValue(L *lua.LState) int {
 	storage := models.Storage{}
 
 	// Get storage value
-	database.DB.Get(&storage, "SELECT key, value FROM players_storage WHERE player_id = ?", player.ID)
+	if err := database.DB.Get(&storage, "SELECT key, value FROM players_storage WHERE player_id = ?", player.ID); err != nil {
+		L.RaiseError("Cannot get player storage: %v", err)
+		return 0
+	}
 
 	// Push storage as table
 	L.Push(StructToTable(&storage))

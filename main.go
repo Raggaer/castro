@@ -52,7 +52,7 @@ Compiled at: %v
 			log.Fatal(err)
 		}
 
-		fmt.Printf("Configuration file created (%v). Installation process is now done\r\n", configFileName)
+		fmt.Printf("Configuration file created (%v). Installation process is now done. Restart Castro", configFileName)
 
 		return
 	}

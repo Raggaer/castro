@@ -33,5 +33,11 @@ function get()
         end
     end
 
+    local t = Player("Roberto")
+
+    print(t)
+
+    t:getCustomField("id")
+
     http:render("home.html", data)
 end

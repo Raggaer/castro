@@ -50,7 +50,7 @@ func (s *stateList) Load(dir string) error {
 		state := glua.NewState()
 
 		// Set castro metatables
-		getApplicationState(state)
+		GetApplicationState(state)
 
 		if err := state.DoFile(subtopic); err != nil {
 			return err
@@ -80,7 +80,7 @@ func (s *stateList) Get(path string) (*glua.LState, error) {
 		state := glua.NewState()
 
 		// Set castro metatables
-		getApplicationState(state)
+		GetApplicationState(state)
 
 		if err := state.DoFile(path); err != nil {
 			return nil, err

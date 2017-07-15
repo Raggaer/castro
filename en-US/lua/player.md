@@ -36,6 +36,7 @@ Provides access to the player information.
 - [player:getAccountId()](#getaccountid)
 - [player:isOnline()](#isonline)
 - [player:getBankBalance()](#getbankbalance)
+- [player:setBankBalance()](#setbankbalance)
 - [player:getStorageValue(key)](#getstoragevalue)
 - [player:setStorageValue(key, value)](setstoragevalue)
 - [player:getVocation()](#getvocation)
@@ -73,6 +74,24 @@ Returns the player bank balance.
 local data = Player("test")
 local balance = data:getBankBalance()
 -- balance = 1000
+```
+
+# setBankBalance
+
+Updates the player bank balance.
+
+```lua
+local data = Player("test")
+local balance = data:setBankBalance(100)
+-- balance = 100
+```
+
+This method overwrites the bank balance. If you want to augment the player balance you can do the following:
+
+```lua
+local data = Player("test")
+local balance = data:setBankBalance(data:getBankBalance() + 100)
+-- balance = 1100
 ```
 
 # getStorageValue
