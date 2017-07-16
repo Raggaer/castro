@@ -22,7 +22,7 @@ function get()
     local pg = paginator(page, 15, tonumber(paymentCount.total))
     local data = {}
 
-    data.list = db:query("SELECT id, payer_id, payment_id, package_name AS name, state, created_at AS created FROM castro_paypal_payments WHERE custom = ? ORDER BY created_at DESC LIMIT ?, ?", account.Name, pg.limit, pg.offset)
+    data.list = db:query("SELECT id, payer_id, payment_id, package_name AS name, state, created_at AS created FROM castro_paypal_payments WHERE custom = ? ORDER BY created_at DESC LIMIT ?, ?", account.Name, pg.offset, pg.limit)
     data.paginator = pg
 
     if data.list ~= nil then

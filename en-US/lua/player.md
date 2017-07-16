@@ -45,6 +45,8 @@ Provides access to the player information.
 - [player:getLevel()](#getlevel)
 - [player:getPremiumDays()](#getpremiumdays)
 - [player:getName()](#getname)
+- [player:getExperience()](#getexperience)
+- [player:getCapacity()](#getcapacity)
 - [player:getCustomField()](#getcustomfield)
 
 # getAccountID
@@ -194,6 +196,26 @@ Return the player name.
 local data = Player(1)
 local name = data:getName()
 -- name = "test"
+```
+
+# getExperience
+
+Return the player current experience value.
+
+```lua
+local data = Player(1)
+local experience = data:getExperience()
+-- experience = 4800
+```
+
+# getCapacity
+
+Return the player current capacity value.
+
+```lua
+local data = Player(1)
+local cap = data:getCapacity()
+-- capacity = 100
 ```
 
 # getCustomField

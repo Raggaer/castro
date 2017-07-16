@@ -135,6 +135,8 @@ var (
 		"getLevel":        GetPlayerLevel,
 		"getPremiumDays":  GetPlayerPremiumDays,
 		"getName":         GetPlayerName,
+		"getExperience":   GetPlayerExperience,
+		"getCapacity":     GetPlayerCapacity,
 		"getCustomField":  GetPlayerCustomField,
 	}
 	widgetMethods = map[string]glua.LGFunction{

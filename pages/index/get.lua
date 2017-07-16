@@ -17,7 +17,7 @@ function get()
     local pg = paginator(page, 5, tonumber(articleCount.total))
     local data = {}
 
-    data.articles, cache = db:query("SELECT title, text, created_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.limit, pg.offset, true)
+    data.articles, cache = db:query("SELECT title, text, created_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.offset, pg.limit, true)
     data.paginator = pg
 
     if data.articles == nil and page > 0 then

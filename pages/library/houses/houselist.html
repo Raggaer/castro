@@ -37,11 +37,15 @@
     {{ end }}
     </tbody>
 </table>
+<ul class="pagination pagination-sm">
+    {{ if .paginator.prev }}
+    <li><a href="{{ url "subtopic" "library" "houses" }}?page={{ .paginator.firstpage.num }}{{ if .townId }}&town={{ .townId }} {{ end }}">First</a></li>
+    <li><a href="{{ url "subtopic" "library" "houses" }}?page={{ .paginator.prevnumber }}{{ if .townId }}&town={{ .townId }} {{ end }}">&lt;</a></li>
+    {{ end }}
+    </li>
+    {{ if $.paginator.last }}
+    <li><a href="{{ url "subtopic" "library" "houses" }}?page={{ .paginator.lastnumber }}{{ if .townId }}&town={{ .townId }} {{ end }}">&gt;</a></li>
+    <li><a href="{{ url "subtopic" "library" "houses" }}?page={{ .paginator.lastpage.num }}{{ if .townId }}&town={{ .townId }} {{ end }}">Last</a></li>
+    {{ end }}
+</ul>
 {{ template "footer.html" . }}
-<script>
-    $(document).ready(function(){
-        var instant = $('#house-list').DataTable({
-            "autoWidth": false
-        });
-    });
-</script>

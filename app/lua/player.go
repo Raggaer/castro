@@ -311,6 +311,46 @@ func GetPlayerName(L *lua.LState) int {
 	return 1
 }
 
+// GetPlayerExperience gets the player experience
+func GetPlayerExperience(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Experience placeholder
+	experience := 0
+
+	// Retrieve experience from database
+	if err := database.DB.Get(&experience, "SELECT experience FROM players WHERE id = ?", player.ID); err != nil {
+		L.RaiseError("Cannot get player experience from database: %v", err)
+		return 0
+	}
+
+	// Push player experience as number
+	L.Push(lua.LNumber(experience))
+
+	return 1
+}
+
+// GetPlayerCapacity gets the player capacity
+func GetPlayerCapacity(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Capacity placeholder
+	capacity := 0
+
+	// Retrieve experience from database
+	if err := database.DB.Get(&capacity, "SELECT capacity FROM players WHERE id = ?", player.ID); err != nil {
+		L.RaiseError("Cannot get player capacity from database: %v", err)
+		return 0
+	}
+
+	// Push player capacity as number
+	L.Push(lua.LNumber(capacity))
+
+	return 1
+}
+
 // GetPlayerCustomField retrieves a field from the player table as string
 func GetPlayerCustomField(L *lua.LState) int {
 	// Get player struct
