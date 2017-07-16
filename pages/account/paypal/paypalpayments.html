@@ -11,27 +11,33 @@
     </tr>
     </thead>
     <tbody>
-    {{ range $index, $element := .list }}
-    <tr>
-        <td>
-            <a href="{{ url "subtopic" "shop" "paypal" }}">{{ $element.name }}</a>
-        </td>
-        <td>{{ $element.created.Result }}</td>
-        <td>
-            {{ if not $element.approved }}
-                <button class="btn btn-danger btn-xs">Not approved</button>
-            {{ else }}
-                {{ if not $element.executed }}
-                <form method="post">
-                    <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
-                    <input type="hidden" name="id" value="{{ $element.id }}">
-                    <button type="submit" class="btn btn-success btn-xs">Execute</button>
-                </form>
+    {{ if .list }}
+        {{ range $index, $element := .list }}
+        <tr>
+            <td>
+                <a href="{{ url "subtopic" "shop" "paypal" }}">{{ $element.name }}</a>
+            </td>
+            <td>{{ $element.created.Result }}</td>
+            <td>
+                {{ if not $element.approved }}
+                    <button class="btn btn-danger btn-xs">Not approved</button>
                 {{ else }}
-
+                    {{ if not $element.executed }}
+                    <form method="post">
+                        <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                        <input type="hidden" name="id" value="{{ $element.id }}">
+                        <button type="submit" class="btn btn-success btn-xs">Execute</button>
+                    </form>
+                    {{ else }}
+                    Payment executed
+                    {{ end }}
                 {{ end }}
-            {{ end }}
-        </td>
+            </td>
+        </tr>
+        {{ end }}
+    {{ else }}
+    <tr>
+        <td colspan="3">No transactions made</td>
     </tr>
     {{ end }}
     </tbody>

@@ -310,3 +310,26 @@ func GetPlayerName(L *lua.LState) int {
 
 	return 1
 }
+
+// GetPlayerCustomField retrieves a field from the player table as string
+func GetPlayerCustomField(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Get field name
+	fieldName := L.ToString(2)
+
+	// Field placeholder
+	fieldValue := ""
+
+	// Retrieve custom field
+	if err := database.DB.Get(&fieldValue, "SELECT "+fieldName+" FROM players WHERE id = ?", player.ID); err != nil {
+		L.RaiseError("Cannot get custom field %s: %v", fieldName, err)
+		return 0
+	}
+
+	// Push value as string
+	L.Push(lua.LString(fieldValue))
+
+	return 1
+}

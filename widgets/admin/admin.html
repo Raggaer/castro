@@ -12,9 +12,11 @@
         <li>
             <a class="light" href="{{ url "subtopic" "admin" "logs" }}">Logs</a>
         </li>
+        {{ if .pluginEnabled }}
         <li>
             <a class="light" href="{{ url "subtopic" "admin" "extensions" }}">Extensions</a>
         </li>
+        {{ end }}
         <li>
             <a class="light" href="{{ url "subtopic" "admin" "bans" }}">Banishments</a>
         </li>

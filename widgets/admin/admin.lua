@@ -8,6 +8,7 @@ function widget()
     local data = {}
 
     data.admin = session:loggedAccount().castro.Admin
+    data.pluginEnabled = app.Plugin.Enabled
 
     widgets:render("admin.html", data)
 end

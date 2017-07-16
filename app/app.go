@@ -306,7 +306,7 @@ func appTemplates(wg *sync.WaitGroup) {
 	util.FuncMap = templateFuncs()
 
 	// Load templates
-	if err := util.Template.LoadTemplates("views/"); err != nil {
+	if err := util.Template.LoadTemplates(util.Config.Configuration.Template); err != nil {
 		util.Logger.Logger.Fatalf("Cannot load templates: %v", err)
 	}
 

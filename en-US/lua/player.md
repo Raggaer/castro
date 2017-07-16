@@ -45,6 +45,7 @@ Provides access to the player information.
 - [player:getLevel()](#getlevel)
 - [player:getPremiumDays()](#getpremiumdays)
 - [player:getName()](#getname)
+- [player:getCustomField()](#getcustomfield)
 
 # getAccountID
 
@@ -193,4 +194,14 @@ Return the player name.
 local data = Player(1)
 local name = data:getName()
 -- name = "test"
+```
+
+# getCustomField
+
+Retrieves the given field as a string.
+
+```lua
+local data = Player(1)
+local points = tonumber(data:getCustomField("points"))
+-- points = 100
 ```

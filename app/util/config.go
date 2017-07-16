@@ -114,6 +114,7 @@ type SecurityConfig struct {
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
 	CheckUpdates bool
+	Template     string
 	Mode         string
 	Port         int
 	URL          string

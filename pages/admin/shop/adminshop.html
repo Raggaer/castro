@@ -78,7 +78,7 @@
                         {{ end }}
                     </td>
                     <td>
-                        <form method="post">
+                        <form action="{{ url "subtopic" "admin" "shop" "discount" "delete" }}" method="post">
                             <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
                             <input type="hidden" name="id" value="{{ $element.id }}">
                             <button type="submit" class="btn btn-danger btn-xs">Delete</button>
