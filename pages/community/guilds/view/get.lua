@@ -14,6 +14,7 @@ function get()
 
     if session:isLogged() then
         data.owner = isGuildOwner(session:loggedAccount().ID, data.guild)
+        data.ownerdata = db:singleQuery("SELECT a.name FROM players a, guilds b WHERE a.id = b.ownerid AND b.id = ?", data.guild.id)
         characters = db:query("SELECT id FROM players WHERE account_id = ?", session:loggedAccount().ID)
     else
         data.owner = false

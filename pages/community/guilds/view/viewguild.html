@@ -85,6 +85,7 @@
         <li role="presentation"><a href="#ranks" aria-controls="ranks" role="tab" data-toggle="tab">Ranks</a></li>
         <li role="presentation"><a href="#invite" aria-controls="invite" role="tab" data-toggle="tab">Invite</a></li>
         <li role="presentation"><a href="#wars" aria-controls="wars" role="tab" data-toggle="tab">Wars</a></li>
+        <li role="presentation"><a href="#leadership" aria-controls="leadership" role="tab" data-toggle="tab">Leadership</a></li>
         {{ end }}
     </ul>
     <div class="tab-content">
@@ -335,6 +336,28 @@
                 </tbody>
             </table>
             {{ end }}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="leadership">
+            <form action="{{ url "subtopic" "community" "guilds" "leadership" }}" method="POST">
+            <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+            <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+            <div class="form-group">
+                <label for="leader-name">
+                    You are about to pass the guild leadership. Please select who you want to take the lead
+                </label>
+                <select name="leader-name" class="form-control" id="leader-name" placeholder="New guild leader">
+                    {{ range $index, $element := .memberlist }}
+                        {{ $r := eq $.ownerdata.name $element.name }}
+                        {{ if not $r }}
+                            <option>{{ $element.name }}</option>
+                        {{ end }}
+                    {{ end }}
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Pass leadership</button>
+            </div>
+            </form>
         </div>
         {{ end }}
     </div>
