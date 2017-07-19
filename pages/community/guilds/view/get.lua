@@ -13,22 +13,14 @@ function get()
     local characters
 
     if session:isLogged() then
+        data.owner = isGuildOwner(session:loggedAccount().ID, data.guild)
         characters = db:query("SELECT id FROM players WHERE account_id = ?", session:loggedAccount().ID)
-    end
-
-    data.owner = false
-
-    if characters ~= nil then
-        for _, val in pairs(characters) do
-            if val.id == tonumber(data.guild.ownerid) then
-                data.owner = true
-                break
-            end
-        end
+    else
+        data.owner = false
     end
 
     data.guild.created = time:parseUnix(tonumber(data.guild.creationdata))
-    data.memberlist = db:query("SELECT a.name, a.level, c.name as rank FROM guild_membership b, players a, guild_ranks c WHERE c.id = b.rank_id AND b.player_id = a.id AND b.guild_id = ? ORDER BY c.level DESC", data.guild.id)
+    data.memberlist = db:query("SELECT a.name, a.level, c.name as rank, c.level as ranklevel FROM guild_membership b, players a, guild_ranks c WHERE c.id = b.rank_id AND b.player_id = a.id AND b.guild_id = ? ORDER BY c.level DESC", data.guild.id)
     data.success = session:getFlash("success")
     data.validationError = session:getFlash("validationError")
     data.wars = getWarsByGuild(data.guild.id)

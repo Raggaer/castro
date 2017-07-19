@@ -95,6 +95,9 @@
                         <th>Name</th>
                         <th>Level</th>
                         <th>Rank</th>
+                        {{ if $.owner }}
+                        <th>Promote</th>
+                        {{ end }}
                     </tr>
                 </thead>
                 <tbody>
@@ -106,6 +109,26 @@
                             </td>
                             <td>{{ $element.level }}</td>
                             <td>{{ $element.rank }}</td>
+                            {{ if $.owner }}
+                            <td>
+                                {{ if eqNumber $element.ranklevel 1 }}
+                                <form method="post" action="{{ url "subtopic" "community" "guilds" "promote" }}">
+                                    <input type="hidden" name="guild-name" value="{{ $.guild.guildname }}">
+                                    <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                                    <input type="hidden" name="character-name" value="{{ $element.name }}">
+                                    <button type="submit" class="btn btn-xs btn-success">Promote</button>
+                                </form>
+                                {{ end }}
+                                {{ if eqNumber $element.ranklevel 2 }}
+                                <form method="post" action="{{ url "subtopic" "community" "guilds" "demote" }}">
+                                <input type="hidden" name="guild-name" value="{{ $.guild.guildname }}">
+                                <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                                <input type="hidden" name="character-name" value="{{ $element.name }}">
+                                <button type="submit" class="btn btn-xs btn-danger">Demote</button>
+                                </form>
+                                {{ end }}
+                            </td>
+                            {{ end }}
                         </tr>
                     {{ end }}
                 {{ else }}

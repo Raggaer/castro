@@ -12,9 +12,6 @@ function get()
     end
 
     local secretKey = crypto:qrKey()
-
-    print(secretKey)
-
     local secret = string.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", config:get("serverName"), account.Name, secretKey, config:get("serverName"))
     local data = {}
 

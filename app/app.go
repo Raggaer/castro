@@ -416,5 +416,8 @@ func templateFuncs() template.FuncMap {
 		"eqNumber": func(a, b float64) bool {
 			return a == b
 		},
+		"gtNumber": func(a, b float64) bool {
+			return a > b
+		},
 	}
 }
