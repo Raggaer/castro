@@ -1,7 +1,5 @@
 require "guild"
 
-require "guild"
-
 function post()
     if not session:isLogged() then
         http:redirect("/")
