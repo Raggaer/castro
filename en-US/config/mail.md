@@ -4,11 +4,11 @@ name: Mail
 
 Provides access to the mail client options. You can send mails using lua.
 
-- [Enabled](#enabled) = false
-- [Server](#server) = "smtp.gmail.com"
-- [Port](#port) = 465
-- [Username](#username) = ""
-- [Password](#password) = ""
+- [Enabled](#enabled)
+- [Server](#server)
+- [Port](#port)
+- [Username](#username)
+- [Password](#password)
 
 # Enabled
 
