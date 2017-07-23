@@ -6,10 +6,10 @@ name: Cookies
 
 Provides access to the website cookies options
 
-- [HashKey](#hashkey)"12345678912345671234567891234567"
-- [BlockKey](#blockkey)"1234567891234567"
-- [Name](#name) = "castro"
-- [MaxAge](#maxage) = 1000000
+- [HashKey](#hashkey)
+- [BlockKey](#blockkey)
+- [Name](#name)
+- [MaxAge](#maxage)
 
 # HashKey
 
