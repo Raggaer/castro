@@ -50,8 +50,9 @@ func SetGlobalLuaValue(L *lua.LState) int {
 			// Insert value into database
 			if _, err := database.DB.Exec("INSERT INTO castro_global (`key`, value) VALUES (?, ?)", key, buff.Bytes()); err != nil {
 				L.RaiseError("Cannot save encoded lua table to database: %v", err)
-				return 0
 			}
+
+			return 0
 		}
 
 		L.RaiseError("Cannot check for global value: %v", err)
