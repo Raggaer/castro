@@ -4,7 +4,7 @@ name: Cookies
 
 # Cookies
 
-Provides access to the website cookies options
+Provides access to the website cookies options.
 
 - [HashKey](#hashkey)
 - [BlockKey](#blockkey)
