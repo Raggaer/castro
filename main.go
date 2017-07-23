@@ -29,6 +29,8 @@ func main() {
 	gob.Register(&models.CsrfToken{})
 	gob.Register(&lua.LTable{})
 	gob.Register(&util.CastroMap{})
+	gob.Register(map[string]interface{}{})
+	gob.Register([]interface{}{})
 
 	// Show credits and application name
 	fmt.Printf(`

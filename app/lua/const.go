@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// GlobalMetaTableName the name of the global metatable
+	GlobalMetaTableName = "global"
+
 	// LogMetaTableName the name of the log metatable
 	LogMetaTableName = "log"
 

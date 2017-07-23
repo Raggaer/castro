@@ -174,6 +174,10 @@ var (
 		"fatal": LogFatal,
 		"info":  LogInfo,
 	}
+	globalMethods = map[string]glua.LGFunction{
+		"set": SetGlobalLuaValue,
+		"get": GetGlobalLuaValue,
+	}
 )
 
 // Get retrieves a lua state from the pool if no states are available we create one
@@ -196,7 +200,10 @@ func (p *luaStatePool) Get() *glua.LState {
 
 // GetApplicationState returns a page configured lua state
 func GetApplicationState(luaState *glua.LState) {
-	// Create http metatable
+	// Create global metatable
+	SetGlobalMetaTable(luaState)
+
+	// Create http regular metatable
 	SetRegularHTTPMetaTable(luaState)
 
 	// Create log metatable
