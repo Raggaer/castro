@@ -11,7 +11,7 @@ Castro provides lua bindings using a pool of lua states. Each request gets a sta
 
 # Documentation
 
-Everything you might need [is here](https://docs.raggaer.pw/). The official documentation site of Castro
+Everything you might need [is here](https://docs.castroaac.org/). The official documentation site of Castro
 
 # License
 
