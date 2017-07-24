@@ -1,5 +1,5 @@
 ---
-name: Global
+name: global
 ---
 
 # Global metatable
@@ -27,4 +27,9 @@ Retrieves a global value from the database. You need to provide a key. If the ke
 ```lua
 local data = global:get("Test")
 --- data.Test = 10
+```
+
+```lua
+local data = global:get("NoExists")
+--- data = nil
 ```
