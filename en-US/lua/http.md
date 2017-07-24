@@ -15,6 +15,7 @@ Provides access to HTTP related functions.
 - [http:setHeader(key, value)](#setheader)
 - [http:getHeader(key)](#getheader)
 - [http:getRemoteAddress()](#getremoteaddress)
+- [http:curl(data)](#curl)
 
 # redirect
 
@@ -109,36 +110,78 @@ local addr = http:getRemoteAddress()
 
 Provides access to an extensible request creator. You can set headers, authentication and data. These are the table fields:
 
-- timeout: request timeout in seconds. Optional.
-- method: request method. 
-- url: request destination.
-- data: request content table. Optional.
-- headers: request headers table. Optional.
-- authentication: request authentication table. Optional.
+The function will return the request response, headers (as a table) and the status code.
 
 ```lua
-local data = {}
+local request = {}
 
-data.timeout = 10
-data.method = "get"
-data.url = "www.test.com"
+request.method = "get"
+request.url = "www.google.com"
 
-data.data = {}
-data.data.name = "Raggaer"
+response, headers, status = http:curl(request)
 
-data.headers = {}
-data.headers.Engine = "Castro"
-
-data.authentication = {}
-data.username = "Raggaer"
-data.password = "password"
-
-local response, headers, status = http:curl(data)
 --[[
-response = "<html>...</html>"
-headers = {}
+response = <html>...</html>
+headers = { "Google-Header": "Test", ... }
 status = 200
 ]]--
 ```
 
-The function will return the request response, headers (as a table) and the status code.
+These are the data fields you can pass to the cURL client:
+
+- [timeout](#curl.timeout)
+- [method](#curl.method) - mandatory
+- [url](#curl.url) - mandatory
+- [data](#curl.data)
+- [headers](#curl.headers)
+- [authentication](#curl.authentication)
+
+# curl.timeout
+
+Time to wait before the client times out during a request, by default this field is 0.
+
+# curl.method
+
+The method to use while performing the request. This field is mandatory.
+
+# curl.url
+
+The destination site. This field is mandatory.
+
+# curl.data
+
+The data that is going to be sent with the request. This data needs to be a lua table, the table is converted to a slice of URL values.
+
+```lua
+local request = {}
+
+request.data = {}
+
+equest.data.username = "Raggaer"
+equest.data.password = "Test1234"
+```
+
+# curl.headers
+
+Table of headers to use during the request. Each element of the table defines a header where the table key is the header key and the table value is the header value.
+
+```lua
+local request = {}
+
+request.headers = {}
+
+request.headers["My-Custom-Header"] = "Hello World"
+```
+
+# curl.authentication
+
+Basic HTTP authentication headers. You must provide an username and a password field using a lua table.
+
+```lua
+local request = {}
+
+request.authentication = {}
+
+request.authentication.username = "Raggaer"
+request.authentication.password = "Test1234"
+```
