@@ -38,4 +38,4 @@ In this example we load the top five players from database and pass it to our te
 </div>
 ```
 
-We check if our top variable has a length greater than 0, loop over that variable and show the players
+We check if our top variable is not nil, loop over that variable and show the players

@@ -6,10 +6,10 @@ Name: player
 
 Providess easy access to server players. You first need to create a new instance:
 
-- [Player(name)](#new)
-- [Player(id)](#new)
+- [Player(name)](#new.name)
+- [Player(id)](#new.id)
 
-# new
+# new.name
 
 Get a player by the given name
 
@@ -19,9 +19,9 @@ local data = Player("test")
 
 This will return a new `player` metatable
 
-# new
+# new.id
 
-Get a player by the identifier
+Get a player by the unique identifier
 
 ```lua
 local data = Player(1)

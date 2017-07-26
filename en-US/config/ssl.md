@@ -22,7 +22,7 @@ Turns the SSL service on or off.
 
 # Auto
 
-If true Castro will request a Lets Encrypt SSL certificate for your site.
+If true Castro will request a Lets Encrypt SSL certificate for your site. The certificate and key will be saved on the Castro directory and will only be requested one time.
 
 # Cert
 

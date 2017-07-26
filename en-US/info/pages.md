@@ -53,6 +53,7 @@ end
 ```
 
 This example loads the server latest news from database, we are also using the paginator function to paginate the results. This function takes the current page, number of results per page and the total count of items. Then we load the news from database or from cache, you can modify the table and it will modify the cache value also.
+
 Lastly we render our template and pass the data we want.
 
 ```html
@@ -89,4 +90,4 @@ Lastly we render our template and pass the data we want.
 {{ template "footer.html" . }}
 ```
 
-We first include our header and our footer, check if the articles variable has a length greater than 0 and then loop that variable to show the news. We also add pagination buttons at the end using the paginator variable.
+We first include our header and our footer, check if the articles variable is not nil then loop that variable to show the news. We also add pagination buttons at the end using the paginator variable.

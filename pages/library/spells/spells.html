@@ -17,8 +17,7 @@
                     <th colspan="4">Instant spells</th>
                 </tr>
                 <tr>
-                    <td>Type</td>
-                    <td>Words</td>
+                    <td>Spell</td>
                     <td>Vocations</td>
                     <td>Level</td>
                 </tr>
@@ -26,8 +25,7 @@
                 <tbody>
                 {{ range $index, $spell := .list.spells.instant }}
                 <tr>
-                    <td>{{ index $spell "-group" }}</td>
-                    <td>{{ index $spell "-words" }}</td>
+                    <td><b>{{ index $spell "-name" }}</b> ({{ index $spell "-words" }})</td>
                     <td>
                         {{ range $vocation := index $spell "vocation" }}
                         {{ if isMap $vocation }}
@@ -50,8 +48,7 @@
                     <th colspan="4">Conjure spells</th>
                 </tr>
                 <tr>
-                    <td>Name</td>
-                    <td>Words</td>
+                    <td>Spell</td>
                     <td>Vocations</td>
                     <td>Level</td>
                 </tr>
@@ -59,8 +56,7 @@
                 <tbody>
                 {{ range $index, $spell := .list.spells.conjure }}
                 <tr>
-                    <td>{{ index $spell "-name" }}</td>
-                    <td>{{ index $spell "-words" }}</td>
+                    <td><b>{{ index $spell "-name" }}</b> ({{ index $spell "-words" }})</td>
                     <td>
                         {{ range $vocation := index $spell "vocation" }}
                         {{ if isMap $vocation }}

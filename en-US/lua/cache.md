@@ -14,6 +14,8 @@ Provides access to the application cache object
 
 Saves the given object into the application cache. For the duration you must use a valid string such as "1h", "1s", "2h20m".
 
+The cache is stored on your system memory.
+
 ```lua
 cache:set("test", 12, "4h")
 ```
@@ -25,6 +27,13 @@ Retrieves a value from the cache object.
 ```lua
 local data = cache:get("test")
 --[[ data = 12 ]]--
+```
+
+If the item does not exists this function will return nil
+
+```lua
+local data = cache:get("does_not_exist")
+--- data = nil
 ```
 
 # delete

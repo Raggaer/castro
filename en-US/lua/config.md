@@ -33,6 +33,8 @@ local test = app.Custom.test
 --- test = "Hello World"
 ```
 
+Setting a custom value will also be saved on the `config.toml` file.
+
 # Config file access
 
 In order to access `config.toml` file, you can access the `app` variable, this variable holds every field from the config file.
@@ -40,4 +42,9 @@ In order to access `config.toml` file, you can access the `app` variable, this v
 ```lua
 local mode = app.Mode
 --- mode = "dev"
+```
+
+```lua
+local paypal_enabled = app.PayPal.Enabled
+--- paypal_enabled = true
 ```
