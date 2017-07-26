@@ -20,10 +20,15 @@ function get()
         end
     end
 
-    data.codes = db:query("SELECT id, code, valid_till, unlimited FROM castro_shop_discounts ORDER BY created_at DESC")
+    data.codes = db:query("SELECT id, uses, code, valid_till, unlimited FROM castro_shop_discounts ORDER BY created_at DESC")
 
     if data.codes ~= nil then
         for i, code in pairs(data.codes) do
+            if code.unlimited then
+                data.codes[i].isUnlimited = true
+            else
+                data.codes[i].isUnlimited = false
+            end
             data.codes[i].available = os.time() < tonumber(code.valid_till)
             data.codes[i].valid_till = time:parseUnix(tonumber(code.valid_till))
         end

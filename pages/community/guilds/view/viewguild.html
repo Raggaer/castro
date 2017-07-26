@@ -87,8 +87,39 @@
         <li role="presentation"><a href="#wars" aria-controls="wars" role="tab" data-toggle="tab">Wars</a></li>
         <li role="presentation"><a href="#leadership" aria-controls="leadership" role="tab" data-toggle="tab">Leadership</a></li>
         {{ end }}
+        {{ if not .owner }}
+            {{ if .myGuildCharacters }}
+            <li role="presentation"><a href="#leave" aria-controls="leave" role="tab" data-toggle="tab">Leave guild</a></li>
+            {{ end }}
+        {{ end }}
     </ul>
     <div class="tab-content">
+        {{ if not .owner }}
+            {{ if .myGuildCharacters }}
+            <div role="tabpanel" class="tab-pane" id="leave">
+                <p>
+                    You are about to leave <b>{{ .guild.guildname }}</b> by clicking on the leave button. After you leave a guild you will need to be invited again by the guild leader.
+                </p>
+                <hr>
+                <form method="post" action="{{ url "subtopic" "community" "guilds" "leave" }}">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <select class="form-control" name="character-name">
+                                {{ range $index, $element := .myGuildCharacters }}
+                                <option>{{ $element.name }}</option>
+                                {{ end }}
+                            </select>
+                            <span class="input-group-btn">
+                                <button type="submit" name="leave" class="btn btn-danger">Leave guild</button>
+                            </span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+                    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                </form>
+            </div>
+            {{ end }}
+        {{ end }}
         <div role="tabpanel" class="tab-pane active" id="members">
             <table class="table table-striped">
                 <thead class="thead-inverse">

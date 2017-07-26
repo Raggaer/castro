@@ -53,39 +53,39 @@
             <table class="table table-striped table-hover">
                 <thead class="thead-inverse">
                 <th>Code</th>
-                <th>Unlimited</th>
+                <th>Uses</th>
                 <th colspan="3">Valid until</th>
                 </thead>
                 <tbody>
-                {{ range $index, $element := .codes }}
-                <tr>
-                    <td>
-                        {{ $element.code }}
-                    </td>
-                    <td>
-                        {{ if $element.unlimited }}
-                        Unlimited
-                        {{ else }}
-                        Limited
-                        {{ end }}
-                    </td>
-                    <td>{{ $element.valid_till.Result }}</td>
-                    <td>
-                        {{ if $element.available }}
-                        <button class="btn btn-xs btn-success">Active</button>
-                        {{ else }}
-                        <button class="btn btn-xs btn-warning">Ended</button>
-                        {{ end }}
-                    </td>
-                    <td>
-                        <form action="{{ url "subtopic" "admin" "shop" "discount" "delete" }}" method="post">
-                            <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
-                            <input type="hidden" name="id" value="{{ $element.id }}">
-                            <button type="submit" class="btn btn-danger btn-xs">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                {{ end }}
+                    {{ range $index, $element := .codes }}
+                    <tr>
+                        <td>
+                            {{ $element.code }}
+                        </td>
+                        <td>
+                            {{ if $element.isUnlimited }}
+                                {{ $element.uses }} left
+                            {{ else }}
+                                Unlimited
+                            {{ end }}
+                        </td>
+                        <td>{{ $element.valid_till.Result }}</td>
+                        <td>
+                            {{ if $element.available }}
+                            <button class="btn btn-xs btn-success">Active</button>
+                            {{ else }}
+                            <button class="btn btn-xs btn-warning">Ended</button>
+                            {{ end }}
+                        </td>
+                        <td>
+                            <form action="{{ url "subtopic" "admin" "shop" "discount" "delete" }}" method="post">
+                                <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                                <input type="hidden" name="id" value="{{ $element.id }}">
+                                <button type="submit" class="btn btn-danger btn-xs">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{ end }}
                 </tbody>
             </table>
             {{ else }}
