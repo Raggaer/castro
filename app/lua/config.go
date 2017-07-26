@@ -1,7 +1,9 @@
 package lua
 
 import (
+	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
+	"os"
 )
 
 // Config holds the current lua configuration file state
@@ -32,4 +34,55 @@ func GetConfigLuaValue(L *lua.LState) int {
 	L.Push(Config.GetGlobal(name))
 
 	return 1
+}
+
+// SetConfigCustomValue sets the a config custom value
+func SetConfigCustomValue(L *lua.LState) int {
+	// Get config key
+	key := L.ToString(2)
+
+	// Get config value
+	value := L.Get(3)
+
+	switch lv := value.(type) {
+	case *lua.LTable:
+
+		// Convert table to go map
+		v := TableToMap(value.(*lua.LTable))
+
+		// Insert map into custom field
+		util.Config.SetCustomValue(key, v)
+
+	case lua.LBool:
+
+		// Insert value as bool
+		util.Config.SetCustomValue(key, bool(lv))
+
+	case lua.LNumber:
+
+		// Insert value as float64
+		util.Config.SetCustomValue(key, float64(lv))
+
+	case lua.LString:
+
+		// Insert value as string
+		util.Config.SetCustomValue(key, string(lv))
+	}
+
+	// Open configuration file
+	configFile, err := os.OpenFile("config.toml", os.O_RDWR, 0660)
+
+	if err != nil {
+		L.RaiseError("Cannot open configuration file: %v", err)
+		return 0
+	}
+
+	// Close configuration file
+	defer configFile.Close()
+
+	if err := util.EncodeConfig(configFile, util.Config.Configuration); err != nil {
+		L.RaiseError("Cannot encode configuration file: %v", err)
+	}
+
+	return 0
 }

@@ -95,32 +95,19 @@
 </table>
 <table class="table table-striped">
     <thead class="thead-inverse">
-    <tr>
-        <th scope="row" colspan="2">Detailed information</th>
-    </tr>
+        <tr>
+            <th scope="row" colspan="2">Account information</th>
+        </tr>
     </thead>
     <tbody>
-
-    <tr>
-        <th colspan="2">
-            <div class="progress">
-                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ .info.health }}"
-                     aria-valuemin="0" aria-valuemax="{{ .info.healthmax }}" style="width:{{ .info.healthpercent }}%">
-                    Health {{ .info.health }} / {{ .info.healthmax }}
-                </div>
-            </div>
-        </th>
-    </tr>
-    <tr>
-        <th colspan="2">
-            <div class="progress">
-                <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{ .info.mana }}"
-                     aria-valuemin="0" aria-valuemax="{{ .info.manamax }}" style="width:{{ .info.manapercent }}%">
-                    Mana {{ .info.mana }} / {{ .info.manamax }}
-                </div>
-            </div>
-        </th>
-    </tr>
+        <tr>
+            <th>Creation</th>
+            <td>{{ .info.accountCreation.Result }}</td>
+        </tr>
+        <tr>
+            <th>Premium days</th>
+            <td>{{ .info.premdays }}</td>
+        </tr>
     </tbody>
 </table>
 {{ template "footer.html" . }}

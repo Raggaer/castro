@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/BurntSushi/toml"
+	"io"
 	"sync"
 	"time"
 )
@@ -233,4 +234,23 @@ func (c Configuration) IsSSL() bool {
 	}
 
 	return false
+}
+
+// EncodeConfig encodes the given io writer
+func EncodeConfig(configFile io.Writer, c *Configuration) error {
+	// Lock mutex
+	Config.rw.Lock()
+	defer Config.rw.Unlock()
+
+	// Encode the given writer with the given interface
+	return toml.NewEncoder(configFile).Encode(c)
+}
+
+func (c *ConfigurationFile) SetCustomValue(key string, v interface{}) {
+	// Lock mutex
+	c.rw.Lock()
+	defer c.rw.Unlock()
+
+	// Set custom value
+	c.Configuration.Custom[key] = v
 }

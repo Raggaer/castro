@@ -34,7 +34,8 @@ var (
 		"singleQuery": SingleQuery,
 	}
 	configMethods = map[string]glua.LGFunction{
-		"get": GetConfigLuaValue,
+		"get":       GetConfigLuaValue,
+		"setCustom": SetConfigCustomValue,
 	}
 	httpMethods = map[string]glua.LGFunction{
 		"redirect":         Redirect,
