@@ -6,6 +6,16 @@
     <strong>Error!</strong> {{ .validationError }}
 </div>
 {{ end }}
+{{ if .error }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .error }}
+</div>
+{{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
 {{ if .logged }}
     {{ if .characters}}
         <form method="POST">

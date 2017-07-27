@@ -34,6 +34,8 @@ function get()
 
     data.paginator = pg
     data["validationError"] = session:getFlash("validationError")
+    data.error = session:getFlash("error")
+    data.success = session:getFlash("success")
 
     http:render("guildlist.html", data)
 end

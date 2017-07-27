@@ -370,24 +370,37 @@
         </div>
         <div role="tabpanel" class="tab-pane" id="leadership">
             <form action="{{ url "subtopic" "community" "guilds" "leadership" }}" method="POST">
-            <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
-            <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
-            <div class="form-group">
-                <label for="leader-name">
-                    You are about to pass the guild leadership. Please select who you want to take the lead
-                </label>
-                <select name="leader-name" class="form-control" id="leader-name" placeholder="New guild leader">
-                    {{ range $index, $element := .memberlist }}
-                        {{ $r := eq $.ownerdata.name $element.name }}
-                        {{ if not $r }}
-                            <option>{{ $element.name }}</option>
+                <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                <div class="form-group">
+                    <label for="leader-name">
+                        You can pass the guild leadership to any other member. Please select who you want to take the lead
+                    </label>
+                    <select name="leader-name" class="form-control" id="leader-name" placeholder="New guild leader">
+                        {{ range $index, $element := .memberlist }}
+                            {{ $r := eq $.ownerdata.name $element.name }}
+                            {{ if not $r }}
+                                <option>{{ $element.name }}</option>
+                            {{ end }}
                         {{ end }}
-                    {{ end }}
-                </select>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Pass leadership</button>
-            </div>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Pass leadership</button>
+                </div>
+            </form>
+            <hr>
+            <form action="{{ url "subtopic" "community" "guilds" "disband" }}" method="POST">
+                <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                <div class="form-group">
+                    <label for="leader-name">
+                        If your guild has no members you can disband it, otherwise if you need to leave the guild pass the leadership and then leave
+                    </label>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-danger">Disband guild</button>
+                </div>
             </form>
         </div>
         {{ end }}
