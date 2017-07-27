@@ -246,6 +246,7 @@ func EncodeConfig(configFile io.Writer, c *Configuration) error {
 	return toml.NewEncoder(configFile).Encode(c)
 }
 
+// SetCustomValue sets a config custom value
 func (c *ConfigurationFile) SetCustomValue(key string, v interface{}) {
 	// Lock mutex
 	c.rw.Lock()
