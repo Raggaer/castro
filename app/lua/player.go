@@ -272,7 +272,7 @@ func GetPlayerTown(L *lua.LState) int {
 	player := getPlayerObject(L)
 
 	// Loop towns
-	for _, town := range util.OTBMap.Towns {
+	for _, town := range util.OTBMap.Map.Towns {
 
 		// Check for player town
 		if town.ID == player.Town_id {

@@ -184,7 +184,7 @@ func SingleQuery(L *lua.LState) int {
 
 	// If user wants to use cache save table
 	if saveToCache {
-		util.Cache.Add(cacheKey, results, util.Config.Configuration.Cache.Default)
+		util.Cache.Add(cacheKey, results, util.Config.Configuration.Cache.Default.Duration)
 	}
 
 	// If there are no results return nil
@@ -316,7 +316,7 @@ func Query(L *lua.LState) int {
 
 	// If user wants to use cache save table
 	if saveToCache {
-		util.Cache.Add(cacheKey, results, util.Config.Configuration.Cache.Default)
+		util.Cache.Add(cacheKey, results, util.Config.Configuration.Cache.Default.Duration)
 	}
 
 	// If there are no results return nil

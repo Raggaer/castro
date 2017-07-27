@@ -31,13 +31,13 @@ type PluginConfig struct {
 // RateLimiterConfig struct used for the rate limiting configuration options
 type RateLimiterConfig struct {
 	Number int64
-	Time   time.Duration
+	Time   StringDuration
 }
 
 // CacheConfig struct used for the cache configuration options
 type CacheConfig struct {
-	Default time.Duration
-	Purge   time.Duration
+	Default StringDuration
+	Purge   StringDuration
 }
 
 // SSLConfig struct used for the ssl configuration options
@@ -114,31 +114,37 @@ type SecurityConfig struct {
 
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
-	CheckUpdates bool
-	Template     string
-	Mode         string
-	Port         int
-	URL          string
-	Datapack     string
-	Security     SecurityConfig
-	Plugin       PluginConfig
-	Mail         MailConfig
-	Captcha      CaptchaConfig
-	SSL          SSLConfig
-	PayPal       PayPalConfig
-	PayGol       PaygolConfig
-	Fortumo      FortumoConfig
-	Shop         ShopConfig
-	Cookies      CookieConfig
-	Cache        CacheConfig
-	RateLimit    RateLimiterConfig
-	Custom       map[string]interface{}
+	CheckUpdates   bool
+	MapRefreshRate StringDuration
+	Template       string
+	Mode           string
+	Port           int
+	URL            string
+	Datapack       string
+	Security       SecurityConfig
+	Plugin         PluginConfig
+	Mail           MailConfig
+	Captcha        CaptchaConfig
+	SSL            SSLConfig
+	PayPal         PayPalConfig
+	PayGol         PaygolConfig
+	Fortumo        FortumoConfig
+	Shop           ShopConfig
+	Cookies        CookieConfig
+	Cache          CacheConfig
+	RateLimit      RateLimiterConfig
+	Custom         map[string]interface{}
 }
 
 // ConfigurationFile struct used to store a configuration pointer
 type ConfigurationFile struct {
 	rw            sync.RWMutex
 	Configuration *Configuration
+}
+
+type StringDuration struct {
+	Duration time.Duration
+	String   string
 }
 
 var (
@@ -155,6 +161,25 @@ var (
 func init() {
 	Config = &ConfigurationFile{}
 	Config.Configuration = &Configuration{}
+}
+
+// NewStringDuration returns a new string duration struct
+func NewStringDuration(s string) StringDuration {
+	return StringDuration{
+		String: s,
+	}
+}
+
+// MarshalText use toml interface to convert string durations to strings
+func (s StringDuration) MarshalText() ([]byte, error) {
+	return []byte(s.String), nil
+}
+
+// UnmarshalText use toml interface to convert strings to durations
+func (s *StringDuration) UnmarshalText(text []byte) error {
+	var err error
+	s.Duration, err = time.ParseDuration(string(text))
+	return err
 }
 
 // LoadConfig loads the configuration file to the given interface pointer

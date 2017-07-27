@@ -43,7 +43,8 @@ func Start() {
 
 		loadLUAConfig()
 		connectDatabase()
-		loadMap()
+		loadMap(false)
+		//go refreshMap()
 		go loadHouses(wait)
 		go loadVocations(wait)
 	}(wait)
@@ -67,7 +68,7 @@ func Start() {
 	executeInitFile()
 }
 
-func loadMap() {
+func loadMap(force bool) {
 	// Map holder
 	m := models.Map{}
 
@@ -82,6 +83,7 @@ func loadMap() {
 	if err == sql.ErrNoRows {
 
 		fmt.Println(">> Encoding map. This process can take several minutes")
+		util.Logger.Logger.Info("Encoding map. This process can take several minutes")
 
 		// Encode map
 		mapData, err := util.EncodeMap(
@@ -105,9 +107,10 @@ func loadMap() {
 	}
 
 	// Check if map is old
-	if m.Updated_at.Add(time.Hour).Before(time.Now()) {
+	if m.Updated_at.Add(util.Config.Configuration.MapRefreshRate.Duration).Before(time.Now()) || force {
 
 		fmt.Println(">> Encoded map is outdated. Generating new map data")
+		util.Logger.Logger.Info("Encoded map is outdated. Generating new map data")
 
 		// Encode map
 		mapData, err := util.EncodeMap(
@@ -138,7 +141,10 @@ func loadMap() {
 	}
 
 	// Set map global
-	util.OTBMap = castroMap
+	util.OTBMap.Load(castroMap)
+
+	// Log messages
+	util.Logger.Logger.Info("New map data encoded")
 }
 
 func executeMigrations() {
@@ -255,12 +261,13 @@ func loadVocations(wg *sync.WaitGroup) {
 
 func loadHouses(wg *sync.WaitGroup) {
 	// Load server houses
-	if err := util.LoadHouses(
-		filepath.Join(util.Config.Configuration.Datapack, "data", "world", util.OTBMap.HouseFile),
-		util.ServerHouseList,
+	if err := util.ServerHouseList.LoadHouses(
+		filepath.Join(util.Config.Configuration.Datapack, "data", "world", util.OTBMap.Map.HouseFile),
 	); err != nil {
 		util.Logger.Logger.Fatalf("Cannot load map house list: %v", err)
 	}
+
+	util.Logger.Logger.Info("House list loaded")
 
 	// Tell the wait group we are done
 	wg.Done()
@@ -284,7 +291,7 @@ func createCache() {
 	// Create a new cache instance with the given options
 	// first parameter is the default item duration on the cache
 	// second parameter is the tick time to purge all dead cache items
-	util.Cache = cache.New(util.Config.Configuration.Cache.Default, util.Config.Configuration.Cache.Purge)
+	util.Cache = cache.New(util.Config.Configuration.Cache.Default.Duration, util.Config.Configuration.Cache.Purge.Duration)
 }
 
 func loadWidgetList(wg *sync.WaitGroup) {

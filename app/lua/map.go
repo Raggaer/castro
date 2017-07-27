@@ -63,7 +63,7 @@ func HouseList(L *lua.LState) int {
 	util.Cache.Add(
 		fmt.Sprintf("house_list_%v", town),
 		tbl,
-		util.Config.Configuration.Cache.Default,
+		util.Config.Configuration.Cache.Default.Duration,
 	)
 
 	// Push table to stack
@@ -90,7 +90,7 @@ func TownList(L *lua.LState) int {
 	result := &lua.LTable{}
 
 	// Loop town list
-	for _, town := range util.OTBMap.Towns {
+	for _, town := range util.OTBMap.Map.Towns {
 
 		// Convert town to table
 		tbl := StructToTable(&town)
@@ -100,7 +100,7 @@ func TownList(L *lua.LState) int {
 	}
 
 	// Save list to cache
-	util.Cache.Add("town_list", result, util.Config.Configuration.Cache.Default)
+	util.Cache.Add("town_list", result, util.Config.Configuration.Cache.Default.Duration)
 
 	// Push result
 	L.Push(result)
@@ -134,7 +134,7 @@ func GetTownByName(L *lua.LState) int {
 	}
 
 	// Get town
-	for _, town := range util.OTBMap.Towns {
+	for _, town := range util.OTBMap.Map.Towns {
 
 		// If its the town we are looking for
 		if town.Name == name.String() {
@@ -145,7 +145,7 @@ func GetTownByName(L *lua.LState) int {
 			util.Cache.Add(
 				fmt.Sprintf("town_%v", name.String()),
 				twn,
-				util.Config.Configuration.Cache.Default,
+				util.Config.Configuration.Cache.Default.Duration,
 			)
 
 			// Convert town to lua table and push
@@ -174,7 +174,7 @@ func GetTownByID(L *lua.LState) int {
 	townid := uint32(L.ToInt(2))
 
 	// Get town
-	for _, town := range util.OTBMap.Towns {
+	for _, town := range util.OTBMap.Map.Towns {
 
 		// If its the town we are looking for
 		if town.ID == townid {
@@ -199,7 +199,7 @@ func GetTownByID(L *lua.LState) int {
 			util.Cache.Add(
 				fmt.Sprintf("town_%v", town.Name),
 				twn,
-				util.Config.Configuration.Cache.Default,
+				util.Config.Configuration.Cache.Default.Duration,
 			)
 
 			// Convert town to lua table and push

@@ -94,7 +94,7 @@ func UnmarshalXMLFile(L *lua.LState) int {
 	util.Cache.Add(
 		fmt.Sprintf("xml_table_%v", src.String()),
 		r,
-		util.Config.Configuration.Cache.Default,
+		util.Config.Configuration.Cache.Default.Duration,
 	)
 
 	// Push result as table

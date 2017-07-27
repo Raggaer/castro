@@ -64,7 +64,7 @@ Compiled at: %v
 
 	// Create rate-limiter instance
 	rate := limiter.Rate{
-		Period: util.Config.Configuration.RateLimit.Time,
+		Period: util.Config.Configuration.RateLimit.Time.Duration,
 		Limit:  util.Config.Configuration.RateLimit.Number,
 	}
 
@@ -166,6 +166,7 @@ Compiled at: %v
 			util.Logger.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
 		}
 	}
+
 }
 
 // wrapHandler converts a normal http handler to a httprouter handler

@@ -242,7 +242,7 @@ func ValidTown(L *lua.LState) int {
 		townid := uint32(L.ToInt(2))
 
 		// Check if town exists
-		for _, town := range util.OTBMap.Towns {
+		for _, town := range util.OTBMap.Map.Towns {
 
 			// If its the town we are looking for
 			if town.ID == townid {
@@ -263,7 +263,7 @@ func ValidTown(L *lua.LState) int {
 	townName := L.ToString(2)
 
 	// Check if town exists
-	for _, town := range util.OTBMap.Towns {
+	for _, town := range util.OTBMap.Map.Towns {
 
 		// If its the town we are looking for
 		if town.Name == townName {

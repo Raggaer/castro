@@ -278,12 +278,13 @@ func createConfigFile(name, location string) error {
 
 	// Encode the given configuration struct into the file
 	return toml.NewEncoder(configFile).Encode(util.Configuration{
-		CheckUpdates: true,
-		Template:     "views/default",
-		Mode:         "dev",
-		Port:         80,
-		URL:          "localhost",
-		Datapack:     location,
+		CheckUpdates:   true,
+		MapRefreshRate: util.NewStringDuration("1h"),
+		Template:       "views/default",
+		Mode:           "dev",
+		Port:           80,
+		URL:            "localhost",
+		Datapack:       location,
 		Cookies: util.CookieConfig{
 			Name:     fmt.Sprintf("castro-%v", uniuri.NewLen(5)),
 			MaxAge:   1000000,
@@ -291,12 +292,12 @@ func createConfigFile(name, location string) error {
 			BlockKey: uniuri.NewLen(32),
 		},
 		Cache: util.CacheConfig{
-			Default: time.Minute * 5,
-			Purge:   time.Minute,
+			Default: util.NewStringDuration("5m"),
+			Purge:   util.NewStringDuration("1m"),
 		},
 		RateLimit: util.RateLimiterConfig{
 			Number: 100,
-			Time:   time.Minute,
+			Time:   util.NewStringDuration("1m"),
 		},
 		Security: util.SecurityConfig{
 			NonceEnabled:      true,
