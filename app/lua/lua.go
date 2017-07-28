@@ -111,6 +111,7 @@ var (
 		"parseUnix":     ParseUnixTimestamp,
 		"parseDuration": ParseDurationString,
 		"parseDate":     ParseDate,
+		"newDuration":   NewDuration,
 	}
 	reflectMethods = map[string]glua.LGFunction{
 		"getGlobal": nil,

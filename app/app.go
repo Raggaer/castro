@@ -107,7 +107,7 @@ func loadMap(force bool) {
 	}
 
 	// Check if map is old
-	if m.Updated_at.Add(util.Config.Configuration.MapRefreshRate.Duration).Before(time.Now()) || force {
+	if m.Updated_at.Add(time.Hour).Before(time.Now()) || force {
 
 		fmt.Println(">> Encoded map is outdated. Generating new map data")
 		util.Logger.Logger.Info("Encoded map is outdated. Generating new map data")
@@ -131,6 +131,9 @@ func loadMap(force bool) {
 		if _, err := database.DB.Exec("UPDATE castro_map SET data = ?, created_at = ?, updated_at = ? WHERE name = ?", m.Data, m.Created_at, m.Updated_at, m.Name); err != nil {
 			util.Logger.Logger.Fatalf("Cannot save encoded map file: %v", err)
 		}
+
+		// Log messages
+		util.Logger.Logger.Info("New map data saved to database")
 	}
 
 	// Decode map
@@ -142,9 +145,6 @@ func loadMap(force bool) {
 
 	// Set map global
 	util.OTBMap.Load(castroMap)
-
-	// Log messages
-	util.Logger.Logger.Info("New map data encoded")
 }
 
 func executeMigrations() {

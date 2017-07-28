@@ -33,7 +33,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 			// Set error header
 			w.WriteHeader(500)
-			util.Logger.Logger.Errorf("Cannot load config file: %v", err)
+			util.Logger.Logger.Errorf("Cannot reload config file: %v", err)
 
 			return
 		}
@@ -43,7 +43,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 			// Set error header
 			w.WriteHeader(500)
-			util.Logger.Logger.Errorf("Cannot load subtopic %v: %v", ps.ByName("page"), err)
+			util.Logger.Logger.Errorf("Cannot reload subtopic %v: %v", ps.ByName("page"), err)
 
 			return
 		}
@@ -53,7 +53,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 			// Set error header
 			w.WriteHeader(500)
-			util.Logger.Logger.Errorf("Cannot load widgets when executing %v subtopic: %v", ps.ByName("page"), err)
+			util.Logger.Logger.Errorf("Cannot reload widgets when executing %v subtopic: %v", ps.ByName("page"), err)
 
 			return
 		}

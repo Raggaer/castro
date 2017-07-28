@@ -114,26 +114,25 @@ type SecurityConfig struct {
 
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
-	CheckUpdates   bool
-	MapRefreshRate StringDuration
-	Template       string
-	Mode           string
-	Port           int
-	URL            string
-	Datapack       string
-	Security       SecurityConfig
-	Plugin         PluginConfig
-	Mail           MailConfig
-	Captcha        CaptchaConfig
-	SSL            SSLConfig
-	PayPal         PayPalConfig
-	PayGol         PaygolConfig
-	Fortumo        FortumoConfig
-	Shop           ShopConfig
-	Cookies        CookieConfig
-	Cache          CacheConfig
-	RateLimit      RateLimiterConfig
-	Custom         map[string]interface{}
+	CheckUpdates bool
+	Template     string
+	Mode         string
+	Port         int
+	URL          string
+	Datapack     string
+	Security     SecurityConfig
+	Plugin       PluginConfig
+	Mail         MailConfig
+	Captcha      CaptchaConfig
+	SSL          SSLConfig
+	PayPal       PayPalConfig
+	PayGol       PaygolConfig
+	Fortumo      FortumoConfig
+	Shop         ShopConfig
+	Cookies      CookieConfig
+	Cache        CacheConfig
+	RateLimit    RateLimiterConfig
+	Custom       map[string]interface{}
 }
 
 // ConfigurationFile struct used to store a configuration pointer

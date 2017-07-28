@@ -4,7 +4,7 @@
 <table class="table table-striped">
     <thead class="thead-inverse">
         <tr>
-            <th colspan="2">Basic information</th>
+            <th colspan="2">Rate information</th>
         </tr>
     </thead>
     <tbody>
@@ -33,6 +33,40 @@
 <table class="table table-striped">
     <thead class="thead-inverse">
         <tr>
+            <th colspan="2">Player versus player information</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>World type</th>
+            <td>{{ .worldType }}</td>
+        </tr>
+        <tr>
+            <th>Protection level</th>
+            <td>{{ .protection }}</td>
+        </tr>
+        <tr>
+            <th>Kills for red skull</th>
+            <td>{{ .redskull }}</td>
+        </tr>
+        <tr>
+            <th>Kills for black skull</th>
+            <td>{{ .blackskull }}</td>
+        </tr>
+        <tr>
+            <th>Time to decrease frags</th>
+            <td>{{ .timeToDecreaseFrags.Hours }} hours</td>
+        </tr>
+        <tr>
+            <th>White skull time</th>
+            <td>{{ .whiteSkullTime.Minutes }} minutes</td>
+        </tr>
+    </tbody>
+</table>
+{{ if .stages }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
             <th colspan="3">Experience stages</th>
         </tr>
     </thead>
@@ -50,4 +84,5 @@
         {{ end }}
     </tbody>
 </table>
+{{ end }}
 {{ template "footer.html" . }} 
