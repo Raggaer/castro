@@ -6,10 +6,10 @@ Name: time
 
 Helper functions to work with time values
 
+- [time:newDuration(nanoseconds)](#newduration)
 - [time:parseUnix(timestamp)](#parseunix)
 - [time:parseDuration(durationString)](#parseduration)
 - [time:parseDate(dateString, dateLayout)](#parsedate)
-- [time:newDuration(nanoseconds)](#newduration)
 
 # newDuration
 
@@ -30,7 +30,7 @@ t.Hours = 24
 ]]--
 ```
 
-Below is an example on how we parse some config values using `math.pow` to convert seconds to nanoseconds:
+Below is an example on how we parse some config values using `math.pow` to convert miliseconds to nanoseconds:
 
 ```lua
 local timeToDecreaseFrags = time:newDuration(config:get("timeToDecreaseFrags") * math.pow(10, 6))
