@@ -95,6 +95,16 @@ func (t Tmpl) RenderWidget(req *http.Request, name string, args map[string]inter
 		return nil, errors.New("Cannot get CSRF token")
 	}
 
+	// Get nonce value
+	nonce, ok := req.Context().Value("nonce").(string)
+
+	if !ok {
+		return nil, errors.New("Cannot get nonce value")
+	}
+
+	// Set nonce value
+	args["nonce"] = nonce
+
 	// Set token value
 	args["csrfToken"] = tkn.Token
 
@@ -157,6 +167,18 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 		w.Write([]byte("Cannot read csrf token value"))
 		return
 	}
+
+	// Get nonce value
+	nonce, ok := req.Context().Value("nonce").(string)
+
+	if !ok {
+		w.WriteHeader(500)
+		w.Write([]byte("Cannot read nonce value"))
+		return
+	}
+
+	// Set nonce value
+	args["nonce"] = nonce
 
 	// Set token value
 	args["csrfToken"] = tkn.Token

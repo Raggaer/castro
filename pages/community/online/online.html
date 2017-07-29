@@ -28,7 +28,7 @@
 {{ end }}
 {{ if .chart }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
-<script>
+<script nonce="{{ .nonce }}">
 var data = {{ .chart }};
 data = JSON.parse(data);
 var ctx = document.getElementById("onlineChart");
