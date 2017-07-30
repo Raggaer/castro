@@ -13,7 +13,7 @@ function get()
 
     local data = {}
 
-    data.category = db:singleQuery("SELECT name, description, created_at FROM castro_shop_categories WHERE id = ?", http.getValues.id)
+    data.category = db:singleQuery("SELECT id, name, description, created_at FROM castro_shop_categories WHERE id = ?", http.getValues.id)
 
     if data.category == nil then
         http:redirect("/subtopic/admin/shop")

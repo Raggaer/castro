@@ -1,7 +1,7 @@
 {{ template "header.html" }}
 <h3>Shop offers for: {{ .category.name }}</h3>
 <hr>
-<a role="button" href="{{ url "subtopic" "admin" "shop" "offer" "new" }}" class="btn btn-primary">New offer</a>
+<a role="button" href="{{ url "subtopic" "admin" "shop" "offer" "new" }}?categoryId={{ .category.id }}" class="btn btn-primary">New offer</a>
 <hr>
 {{ if .success }}
 <div class="alert alert-success" role="alert">

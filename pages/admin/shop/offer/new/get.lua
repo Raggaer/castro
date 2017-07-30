@@ -11,5 +11,12 @@ function get()
 
     local data = {}
 
+    data.category = db:singleQuery("SELECT id, name FROM castro_shop_categories WHERE id = ?", http.getValues.categoryId)
+
+    if data.category == nil then
+        http:redirect("/")
+        return
+    end
+
     http:render("newoffer.html", data)
 end

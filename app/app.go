@@ -43,8 +43,7 @@ func Start() {
 
 		loadLUAConfig()
 		connectDatabase()
-		loadMap(false)
-		//go refreshMap()
+		loadMap()
 		go loadHouses(wait)
 		go loadVocations(wait)
 	}(wait)
@@ -68,7 +67,7 @@ func Start() {
 	executeInitFile()
 }
 
-func loadMap(force bool) {
+func loadMap() {
 	// Map holder
 	m := models.Map{}
 
@@ -107,7 +106,7 @@ func loadMap(force bool) {
 	}
 
 	// Check if map is old
-	if m.Updated_at.Add(time.Hour).Before(time.Now()) || force {
+	if m.Updated_at.Add(time.Hour).Before(time.Now()) {
 
 		fmt.Println(">> Encoded map is outdated. Generating new map data")
 		util.Logger.Logger.Info("Encoded map is outdated. Generating new map data")

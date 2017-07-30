@@ -33,7 +33,6 @@
 <table class="table table-inverse">
     <thead class="thead-inverse">
     <tr>
-        <th>#</th>
         <th>Name</th>
         <th>Vocation</th>
         <th>{{ .order }}</th>
@@ -43,7 +42,6 @@
     {{ if .list }}
     {{ range $index, $element := .list }}
     <tr>
-        <td>{{ $index }}</td>
         <td>
             <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">
             {{ $element.name }}
@@ -55,7 +53,7 @@
     {{ end }}
     {{ else }}
     <tr>
-        <td colspan="4">
+        <td colspan="3">
             No players match this criteria
         </td>
     </tr>

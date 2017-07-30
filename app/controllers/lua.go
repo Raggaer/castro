@@ -83,9 +83,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if err != nil {
 
-		// Set error header
-		w.WriteHeader(500)
-		util.Logger.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
+		// Set not found header
+		w.WriteHeader(404)
+		util.Logger.Logger.Errorf("Cannot get %v subtopic source: %v", pageName, err)
 
 		return
 	}
@@ -113,6 +113,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Set error header
 		w.WriteHeader(500)
-		util.Logger.Logger.Errorf("Cannot get %v subtopic source code: %v", pageName, err)
+		util.Logger.Logger.Errorf("Cannot execute %v subtopic: %v", pageName, err)
 	}
 }
