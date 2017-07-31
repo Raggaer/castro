@@ -15,18 +15,24 @@
         </p>
     </div>
 </div>
-<div id="ban-tabs">
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#offers" aria-controls="offers" role="tab" data-toggle="tab">Offers</a></li>
-    </ul>
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="offers">
-            {{ if .list }}
-            f
-            {{ else }}
-            <p>No offers for this category</p>
+{{ if .list }}
+    <table class="table table-striped table-hover">
+        <thead class="thead-inverse">
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range $index, $element := .list }}
+            <tr>
+                <td>{{ $element.name }}</td>
+                <td>{{ $element.price }}</td>
+            </tr>
             {{ end }}
-        </div>
-    </div>
-</div>
+        </tbody>
+    </table>
+    {{ else }}
+    <p>No offers for this category</p>
+{{ end }}
 {{ template "footer.html" . }}
