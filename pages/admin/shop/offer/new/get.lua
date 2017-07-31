@@ -12,6 +12,7 @@ function get()
     local data = {}
 
     data.category = db:singleQuery("SELECT id, name FROM castro_shop_categories WHERE id = ?", http.getValues.categoryId)
+    data.validationError = session:getFlash("validationError")
 
     if data.category == nil then
         http:redirect("/")
