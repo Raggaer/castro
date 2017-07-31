@@ -110,4 +110,27 @@
         </tr>
     </tbody>
 </table>
+{{ if .characterList }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th colspan="2" scope="row">Character list</th>
+        </tr>
+    </thead>
+    <tbody>
+            {{ range $index, $element := .characterList }}
+            <tr>
+                <td>{{ $element.name }}</td>
+                <td>
+                    {{ if $element.online }}
+                        Online
+                    {{ else }}
+                        Offline
+                    {{ end }}
+                </td>
+            </tr>
+            {{ end }}
+    </tbody>
+</table>
+{{ end }}
 {{ template "footer.html" . }}
