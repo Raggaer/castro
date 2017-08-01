@@ -5,9 +5,19 @@ If (Test-Path "buildOutput") {
 $date = (Get-Date).AddDays(-1).ToString('MM-dd-yyyy_HH:mm:ss')
 $version = git rev-parse HEAD
 
-$initCommand = 'go get'
+echo "$date - $version"
 
-iex $initCommand
+$getDepCommand = 'go get github.com/golang/dep/cmd/dep'
+
+echo "Versioning dep tool downloaded"
+
+iex $getDepCommand
+
+echo "Populating vendor directory"
+
+$depCommand = 'dep ensure'
+
+iex $depCommand
 
 echo "Building for Windows amd64"
 $env:GOOS = "windows"

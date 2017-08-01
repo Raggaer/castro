@@ -192,7 +192,7 @@
   name = "gopkg.in/gomail.v2"
   packages = ["."]
   revision = "81ebce5c23dfd25c6c67194b37d3dd3f338c98b1"
-  source = "github.com/go-gomail/gomail"
+  source = "https://github.com/go-gomail/gomail.git"
 
 [[projects]]
   name = "gopkg.in/square/go-jose.v1"
@@ -203,6 +203,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d9db7851bcc3b2cd97ddf114a2e28edd1412a46032d2d6210677bf019da3dbc3"
+  inputs-digest = "567190bfdae17ca4a21e4e0fc0ce99c27cfb8d716c7b13ade114b2c23dfaeb2e"
   solver-name = "gps-cdcl"
   solver-version = 1
