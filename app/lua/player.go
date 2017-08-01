@@ -5,6 +5,7 @@ import (
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
+	"html"
 )
 
 // PlayerConstructor returns a new player metatable for the given ID or name
@@ -362,14 +363,39 @@ func GetPlayerCustomField(L *lua.LState) int {
 	// Field placeholder
 	fieldValue := ""
 
-	// Retrieve custom field
-	if err := database.DB.Get(&fieldValue, "SELECT "+fieldName+" FROM players WHERE id = ?", player.ID); err != nil {
-		L.RaiseError("Cannot get custom field %s: %v", fieldName, err)
+	// Retrieve current schema
+	schema := Config.GetGlobal("mysqlDatabase").String()
+
+	// Column name placeholder
+	nameList := []models.PlayerColumn{}
+
+	// Get all player column names
+	if err := database.DB.Select(&nameList, "SELECT COLUMN_NAME AS name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?", "players", schema); err != nil {
+		L.RaiseError("Cannot get list of column names from information_schema: %v", err)
 		return 0
 	}
 
-	// Push value as string
-	L.Push(lua.LString(fieldValue))
+	// Loop column list
+	for _, column := range nameList {
+
+		// Check for valid column name
+		if column.Name == fieldName {
+
+			// Retrieve custom field
+			if err := database.DB.Get(&fieldValue, "SELECT " + html.EscapeString(fieldName) + " FROM players WHERE id = ?", player.ID); err != nil {
+				L.RaiseError("Cannot get custom field %s: %v", fieldName, err)
+				return 0
+			}
+
+			// Push value as string
+			L.Push(lua.LString(fieldValue))
+
+			return 1
+		}
+	}
+
+	// Push nil if the field is not valid
+	L.Push(lua.LNil)
 
 	return 1
 }

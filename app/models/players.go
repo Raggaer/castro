@@ -1,5 +1,9 @@
 package models
 
+type PlayerColumn struct {
+	Name string
+}
+
 // Player struct used for server players
 type Player struct {
 	ID         int64
