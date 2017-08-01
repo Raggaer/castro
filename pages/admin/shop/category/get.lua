@@ -23,7 +23,7 @@ function get()
     data.category.description = data.category.description:parseBBCode()
     data.validationError = session:getFlash("validationError")
     data.success = session:getFlash("success")
-    data.list = db:query("SELECT name, price, offer_type FROM castro_shop_offers WHERE category_id = ?", http.getValues.id)
+    data.list = db:query("SELECT id, name, price, offer_type FROM castro_shop_offers WHERE category_id = ?", http.getValues.id)
 
     http:render("shopoffers.html", data)
 end
