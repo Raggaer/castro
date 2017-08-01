@@ -141,6 +141,7 @@ type ConfigurationFile struct {
 	Configuration *Configuration
 }
 
+// StringDuration struct used to convert strings to time duration during config encoding or vice-versa
 type StringDuration struct {
 	Duration time.Duration
 	String   string
