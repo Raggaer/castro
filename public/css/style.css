@@ -159,3 +159,15 @@ tr.skills {
     border: 1px solid #c8c8c8;
     box-shadow: 0 1px 5px 0 #c8c8c8;
 }
+
+.list-widget {
+    margin-bottom: 0px;
+}
+
+.date-box {
+    background-color: #333333;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}

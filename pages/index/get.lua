@@ -29,6 +29,7 @@ function get()
         if not cache then
             for _, article in pairs(data.articles) do
                 article.text = article.text:parseBBCode()
+                article.created = time:parseUnix(article.created_at)
             end
         end
     end

@@ -1,25 +1,28 @@
 {{ if .admin }}
-<div class="info-panel black">
-    <h5>Admin panel</h5>
-    <hr class="white-hr">
-    <ul>
-        <li>
-            <a class="light" href="{{ url "subtopic" "admin" "shop" }}">Shop</a>
-        </li>
-        <li>
-            <a class="light" href="{{ url "subtopic" "admin" "articles" "list" }}">Articles</a>
-        </li>
-        <li>
-            <a class="light" href="{{ url "subtopic" "admin" "logs" }}">Logs</a>
-        </li>
-        {{ if .pluginEnabled }}
-        <li>
-            <a class="light" href="{{ url "subtopic" "admin" "extensions" }}">Extensions</a>
-        </li>
-        {{ end }}
-        <li>
-            <a class="light" href="{{ url "subtopic" "admin" "bans" }}">Banishments</a>
-        </li>
-    </ul>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="glyphicon glyphicon-cog"></span> Admin panel
+    </div>
+    <div class="panel-body">
+        <ul class="list-group list-widget">
+            <li class="list-group-item">
+                <a class="light" href="{{ url "subtopic" "admin" "shop" }}">Shop</a>
+            </li>
+            <li class="list-group-item">
+                <a class="light" href="{{ url "subtopic" "admin" "articles" "list" }}">Articles</a>
+            </li>
+            <li class="list-group-item">
+                <a class="light" href="{{ url "subtopic" "admin" "logs" }}">Logs</a>
+            </li>
+            {{ if .pluginEnabled }}
+            <li class="list-group-item">
+                <a class="light" href="{{ url "subtopic" "admin" "extensions" }}">Extensions</a>
+            </li>
+            {{ end }}
+            <li class="list-group-item">
+                <a class="light" href="{{ url "subtopic" "admin" "bans" }}">Banishments</a>
+            </li>
+        </ul>
+    </div>
 </div>
 {{ end }}

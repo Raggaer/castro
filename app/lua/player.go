@@ -382,7 +382,7 @@ func GetPlayerCustomField(L *lua.LState) int {
 		if column.Name == fieldName {
 
 			// Retrieve custom field
-			if err := database.DB.Get(&fieldValue, "SELECT " + html.EscapeString(fieldName) + " FROM players WHERE id = ?", player.ID); err != nil {
+			if err := database.DB.Get(&fieldValue, "SELECT "+html.EscapeString(fieldName)+" FROM players WHERE id = ?", player.ID); err != nil {
 				L.RaiseError("Cannot get custom field %s: %v", fieldName, err)
 				return 0
 			}
