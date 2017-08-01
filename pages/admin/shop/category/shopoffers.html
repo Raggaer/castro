@@ -33,7 +33,11 @@
                     <a role="button" href="{{ url "subtopic" "admin" "shop" "offer" "edit" }}?id={{ $element.id }}" class="btn btn-primary btn-xs">Edit</a>
                 </td>
                 <td>
-                    <a role="button" href="{{ url "subtopic" "admin" "shop" "offer" "edit" }}?id={{ $element.id }}" class="btn btn-danger btn-xs">Edit</a>
+                    <form method="post" action="{{ url "subtopic" "admin" "shop" "offer" "delete" }}">
+                        <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                        <input type="hidden" name="id" value="{{ $element.id }}">
+                        <button type="submit" class="btn btn-danger btn-xs">Delete</button>
+                    </form>
                 </td>
             </tr>
             {{ end }}
