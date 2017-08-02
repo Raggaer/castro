@@ -38,6 +38,8 @@ data.level = 10
 ]]--
 ```
 
+Inline element keys follow this structure `-element`.
+
 # unmarshalFile
 
 Converts a valid XML file to a lua table. This function acts almost like [unmarshal](#unmarshal) but takes a file path instead of a string.
@@ -64,6 +66,6 @@ function get()
 end
 ```
 
-Inline elements follow this structure `-element`.
+Inline element keys follow this structure `-element`.
 
-Its recommended that you cache the results, parsing an XML file on each request is not the way to go, [xml:unmarshalFile(filename)](#unmarshalfile) will save the XML result in the cache.
+Its recommended that you cache the results, parsing an XML file on each request is not the way to go, [xml:unmarshalFile(filename)](#unmarshalfile) will save the XML result in the cache by default.

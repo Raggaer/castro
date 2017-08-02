@@ -38,16 +38,18 @@ var (
 		"setCustom": SetConfigCustomValue,
 	}
 	httpMethods = map[string]glua.LGFunction{
-		"redirect":         Redirect,
-		"render":           RenderTemplate,
-		"write":            WriteResponse,
-		"serveFile":        ServeFile,
-		"get":              GetRequest,
-		"setHeader":        SetHeader,
-		"postForm":         PostFormRequest,
-		"getHeader":        GetHeader,
-		"getRemoteAddress": GetRemoteAddress,
-		"curl":             CreateRequestClient,
+		"redirect":           Redirect,
+		"render":             RenderTemplate,
+		"write":              WriteResponse,
+		"serveFile":          ServeFile,
+		"get":                GetRequest,
+		"setHeader":          SetHeader,
+		"postForm":           PostFormRequest,
+		"getHeader":          GetHeader,
+		"getRemoteAddress":   GetRemoteAddress,
+		"curl":               CreateRequestClient,
+		"formFile":           GetFormFile,
+		"parseMultiPartForm": ParseMultiPartForm,
 	}
 	httpRegularMethods = map[string]glua.LGFunction{
 		"curl":     CreateRequestClient,
@@ -179,6 +181,12 @@ var (
 	globalMethods = map[string]glua.LGFunction{
 		"set": SetGlobalLuaValue,
 		"get": GetGlobalLuaValue,
+	}
+	formFileMethods = map[string]glua.LGFunction{
+		"isValidPNG":    FormFileIsValidPNG,
+		"getFile":       GetFormFileByteArray,
+		"saveFile":      SaveFormFile,
+		"saveFileAsPNG": SaveFormFileAsPNG,
 	}
 )
 

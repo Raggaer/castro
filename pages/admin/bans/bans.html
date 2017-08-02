@@ -199,7 +199,7 @@
 </div>
 {{ end }}
 {{ template "footer.html" . }}
-<script>
+<script nonce="{{ .nonce }}">
     $(document).ready(function(){
         var namelocks = $('#namelocks_table').DataTable({
             "autoWidth": false

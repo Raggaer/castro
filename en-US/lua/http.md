@@ -16,6 +16,7 @@ Provides access to HTTP related functions.
 - [http:getHeader(key)](#getheader)
 - [http:getRemoteAddress()](#getremoteaddress)
 - [http:curl(data)](#curl)
+- [http:formFile(name)](#formfile)
 
 # redirect
 
@@ -184,4 +185,61 @@ request.authentication = {}
 
 request.authentication.username = "Raggaer"
 request.authentication.password = "Test1234"
+```
+
+# formFile
+
+Retrieves a file from a `multipart/form-data` encoded form. If the file is not present this function will return `nil`.
+
+```lua
+local file = http:formFile("guild-image")
+```
+
+This function returns a metatable with the following functions:
+
+- [formFile:isValidPNG()](#isvalidpng)
+- [formFile:saveFile(destination)](#destination)
+- [formFile:saveFileAsPNG(destination, width, height)](#savefileaspng)
+- [formFile:getFile()](#getfile)
+
+# isValidPNG
+
+Checks if the current form file is a valid `png` image.
+
+```lua
+local file = http:formFile("guild-image")
+
+local isPNG = file:isValidPNG()
+-- isPNG = true
+```
+
+# saveFile
+
+Saves the current form file to the given destination. This method can be used for any file extension, if you want to save it as a image file use [formFile:saveFileAsPNG(destination, width, height)](#savefileaspng).
+
+```lua
+local file = http:formFile("guild-image")
+
+file:saveFile("public/images/guild-image.png")
+```
+
+# saveFileAsPNG
+
+Saves the current form file as a `png` image to the given destination. You can pass a width and a height as optional values to resize the image.
+
+```lua
+local file = http:formFile("guild-image")
+
+file:saveFileAsPNG("public/images/guild-image.png", 64, 64)
+```
+
+# getFile
+
+Returns the file byte array as a lua string.
+
+```lua
+local file = http:formFile("guild-image")
+
+local f = file:getFile()
+-- f = <file byte array>
 ```

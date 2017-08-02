@@ -1,5 +1,4 @@
 function widget()
-
     local data = {}
 
     data["logged"] = session:isLogged()

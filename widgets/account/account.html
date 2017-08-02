@@ -24,8 +24,6 @@
             {{ end }}
         </ul>
         {{ else }}
-        <h5>Login</h5>
-        <hr class="white-hr">
         <form method="POST" action="{{ url "subtopic" "login" }}">
         <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
             <div class="form-group">

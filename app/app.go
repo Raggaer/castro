@@ -419,6 +419,9 @@ func templateFuncs() template.FuncMap {
 		"captchaEnabled": func() bool {
 			return util.Config.Configuration.Captcha.Enabled
 		},
+		"eq": func(a, b interface{}) bool {
+			return a == b
+		},
 		"eqNumber": func(a, b float64) bool {
 			return a == b
 		},

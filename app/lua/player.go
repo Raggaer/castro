@@ -54,7 +54,7 @@ func PlayerConstructor(L *lua.LState) int {
 // createPlayerMetaTable returns a new player metatable
 func createPlayerMetaTable(player *models.Player, luaState *lua.LState) *lua.LTable {
 	// Create a player metatable
-	playerMetaTable := luaState.NewTypeMetatable(PlayerMetaTableName)
+	playerMetaTable := luaState.NewTable()
 
 	// Set user data
 	u := luaState.NewUserData()
@@ -74,7 +74,7 @@ func createPlayerMetaTable(player *models.Player, luaState *lua.LState) *lua.LTa
 // getPlayerObject returns a player struct from a user data value
 func getPlayerObject(luaState *lua.LState) *models.Player {
 	// Get metatable
-	tbl := luaState.GetTypeMetatable(PlayerMetaTableName)
+	tbl := luaState.ToTable(1)
 
 	// Get user data field
 	data := luaState.GetField(tbl, "__player").(*lua.LUserData)

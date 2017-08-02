@@ -52,14 +52,42 @@ function post()
         return
     end
 
-    db:execute(
-        "UPDATE castro_shop_offers SET description = ?, price = ?, name = ?, updated_at = ? WHERE id = ?",
-        http.postValues["offer-description"],
-        http.postValues["offer-price"],
-        http.postValues["offer-name"],
-        os.time(),
-        data.offer.id
-    )
+    http:parseMultiPartForm()
+
+    local offerImage = http:formFile("offer-image")
+
+    if offerImage == nil then
+
+        db:execute(
+            "UPDATE castro_shop_offers SET description = ?, price = ?, name = ?, updated_at = ? WHERE id = ?",
+            http.postValues["offer-description"],
+            http.postValues["offer-price"],
+            http.postValues["offer-name"],
+            os.time(),
+            data.offer.id
+        )
+
+    else
+
+        if not offerImage:isValidPNG() then
+            session:setFlash("validationError", "Offer image needs to be a valid png image")
+            http:redirect("/subtopic/admin/shop/offer/edit?id=" .. data.offer.id)
+            return
+        end
+
+        offerImage:saveFileAsPNG("public/images/offer-images/" .. http.postValues["offer-name"] .. ".png", 64, 64)
+
+        db:execute(
+            "UPDATE castro_shop_offers SET description = ?, price = ?, name = ?, updated_at = ?, image = ? WHERE id = ?",
+            http.postValues["offer-description"],
+            http.postValues["offer-price"],
+            http.postValues["offer-name"],
+            os.time(),
+            "public/images/offer-images/" .. http.postValues["offer-name"] .. ".png",
+            data.offer.id
+        )
+
+    end
 
     session:setFlash("success", "Shop offer edited")
     http:redirect("/subtopic/admin/shop/category?id=" .. data.category.id)

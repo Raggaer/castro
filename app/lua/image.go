@@ -19,7 +19,7 @@ func SetImageMetaTable(luaState *lua.LState) {
 // getGoImage retrieves the user data goimage from the given state
 func getGoImage(luaState *lua.LState) goimage.Image {
 	// Get metatable
-	meta := luaState.GetTypeMetatable(GoImageMetaTableName)
+	meta := luaState.Get(1)
 
 	// Get user data
 	data := luaState.GetField(meta, "__img").(*lua.LUserData)
@@ -36,7 +36,7 @@ func NewGoImage(L *lua.LState) int {
 	)
 
 	// Create metatable
-	tbl := L.NewTypeMetatable(GoImageMetaTableName)
+	tbl := L.NewTable()
 
 	// Create image user data
 	imgUserData := L.NewUserData()
