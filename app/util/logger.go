@@ -12,6 +12,7 @@ import (
 )
 
 var (
+	// Logger main application logging entry point
 	Logger = &ApplicationLogger{}
 )
 

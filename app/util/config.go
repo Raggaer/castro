@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/BurntSushi/toml"
+	"io"
 	"sync"
 	"time"
 )
@@ -30,13 +31,13 @@ type PluginConfig struct {
 // RateLimiterConfig struct used for the rate limiting configuration options
 type RateLimiterConfig struct {
 	Number int64
-	Time   time.Duration
+	Time   StringDuration
 }
 
 // CacheConfig struct used for the cache configuration options
 type CacheConfig struct {
-	Default time.Duration
-	Purge   time.Duration
+	Default StringDuration
+	Purge   StringDuration
 }
 
 // SSLConfig struct used for the ssl configuration options
@@ -114,6 +115,7 @@ type SecurityConfig struct {
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
 	CheckUpdates bool
+	Template     string
 	Mode         string
 	Port         int
 	URL          string
@@ -139,6 +141,12 @@ type ConfigurationFile struct {
 	Configuration *Configuration
 }
 
+// StringDuration struct used to convert strings to time duration during config encoding or vice-versa
+type StringDuration struct {
+	Duration time.Duration
+	String   string
+}
+
 var (
 	// Config holds the main configuration file
 	Config *ConfigurationFile
@@ -153,6 +161,25 @@ var (
 func init() {
 	Config = &ConfigurationFile{}
 	Config.Configuration = &Configuration{}
+}
+
+// NewStringDuration returns a new string duration struct
+func NewStringDuration(s string) StringDuration {
+	return StringDuration{
+		String: s,
+	}
+}
+
+// MarshalText use toml interface to convert string durations to strings
+func (s StringDuration) MarshalText() ([]byte, error) {
+	return []byte(s.String), nil
+}
+
+// UnmarshalText use toml interface to convert strings to durations
+func (s *StringDuration) UnmarshalText(text []byte) error {
+	var err error
+	s.Duration, err = time.ParseDuration(string(text))
+	return err
 }
 
 // LoadConfig loads the configuration file to the given interface pointer
@@ -232,4 +259,24 @@ func (c Configuration) IsSSL() bool {
 	}
 
 	return false
+}
+
+// EncodeConfig encodes the given io writer
+func EncodeConfig(configFile io.Writer, c *Configuration) error {
+	// Lock mutex
+	Config.rw.Lock()
+	defer Config.rw.Unlock()
+
+	// Encode the given writer with the given interface
+	return toml.NewEncoder(configFile).Encode(c)
+}
+
+// SetCustomValue sets a config custom value
+func (c *ConfigurationFile) SetCustomValue(key string, v interface{}) {
+	// Lock mutex
+	c.rw.Lock()
+	defer c.rw.Unlock()
+
+	// Set custom value
+	c.Configuration.Custom[key] = v
 }

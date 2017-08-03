@@ -6,10 +6,10 @@ Name: player
 
 Providess easy access to server players. You first need to create a new instance:
 
-- [Player(name)](#new)
-- [Player(id)](#new)
+- [Player(name)](#new.name)
+- [Player(id)](#new.id)
 
-# new
+# new.name
 
 Get a player by the given name
 
@@ -19,9 +19,9 @@ local data = Player("test")
 
 This will return a new `player` metatable
 
-# new
+# new.id
 
-Get a player by the identifier
+Get a player by the unique identifier
 
 ```lua
 local data = Player(1)
@@ -36,6 +36,7 @@ Provides access to the player information.
 - [player:getAccountId()](#getaccountid)
 - [player:isOnline()](#isonline)
 - [player:getBankBalance()](#getbankbalance)
+- [player:setBankBalance()](#setbankbalance)
 - [player:getStorageValue(key)](#getstoragevalue)
 - [player:setStorageValue(key, value)](setstoragevalue)
 - [player:getVocation()](#getvocation)
@@ -44,6 +45,9 @@ Provides access to the player information.
 - [player:getLevel()](#getlevel)
 - [player:getPremiumDays()](#getpremiumdays)
 - [player:getName()](#getname)
+- [player:getExperience()](#getexperience)
+- [player:getCapacity()](#getcapacity)
+- [player:getCustomField()](#getcustomfield)
 
 # getAccountID
 
@@ -73,6 +77,24 @@ Returns the player bank balance.
 local data = Player("test")
 local balance = data:getBankBalance()
 -- balance = 1000
+```
+
+# setBankBalance
+
+Updates the player bank balance.
+
+```lua
+local data = Player("test")
+local balance = data:setBankBalance(100)
+-- balance = 100
+```
+
+This method overwrites the bank balance. If you want to augment the player balance you can do the following:
+
+```lua
+local data = Player("test")
+local balance = data:setBankBalance(data:getBankBalance() + 100)
+-- balance = 1100
 ```
 
 # getStorageValue
@@ -174,4 +196,34 @@ Return the player name.
 local data = Player(1)
 local name = data:getName()
 -- name = "test"
+```
+
+# getExperience
+
+Return the player current experience value.
+
+```lua
+local data = Player(1)
+local experience = data:getExperience()
+-- experience = 4800
+```
+
+# getCapacity
+
+Return the player current capacity value.
+
+```lua
+local data = Player(1)
+local cap = data:getCapacity()
+-- capacity = 100
+```
+
+# getCustomField
+
+Retrieves the given field as a string.
+
+```lua
+local data = Player(1)
+local points = tonumber(data:getCustomField("points"))
+-- points = 100
 ```

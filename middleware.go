@@ -73,6 +73,24 @@ func newSecurityHandler() *securityHandler {
 }
 
 func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+	// Retrieve nonce value from cache
+	nonce, ok := util.Cache.Get("nonce")
+
+	if !ok {
+
+		// Create new nonce value
+		nonce = uniuri.NewLen(3)
+
+		// Save new nonce to cache
+		util.Cache.Set("nonce", nonce, time.Minute*20)
+	}
+
+	// Set nonce header value
+	util.Config.Configuration.Security.CSP.Script.Default = append(util.Config.Configuration.Security.CSP.Script.Default, "nonce-"+nonce.(string))
+
+	// Create new context with cookie value
+	ctx := context.WithValue(req.Context(), "nonce", nonce)
+
 	// Set Strict-Transport-Security header if SSL
 	if util.Config.Configuration.IsSSL() {
 
@@ -106,8 +124,8 @@ func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, ne
 		)
 	}
 
-	// Execute next handler
-	next(w, req)
+	// Run next handler
+	next(w, req.WithContext(ctx))
 }
 
 // newSessionHandler creates and returns a new sessionHandler instance

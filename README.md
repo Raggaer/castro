@@ -1,4 +1,4 @@
-![Castro AAC](https://i.gyazo.com/7a9f5b334221456a6c9f80c3274b917c.png)
+# Castro AAC
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/Raggaer/castro)](https://goreportcard.com/report/github.com/Raggaer/castro)
 [![lICENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/Raggaer/castro/blob/master/LICENSE)
@@ -10,7 +10,7 @@ Castro provides lua bindings using a pool of lua states. Each request gets a sta
 
 # Documentation
 
-Everything you might need [is here](https://docs.raggaer.pw/)
+Everything you might need [is here](https://docs.castroaac.org/). The official documentation site of Castro
 
 # License
 

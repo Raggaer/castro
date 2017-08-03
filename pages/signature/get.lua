@@ -6,7 +6,7 @@ function get()
         return
     end
 
-    if file:exists("public/images/signature/" .. character:getName() .. ".png") then
+    if file:exists("public/images/signature/" .. character:getName() .. ".png") and not app.Mode == "dev" then
        local up = file:mod("public/images/signature/" .. character:getName() .. ".png") + 5 * 60
        if up > os.time() then
            http:serveFile("public/images/signature/" .. character:getName() .. ".png")
@@ -21,7 +21,7 @@ function get()
     img:setBackground("public/images/signature-bg.png")
 
     if online == nil then
-        img:writeText(character:getName(), "#C64342", 19, 20, 20)
+        img:writeText(character:getName(), "#FF0000", 19, 20, 20)
     else
         img:writeText(character:getName(), "#34BC41", 19, 20, 20)
     end
@@ -30,6 +30,7 @@ function get()
     img:writeText("Vocation: " .. character:getVocation().Name, "#000000", 16, 20, 80)
     img:writeText("Town: " .. character:getTown().Name, "#000000", 16, 20, 100)
     img:save("public/images/signature/" .. character:getName() .. ".png")
+
 
     http:serveFile("public/images/signature/" .. character:getName() .. ".png")
 end

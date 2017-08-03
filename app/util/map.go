@@ -6,17 +6,24 @@ import (
 	"encoding/xml"
 	"github.com/raggaer/otmap"
 	"io/ioutil"
+	"sync"
 )
 
 var (
 	// OTBMap holds the main server map parsed using otmap library
-	OTBMap *CastroMap
+	OTBMap = CastroMapInstance{}
 
 	// ServerHouseList holds the main server house list XML list
 	ServerHouseList = ServerHouses{
 		List: &HouseList{},
 	}
 )
+
+// CastroMapInstance struct used to hold the server map data
+type CastroMapInstance struct {
+	Map *CastroMap
+	rw  sync.RWMutex
+}
 
 // CastroMap struct used to decode and encode tibia maps
 type CastroMap struct {
@@ -44,10 +51,24 @@ type HouseList struct {
 // ServerHouses contains the whole house list of the server
 type ServerHouses struct {
 	List *HouseList
+	rw   sync.RWMutex
+}
+
+func (c *CastroMapInstance) Load(m *CastroMap) {
+	// Prevent data-races
+	c.rw.Lock()
+	defer c.rw.Unlock()
+
+	// Set map pointer
+	c.Map = m
 }
 
 // LoadHouses parses the server map houses
-func LoadHouses(file string, list ServerHouses) error {
+func (s *ServerHouses) LoadHouses(file string) error {
+	// Lock mutex
+	s.rw.Lock()
+	defer s.rw.Unlock()
+
 	// Load houses file
 	f, err := ioutil.ReadFile(file)
 
@@ -56,7 +77,7 @@ func LoadHouses(file string, list ServerHouses) error {
 	}
 
 	// Unmarshal houses file
-	return xml.Unmarshal(f, &list.List)
+	return xml.Unmarshal(f, &s.List)
 }
 
 // EncodeMap encodes the server map to the given destination

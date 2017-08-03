@@ -256,56 +256,8 @@ func createConfigFile(name, location string) error {
 	// Close state
 	defer luaState.Close()
 
-	// Create events metatable
-	lua.SetEventsMetaTable(luaState)
-
-	// Create storage metatable
-	lua.SetStorageMetaTable(luaState)
-
-	// Create time metatable
-	lua.SetTimeMetaTable(luaState)
-
-	// Create url metatable
-	lua.SetURLMetaTable(luaState)
-
-	// Create debug metatable
-	lua.SetDebugMetaTable(luaState)
-
-	// Create XML metatable
-	lua.SetXMLMetaTable(luaState)
-
-	// Create captcha metatable
-	lua.SetCaptchaMetaTable(luaState)
-
-	// Create crypto metatable
-	lua.SetCryptoMetaTable(luaState)
-
-	// Create validator metatable
-	lua.SetValidatorMetaTable(luaState)
-
-	// Create database metatable
-	lua.SetDatabaseMetaTable(luaState)
-
-	// Create config metatable
-	lua.SetConfigMetaTable(luaState)
-
-	// Create map metatable
-	lua.SetMapMetaTable(luaState)
-
-	// Create mail metatable
-	lua.SetMailMetaTable(luaState)
-
-	// Create cache metatable
-	lua.SetCacheMetaTable(luaState)
-
-	// Create reflect metatable
-	lua.SetReflectMetaTable(luaState)
-
-	// Create json metatable
-	lua.SetJSONMetaTable(luaState)
-
-	// Set config metatable
-	lua.SetConfigGlobal(luaState)
+	// Get application state ready
+	lua.GetApplicationState(luaState)
 
 	// Execute init file
 	if err := luaState.DoFile(filepath.Join("engine", "install.lua")); err != nil {
@@ -327,6 +279,7 @@ func createConfigFile(name, location string) error {
 	// Encode the given configuration struct into the file
 	return toml.NewEncoder(configFile).Encode(util.Configuration{
 		CheckUpdates: true,
+		Template:     "views/default",
 		Mode:         "dev",
 		Port:         80,
 		URL:          "localhost",
@@ -338,12 +291,12 @@ func createConfigFile(name, location string) error {
 			BlockKey: uniuri.NewLen(32),
 		},
 		Cache: util.CacheConfig{
-			Default: time.Minute * 5,
-			Purge:   time.Minute,
+			Default: util.NewStringDuration("5m"),
+			Purge:   util.NewStringDuration("1m"),
 		},
 		RateLimit: util.RateLimiterConfig{
 			Number: 100,
-			Time:   time.Minute,
+			Time:   util.NewStringDuration("1m"),
 		},
 		Security: util.SecurityConfig{
 			NonceEnabled:      true,

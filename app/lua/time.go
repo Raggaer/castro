@@ -28,6 +28,30 @@ func SetTimeMetaTable(luaState *lua.LState) {
 	luaState.SetFuncs(timeMetaTable, timeMethods)
 }
 
+// NewDuration creates a time duration from the given number
+func NewDuration(L *lua.LState) int {
+	// Get duration number
+	d := L.ToInt(2)
+
+	// Create time duration
+	duration := time.Duration(d)
+
+	// Create lua table to store result
+	result := L.NewTable()
+
+	// Set result table fields
+	result.RawSetString("Nanoseconds", lua.LNumber(duration.Nanoseconds()))
+	result.RawSetString("Seconds", lua.LNumber(duration.Seconds()))
+	result.RawSetString("Minutes", lua.LNumber(duration.Minutes()))
+	result.RawSetString("Hours", lua.LNumber(duration.Hours()))
+	result.RawSetString("String", lua.LString(duration.String()))
+
+	// Push table
+	L.Push(result)
+
+	return 1
+}
+
 // ParseUnixTimestamp returns a date object for the given timestamp
 func ParseUnixTimestamp(L *lua.LState) int {
 	// Get timestamp

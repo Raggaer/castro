@@ -26,7 +26,7 @@ function get()
 	-- User is admin so should be fine and would be strange not to see changes right away
 	local articleCount = db:singleQuery("SELECT COUNT(*) as total FROM castro_articles", false)
 	local pg = paginator(page, 10, tonumber(articleCount.total))
-	data.articles = db:query("SELECT id, title, text, created_at, updated_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.limit, pg.offset, false)
+	data.articles = db:query("SELECT id, title, text, created_at, updated_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.offset, pg.limit, false)
 	data.paginator = pg
 
 	if data.articles ~= nil then

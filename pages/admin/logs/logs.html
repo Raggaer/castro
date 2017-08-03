@@ -2,21 +2,32 @@
 <h3>Website logs</h3>
 <hr>
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-{{ range $index, $element := .logs }}
-    <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="heading-{{ $index }}">
-            <h4 class="panel-title">
-                <a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ $index }}" aria-expanded="true" aria-controls="collapse-{{ $index }}">
-                    {{ $element.time }}
-                </a>
-            </h4>
-        </div>
-        <div id="collapse-{{ $index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{ $index }}">
-            <div class="panel-body">
-               {{ nl2br $element.msg }}
+    {{ range $index, $element := .logs }}
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="heading-{{ $index }}">
+                <h4 class="panel-title">
+                    <a role="button" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ $index }}" aria-expanded="true" aria-controls="collapse-{{ $index }}">
+                        {{ $element.time }}
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-{{ $index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{ $index }}">
+                <div class="panel-body">
+                   {{ nl2br $element.msg }}
+                </div>
             </div>
         </div>
-    </div>
-{{ end }}
+    {{ end }}
+    <ul class="pagination pagination-sm">
+        {{ if .paginator.prev }}
+        <li><a href="{{ url "subtopic" "admin" "logs" }}?page={{ .paginator.firstpage.num }}">First</a></li>
+        <li><a href="{{ url "subtopic" "admin" "logs" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
+        {{ end }}
+        </li>
+        {{ if $.paginator.last }}
+        <li><a href="{{ url "subtopic" "admin" "logs" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
+        <li><a href="{{ url "subtopic" "admin" "logs" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
+        {{ end }}
+    </ul>
 </div>
 {{ template "footer.html" . }}

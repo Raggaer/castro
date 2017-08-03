@@ -1,6 +1,14 @@
 {{ template "header.html" }}
-<h3>Guild: {{ .guild.guildname }}</h3>
-<p>{{ nl2br .guild.motd }}</p>
+<div class="row">
+    <div style="margin-right: 15px;" class="col-md-1">
+        <img src="{{ .logo }}">
+    </div>
+    <div class="col-md-10">
+        <h3>Guild: {{ .guild.guildname }}</h3>
+        <p>{{ nl2br .guild.motd }}</p>
+    </div>
+</div>
+
 <hr>
 {{ if .validationError }}
 <div class="alert alert-danger" role="alert">
@@ -85,9 +93,42 @@
         <li role="presentation"><a href="#ranks" aria-controls="ranks" role="tab" data-toggle="tab">Ranks</a></li>
         <li role="presentation"><a href="#invite" aria-controls="invite" role="tab" data-toggle="tab">Invite</a></li>
         <li role="presentation"><a href="#wars" aria-controls="wars" role="tab" data-toggle="tab">Wars</a></li>
+        <li role="presentation"><a href="#leadership" aria-controls="leadership" role="tab" data-toggle="tab">Leadership</a></li>
+        <li role="presentation"><a href="#logo" aria-controls="leadership" role="tab" data-toggle="tab">Logo</a></li>
+        {{ end }}
+        {{ if not .owner }}
+            {{ if .myGuildCharacters }}
+            <li role="presentation"><a href="#leave" aria-controls="leave" role="tab" data-toggle="tab">Leave guild</a></li>
+            {{ end }}
         {{ end }}
     </ul>
     <div class="tab-content">
+        {{ if not .owner }}
+            {{ if .myGuildCharacters }}
+            <div role="tabpanel" class="tab-pane" id="leave">
+                <p>
+                    You are about to leave <b>{{ .guild.guildname }}</b> by clicking on the leave button. After you leave a guild you will need to be invited again by the guild leader.
+                </p>
+                <hr>
+                <form method="post" action="{{ url "subtopic" "community" "guilds" "leave" }}">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <select class="form-control" name="character-name">
+                                {{ range $index, $element := .myGuildCharacters }}
+                                <option>{{ $element.name }}</option>
+                                {{ end }}
+                            </select>
+                            <span class="input-group-btn">
+                                <button type="submit" name="leave" class="btn btn-danger">Leave guild</button>
+                            </span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+                    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                </form>
+            </div>
+            {{ end }}
+        {{ end }}
         <div role="tabpanel" class="tab-pane active" id="members">
             <table class="table table-striped">
                 <thead class="thead-inverse">
@@ -95,6 +136,9 @@
                         <th>Name</th>
                         <th>Level</th>
                         <th>Rank</th>
+                        {{ if $.owner }}
+                        <th>Promote</th>
+                        {{ end }}
                     </tr>
                 </thead>
                 <tbody>
@@ -106,6 +150,26 @@
                             </td>
                             <td>{{ $element.level }}</td>
                             <td>{{ $element.rank }}</td>
+                            {{ if $.owner }}
+                            <td>
+                                {{ if eqNumber $element.ranklevel 1 }}
+                                <form method="post" action="{{ url "subtopic" "community" "guilds" "promote" }}">
+                                    <input type="hidden" name="guild-name" value="{{ $.guild.guildname }}">
+                                    <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                                    <input type="hidden" name="character-name" value="{{ $element.name }}">
+                                    <button type="submit" class="btn btn-xs btn-success">Promote</button>
+                                </form>
+                                {{ end }}
+                                {{ if eqNumber $element.ranklevel 2 }}
+                                <form method="post" action="{{ url "subtopic" "community" "guilds" "demote" }}">
+                                <input type="hidden" name="guild-name" value="{{ $.guild.guildname }}">
+                                <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                                <input type="hidden" name="character-name" value="{{ $element.name }}">
+                                <button type="submit" class="btn btn-xs btn-danger">Demote</button>
+                                </form>
+                                {{ end }}
+                            </td>
+                            {{ end }}
                         </tr>
                     {{ end }}
                 {{ else }}
@@ -164,6 +228,22 @@
             </table>
         </div>
         {{ if .owner }}
+        <div role="tabpanel" class="tab-pane" id="logo">
+            <form enctype="multipart/form-data" action="{{ url "subtopic" "community" "guilds" "logo" }}" method="POST">
+                <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                <div class="form-group">
+                    <label for="guild-motd">Guild logo</label>
+                    <input type="file" id="guild-logo" name="guild-logo" class="form-control">
+                    <p class="help-block">
+                        The guild logo needs to be a png image. Images are resized to 64x64
+                    </p>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Update logo</button>
+                </div>
+            </form>
+        </div>
         <div role="tabpanel" class="tab-pane" id="motd">
             <form action="{{ url "subtopic" "community" "guilds" "motd" }}" method="POST">
             <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
@@ -171,6 +251,9 @@
             <div class="form-group">
                 <label for="guild-motd">Guild motd</label>
                 <textarea class="form-control" name="guild-motd" id="guild-motd">{{ .guild.motd }}</textarea>
+                <p class="help-block">
+                    The guild message of the day. Can only contain between 0 - 250 characters.
+                </p>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Update</button>
@@ -312,6 +395,41 @@
                 </tbody>
             </table>
             {{ end }}
+        </div>
+        <div role="tabpanel" class="tab-pane" id="leadership">
+            <form action="{{ url "subtopic" "community" "guilds" "leadership" }}" method="POST">
+                <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                <div class="form-group">
+                    <label for="leader-name">
+                        You can pass the guild leadership to any other member. Please select who you want to take the lead
+                    </label>
+                    <select name="leader-name" class="form-control" id="leader-name" placeholder="New guild leader">
+                        {{ range $index, $element := .memberlist }}
+                            {{ $r := eq $.ownerdata.name $element.name }}
+                            {{ if not $r }}
+                                <option>{{ $element.name }}</option>
+                            {{ end }}
+                        {{ end }}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Pass leadership</button>
+                </div>
+            </form>
+            <hr>
+            <form action="{{ url "subtopic" "community" "guilds" "disband" }}" method="POST">
+                <input type="hidden" name="guild-name" value="{{ .guild.guildname }}">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                <div class="form-group">
+                    <label for="leader-name">
+                        If your guild has no members you can disband it, otherwise if you need to leave the guild pass the leadership and then leave
+                    </label>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-danger">Disband guild</button>
+                </div>
+            </form>
         </div>
         {{ end }}
     </div>

@@ -1,8 +1,8 @@
 tmp/
 *.gzip
-*.toml
-.idea/
-vendor/
+config.toml
+vendor/*
+.idea
 public/images/signature/*.png
 logs/*.json
 *.exe
@@ -13,4 +13,5 @@ buildOutput/
 obfuscator/*
 deobfuscator/*
 engine/*.castro
-extensions/*/
+extensions/*
+public/images/offer-images/*.png

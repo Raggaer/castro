@@ -21,6 +21,16 @@ func SetHTTPMetaTable(luaState *glua.LState) {
 	luaState.SetFuncs(httpMetaTable, httpMethods)
 }
 
+// SetRegularHTTPMetaTable sets the event http metatable removing some http methods
+func SetRegularHTTPMetaTable(luaState *glua.LState) {
+	// Create and set HTTP metatable
+	httpMetaTable := luaState.NewTypeMetatable(HTTPMetaTableName)
+	luaState.SetGlobal(HTTPMetaTableName, httpMetaTable)
+
+	// Set all HTTP metatable functions
+	luaState.SetFuncs(httpMetaTable, httpRegularMethods)
+}
+
 // SetWidgetHTTPMetaTable sets the widget http metatable on the given lua state
 func SetWidgetHTTPMetaTable(luaState *glua.LState) {
 	// Create and set HTTP metatable
@@ -71,6 +81,56 @@ func getRequestAndResponseWriter(L *glua.LState) (*http.Request, http.ResponseWr
 	w := L.GetField(metatable, HTTPResponseWriterName).(*glua.LUserData).Value.(http.ResponseWriter)
 
 	return req, w
+}
+
+// ParseMultiPartForm parses a multi-part form encoded
+func ParseMultiPartForm(L *glua.LState) int {
+	// Get HTTP request and HTTP response writer
+	req, _ := getRequestAndResponseWriter(L)
+
+	// Get max memory value
+	maxMemory := L.ToInt64(2)
+
+	if maxMemory == 0 {
+		maxMemory = 32 << 20
+	}
+
+	// Parse multi-part form
+	if err := req.ParseMultipartForm(maxMemory); err != nil {
+		L.RaiseError("Cannot parse multi-part form: %v", err)
+	}
+
+	return 0
+}
+
+// GetFormFile retrieves a file input from a form
+func GetFormFile(L *glua.LState) int {
+	// Get HTTP request and HTTP response writer
+	req, _ := getRequestAndResponseWriter(L)
+
+	// Retrieve form file
+	file, header, err := req.FormFile(L.ToString(2))
+
+	if err != nil {
+
+		// The file is not found so we push nil
+		L.Push(glua.LNil)
+
+		return 1
+	}
+
+	// Read whole file
+	fileContent, err := ioutil.ReadAll(file)
+
+	if err != nil {
+		L.RaiseError("Cannot read file content: %v", err)
+		return 0
+	}
+
+	// Create and push form file metatable
+	L.Push(createFormFileMetaTable(fileContent, header, L))
+
+	return 1
 }
 
 // WriteResponse writes string to the response writer

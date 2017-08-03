@@ -3,8 +3,8 @@ function paginator(page, perpage, count)
     pg.perpage = perpage
     pg.page = page
     pg.count = count
-    pg.limit = page * perpage
-    pg.offset = perpage
+    pg.offset = page * perpage
+    pg.limit = perpage
     pg.pages = {}
     if page <= 0 then
         pg.prev = false
@@ -16,7 +16,11 @@ function paginator(page, perpage, count)
     if (pg.page + 1) * pg.perpage >= pg.count then
         pg.last = false
     else
-        pg.lastpage = newpage((count / perpage) - 1)
+        local t = (count / perpage) - 1
+        if math.floor(t) ~= t then
+            t = math.floor(t) + 1
+        end
+        pg.lastpage = newpage(t)
         pg.lastnumber = page + 1
         pg.last = true
     end

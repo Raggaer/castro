@@ -34,19 +34,27 @@ var (
 		"singleQuery": SingleQuery,
 	}
 	configMethods = map[string]glua.LGFunction{
-		"get": GetConfigLuaValue,
+		"get":       GetConfigLuaValue,
+		"setCustom": SetConfigCustomValue,
 	}
 	httpMethods = map[string]glua.LGFunction{
-		"redirect":         Redirect,
-		"render":           RenderTemplate,
-		"write":            WriteResponse,
-		"serveFile":        ServeFile,
-		"get":              GetRequest,
-		"setHeader":        SetHeader,
-		"postForm":         PostFormRequest,
-		"getHeader":        GetHeader,
-		"getRemoteAddress": GetRemoteAddress,
-		"curl":             CreateRequestClient,
+		"redirect":           Redirect,
+		"render":             RenderTemplate,
+		"write":              WriteResponse,
+		"serveFile":          ServeFile,
+		"get":                GetRequest,
+		"setHeader":          SetHeader,
+		"postForm":           PostFormRequest,
+		"getHeader":          GetHeader,
+		"getRemoteAddress":   GetRemoteAddress,
+		"curl":               CreateRequestClient,
+		"formFile":           GetFormFile,
+		"parseMultiPartForm": ParseMultiPartForm,
+	}
+	httpRegularMethods = map[string]glua.LGFunction{
+		"curl":     CreateRequestClient,
+		"postForm": PostFormRequest,
+		"get":      GetRequest,
 	}
 	validatorMethods = map[string]glua.LGFunction{
 		"validate":       Validate,
@@ -105,6 +113,7 @@ var (
 		"parseUnix":     ParseUnixTimestamp,
 		"parseDuration": ParseDurationString,
 		"parseDate":     ParseDate,
+		"newDuration":   NewDuration,
 	}
 	reflectMethods = map[string]glua.LGFunction{
 		"getGlobal": nil,
@@ -121,6 +130,7 @@ var (
 		"getAccountId":    GetPlayerAccountID,
 		"isOnline":        IsPlayerOnline,
 		"getBankBalance":  GetPlayerBankBalance,
+		"setBankBalance":  SetPlayerBankBalance,
 		"getStorageValue": GetPlayerStorageValue,
 		"setStorageValue": SetPlayerStorageValue,
 		"getVocation":     GetPlayerVocation,
@@ -129,6 +139,9 @@ var (
 		"getLevel":        GetPlayerLevel,
 		"getPremiumDays":  GetPlayerPremiumDays,
 		"getName":         GetPlayerName,
+		"getExperience":   GetPlayerExperience,
+		"getCapacity":     GetPlayerCapacity,
+		"getCustomField":  GetPlayerCustomField,
 	}
 	widgetMethods = map[string]glua.LGFunction{
 		"render": RenderWidgetTemplate,
@@ -166,6 +179,16 @@ var (
 		"fatal": LogFatal,
 		"info":  LogInfo,
 	}
+	globalMethods = map[string]glua.LGFunction{
+		"set": SetGlobalLuaValue,
+		"get": GetGlobalLuaValue,
+	}
+	formFileMethods = map[string]glua.LGFunction{
+		"isValidPNG":    FormFileIsValidPNG,
+		"getFile":       GetFormFileByteArray,
+		"saveFile":      SaveFormFile,
+		"saveFileAsPNG": SaveFormFileAsPNG,
+	}
 )
 
 // Get retrieves a lua state from the pool if no states are available we create one
@@ -187,7 +210,13 @@ func (p *luaStatePool) Get() *glua.LState {
 }
 
 // GetApplicationState returns a page configured lua state
-func getApplicationState(luaState *glua.LState) {
+func GetApplicationState(luaState *glua.LState) {
+	// Create global metatable
+	SetGlobalMetaTable(luaState)
+
+	// Create http regular metatable
+	SetRegularHTTPMetaTable(luaState)
+
 	// Create log metatable
 	SetLogMetaTable(luaState)
 
@@ -386,7 +415,7 @@ func (p *luaStatePool) New() *glua.LState {
 	)
 
 	// Set castro metatables
-	getApplicationState(state)
+	GetApplicationState(state)
 
 	// Return the lua state
 	return state

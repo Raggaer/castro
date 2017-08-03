@@ -1,0 +1,64 @@
+{{ template "header.html" }}
+<h3>Shop</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+<p id="shop-overview-text">
+    Browse the different categories and see what they offer. You can buy multiple items at once and use a discount code before checking out your cart
+</p>
+
+{{ if .categories }}
+<ul class="nav nav-tabs" role="tablist">
+    {{ range $index, $element := .categories }}
+        <li role="presentation" {{ if eq $index 0 }} class="active" {{ end }}>
+            <a href="#category-{{ $element.id }}" aria-controls="{{ $element.name }}" role="tab" data-toggle="tab">{{ $element.name }}</a>
+        </li>
+    {{ end }}
+</ul>
+
+<div class="tab-content">
+    {{ range $index, $element := .categories }}
+        <div role="tabpanel" class="tab-pane {{ if eq $index 0 }} active {{ end }}" id="category-{{ $element.id }}">
+            <p id="shop-overview-text">
+                {{ nl2br $element.parsedDescription }}
+            </p>
+            {{ if $element.offers }}
+                {{ range $index, $element := $element.offers }}
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="row">
+                                {{ if $element.image }}
+                                <div class="col-md-1">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ $element.image }}" alt="{{ $element.image }}">
+                                    </a>
+                                </div>
+                                {{ end }}
+                                <div class="col-md-10">
+                                    <h4 class="media-heading">{{ $element.name }}</h4>
+                                    <p>
+                                        {{ nl2br $element.parsedDescription }}
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                {{ end }}
+            {{ end }}
+        </div>
+    {{ end }}
+</div>
+{{ else }}
+<p>
+    There are currently no shop categories
+</p>
+{{ end }}
+{{ template "footer.html" . }}

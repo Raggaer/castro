@@ -3,7 +3,6 @@ package app
 import (
 	"database/sql"
 	"fmt"
-	"github.com/kardianos/osext"
 	"github.com/patrickmn/go-cache"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/lua"
@@ -84,6 +83,7 @@ func loadMap() {
 	if err == sql.ErrNoRows {
 
 		fmt.Println(">> Encoding map. This process can take several minutes")
+		util.Logger.Logger.Info("Encoding map. This process can take several minutes")
 
 		// Encode map
 		mapData, err := util.EncodeMap(
@@ -110,6 +110,7 @@ func loadMap() {
 	if m.Updated_at.Add(time.Hour).Before(time.Now()) {
 
 		fmt.Println(">> Encoded map is outdated. Generating new map data")
+		util.Logger.Logger.Info("Encoded map is outdated. Generating new map data")
 
 		// Encode map
 		mapData, err := util.EncodeMap(
@@ -130,6 +131,9 @@ func loadMap() {
 		if _, err := database.DB.Exec("UPDATE castro_map SET data = ?, created_at = ?, updated_at = ? WHERE name = ?", m.Data, m.Created_at, m.Updated_at, m.Name); err != nil {
 			util.Logger.Logger.Fatalf("Cannot save encoded map file: %v", err)
 		}
+
+		// Log messages
+		util.Logger.Logger.Info("New map data saved to database")
 	}
 
 	// Decode map
@@ -140,7 +144,7 @@ func loadMap() {
 	}
 
 	// Set map global
-	util.OTBMap = castroMap
+	util.OTBMap.Load(castroMap)
 }
 
 func executeMigrations() {
@@ -195,83 +199,8 @@ func executeInitFile() {
 	// Close state
 	defer luaState.Close()
 
-	// Create log metatable
-	lua.SetLogMetaTable(luaState)
-
-	// Create http metatable
-	lua.SetHTTPMetaTable(luaState)
-
-	// Create env metatable
-	lua.SetEnvMetaTable(luaState)
-
-	// Create events metatable
-	lua.SetEventsMetaTable(luaState)
-
-	// Create storage metatable
-	lua.SetStorageMetaTable(luaState)
-
-	// Create time metatable
-	lua.SetTimeMetaTable(luaState)
-
-	// Create url metatable
-	lua.SetURLMetaTable(luaState)
-
-	// Create debug metatable
-	lua.SetDebugMetaTable(luaState)
-
-	// Create XML metatable
-	lua.SetXMLMetaTable(luaState)
-
-	// Create captcha metatable
-	lua.SetCaptchaMetaTable(luaState)
-
-	// Create crypto metatable
-	lua.SetCryptoMetaTable(luaState)
-
-	// Create validator metatable
-	lua.SetValidatorMetaTable(luaState)
-
-	// Create database metatable
-	lua.SetDatabaseMetaTable(luaState)
-
-	// Create config metatable
-	lua.SetConfigMetaTable(luaState)
-
-	// Create map metatable
-	lua.SetMapMetaTable(luaState)
-
-	// Create mail metatable
-	lua.SetMailMetaTable(luaState)
-
-	// Create cache metatable
-	lua.SetCacheMetaTable(luaState)
-
-	// Create reflect metatable
-	lua.SetReflectMetaTable(luaState)
-
-	// Create json metatable
-	lua.SetJSONMetaTable(luaState)
-
-	lua.SetConfigGlobal(luaState)
-
-	// Get executable folder
-	f, err := osext.ExecutableFolder()
-
-	if err != nil {
-		util.Logger.Logger.Fatalf("Cannot get executable folder path: %v", err)
-	}
-
-	// Get package metatable
-	pkg := luaState.GetGlobal("package")
-
-	// Set path field
-	luaState.SetField(
-		pkg,
-		"path",
-		glua.LString(
-			filepath.Join(f, "engine", "?.lua"),
-		),
-	)
+	// Get application ready state
+	lua.GetApplicationState(luaState)
 
 	// Execute init file
 	if err := luaState.DoFile(filepath.Join("engine", "init.lua")); err != nil {
@@ -342,12 +271,13 @@ func loadVocations(wg *sync.WaitGroup) {
 
 func loadHouses(wg *sync.WaitGroup) {
 	// Load server houses
-	if err := util.LoadHouses(
-		filepath.Join(util.Config.Configuration.Datapack, "data", "world", util.OTBMap.HouseFile),
-		util.ServerHouseList,
+	if err := util.ServerHouseList.LoadHouses(
+		filepath.Join(util.Config.Configuration.Datapack, "data", "world", util.OTBMap.Map.HouseFile),
 	); err != nil {
 		util.Logger.Logger.Fatalf("Cannot load map house list: %v", err)
 	}
+
+	util.Logger.Logger.Info("House list loaded")
 
 	// Tell the wait group we are done
 	wg.Done()
@@ -371,7 +301,7 @@ func createCache() {
 	// Create a new cache instance with the given options
 	// first parameter is the default item duration on the cache
 	// second parameter is the tick time to purge all dead cache items
-	util.Cache = cache.New(util.Config.Configuration.Cache.Default, util.Config.Configuration.Cache.Purge)
+	util.Cache = cache.New(util.Config.Configuration.Cache.Default.Duration, util.Config.Configuration.Cache.Purge.Duration)
 }
 
 func loadWidgetList(wg *sync.WaitGroup) {
@@ -398,7 +328,7 @@ func appTemplates(wg *sync.WaitGroup) {
 	util.FuncMap = templateFuncs()
 
 	// Load templates
-	if err := util.Template.LoadTemplates("views/"); err != nil {
+	if err := util.Template.LoadTemplates(util.Config.Configuration.Template); err != nil {
 		util.Logger.Logger.Fatalf("Cannot load templates: %v", err)
 	}
 
@@ -515,8 +445,14 @@ func templateFuncs() template.FuncMap {
 		"captchaEnabled": func() bool {
 			return util.Config.Configuration.Captcha.Enabled
 		},
+		"eq": func(a, b interface{}) bool {
+			return a == b
+		},
 		"eqNumber": func(a, b float64) bool {
 			return a == b
+		},
+		"gtNumber": func(a, b float64) bool {
+			return a > b
 		},
 	}
 }

@@ -1,16 +1,20 @@
 {{ template "header.html" }}
 {{ if .articles }}
     {{ range $index, $element := .articles }}
-    <div class="news-box">
-        <h3>
-            <a href="#">{{ $element.title }}</a>
-            <small class="small-info">{{ unixToDate $element.created_at }}</small>
-        </h3>
-        <hr>
-        <p>
-            {{ nl2br $element.text }}
-        </p>
+<div class="row">
+    <div class="col-md-12">
+        <div class="news-box">
+            <h3>{{ $element.title }}</h3>
+            <span class="label label-primary">
+                {{ $element.created.Result }}
+            </span>
+            <hr>
+            <p>
+                {{ nl2br $element.text }}
+            </p>
+        </div>
     </div>
+</div>
     {{ end }}
     <ul class="pagination pagination-sm">
         {{ if .paginator.prev }}

@@ -37,6 +37,11 @@
     color: #2097ff;
 }
 
+.titleheader {
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
 .titleheader h3 {
     font-family: Simonetta;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, .5);
@@ -95,16 +100,14 @@
 
 .footer {
     background-color: #333333;
-    padding: 10px;
+    padding: 15px;
     text-align: center;
+    border: 1px solid #4a4a4a;
 }
 
 body {
-    background: url(../images/bg.jpg) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    background-color: black;
+    background-image: url("/images/bg.png");
 }
 
 #footer {
@@ -117,4 +120,59 @@ a.title {
 
 tr.skills {
     text-align: center;
+}
+
+.navbar-nav>li>a {
+    line-height: 35px;
+}
+
+.box {
+    background-color: #EBEBEB;
+    padding: 29px 20px 15px 15px;
+}
+
+.pattern-box {
+    background: linear-gradient(rgba(255,255,255,.2), rgba(255,255,255,.2)), url("/images/pattern_box.jpg");
+}
+
+.black-box {
+    border: 1px solid #4a4a4a;
+    padding: 0px;
+    background-color: #333333;
+    width: 100%;
+    height: 50px;
+}
+
+@media (min-width: 1200px) {
+
+    .container {
+        width: 1210px;
+    }
+
+}
+
+.panel-body h3 {
+    color: #008cba;
+}
+
+.panel {
+    border: 1px solid #c8c8c8;
+    box-shadow: 0 1px 5px 0 #c8c8c8;
+}
+
+.list-widget {
+    margin-bottom: 0px;
+}
+
+.date-box {
+    background-color: #333333;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#shop-overview-text {
+    margin-bottom: 25px;
+    margin-top: 25px;
 }

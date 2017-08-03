@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="/images/favicon.ico">
+
+    <title>{{ serverName }}</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Simonetta' rel='stylesheet' type='text/css'>
+    <link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url "/" }}">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Community <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url "subtopic" "community" "online" }}">Who is online</a></li>
+                        <li><a href="{{ url "subtopic" "community" "highscores" }}">Highscores</a></li>
+                        <li><a href="{{ url "subtopic" "community" "search" }}">Search character</a></li>
+                        <li><a href="{{ url "subtopic" "community" "guilds" "list" }}">Guild list</a></li>
+                        <li><a href="{{ url "subtopic" "community" "guilds" "wars" }}">Guild wars</a></li>
+                        <li><a href="{{ url "subtopic" "community" "deaths" }}">Latest deaths</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Library <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url "subtopic" "library" "houses" }}">House list</a></li>
+                        <li><a href="{{ url "subtopic" "library" "serverinfo" }}">Server information</a></li>
+                        <li><a href="{{ url "subtopic" "library" "support" }}">Support list</a></li>
+                        <li><a href="{{ url "subtopic" "library" "spells" }}">Spell list</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Shop <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url "subtopic" "shop" "view" }}">Shop</a></li>
+                        <li><a href="{{ url "subtopic" "shop" "paypal" }}">Buypoints PayPal</a></li>
+                        <li><a href="{{ url "subtopic" "shop" "paygol" }}">Buypoints PayGol</a></li>
+                        <li><a href="{{ url "subtopic" "shop" "fortumo" }}">Buypoints Fortumo</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="titleheader">
+        <h1>
+            <a class="title" href="/">{{ serverName }}</a>
+        </h1>
+        <h3>{{ serverMotd }}</h3>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- /.container -->
+
+<div class="container">
+    <div class="box black-box">
+        <div class="clearfix"></div>
+    </div>
+    <div class="box pattern-box">
+        <div class="col-sm-9">
+            <div class="panel panel-default">
+                <div class="panel-body">

@@ -1,13 +1,17 @@
-<div class="info-panel black">
-    <h5>Top players</h5>
-    <hr class="white-hr">
-    <ul>
-        {{ if .top }}
-            {{ range $index, $element := .top }}
-                <li><a class="light" href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a> ({{ $element.level }})</li>
+<div class="panel panel-default">
+    <div class="panel-heading">Top players</div>
+    <div class="panel-body">
+        <ul class="list-group list-widget">
+            {{ if .top }}
+                {{ range $index, $element := .top }}
+                    <li class="list-group-item">
+                        <a class="light" href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a>
+                        <span class="badge">{{ $element.level }}</span>
+                    </li>
+                {{ end }}
+            {{ else }}
+                No players made
             {{ end }}
-        {{ else }}
-            No players made
-        {{ end }}
-    </ul>
+        </ul>
+    </div>
 </div>

@@ -18,8 +18,8 @@ function post()
         return
     end
 
-    if http.postValues["guild-motd"]:len() > 50 then
-        session:setFlash("validationError", "Motd message must be between 0 - 50 characters")
+    if http.postValues["guild-motd"]:len() > 250 then
+        session:setFlash("validationError", "Motd message must be between 0 - 250 characters")
         http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
         return
     end

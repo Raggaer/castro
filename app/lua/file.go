@@ -12,7 +12,7 @@ func SetFileMetaTable(luaState *lua.LState) {
 	fileMetaTable := luaState.NewTypeMetatable(FileMetaTableName)
 	luaState.SetGlobal(FileMetaTableName, fileMetaTable)
 
-	// Set all xml metatable functions
+	// Set all file metatable functions
 	luaState.SetFuncs(fileMetaTable, fileMethods)
 }
 

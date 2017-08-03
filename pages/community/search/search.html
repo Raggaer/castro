@@ -25,14 +25,12 @@
 <table class="table table-striped">
     <thead class="thead-inverse">
         <tr>
-            <th>#</th>
             <th>Name</th>
         </tr>
     </thead>
     <tbody>
     {{ range $index, $element := .list }}
         <tr>
-            <td>{{ $index }}</td>
             <td>
                 <a href="{{ url "subtopic" "community" "view" }}?name={{ urlEncode $element.name }}">{{ $element.name }}</a>
             </td>

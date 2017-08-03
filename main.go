@@ -29,6 +29,8 @@ func main() {
 	gob.Register(&models.CsrfToken{})
 	gob.Register(&lua.LTable{})
 	gob.Register(&util.CastroMap{})
+	gob.Register(map[string]interface{}{})
+	gob.Register([]interface{}{})
 
 	// Show credits and application name
 	fmt.Printf(`
@@ -52,7 +54,7 @@ Compiled at: %v
 			log.Fatal(err)
 		}
 
-		fmt.Printf("Configuration file created (%v). Installation process is now done\r\n", configFileName)
+		fmt.Printf("Configuration file created (%v). Installation process is now done. Restart Castro\r\n", configFileName)
 
 		return
 	}
@@ -62,7 +64,7 @@ Compiled at: %v
 
 	// Create rate-limiter instance
 	rate := limiter.Rate{
-		Period: util.Config.Configuration.RateLimit.Time,
+		Period: util.Config.Configuration.RateLimit.Time.Duration,
 		Limit:  util.Config.Configuration.RateLimit.Number,
 	}
 
@@ -164,6 +166,7 @@ Compiled at: %v
 			util.Logger.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
 		}
 	}
+
 }
 
 // wrapHandler converts a normal http handler to a httprouter handler

@@ -1,7 +1,7 @@
 {{ template "header.html" }}
 <h3>Shop offers for: {{ .category.name }}</h3>
 <hr>
-<a role="button" href="{{ url "subtopic" "admin" "shop" "offer" "new" }}" class="btn btn-primary">New offer</a>
+<a role="button" href="{{ url "subtopic" "admin" "shop" "offer" "new" }}?categoryId={{ .category.id }}" class="btn btn-primary">New offer</a>
 <hr>
 {{ if .success }}
 <div class="alert alert-success" role="alert">
@@ -15,18 +15,35 @@
         </p>
     </div>
 </div>
-<div id="ban-tabs">
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#offers" aria-controls="offers" role="tab" data-toggle="tab">Offers</a></li>
-    </ul>
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="offers">
-            {{ if .list }}
-            f
-            {{ else }}
-            <p>No offers for this category</p>
+{{ if .list }}
+    <table class="table table-striped">
+        <thead class="thead-inverse">
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th colspan="2">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range $index, $element := .list }}
+            <tr>
+                <td>{{ $element.name }}</td>
+                <td>{{ $element.price }}</td>
+                <td>
+                    <a role="button" href="{{ url "subtopic" "admin" "shop" "offer" "edit" }}?id={{ $element.id }}" class="btn btn-primary btn-xs">Edit</a>
+                </td>
+                <td>
+                    <form method="post" action="{{ url "subtopic" "admin" "shop" "offer" "delete" }}">
+                        <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                        <input type="hidden" name="id" value="{{ $element.id }}">
+                        <button type="submit" class="btn btn-danger btn-xs">Delete</button>
+                    </form>
+                </td>
+            </tr>
             {{ end }}
-        </div>
-    </div>
-</div>
+        </tbody>
+    </table>
+    {{ else }}
+    <p>No offers for this category</p>
+{{ end }}
 {{ template "footer.html" . }}

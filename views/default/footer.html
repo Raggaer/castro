@@ -1,11 +1,14 @@
 </div>
-<div class="col-sm-3 sidebar">
+</div>
+</div>
+<div class="col-sm-3">
     {{ range $index, $element := .widgets }}
-    {{ $element }}
+        {{ $element }}
     {{ end }}
 </div>
 <div class="clearfix"></div>
 </div>
+
 
 </div> <!-- /container -->
 
@@ -13,7 +16,7 @@
     <div class="footer">
         <h6>
             {{ if isDev }} <b>Development mode</b> |
-            Page generated in {{ .microtime }} | {{ end }} {{ serverName }} - Engine by <a href="{{ url "subtopic" "credits" }}">Castro</a>.
+            Page generated in {{ .microtime }} | {{ end }} {{ serverName }} - Engine by <a href="{{ url "subtopic" "credits" }}">Castro</a>
         </h6>
     </div>
 </div> <!-- /container -->

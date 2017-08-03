@@ -1,6 +1,5 @@
 function isGuildOwner(accountid, guild)
     local characters = db:query("SELECT id FROM players WHERE account_id = ?", accountid)
-
     for _, val in pairs(characters) do
         if val.id == tonumber(guild.ownerid) then
             return true
@@ -8,6 +7,10 @@ function isGuildOwner(accountid, guild)
     end
 
     return false
+end
+
+function isGuildMember(playerid, guild)
+    return db:singleQuery("SELECT 1 FROM guild_membership WHERE player_id = ? AND guild_id = ?", playerid, guild.id) ~= nil
 end
 
 function getGuildName(guildId)
@@ -50,7 +53,7 @@ end
 -- Return is sorted by status
 -- Ex. {["Pending"] = {war1, war2, ...}}
 function getWarsByGuild(guildId)
-	local list = cache:get("guildwars-" .. tostring(guildId))
+    local list = cache:get("guildwars-" .. tostring(guildId))
 
     if not list then
         list = db:query("SELECT *, (SELECT COUNT(*) AS kills FROM guildwar_kills WHERE warid = a.id AND killerguild = a.guild1) AS guild1_kills, (SELECT COUNT(*) AS kills FROM guildwar_kills WHERE warid = a.id AND killerguild = a.guild2) AS guild2_kills FROM guild_wars a WHERE (guild1 = ? OR guild2 = ?) ORDER BY started", guildId, guildId, false) or {}
