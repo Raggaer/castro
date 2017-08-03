@@ -8,6 +8,7 @@ import (
 	"sync"
 	"path/filepath"
 	"os"
+	"fmt"
 )
 
 var (
@@ -95,18 +96,18 @@ func (s *stateList) LoadExtensions() error {
 	for rows.Next() {
 
 		// Hold extension id
-		var extension_id string
+		var extensionID string
 
-		if err := rows.Scan(&extension_id); err != nil {
+		if err := rows.Scan(&extensionID); err != nil {
 			return err
 		}
 
-		dir := filepath.Join("extensions", extension_id, extType)
+		dir := filepath.Join("extensions", extensionID, extType)
 
 		// Make sure that directory exist
 		if _, err = os.Stat(dir); err != nil {
 			if os.IsNotExist(err) {
-				util.Logger.Logger.Errorf("Missing %v directory in extension %v", extType, extension_id)
+				util.Logger.Logger.Errorf("Missing %v directory in extension %v", extType, extensionID)
 			}
 			continue
 		}
@@ -128,7 +129,15 @@ func (s *stateList) LoadExtensions() error {
 			getApplicationState(state)
 
 			if err := state.DoFile(subtopic); err != nil {
-				return err
+				if extType == "widgets" {
+					util.Logger.Logger.Errorf("Cannot load widgets in extension: %v %v", extensionID, err.Error())
+					_, filename := filepath.Split(subtopic)
+					// Remove widget from util.Widgets.List
+					util.Widgets.UnloadExtensionWidget(strings.TrimSuffix(filename, ".lua"))
+
+					continue
+				}
+				return fmt.Errorf("extension: %v %v", extensionID, err.Error())
 			}
 
 			// Set lowercase path

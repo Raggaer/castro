@@ -80,40 +80,43 @@ func (t *Tmpl) LoadExtensionTemplates(extType string) error {
 	for rows.Next() {
 
 		// Hold extension id
-		var extension_id string
+		var extensionID string
 
-		if err := rows.Scan(&extension_id); err != nil {
+		if err := rows.Scan(&extensionID); err != nil {
 			return err
 		}
 
-		dir := filepath.Join("extensions", extension_id, extType)
+		dir := filepath.Join("extensions", extensionID, extType)
 
 		// Make sure that directory exist
 		if _, err = os.Stat(dir); err != nil {
 			if os.IsNotExist(err) {
-				Logger.Logger.Errorf("Missing %v directory in extension %v", extType, extension_id)
+				Logger.Logger.Errorf("Missing %v directory in extension %v", extType, extensionID)
 			}
 			continue
 		}
 
 		// Walk over the directory
-		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 
 			// Check if file has .html extension
 			if strings.HasSuffix(info.Name(), ".html") {
-				if t.Tmpl, err = t.Tmpl.ParseFiles(path); err != nil {
-					return err
+				tmp, err := t.Tmpl.ParseFiles(path)
+				if err != nil {
+					// Parse failed
+					if extType == "widgets" {
+						// Remove widget from Widgets.List
+						Widgets.UnloadExtensionWidget(strings.TrimSuffix(info.Name(), ".html"))
+					}
+					Logger.Logger.Errorf("Cannot load %v in extension: %v %v", extType, extensionID, err)
+				} else {
+					// Update t.Tmpl
+					t.Tmpl = tmp
 				}
 			}
 
 			return nil
 		})
-
-		if err != nil {
-			// Log error
-			Logger.Logger.Errorf("Cannot load extension template: %v", err)
-			continue
-		}
 	}
 
 	return nil
@@ -150,7 +153,7 @@ func (t Tmpl) RenderWidget(req *http.Request, name string, args map[string]inter
 
 		// Reload extension templates
 		if err := t.LoadExtensionTemplates("widgets"); err != nil {
-			Logger.Logger.Error(err.Error())
+			return nil, err
 		}
 	}
 
@@ -203,7 +206,8 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 
 		// Reload all extension templates
 		if err := t.LoadExtensionTemplates("pages"); err != nil {
-			Logger.Logger.Error(err.Error())
+			Logger.Logger.Errorf("Cannot load extension subtopic template: %v", err.Error())
+			return
 		}
 	}
 

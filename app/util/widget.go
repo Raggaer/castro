@@ -91,19 +91,19 @@ func (w *WidgetList) LoadExtensions() error {
 	for rows.Next() {
 
 		// Hold extension id
-		var extension_id string
+		var extensionID string
 
-		if err := rows.Scan(&extension_id); err != nil {
+		if err := rows.Scan(&extensionID); err != nil {
 			return err
 		}
 
 		// Extension widget directory
-		dir := filepath.Join("extensions", extension_id, "widgets")
+		dir := filepath.Join("extensions", extensionID, "widgets")
 
 		// Skip if directory does not exist
 		if _, err = os.Stat(dir); err != nil {
 			if os.IsNotExist(err) {
-				Logger.Logger.Errorf("Missing widgets directory in extension %v", extension_id)
+				Logger.Logger.Errorf("Missing widgets directory in extension %v", extensionID)
 			}
 			continue
 		}
@@ -112,7 +112,7 @@ func (w *WidgetList) LoadExtensions() error {
 		widgets, err := ioutil.ReadDir(dir)
 
 		if err != nil {
-			Logger.Logger.Errorf("Error loading widget from extension %v: %v", extension_id, err)
+			Logger.Logger.Errorf("Error loading widget from extension %v: %v", extensionID, err)
 			continue
 		}
 
@@ -128,6 +128,16 @@ func (w *WidgetList) LoadExtensions() error {
 				Name: file.Name(),
 				rw:   &sync.RWMutex{},
 			})
+		}
+	}
+
+	return nil
+}
+
+func (w *WidgetList) UnloadExtensionWidget(widgetName string) error {
+	for i, widget := range w.List {
+		if widget.Name == widgetName {
+			w.List = append(w.List[:i], w.List[i+1:]...)
 		}
 	}
 
