@@ -70,6 +70,25 @@ func FormFileIsValidPNG(L *lua.LState) int {
 	return 1
 }
 
+// FormFileIsValidExtension checks if the current form file is a valid extension
+func FormFileIsValidExtension(L *lua.LState) int {
+	// Get form file
+	formFile := getFormFileObject(L)
+
+	if http.DetectContentType(formFile.File) != L.ToString(2) {
+
+		// Push false
+		L.Push(lua.LBool(false))
+
+		return 1
+	}
+
+	// The file is a image png
+	L.Push(lua.LBool(true))
+
+	return 1
+}
+
 // GetFormFileByteArray returns the form file byte array as a lua string
 func GetFormFileByteArray(L *lua.LState) int {
 	// Get form file

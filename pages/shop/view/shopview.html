@@ -32,25 +32,29 @@
             </p>
             {{ if $element.offers }}
                 {{ range $index, $element := $element.offers }}
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <div class="row">
-                                {{ if $element.image }}
-                                <div class="col-md-1">
-                                    <a href="#">
-                                        <img class="media-object" src="{{ $element.image }}" alt="{{ $element.image }}">
-                                    </a>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {{ $element.name }}
+                        </div>
+                        <div class="panel-body">
+                            <div class="media">
+                                <div class="media-left">
+                                    <img style="margin-right: 10px;" src="{{ $element.image }}" class="media-object pull-left">
                                 </div>
-                                {{ end }}
-                                <div class="col-md-10">
-                                    <h4 class="media-heading">{{ $element.name }}</h4>
-                                    <p>
-                                        {{ nl2br $element.parsedDescription }}
-                                    </p>
+                                <div class="media-body">
+                                    <p>{{ nl2br $element.parsedDescription }}</p>
                                 </div>
                             </div>
-                        </li>
-                    </ul>
+                        </div>
+                        <div class="panel-footer">
+                            <form method="post" action="{{ url "subtopic" "shop" "add" }}">
+                                <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                                <input type="hidden" name="offer" value="{{ $element.id }}">
+                                <button type="submit" class="btn btn-success btn-xs pull-right">Add to cart</button>
+                                <button class="btn btn-primary btn-xs">{{ $element.price }} coins</button>
+                            </form>
+                        </div>
+                    </div>
                 {{ end }}
             {{ end }}
         </div>

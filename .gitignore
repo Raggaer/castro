@@ -14,3 +14,4 @@ obfuscator/*
 deobfuscator/*
 engine/*.castro
 public/images/offer-images/*.png
+extensions/*

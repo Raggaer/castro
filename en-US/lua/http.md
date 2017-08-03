@@ -197,10 +197,22 @@ local file = http:formFile("guild-image")
 
 This function returns a metatable with the following functions:
 
+- [formFile:isValidExtension(type)](#isvalidextension)
 - [formFile:isValidPNG()](#isvalidpng)
 - [formFile:saveFile(destination)](#destination)
 - [formFile:saveFileAsPNG(destination, width, height)](#savefileaspng)
 - [formFile:getFile()](#getfile)
+
+# isValidExtension
+
+Checks if the current form file is a valid file extension. File extensions are actually `MIME types`.
+
+```lua
+local file = http:formFile("guild-image")
+
+local isPNG = file:isValidExtension("image/gif")
+-- isPNG = false
+```
 
 # isValidPNG
 

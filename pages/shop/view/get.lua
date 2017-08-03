@@ -12,11 +12,13 @@ function get()
 
     for _, category in ipairs(data.categories) do
         category.parsedDescription = category.description:parseBBCode()
-        category.offers = db:query("SELECT image, name, description, price FROM castro_shop_offers WHERE category_id = ?", category.id)
+        category.offers = db:query("SELECT id, image, name, description, price FROM castro_shop_offers WHERE category_id = ?", category.id)
         for _, offer in ipairs(category.offers) do
             offer.parsedDescription = offer.description:parseBBCode()
         end
     end
+
+    data.success = session:getFlash("success")
 
     http:render("shopview.html", data)
 end
