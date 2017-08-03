@@ -27,12 +27,28 @@
 <div class="tab-content">
     {{ range $index, $element := .categories }}
         <div role="tabpanel" class="tab-pane {{ if eq $index 0 }} active {{ end }}" id="category-{{ $element.id }}">
+            <p id="shop-overview-text">
+                {{ nl2br $element.parsedDescription }}
+            </p>
             {{ if $element.offers }}
                 {{ range $index, $element := $element.offers }}
                     <ul class="list-group">
                         <li class="list-group-item">
-                            <h4>{{ $element.name }}</h4>
-                            <p>{{ $element.description }}</p>
+                            <div class="row">
+                                {{ if $element.image }}
+                                <div class="col-md-1">
+                                    <a href="#">
+                                        <img class="media-object" src="{{ $element.image }}" alt="{{ $element.image }}">
+                                    </a>
+                                </div>
+                                {{ end }}
+                                <div class="col-md-10">
+                                    <h4 class="media-heading">{{ $element.name }}</h4>
+                                    <p>
+                                        {{ nl2br $element.parsedDescription }}
+                                    </p>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 {{ end }}

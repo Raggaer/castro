@@ -10,6 +10,12 @@ function get()
         return
     end
 
+    if file:exists("public/images/guild-images/" .. data.guild.guildname .. ".png") then
+        data.logo = "/images/guild-images/" .. data.guild.guildname .. ".png"
+    else
+        data.logo = "/images/guild-images/default-guild-logo.png"
+    end
+
     local characters
 
     if session:isLogged() then

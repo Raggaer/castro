@@ -18,13 +18,24 @@ function post()
         return
     end
 
-    if http.postValues["guild-motd"]:len() > 250 then
-        session:setFlash("validationError", "Motd message must be between 0 - 250 characters")
+    http:parseMultiPartForm()
+
+    local logoImage = http:formFile("guild-logo")
+
+    if logoImage == nil then
+        session:setFlash("validationError", "Invalid logo image")
         http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
         return
     end
 
-    db:execute("UPDATE guilds SET motd = ? WHERE id = ?", http.postValues["guild-motd"], guild.id)
-    session:setFlash("success", "Motd updated")
+    if not logoImage:isValidPNG() then
+        session:setFlash("validationError", "Logo image can only be png")
+        http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
+        return
+    end
+
+    logoImage:saveFileAsPNG("public/images/guild-images/" .. guild.name .. ".png", 64, 64)
+
+    session:setFlash("success", "Logo updated")
     http:redirect("/subtopic/community/guilds/view?name=" .. url:encode(guild.name))
 end

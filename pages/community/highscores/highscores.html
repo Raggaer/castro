@@ -48,7 +48,9 @@
             </a>
         </td>
         <td>{{ $element.vocation.Name }}</td>
-        <td>{{ $element.value }}</td>
+        <td>
+            <span class="badge">{{ $element.value }}</span>
+        </td>
     </tr>
     {{ end }}
     {{ else }}

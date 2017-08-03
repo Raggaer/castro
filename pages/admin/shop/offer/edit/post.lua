@@ -75,7 +75,7 @@ function post()
             return
         end
 
-        offerImage:saveFileAsPNG("public/images/offer-images/" .. http.postValues["offer-name"] .. ".png", 64, 64)
+        offerImage:saveFileAsPNG("public/images/offer-images/" .. http.postValues["offer-name"] .. ".png", 32, 32)
 
         db:execute(
             "UPDATE castro_shop_offers SET description = ?, price = ?, name = ?, updated_at = ?, image = ? WHERE id = ?",
@@ -83,7 +83,7 @@ function post()
             http.postValues["offer-price"],
             http.postValues["offer-name"],
             os.time(),
-            "public/images/offer-images/" .. http.postValues["offer-name"] .. ".png",
+            "/images/offer-images/" .. http.postValues["offer-name"] .. ".png",
             data.offer.id
         )
 

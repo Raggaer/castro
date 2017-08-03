@@ -69,7 +69,7 @@ function post()
             return
         end
 
-        offerImage:saveFileAsPNG("public/images/offer-images/" .. http.postValues["offer-name"] .. ".png", 64, 64)
+        offerImage:saveFileAsPNG("public/images/offer-images/" .. http.postValues["offer-name"] .. ".png", 32, 32)
 
         db:execute(
             "INSERT INTO castro_shop_offers (category_id, description, price, name, created_at, updated_at, image) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -79,7 +79,7 @@ function post()
             http.postValues["offer-name"],
             os.time(),
             os.time(),
-            "public/images/offer-images/" .. http.postValues["offer-name"] .. ".png"
+            "/images/offer-images/" .. http.postValues["offer-name"] .. ".png"
         )
 
     else
