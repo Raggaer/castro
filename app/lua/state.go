@@ -126,7 +126,7 @@ func (s *stateList) LoadExtensions() error {
 			state := glua.NewState()
 
 			// Set castro metatables
-			getApplicationState(state)
+			GetApplicationState(state)
 
 			if err := state.DoFile(subtopic); err != nil {
 				if extType == "widgets" {
