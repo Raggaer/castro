@@ -20,5 +20,18 @@ function get()
 
     data.success = session:getFlash("success")
 
-    http:render("shopview.html", data)
+    local cart = session:get("shop-cart")
+
+    if cart ~= nil then
+
+        data.cart = {}
+
+        for name, count in pairs(cart) do
+            data.cart[name] = {}
+            data.cart[name].offer = db:singleQuery("SELECT name, price FROM castro_shop_offers WHERE name = ?", name)
+            data.cart[name].count = count
+        end
+    end
+
+http:render("shopview.html", data)
 end

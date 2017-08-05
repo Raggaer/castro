@@ -121,6 +121,7 @@ var (
 	jsonMethods = map[string]glua.LGFunction{
 		"marshal":   MarshalJSON,
 		"unmarshal": UnmarshalJSON,
+		"unmarshalFile": UnmarshalJSONFile,
 	}
 	storageMethods = map[string]glua.LGFunction{
 		"get": GetStorageValue,

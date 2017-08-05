@@ -3,6 +3,7 @@ package lua
 import (
 	"github.com/clbanning/mxj"
 	"github.com/yuin/gopher-lua"
+	"io/ioutil"
 )
 
 // SetJSONMetaTable sets the json metatable of the given state
@@ -59,6 +60,34 @@ func UnmarshalJSON(L *lua.LState) int {
 
 	if err != nil {
 		L.RaiseError("Cannot unmarshal the given string: %v", err)
+		return 0
+	}
+
+	// Push result as table
+	L.Push(MapToTable(result))
+
+	return 1
+}
+
+// UnmarshalJSONFile unmarshals the given file to a lua table
+func UnmarshalJSONFile(L *lua.LState) int {
+	// Get file location
+	src := L.Get(2)
+
+	// Check for valid string type
+	if src.Type() != lua.LTString {
+		L.ArgError(1, "Invalid unmarshal source. Expected string")
+		return 0
+	}
+
+	// Read whole file
+	file, err := ioutil.ReadFile(src.String())
+
+	// Unmarshal string
+	result, err := mxj.NewMapJson(file)
+
+	if err != nil {
+		L.RaiseError("Cannot unmarshal the given file: %v", err)
 		return 0
 	}
 

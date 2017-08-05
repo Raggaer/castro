@@ -14,20 +14,24 @@ function post()
     local shopCart = session:get("shop-cart")
 
     if shopCart == nil then
-        local cart = {}
+        local c = {}
 
-        table.insert(cart, offer.id)
+        c[offer.name] = 1
 
-        session:set("shop-cart", cart)
+        session:set("shop-cart", c)
         session:setFlash("success", "Offer added to your cart")
 
         http:redirect("/subtopic/shop/view")
         return
     end
 
-    table.insert(shopCart, offer.id)
+    if shopCart[offer.name] then
+        shopCart[offer.name] = shopCart[offer.name] + 1
+    else
+        shopCart[offer.name] = 1
+    end
 
-    session:set("shop-cart", cart)
+    session:set("shop-cart", shopCart)
     session:setFlash("success", "Offer added to your cart")
 
     http:redirect("/subtopic/shop/view")

@@ -22,9 +22,25 @@
             <a href="#category-{{ $element.id }}" aria-controls="{{ $element.name }}" role="tab" data-toggle="tab">{{ $element.name }}</a>
         </li>
     {{ end }}
+    <li role="presentation" class="pull-right">
+        <a href="#checkout" role="tab" aria-controls="checkout" data-toggle="tab">
+            <i class="glyphicon glyphicon-shopping-cart"></i> Checkout
+        </a>
+    </li>
 </ul>
 
 <div class="tab-content">
+    <div role="tabpanel" class="tab-pane" id="checkout">
+        {{ if .cart }}
+        <ul class="list-group">
+
+        </ul>
+        {{ else }}
+        <p>
+            Your shop cart is empty
+        </p>
+        {{ end }}
+    </div>
     {{ range $index, $element := .categories }}
         <div role="tabpanel" class="tab-pane {{ if eq $index 0 }} active {{ end }}" id="category-{{ $element.id }}">
             <p id="shop-overview-text">
