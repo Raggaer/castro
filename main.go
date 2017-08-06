@@ -99,6 +99,7 @@ Compiled at: %v
 		newMicrotimeHandler(),
 		newCsrfHandler(),
 		negroni.NewStatic(http.Dir("public/")),
+		newExtensionServer(),
 	)
 
 	// Use negroni logger only in development mode

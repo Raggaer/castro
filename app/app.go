@@ -27,7 +27,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(7)
+	wait.Add(8)
 
 	// Load application logger
 	loadAppLogger()
@@ -58,6 +58,8 @@ func Start() {
 	go loadSubtopics(wait)
 	go loadWidgets(wait)
 
+	loadExtensionStaticResources(wait)
+
 	// Wait for the tasks
 	wait.Wait()
 
@@ -66,6 +68,16 @@ func Start() {
 
 	// Execute the init lua file
 	executeInitFile()
+}
+
+func loadExtensionStaticResources(wg *sync.WaitGroup) {
+	// Load extension static resources
+	if err := util.ExtensionStatic.Load("extensions"); err != nil {
+		util.Logger.Logger.Fatalf("Cannot load extensions static resources: %v", err)
+	}
+
+	// Finish task
+	wg.Done()
 }
 
 func loadMap() {

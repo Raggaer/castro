@@ -9,6 +9,7 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"github.com/ulule/limiter"
 	"golang.org/x/net/context"
+	"path/filepath"
 )
 
 // microtimeHandler used to record all requests time spent
@@ -26,6 +27,34 @@ type securityHandler struct{}
 // rateLimitHandler used for rate-limiting
 type rateLimitHandler struct {
 	Limiter *limiter.Limiter
+}
+
+type extensionServer struct {}
+
+// newExtensionServer returns a new extensionServer instance
+func newExtensionServer() *extensionServer {
+	return &extensionServer{}
+}
+
+func (e *extensionServer) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+	// Check if request is GET or HEAD
+	if req.Method != "GET" && req.Method != "HEAD" {
+		next(w, req)
+		return
+	}
+
+	// Get file url
+	file := req.URL.Path
+
+	// Check if static file exists
+	if !util.ExtensionStatic.FileExists(file) {
+		next(w, req)
+		return
+	}
+
+	// Serve file
+	http.ServeFile(w, req, filepath.Join("extensions", file))
+	return
 }
 
 // newRateLimitHandler creates and returns a new rateLimitHandler instance

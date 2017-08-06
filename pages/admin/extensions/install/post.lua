@@ -14,18 +14,18 @@ function post()
         -- Install hooks
         if extension.hooks then
             for hook, script in pairs(extension.hooks) do
-                db:execute("INSERT INTO castro_extension_hooks (extension_id, type, script, enabled) VALUES (?, ?, ?, ?)", extension.id, hook, script, 1)
+                db:execute("INSERT INTO castro_extension_hooks (extension_id, type, script, enabled) VALUES (?, ?, ?, b'1')", extension.id, hook, script)
             end
         end
 
         -- Install pages
         if file:exists(string.format("extensions/%s/pages", extension.id)) then
-            db:execute("INSERT INTO castro_extension_pages (extension_id, enabled) VALUES (?, ?)", extension.id, 1)
+            db:execute("INSERT INTO castro_extension_pages (extension_id, enabled) VALUES (?, b'1')", extension.id)
         end
 
         -- Install widgets
         if file:exists(string.format("extensions/%s/widgets", extension.id)) then
-            db:execute("INSERT INTO castro_extension_widgets (extension_id, enabled) VALUES (?, ?)", extension.id, 1)
+            db:execute("INSERT INTO castro_extension_widgets (extension_id, enabled) VALUES (?, b'1')", extension.id)
         end
 
         session:setFlash("success", http.postValues.install_extension .. " has been installed.")

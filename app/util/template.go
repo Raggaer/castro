@@ -38,7 +38,7 @@ func NewTemplate(name string) Tmpl {
 	}
 }
 
-// LoadTemplates parses and loads all template into the given variable
+// LoadTemplates parses and loads all template files
 func (t *Tmpl) LoadTemplates(dir string) error {
 	// Lock mutex
 	t.rw.Lock()
@@ -60,7 +60,7 @@ func (t *Tmpl) LoadTemplates(dir string) error {
 	return err
 }
 
-// LoadExtensionTemplates parses and loads all extension templates into the given variable
+// LoadExtensionTemplates parses and loads all extension templates
 func (t *Tmpl) LoadExtensionTemplates(extType string) error {
 	// Lock mutex
 	t.rw.Lock()
