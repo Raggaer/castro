@@ -9,9 +9,6 @@ import (
 	"github.com/raggaer/castro/app/util"
 	"github.com/ulule/limiter"
 	"golang.org/x/net/context"
-	"path/filepath"
-	"strings"
-	"log"
 )
 
 // microtimeHandler used to record all requests time spent
@@ -29,65 +26,6 @@ type securityHandler struct{}
 // rateLimitHandler used for rate-limiting
 type rateLimitHandler struct {
 	Limiter *limiter.Limiter
-}
-
-type extensionServer struct {}
-
-// newExtensionServer returns a new extensionServer instance
-func newExtensionServer() *extensionServer {
-	return &extensionServer{}
-}
-
-func (e *extensionServer) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
-	// Check if request is GET or HEAD
-	if req.Method != "GET" && req.Method != "HEAD" {
-		next(w, req)
-		return
-	}
-
-	// Get file url
-	file := req.URL.Path
-
-	// Check if static file exists
-	dir, exists := util.ExtensionStatic.FileExists(file)
-
-	if !exists {
-		next(w, req)
-		return
-	}
-
-	// Split static url
-	u := strings.Split(file, "/")
-
-	// Open desired file
-	f, err := dir.Open(strings.Join(u[3:], "/"))
-
-	if err != nil {
-		next(w, req)
-		return
-	}
-
-	// Close file handle
-	defer f.Close()
-
-	// Get file information
-	fi, err := f.Stat()
-
-	if err != nil {
-		next(w, req)
-		return
-	}
-
-	// Check if file is directory
-	if fi.IsDir() {
-		next(w, req)
-		return
-	}
-
-	// Serve file
-	http.ServeContent(w, req, file, fi.ModTime(), f)
-
-	return
 }
 
 // newRateLimitHandler creates and returns a new rateLimitHandler instance

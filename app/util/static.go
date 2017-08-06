@@ -5,7 +5,6 @@ import (
 	"github.com/raggaer/castro/app/database"
 	"path/filepath"
 	"os"
-	"strings"
 	"net/http"
 )
 
@@ -23,20 +22,13 @@ type StaticList struct {
 }
 
 // FileExists checks if the given resource exists
-func (e *StaticList) FileExists(url string) (http.FileSystem, bool) {
+func (e *StaticList) FileExists(id string) (http.FileSystem, bool) {
 	// Read lock mutex
 	e.rw.RLock()
 	defer e.rw.RUnlock()
 
-	// Split url
-	u := strings.Split(url, "/")
-
-	if len(u) < 3 {
-		return nil, false
-	}
-
 	// Get element from the map
-	dir, ok := e.list[filepath.Join(u[0], u[1], u[2])]
+	dir, ok := e.list[id]
 
 	if !ok {
 		return nil, false
@@ -84,7 +76,7 @@ func (e *StaticList) Load(d string) error {
 			continue
 		}
 
-		e.list[strings.Replace(dir, d + "\\", "", 1)] = http.Dir(dir)
+		e.list[id] = http.Dir(dir)
 	}
 
 	return nil
