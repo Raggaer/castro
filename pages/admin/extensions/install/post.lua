@@ -9,7 +9,7 @@ function post()
 
     if http.postValues.install_extension then
         local extension = json:unmarshalFile(string.format("extensions/%s/extension.json", http.postValues.install_extension))
-        db:execute("INSERT INTO castro_extensions (name, id, version, description, author, type, installed, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", extension.name, extension.id, extension.version, extension.description, extension.author, extension.type, 1, os.time())
+        db:execute("INSERT INTO castro_extensions (name, id, version, description, author, type, installed, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, b'1', ?, ?)", extension.name, extension.id, extension.version, extension.description, extension.author, extension.type, os.time(), os.time())
 
         -- Install hooks
         if extension.hooks then
