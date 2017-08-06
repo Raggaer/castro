@@ -33,12 +33,14 @@
     <div role="tabpanel" class="tab-pane" id="checkout">
         {{ if .cart }}
         <ul class="list-group">
-
+            {{ range $index, $element := .cart }}
+                {{ $element }}
+            {{ end }}
         </ul>
         {{ else }}
-        <p>
-            Your shop cart is empty
-        </p>
+        <div class="alert alert-info">
+            Your shop-cart is currently empty
+        </div>
         {{ end }}
     </div>
     {{ range $index, $element := .categories }}

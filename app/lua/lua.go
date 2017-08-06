@@ -119,8 +119,8 @@ var (
 		"getGlobal": nil,
 	}
 	jsonMethods = map[string]glua.LGFunction{
-		"marshal":   MarshalJSON,
-		"unmarshal": UnmarshalJSON,
+		"marshal":       MarshalJSON,
+		"unmarshal":     UnmarshalJSON,
 		"unmarshalFile": UnmarshalJSONFile,
 	}
 	storageMethods = map[string]glua.LGFunction{
