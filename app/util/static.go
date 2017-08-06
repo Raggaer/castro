@@ -6,36 +6,43 @@ import (
 	"path/filepath"
 	"os"
 	"strings"
+	"net/http"
 )
 
 var (
 	// ExtensionStatic holds all extension subtopic static folders
 	ExtensionStatic = &StaticList{
-		list: []string{},
+		list: map[string]http.FileSystem{},
 	}
 )
 
 // StaticList struct used to hold static lists
 type StaticList struct {
 	rw sync.RWMutex
-	list []string
+	list map[string]http.FileSystem
 }
 
 // FileExists checks if the given resource exists
-func (e *StaticList) FileExists(url string) bool {
+func (e *StaticList) FileExists(url string) (http.FileSystem, bool) {
 	// Read lock mutex
 	e.rw.RLock()
 	defer e.rw.RUnlock()
 
-	// Loop list
-	for _, e := range e.list {
+	// Split url
+	u := strings.Split(url, "/")
 
-		if strings.HasPrefix(strings.Replace(url, "/", "\\", -1), filepath.Join(e)) {
-			return true
-		}
+	if len(u) < 3 {
+		return nil, false
 	}
 
-	return false
+	// Get element from the map
+	dir, ok := e.list[filepath.Join(u[0], u[1], u[2])]
+
+	if !ok {
+		return nil, false
+	}
+
+	return dir, true
 }
 
 // Load loads all the static resources from the enabled extensions
@@ -77,7 +84,7 @@ func (e *StaticList) Load(d string) error {
 			continue
 		}
 
-		e.list = append(e.list, strings.Replace(dir, d, "", 1))
+		e.list[strings.Replace(dir, d + "\\", "", 1)] = http.Dir(dir)
 	}
 
 	return nil

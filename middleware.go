@@ -10,6 +10,8 @@ import (
 	"github.com/ulule/limiter"
 	"golang.org/x/net/context"
 	"path/filepath"
+	"strings"
+	"log"
 )
 
 // microtimeHandler used to record all requests time spent
@@ -47,13 +49,44 @@ func (e *extensionServer) ServeHTTP(w http.ResponseWriter, req *http.Request, ne
 	file := req.URL.Path
 
 	// Check if static file exists
-	if !util.ExtensionStatic.FileExists(file) {
+	dir, exists := util.ExtensionStatic.FileExists(file)
+
+	if !exists {
+		next(w, req)
+		return
+	}
+
+	// Split static url
+	u := strings.Split(file, "/")
+
+	// Open desired file
+	f, err := dir.Open(strings.Join(u[3:], "/"))
+
+	if err != nil {
+		next(w, req)
+		return
+	}
+
+	// Close file handle
+	defer f.Close()
+
+	// Get file information
+	fi, err := f.Stat()
+
+	if err != nil {
+		next(w, req)
+		return
+	}
+
+	// Check if file is directory
+	if fi.IsDir() {
 		next(w, req)
 		return
 	}
 
 	// Serve file
-	http.ServeFile(w, req, filepath.Join("extensions", file))
+	http.ServeContent(w, req, file, fi.ModTime(), f)
+
 	return
 }
 
