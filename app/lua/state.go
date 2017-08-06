@@ -2,9 +2,13 @@ package lua
 
 import (
 	"github.com/raggaer/castro/app/util"
+	"github.com/raggaer/castro/app/database"
 	glua "github.com/yuin/gopher-lua"
 	"strings"
 	"sync"
+	"path/filepath"
+	"os"
+	"fmt"
 )
 
 var (
@@ -61,6 +65,87 @@ func (s *stateList) Load(dir string) error {
 
 		// Add state to the pool
 		s.List[path] = append(s.List[path], state)
+	}
+
+	return nil
+}
+
+// LoadExtensions loads the given state list
+func (s *stateList) LoadExtensions() error {
+	// Lock mutex
+	s.rw.Lock()
+	defer s.rw.Unlock()
+
+	// Set list
+	s.List = make(map[string][]*glua.LState)
+
+	// Set extension type
+	extType := s.Type + "s"
+
+	// Get extensions from database
+	rows, err := database.DB.Queryx(strings.Replace("SELECT extension_id FROM castro_extension_? WHERE enabled = 1", "?", extType, -1))
+
+	if err != nil {
+		return err
+	}
+
+	// Close rows
+	defer rows.Close()
+
+	// Loop rows
+	for rows.Next() {
+
+		// Hold extension id
+		var extensionID string
+
+		if err := rows.Scan(&extensionID); err != nil {
+			return err
+		}
+
+		dir := filepath.Join("extensions", extensionID, extType)
+
+		// Make sure that directory exist
+		if _, err = os.Stat(dir); err != nil {
+			if os.IsNotExist(err) {
+				util.Logger.Logger.Errorf("Missing %v directory in extension %v", extType, extensionID)
+			}
+			continue
+		}
+
+		// Get subtopic list
+		subtopicList, err := util.GetLuaFiles(dir)
+
+		if err != nil {
+			return err
+		}
+
+		// Loop subtopic list
+		for _, subtopic := range subtopicList {
+
+			// Create state
+			state := glua.NewState()
+
+			// Set castro metatables
+			GetApplicationState(state)
+
+			if err := state.DoFile(subtopic); err != nil {
+				if extType == "widgets" {
+					util.Logger.Logger.Errorf("Cannot load widgets in extension: %v %v", extensionID, err.Error())
+					_, filename := filepath.Split(subtopic)
+					// Remove widget from util.Widgets.List
+					util.Widgets.UnloadExtensionWidget(strings.TrimSuffix(filename, ".lua"))
+
+					continue
+				}
+				return fmt.Errorf("extension: %v %v", extensionID, err.Error())
+			}
+
+			// Set lowercase path
+			path := strings.ToLower(strings.Replace(subtopic, dir, extType, -1))
+
+			// Add state to the pool
+			s.List[path] = append(s.List[path], state)
+		}
 	}
 
 	return nil
