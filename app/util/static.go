@@ -43,6 +43,9 @@ func (e *StaticList) Load(d string) error {
 	e.rw.Lock()
 	defer e.rw.Unlock()
 
+	// Reset static list
+	e.list = map[string]http.FileSystem{}
+
 	// Get extensions from database
 	rows, err := database.DB.Queryx("SELECT id FROM castro_extensions WHERE installed = 1")
 
