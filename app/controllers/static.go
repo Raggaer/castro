@@ -44,5 +44,5 @@ func ExtensionStatic(w http.ResponseWriter, req *http.Request, ps httprouter.Par
 	}
 
 	// Serve file
-	http.ServeContent(w, req, ps.ByName("filepath"), fi.ModTime(), f)
+	http.ServeContent(w, req, fi.Name(), fi.ModTime(), f)
 }
