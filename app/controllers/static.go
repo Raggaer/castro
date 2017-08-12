@@ -4,6 +4,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/util"
 	"net/http"
+	"strings"
 )
 
 func ExtensionStatic(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
@@ -41,6 +42,15 @@ func ExtensionStatic(w http.ResponseWriter, req *http.Request, ps httprouter.Par
 	if fi.IsDir() {
 		w.WriteHeader(404)
 		return
+	}
+
+	// Set content type to prevent possible problems with http.ServeContent
+	if strings.HasPrefix(fi.Name(), ".css") {
+		w.Header().Set("Content-Type", "text/css")
+	}
+
+	if strings.HasPrefix(fi.Name(), ".js") {
+		w.Header().Set("Content-Type", "text/javascript")
 	}
 
 	// Serve file
