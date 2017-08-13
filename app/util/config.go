@@ -172,7 +172,7 @@ func NewStringDuration(s string) StringDuration {
 
 // MarshalText use toml interface to convert string durations to strings
 func (s StringDuration) MarshalText() ([]byte, error) {
-	return []byte(s.String), nil
+	return []byte(s.Duration.String()), nil
 }
 
 // UnmarshalText use toml interface to convert strings to durations
@@ -279,4 +279,17 @@ func (c *ConfigurationFile) SetCustomValue(key string, v interface{}) {
 
 	// Set custom value
 	c.Configuration.Custom[key] = v
+}
+
+// GetCustomValue returns a custom config value
+func (c *ConfigurationFile) GetCustomValue(key string) interface{} {
+	// Lock mutex
+	c.rw.RLock()
+	defer c.rw.RUnlock()
+
+	if v, ok := c.Configuration.Custom[key]; ok {
+		return v
+	}
+
+	return nil
 }

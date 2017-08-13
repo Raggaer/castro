@@ -176,6 +176,9 @@ func RenderTemplate(L *glua.LState) int {
 		util.Logger.Logger.Errorf("Cannot compile widget list: %v", err)
 	}
 
+	// Set status code
+	w.WriteHeader(200)
+
 	// Check if args is set
 	if tableValue.Type() == glua.LTTable {
 
@@ -188,9 +191,6 @@ func RenderTemplate(L *glua.LState) int {
 		util.Template.RenderTemplate(w, req, templateName, args)
 		return 0
 	}
-
-	// Set status code
-	w.WriteHeader(200)
 
 	// Render template without args
 	util.Template.RenderTemplate(w, req, templateName, map[string]interface{}{

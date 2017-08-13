@@ -466,5 +466,8 @@ func templateFuncs() template.FuncMap {
 		"gtNumber": func(a, b float64) bool {
 			return a > b
 		},
+		"menuPages": func() interface{} {
+			return util.Config.GetCustomValue("MenuPages")
+		},
 	}
 }

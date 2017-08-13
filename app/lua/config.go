@@ -70,7 +70,7 @@ func SetConfigCustomValue(L *lua.LState) int {
 	}
 
 	// Open configuration file
-	configFile, err := os.OpenFile("config.toml", os.O_RDWR, 0660)
+	configFile, err := os.OpenFile("config.toml", os.O_RDWR | os.O_TRUNC, 0660)
 
 	if err != nil {
 		L.RaiseError("Cannot open configuration file: %v", err)
