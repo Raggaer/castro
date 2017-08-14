@@ -189,8 +189,15 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 		return
 	}
 
+	// Get issuer
+	issuer, ok := v["issuer"].(string)
+
+	if !ok {
+		return
+	}
+
 	// Check issuer
-	if v["issuer"].(string) != "Castro" {
+	if issuer != "Castro" {
 		return
 	}
 
