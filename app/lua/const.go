@@ -85,6 +85,12 @@ const (
 	// DatabaseMetaTableName the name of the database metatable
 	DatabaseMetaTableName = "db"
 
+	// DatabaseTransactionFieldName the name of the field that holds the current database transaction
+	DatabaseTransactionFieldName = "__tx"
+
+	// DatabaseTransactionStatusFieldName the name of the field that holds if a transaction started
+	DatabaseTransactionStatusFieldName = "__ts"
+
 	// ConfigMetaTableName the name of the config metatable
 	ConfigMetaTableName = "config"
 

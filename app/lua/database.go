@@ -1,6 +1,8 @@
 package lua
 
 import (
+	"database/sql"
+	"github.com/jmoiron/sqlx"
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
@@ -15,6 +17,63 @@ func SetDatabaseMetaTable(luaState *lua.LState) {
 
 	// Set all MySQL metatable functions
 	luaState.SetFuncs(mysqlMetaTable, mysqlMethods)
+
+	// Set transaction field status
+	luaState.SetField(mysqlMetaTable, DatabaseTransactionStatusFieldName, lua.LBool(false))
+}
+
+// GetDatabaseTransactionFieldStatus retrieves the transaction status field
+func GetDatabaseTransactionFieldStatus(luaState *lua.LState) bool {
+	// Get transaction field
+	txFieldStatus, ok := luaState.GetField(luaState.GetTypeMetatable(DatabaseMetaTableName), DatabaseTransactionStatusFieldName).(lua.LBool)
+
+	if !ok {
+		luaState.RaiseError("Cannot retrieve transaction status field")
+	}
+
+	return bool(txFieldStatus)
+}
+
+func GetDatabaseTransactionField(luaState *lua.LState) *sqlx.Tx {
+	// Get metatable
+	m := luaState.GetTypeMetatable(DatabaseMetaTableName)
+
+	// Get transaction user data
+	data, ok := luaState.GetField(m, DatabaseTransactionFieldName).(*lua.LUserData)
+
+	if !ok {
+		luaState.RaiseError("Cannot retrieve database transaction user data")
+	}
+
+	// Get database transaction
+	tx, ok := data.Value.(*sqlx.Tx)
+
+	if !ok {
+		luaState.RaiseError("Cannot retrieve database transaction from user data")
+	}
+
+	return tx
+}
+
+func setDatabaseTransactionField(luaState *lua.LState) *sqlx.Tx {
+	// Create database transaction
+	tx, err := database.DB.Beginx()
+
+	if err != nil {
+		luaState.RaiseError("Cannot begin database transaction: %v", err)
+	}
+
+	// Set transaction field status
+	luaState.SetField(luaState.GetTypeMetatable(DatabaseMetaTableName), DatabaseTransactionStatusFieldName, lua.LBool(true))
+
+	// Create transaction user data
+	txUserData := luaState.NewUserData()
+	txUserData.Value = tx
+
+	// Set transaction field
+	luaState.SetField(luaState.GetTypeMetatable(DatabaseMetaTableName), DatabaseTransactionFieldName, txUserData)
+
+	return tx
 }
 
 // Execute executes a query without returning the result
@@ -47,8 +106,29 @@ func Execute(L *lua.LState) int {
 		util.Logger.Logger.Infof("execute: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
-	// Execute query
-	result, err := database.DB.Exec(query.String(), args...)
+	// Result and error placeholders
+	var result sql.Result
+	var err error
+
+	// Retrieve transaction status
+	txStatus := GetDatabaseTransactionFieldStatus(L)
+
+	if txStatus {
+
+		// Retrieve transaction field
+		tx := GetDatabaseTransactionField(L)
+
+		// Execute query
+		result, err = tx.Exec(query.String(), args...)
+
+	} else {
+
+		// Update transaction status
+		tx := setDatabaseTransactionField(L)
+
+		// Execute query
+		result, err = tx.Exec(query.String(), args...)
+	}
 
 	if err != nil {
 		L.RaiseError("Cannot execute query: %v", err)
@@ -152,7 +232,7 @@ func SingleQuery(L *lua.LState) int {
 		util.Logger.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
-	// Execute query
+	// Run query
 	rows, err := database.DB.Queryx(query.String(), args...)
 
 	if err != nil {
@@ -284,7 +364,7 @@ func Query(L *lua.LState) int {
 		util.Logger.Logger.Infof("query: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
-	// Execute query
+	// Run query
 	rows, err := database.DB.Queryx(query.String(), args...)
 
 	if err != nil {

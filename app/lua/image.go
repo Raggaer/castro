@@ -22,9 +22,20 @@ func getGoImage(luaState *lua.LState) goimage.Image {
 	meta := luaState.Get(1)
 
 	// Get user data
-	data := luaState.GetField(meta, "__img").(*lua.LUserData)
+	data, ok := luaState.GetField(meta, "__img").(*lua.LUserData)
 
-	return data.Value.(goimage.Image)
+	if !ok {
+		luaState.RaiseError("Cannot retrieve goimage user data")
+	}
+
+	// Retrieve goimage
+	img, ok := data.Value.(goimage.Image)
+
+	if !ok {
+		luaState.RaiseError("Cannot retrieve goimage from user data")
+	}
+
+	return img
 }
 
 // NewGoImage creates and returns a new goimage image

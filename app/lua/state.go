@@ -1,14 +1,14 @@
 package lua
 
 import (
-	"github.com/raggaer/castro/app/util"
+	"fmt"
 	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync"
-	"path/filepath"
-	"os"
-	"fmt"
 )
 
 var (
@@ -188,6 +188,9 @@ func (s *stateList) Put(state *glua.LState, path string) {
 	// Lock mutex
 	s.rw.Lock()
 	defer s.rw.Unlock()
+
+	// Remove database transaction status
+	state.SetField(state.GetTypeMetatable(DatabaseMetaTableName), DatabaseTransactionStatusFieldName, glua.LBool(false))
 
 	// Save state
 	s.List[path] = append(s.List[path], state)

@@ -133,12 +133,34 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		glua.P{
 			Fn:      s.GetGlobal(strings.ToLower(r.Method)),
 			NRet:    0,
-			Protect: !util.Config.Configuration.IsDev(),
+			Protect: true,
 		},
 	); err != nil {
+
+		// Rollback database if needed
+		if lua.GetDatabaseTransactionFieldStatus(s) {
+
+			// Retrieve transaction
+			tx := lua.GetDatabaseTransactionField(s)
+
+			// Rollback
+			tx.Rollback()
+		}
 
 		// Set error header
 		w.WriteHeader(500)
 		util.Logger.Logger.Errorf("Cannot execute %v subtopic: %v", pageName, err)
+
+		return
+	}
+
+	// Commit database if needed
+	if lua.GetDatabaseTransactionFieldStatus(s) {
+
+		// Retrieve transaction
+		tx := lua.GetDatabaseTransactionField(s)
+
+		// Rollback
+		tx.Commit()
 	}
 }
