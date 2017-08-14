@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/raggaer/castro/app/models"
+	"github.com/raggaer/castro/app/database"
 	"html/template"
 	"io"
 	"net/http"
@@ -37,7 +38,7 @@ func NewTemplate(name string) Tmpl {
 	}
 }
 
-// LoadTemplates parses and loads all template into the given variable
+// LoadTemplates parses and loads all template files
 func (t *Tmpl) LoadTemplates(dir string) error {
 	// Lock mutex
 	t.rw.Lock()
@@ -57,6 +58,68 @@ func (t *Tmpl) LoadTemplates(dir string) error {
 	})
 
 	return err
+}
+
+// LoadExtensionTemplates parses and loads all extension templates
+func (t *Tmpl) LoadExtensionTemplates(extType string) error {
+	// Lock mutex
+	t.rw.Lock()
+	defer t.rw.Unlock()
+
+	// Get extensions from database
+	rows, err := database.DB.Queryx(strings.Replace("SELECT extension_id FROM castro_extension_? WHERE enabled = 1", "?", extType, -1))
+
+	if err != nil {
+		return err
+	}
+
+	// Close rows
+	defer rows.Close()
+
+	// Loop rows
+	for rows.Next() {
+
+		// Hold extension id
+		var extensionID string
+
+		if err := rows.Scan(&extensionID); err != nil {
+			return err
+		}
+
+		dir := filepath.Join("extensions", extensionID, extType)
+
+		// Make sure that directory exist
+		if _, err = os.Stat(dir); err != nil {
+			if os.IsNotExist(err) {
+				Logger.Logger.Errorf("Missing %v directory in extension %v", extType, extensionID)
+			}
+			continue
+		}
+
+		// Walk over the directory
+		filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+
+			// Check if file has .html extension
+			if strings.HasSuffix(info.Name(), ".html") {
+				tmp, err := t.Tmpl.ParseFiles(path)
+				if err != nil {
+					// Parse failed
+					if extType == "widgets" {
+						// Remove widget from Widgets.List
+						Widgets.UnloadExtensionWidget(strings.TrimSuffix(info.Name(), ".html"))
+					}
+					Logger.Logger.Errorf("Cannot load %v in extension: %v %v", extType, extensionID, err)
+				} else {
+					// Update t.Tmpl
+					t.Tmpl = tmp
+				}
+			}
+
+			return nil
+		})
+	}
+
+	return nil
 }
 
 // FuncMap returns the template map of functions
@@ -85,6 +148,11 @@ func (t Tmpl) RenderWidget(req *http.Request, name string, args map[string]inter
 
 		// Reload all templates
 		if err := t.LoadTemplates("widgets/"); err != nil {
+			return nil, err
+		}
+
+		// Reload extension templates
+		if err := t.LoadExtensionTemplates("widgets"); err != nil {
 			return nil, err
 		}
 	}
@@ -143,6 +211,12 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 		// Reload all templates
 		if err := t.LoadTemplates("pages/"); err != nil {
 			Logger.Logger.Error(err.Error())
+			return
+		}
+
+		// Reload all extension templates
+		if err := t.LoadExtensionTemplates("pages"); err != nil {
+			Logger.Logger.Errorf("Cannot load extension subtopic template: %v", err.Error())
 			return
 		}
 	}

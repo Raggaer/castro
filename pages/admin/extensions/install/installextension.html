@@ -1,0 +1,39 @@
+{{ template "header.html" }}
+<h2>Installing extension</h2>
+<hr>
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .extensions }}
+<form action="{{ url "subtopic" "admin" "extensions" "install" }}" method="POST">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <table class="table table-striped">
+        <thead class="thead-inverse">
+            <tr>
+                <th>Name</th><th>Id</th><th>Version</th><th>Status</th><th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range $index, $extension := .extensions }}
+            <tr>
+                <td>{{ $extension.name }}</td>
+                <td>{{ $extension.id }}</td>
+                <td>{{ $extension.version }}</td>
+                <td>{{ if $extension.installed }}Installed{{ else }}Not installed{{ end }}</td>
+                <td>{{ if $extension.installed }}<button type="submit" name="uninstall_extension" value="{{ $extension.id }}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span> Uninstall</button>{{ else }}<button type="submit" name="install_extension" value="{{ $extension.id }}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Install</button>{{ end }}</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</form>
+{{ else }}
+<p>No extensions found.</p>
+{{ end }}
+{{ template "footer.html" . }}

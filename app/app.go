@@ -27,7 +27,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(7)
+	wait.Add(8)
 
 	// Load application logger
 	loadAppLogger()
@@ -38,11 +38,12 @@ func Start() {
 	// Run logger renew service
 	go util.RenewLogger()
 
+	loadLUAConfig()
+	connectDatabase()
+
 	// Execute our tasks
 	go func(wait *sync.WaitGroup) {
 
-		loadLUAConfig()
-		connectDatabase()
 		loadMap()
 		go loadHouses(wait)
 		go loadVocations(wait)
@@ -57,6 +58,8 @@ func Start() {
 	go loadSubtopics(wait)
 	go loadWidgets(wait)
 
+	loadExtensionStaticResources(wait)
+
 	// Wait for the tasks
 	wait.Wait()
 
@@ -65,6 +68,16 @@ func Start() {
 
 	// Execute the init lua file
 	executeInitFile()
+}
+
+func loadExtensionStaticResources(wg *sync.WaitGroup) {
+	// Load extension static resources
+	if err := util.ExtensionStatic.Load("extensions"); err != nil {
+		util.Logger.Logger.Fatalf("Cannot load extensions static resources: %v", err)
+	}
+
+	// Finish task
+	wg.Done()
 }
 
 func loadMap() {
@@ -213,6 +226,11 @@ func loadWidgets(wg *sync.WaitGroup) {
 		util.Logger.Logger.Fatalf("Cannot load application widget list: %v", err)
 	}
 
+	// Load extension widgets
+	if err := lua.WidgetList.LoadExtensions(); err != nil {
+		util.Logger.Logger.Errorf("Cannot load extension widget list: %v", err)
+	}
+
 	// Tell the wait group we are done
 	wg.Done()
 }
@@ -221,6 +239,11 @@ func loadSubtopics(wg *sync.WaitGroup) {
 	// Load subtopic list
 	if err := lua.PageList.Load("pages"); err != nil {
 		util.Logger.Logger.Fatalf("Cannot load application subtopic list: %v", err)
+	}
+
+	// Load extension subtopics
+	if err := lua.PageList.LoadExtensions(); err != nil {
+		util.Logger.Logger.Errorf("Cannot load extension subtopic list: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -299,6 +322,11 @@ func loadWidgetList(wg *sync.WaitGroup) {
 		util.Logger.Logger.Fatalf("Cannot load widget list: %v", err)
 	}
 
+	// Load extension widget list
+	if err := util.Widgets.LoadExtensions(); err != nil {
+		util.Logger.Logger.Errorf("Cannot load extension widget list: %v", err)
+	}
+
 	// Tell the wait group we are done
 	wg.Done()
 }
@@ -322,6 +350,11 @@ func appTemplates(wg *sync.WaitGroup) {
 		return
 	}
 
+	// Load extension subtopic templates
+	if err := util.Template.LoadExtensionTemplates("pages"); err != nil {
+		util.Logger.Logger.Errorf("Cannot load extension subtopic templates: %v", err)
+	}
+
 	// Tell the wait group we are done
 	wg.Done()
 }
@@ -335,6 +368,11 @@ func widgetTemplates(wg *sync.WaitGroup) {
 	// Load widget templates
 	if err := util.WidgetTemplate.LoadTemplates("widgets/"); err != nil {
 		util.Logger.Logger.Fatalf("Cannot load widget templates: %v", err)
+	}
+
+	// Load extension widget templates
+	if err := util.WidgetTemplate.LoadExtensionTemplates("widgets"); err != nil {
+		util.Logger.Logger.Errorf("Cannot load extension widget templates: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -427,6 +465,9 @@ func templateFuncs() template.FuncMap {
 		},
 		"gtNumber": func(a, b float64) bool {
 			return a > b
+		},
+		"menuPages": func() interface{} {
+			return util.Config.GetCustomValue("MenuPages")
 		},
 	}
 }

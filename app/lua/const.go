@@ -1,7 +1,7 @@
 package lua
 
 const (
-	// FormFileMetaTable the name of the form file metatable
+	// FormFileMetaTableName the name of the form file metatable
 	FormFileMetaTableName = "formFile"
 
 	// GlobalMetaTableName the name of the global metatable

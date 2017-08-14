@@ -54,6 +54,7 @@ type ServerHouses struct {
 	rw   sync.RWMutex
 }
 
+// Load sets the map pointer
 func (c *CastroMapInstance) Load(m *CastroMap) {
 	// Prevent data-races
 	c.rw.Lock()

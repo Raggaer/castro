@@ -48,6 +48,24 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			return
 		}
 
+		// Reload extension pages
+		if err := lua.PageList.LoadExtensions(); err != nil {
+
+			// If AAC is running on development mode log error
+			if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
+				util.Logger.Logger.Errorf("Cannot load extension subtopic %v: %v", ps.ByName("page"), err)
+			}
+		}
+
+		// Reload extension static list
+		if err := util.ExtensionStatic.Load("extensions"); err != nil {
+
+			// If AAC is running on development mode log error
+			if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
+				util.Logger.Logger.Errorf("Cannot load extension subtopic %v: %v", ps.ByName("page"), err)
+			}
+		}
+
 		// Reload widgets
 		if err := lua.WidgetList.Load("widgets"); err != nil {
 
@@ -56,6 +74,14 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			util.Logger.Logger.Errorf("Cannot reload widgets when executing %v subtopic: %v", ps.ByName("page"), err)
 
 			return
+		}
+
+		// Reload extension widgets
+		if err := lua.WidgetList.LoadExtensions(); err != nil {
+			// If AAC is running on development mode log error
+			if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
+				util.Logger.Logger.Errorf("Cannot load extension widgets when executing %v subtopic: %v", ps.ByName("page"), err)
+			}
 		}
 	}
 
