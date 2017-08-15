@@ -57,3 +57,4 @@ local articles = db:execute("UPDATE articles SET name = ? WHERE id = 1", name)
 local name = "test"
 local id = db:execute("INSERT INTO articles (name) VALUES (?)", name)
 --[[ id = 1 ]]--
+```
