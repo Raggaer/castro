@@ -87,11 +87,7 @@ func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string
 		SetSessionMetaTableUserData(state, sess)
 
 		// Call widget function
-		if err := state.CallByParam(lua.P{
-			Fn:      state.GetGlobal("widget"),
-			NRet:    0,
-			Protect: !util.Config.Configuration.IsDev(),
-		}); err != nil {
+		if err := ExecuteControllerPage(state, "widget"); err != nil {
 			return nil, err
 		}
 

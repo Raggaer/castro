@@ -6,6 +6,7 @@ import (
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -411,7 +412,7 @@ func (p *luaStatePool) New() *glua.LState {
 	// Create a new lua state
 	state := glua.NewState(
 		glua.Options{
-			IncludeGoStackTrace: true,
+			IncludeGoStackTrace: util.Config.Configuration.IsDev(),
 		},
 	)
 
@@ -420,4 +421,71 @@ func (p *luaStatePool) New() *glua.LState {
 
 	// Return the lua state
 	return state
+}
+
+// ExecuteFile calls lua dofile
+func ExecuteFile(luaState *glua.LState, path string) error {
+	// Execute lua file
+	if err := luaState.DoFile(path); err != nil {
+
+		// Rollback database if needed
+		if GetDatabaseTransactionFieldStatus(luaState) {
+
+			// Retrieve transaction
+			tx := GetDatabaseTransactionField(luaState)
+
+			// Rollback
+			tx.Rollback()
+		}
+
+		return err
+	}
+
+	// Commit database if needed
+	if GetDatabaseTransactionFieldStatus(luaState) {
+
+		// Retrieve transaction
+		tx := GetDatabaseTransactionField(luaState)
+
+		// Rollback
+		tx.Commit()
+	}
+
+	return nil
+}
+
+func ExecuteControllerPage(luaState *glua.LState, method string) error {
+	// Call file function
+	if err := luaState.CallByParam(
+		glua.P{
+			Fn:      luaState.GetGlobal(strings.ToLower(method)),
+			NRet:    0,
+			Protect: !util.Config.Configuration.IsDev(),
+		},
+	); err != nil {
+
+		// Rollback database if needed
+		if GetDatabaseTransactionFieldStatus(luaState) {
+
+			// Retrieve transaction
+			tx := GetDatabaseTransactionField(luaState)
+
+			// Rollback
+			tx.Rollback()
+		}
+
+		return err
+	}
+
+	// Commit database if needed
+	if GetDatabaseTransactionFieldStatus(luaState) {
+
+		// Retrieve transaction
+		tx := GetDatabaseTransactionField(luaState)
+
+		// Rollback
+		tx.Commit()
+	}
+
+	return nil
 }

@@ -215,7 +215,7 @@ func executeInitFile() {
 	lua.GetApplicationState(luaState)
 
 	// Execute init file
-	if err := luaState.DoFile(filepath.Join("engine", "init.lua")); err != nil {
+	if err := lua.ExecuteFile(luaState, filepath.Join("engine", "init.lua")); err != nil {
 		util.Logger.Logger.Fatalf("Cannot execute init lua file: %v", err)
 	}
 }

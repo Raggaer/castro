@@ -4,10 +4,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
-	glua "github.com/yuin/gopher-lua"
 	"net/http"
 	"path/filepath"
-	"strings"
 )
 
 // LuaPage executes the given lua page
@@ -128,39 +126,12 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Set session user data
 	lua.SetSessionMetaTableUserData(s, session)
 
-	// Call file function
-	if err := s.CallByParam(
-		glua.P{
-			Fn:      s.GetGlobal(strings.ToLower(r.Method)),
-			NRet:    0,
-			Protect: !util.Config.Configuration.IsDev(),
-		},
-	); err != nil {
-
-		// Rollback database if needed
-		if lua.GetDatabaseTransactionFieldStatus(s) {
-
-			// Retrieve transaction
-			tx := lua.GetDatabaseTransactionField(s)
-
-			// Rollback
-			tx.Rollback()
-		}
+	if err := lua.ExecuteControllerPage(s, r.Method); err != nil {
 
 		// Set error header
 		w.WriteHeader(500)
-		util.Logger.Logger.Errorf("Cannot execute %v subtopic: %v", pageName, err)
 
-		return
-	}
-
-	// Commit database if needed
-	if lua.GetDatabaseTransactionFieldStatus(s) {
-
-		// Retrieve transaction
-		tx := lua.GetDatabaseTransactionField(s)
-
-		// Rollback
-		tx.Commit()
+		// Log error
+		util.Logger.Logger.Errorf("Cannot execute subtopic %v: %v", pageName, err)
 	}
 }

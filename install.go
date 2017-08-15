@@ -110,16 +110,19 @@ func installApplication() error {
 		return err
 	}
 
+	// Set global handler for lua states
+	database.DB = conn
+
 	// Ping database
-	if err := conn.Ping(); err != nil {
+	if err := database.DB.Ping(); err != nil {
 		return err
 	}
 
 	// Close database handle
-	defer conn.Close()
+	defer database.DB.Close()
 
 	// Begin transaction
-	db, err := conn.Beginx()
+	db, err := database.DB.Beginx()
 
 	if err != nil {
 		db.Rollback()
@@ -260,7 +263,7 @@ func createConfigFile(name, location string) error {
 	lua.GetApplicationState(luaState)
 
 	// Execute init file
-	if err := luaState.DoFile(filepath.Join("engine", "install.lua")); err != nil {
+	if err := lua.ExecuteFile(luaState, filepath.Join("engine", "install.lua")); err != nil {
 		return err
 	}
 
