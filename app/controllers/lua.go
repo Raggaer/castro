@@ -133,7 +133,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		glua.P{
 			Fn:      s.GetGlobal(strings.ToLower(r.Method)),
 			NRet:    0,
-			Protect: true,
+			Protect: !util.Config.Configuration.IsDev(),
 		},
 	); err != nil {
 
