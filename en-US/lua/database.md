@@ -45,7 +45,7 @@ Same rules from `singleQuery` apply to `query`
 
 # execute
 
-Runs the given SQL command. If the command is of the type `INSERT` the last inserted ID is returned. All execute queries are made using transactions, if the your script crashes any changes to the database during that session will be reverted.
+Runs the given SQL command. If the command is of the type `INSERT` the last inserted ID is returned.
 
 ```lua
 local name = "test"

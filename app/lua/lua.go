@@ -150,10 +150,7 @@ var (
 		"render": RenderWidgetTemplate,
 	}
 	eventsMethods = map[string]glua.LGFunction{
-		"tick": AddEvent,
-	}
-	eventMethods = map[string]glua.LGFunction{
-		"stop": StopEvent,
+		"new": LuaEvent,
 	}
 	paypalMethods = map[string]glua.LGFunction{
 		"createPayment":      CreatePaypalPayment,
@@ -285,6 +282,9 @@ func GetApplicationState(luaState *glua.LState) {
 
 	// Create json metatable
 	SetJSONMetaTable(luaState)
+
+	// Set sleep global
+	luaState.SetGlobal("sleep", luaState.NewFunction(LuaSleep))
 
 	// Set player global
 	luaState.SetGlobal("Player", luaState.NewFunction(PlayerConstructor))
@@ -428,28 +428,7 @@ func (p *luaStatePool) New() *glua.LState {
 func ExecuteFile(luaState *glua.LState, path string) error {
 	// Execute lua file
 	if err := luaState.DoFile(path); err != nil {
-
-		// Rollback database if needed
-		if GetDatabaseTransactionFieldStatus(luaState) {
-
-			// Retrieve transaction
-			tx := GetDatabaseTransactionField(luaState)
-
-			// Rollback
-			tx.Rollback()
-		}
-
 		return err
-	}
-
-	// Commit database if needed
-	if GetDatabaseTransactionFieldStatus(luaState) {
-
-		// Retrieve transaction
-		tx := GetDatabaseTransactionField(luaState)
-
-		// Rollback
-		tx.Commit()
 	}
 
 	return nil
@@ -464,28 +443,7 @@ func ExecuteControllerPage(luaState *glua.LState, method string) error {
 			Protect: !util.Config.Configuration.IsDev(),
 		},
 	); err != nil {
-
-		// Rollback database if needed
-		if GetDatabaseTransactionFieldStatus(luaState) {
-
-			// Retrieve transaction
-			tx := GetDatabaseTransactionField(luaState)
-
-			// Rollback
-			tx.Rollback()
-		}
-
 		return err
-	}
-
-	// Commit database if needed
-	if GetDatabaseTransactionFieldStatus(luaState) {
-
-		// Retrieve transaction
-		tx := GetDatabaseTransactionField(luaState)
-
-		// Rollback
-		tx.Commit()
 	}
 
 	return nil

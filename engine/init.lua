@@ -7,7 +7,21 @@ if app.Mode == "dev" then
 end
 
 if app.Custom.OnlineChart.Enabled then
-	events:tick("engine/onlinechart.lua", app.Custom.OnlineChart.Interval)
+	events:new(
+       function()
+           local interval = time:parseDuration(app.Custom.OnlineChart.Interval)
+           while true do
+               local result = db:singleQuery("SELECT COUNT(*) AS count FROM players_online")
+               local count, time = result.count, os.time()
+               db:execute("INSERT INTO castro_onlinechart (count, time) VALUES (?, ?)", count, time)
+
+               local old = time - (interval * (app.Custom.OnlineChart.Display + 1))
+               db:execute("DELETE FROM castro_onlinechart WHERE time < ?", old)
+
+               sleep(app.Custom.OnlineChart.Interval)
+           end
+       end
+    )
 end
 
 -- Run extensions onStartup event
