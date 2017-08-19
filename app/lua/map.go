@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
+	"path/filepath"
+	"time"
 )
 
 // SetMapMetaTable sets a map metatable for the given state
@@ -14,6 +16,26 @@ func SetMapMetaTable(luaState *lua.LState) {
 
 	// Set all map metatable functions
 	luaState.SetFuncs(mapMetaTable, mapMethods)
+}
+
+// EncodeMap encodes the server map
+func EncodeMap(L *lua.LState) int {
+	// Encode map
+	mapData, err := util.EncodeMap(
+		filepath.Join(util.Config.Configuration.Datapack, "data", "world", Config.GetGlobal("mapName").String()+".otbm"),
+	)
+
+	if err != nil {
+		L.RaiseError("Cannot encode map file: %v", err)
+		return 0
+	}
+
+	// Insert map data into database
+	if _, err := executeQueryHelper(L, "INSERT INTO castro_map (name, data, created_at, updated_at) VALUES (?, ?, ?, ?)", Config.GetGlobal("mapName").String(), mapData, time.Now(), time.Now()); err != nil {
+		L.RaiseError("Cannot save encoded map data: %v", err)
+	}
+
+	return 0
 }
 
 // HouseList returns the server house list as a lua table

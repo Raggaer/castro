@@ -85,7 +85,7 @@ func loadMap() {
 	m := models.Map{}
 
 	// Check if map is encoded
-	err := database.DB.Get(&m, "SELECT id, name, data, created_at, updated_at FROM castro_map WHERE name = ?", lua.Config.GetGlobal("mapName").String())
+	err := database.DB.Get(&m, "SELECT id, name, data, created_at, updated_at FROM castro_map WHERE name = ? ORDER BY id DESC", lua.Config.GetGlobal("mapName").String())
 
 	if err != nil && err != sql.ErrNoRows {
 		util.Logger.Logger.Fatalf("Cannot retrieve map from database: %v", err)

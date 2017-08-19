@@ -57,7 +57,7 @@ func SetStorageValue(L *lua.LState) int {
 	v := L.ToInt(4)
 
 	// Execute insert query
-	if _, err := database.DB.Exec("INSERT INTO player_storage (player_id, key, value) VALUES (?, ?, ?)", playerid, key, v); err != nil {
+	if _, err := executeQueryHelper(L, "INSERT INTO player_storage (player_id, key, value) VALUES (?, ?, ?)", playerid, key, v); err != nil {
 		L.RaiseError("Cannot insert storage value: %v", err)
 		return 0
 	}

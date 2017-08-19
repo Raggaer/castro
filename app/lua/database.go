@@ -76,6 +76,34 @@ func setDatabaseTransactionField(luaState *lua.LState) *sqlx.Tx {
 	return tx
 }
 
+func executeQueryHelper(L *lua.LState, query string, args ...interface{}) (sql.Result, error) {
+	// Result and error placeholders
+	var result sql.Result
+	var err error
+
+	// Retrieve transaction status
+	txStatus := GetDatabaseTransactionFieldStatus(L)
+
+	if txStatus {
+
+		// Retrieve transaction field
+		tx := GetDatabaseTransactionField(L)
+
+		// Execute query
+		result, err = tx.Exec(query, args...)
+
+	} else {
+
+		// Update transaction status
+		tx := setDatabaseTransactionField(L)
+
+		// Execute query
+		result, err = tx.Exec(query, args...)
+	}
+
+	return result, err
+}
+
 // Execute executes a query without returning the result
 func Execute(L *lua.LState) int {
 	// Get query
@@ -106,29 +134,8 @@ func Execute(L *lua.LState) int {
 		util.Logger.Logger.Infof("execute: "+strings.Replace(query.String(), "?", "%v", -1), args...)
 	}
 
-	// Result and error placeholders
-	var result sql.Result
-	var err error
-
-	// Retrieve transaction status
-	txStatus := GetDatabaseTransactionFieldStatus(L)
-
-	if txStatus {
-
-		// Retrieve transaction field
-		tx := GetDatabaseTransactionField(L)
-
-		// Execute query
-		result, err = tx.Exec(query.String(), args...)
-
-	} else {
-
-		// Update transaction status
-		tx := setDatabaseTransactionField(L)
-
-		// Execute query
-		result, err = tx.Exec(query.String(), args...)
-	}
+	// Execute query using database or transaction
+	result, err := executeQueryHelper(L, query.String(), args)
 
 	if err != nil {
 		L.RaiseError("Cannot execute query: %v", err)

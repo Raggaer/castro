@@ -123,7 +123,7 @@ func SetPlayerBankBalance(L *lua.LState) int {
 	newBalance := L.ToInt(2)
 
 	// Update bank balance
-	if _, err := database.DB.Exec("UPDATE players SET balance = ? WHERE id = ?", newBalance, player.ID); err != nil {
+	if _, err := executeQueryHelper(L, "UPDATE players SET balance = ? WHERE id = ?", newBalance, player.ID); err != nil {
 		L.RaiseError("Cannot update player balance: %v")
 		return 0
 	}
@@ -204,7 +204,7 @@ func SetPlayerStorageValue(L *lua.LState) int {
 	}
 
 	// Insert storage value
-	if _, err := database.DB.Exec("INSERT INTO player_storage (player_id, key, value) VALUES (?, ?, ?)", player.ID, L.ToInt(2), L.ToInt(3)); err != nil {
+	if _, err := executeQueryHelper(L, "INSERT INTO player_storage (player_id, key, value) VALUES (?, ?, ?)", player.ID, L.ToInt(2), L.ToInt(3)); err != nil {
 		L.RaiseError("Cannot set player storage value: %v", err)
 		return 0
 	}

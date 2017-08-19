@@ -86,6 +86,7 @@ var (
 		"townList":   TownList,
 		"townByID":   GetTownByID,
 		"townByName": GetTownByName,
+		"encode":     EncodeMap,
 	}
 	xmlMethods = map[string]glua.LGFunction{
 		"vocationList":   VocationList,
