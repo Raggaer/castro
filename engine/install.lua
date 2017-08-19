@@ -75,7 +75,7 @@ custom.MenuPages = {
 		DropdownItems = {
 			{
 				Link = "/subtopic/shop/view",
-				Text = "House list"
+				Text = "Shop"
 			},
 			{
 				Link = "/subtopic/shop/paypal",

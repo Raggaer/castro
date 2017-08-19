@@ -1,9 +1,9 @@
 {{ template "header.html" }}
 <h3>Shop</h3>
 <hr>
-{{ if .validationError }}
+{{ if .error }}
 <div class="alert alert-danger" role="alert">
-    <strong>Error!</strong> {{ .validationError }}
+    <strong>Error!</strong> {{ .error }}
 </div>
 {{ end }}
 {{ if .success }}
@@ -34,9 +34,38 @@
         {{ if .cart }}
         <ul class="list-group">
             {{ range $index, $element := .cart }}
-                {{ $element }}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <ul>
+                                <li>
+                                    <b>Offer name</b>: {{ $element.offer.name }}
+                                </li>
+                                <li>
+                                    <b>Offer price</b>: {{ $element.offer.price }} points
+                                </li>
+                                <li>
+                                    <b>Amount</b>: {{ $element.count }}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pull-right">
+                                <form action="{{ url "subtopic" "shop" "remove" }}" method="post">
+                                    <button type="submit" class="btn btn-danger btn-xs">Remove</button>
+                                    <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+                                    <input type="hidden" name="offer" value="{{ $element.offer.name }}">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </li>
             {{ end }}
         </ul>
+        <form method="post" action="{{ url "subtopic" "shop" "checkout" }}">
+            <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+            <button type="submit" class="btn btn-success">Checkout</button>
+        </form>
         {{ else }}
         <div class="alert alert-info">
             Your shop-cart is currently empty

@@ -19,6 +19,12 @@ function get()
     end
 
     data.success = session:getFlash("success")
+    data.error = session:getFlash("error")
+
+    if not session:isLogged() then
+        http:render("shopview.html", data)
+        return
+    end
 
     local cart = session:get("shop-cart")
 
@@ -33,5 +39,5 @@ function get()
         end
     end
 
-http:render("shopview.html", data)
+    http:render("shopview.html", data)
 end
