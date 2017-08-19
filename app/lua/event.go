@@ -89,67 +89,7 @@ func executeEvent(file string, duration time.Duration) {
 	// Close state
 	defer state.Close()
 
-	SetRegularHTTPMetaTable(state)
-
-	// Create log metatable
-	SetLogMetaTable(state)
-
-	// Create file metatable
-	SetFileMetaTable(state)
-
-	// Create env metatable
-	SetEnvMetaTable(state)
-
-	// Create event metatable
-	SetEventMetaTable(state)
-
-	// Create storage metatable
-	SetStorageMetaTable(state)
-
-	// Create time metatable
-	SetTimeMetaTable(state)
-
-	// Create url metatable
-	SetURLMetaTable(state)
-
-	// Create debug metatable
-	SetDebugMetaTable(state)
-
-	// Create XML metatable
-	SetXMLMetaTable(state)
-
-	// Create captcha metatable
-	SetCaptchaMetaTable(state)
-
-	// Create crypto metatable
-	SetCryptoMetaTable(state)
-
-	// Create validator metatable
-	SetValidatorMetaTable(state)
-
-	// Create database metatable
-	SetDatabaseMetaTable(state)
-
-	// Create config metatable
-	SetConfigMetaTable(state)
-
-	// Create map metatable
-	SetMapMetaTable(state)
-
-	// Create mail metatable
-	SetMailMetaTable(state)
-
-	// Create cache metatable
-	SetCacheMetaTable(state)
-
-	// Create reflect metatable
-	SetReflectMetaTable(state)
-
-	// Create json metatable
-	SetJSONMetaTable(state)
-
-	// Set config metatable
-	SetConfigGlobal(state)
+	GetApplicationState(state)
 
 	// Create event channel
 	eventChannel := make(chan int, 100)

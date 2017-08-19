@@ -15,7 +15,7 @@ Starts a tick event. Events must be loaded from files with a given tick rate.
 Event files must have the `function run()` declaration.
 
 ```lua
-events:tick("engine/onlinechart.lua", "test.lua")
+events:tick("engine/onlinechart.lua", "2m")
 ```
 
 ### test.lua
@@ -34,7 +34,7 @@ function run()
 end
 ```
 
-This example illustrates how the online chart gets its data. Tick rate strings can contain `s,m,h,x,d,y` for example `1h35m`
+This example illustrates how the online chart gets its data. Tick rate strings can contain `s,m,h,d,x,y` for example `1h35m`
 
 ### Stopping an event
 
