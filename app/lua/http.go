@@ -2,13 +2,14 @@ package lua
 
 import (
 	"bytes"
-	"github.com/raggaer/castro/app/util"
-	glua "github.com/yuin/gopher-lua"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/raggaer/castro/app/util"
+	glua "github.com/yuin/gopher-lua"
 )
 
 // SetHTTPMetaTable sets the http metatable on the given lua state
@@ -430,9 +431,9 @@ func CreateRequestClient(L *glua.LState) int {
 	}
 
 	// Get request url
-	requestUrl := data.RawGetString("url")
+	requestURL := data.RawGetString("url")
 
-	if requestUrl.Type() != glua.LTString {
+	if requestURL.Type() != glua.LTString {
 		L.RaiseError("Invalid request url type. Expected string")
 		return 0
 	}
@@ -462,7 +463,7 @@ func CreateRequestClient(L *glua.LState) int {
 	// Create request
 	req, err := http.NewRequest(
 		method.String(),
-		requestUrl.String(),
+		requestURL.String(),
 		bytes.NewBufferString(contentString.Encode()),
 	)
 

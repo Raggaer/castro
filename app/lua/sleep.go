@@ -1,12 +1,13 @@
 package lua
 
 import (
-	"github.com/yuin/gopher-lua"
 	"time"
+
+	"github.com/yuin/gopher-lua"
 )
 
-// LuaSleep sleeps the current running lua state
-func LuaSleep(L *lua.LState) int {
+// ThreadSleep sleeps the current running lua state
+func ThreadSleep(L *lua.LState) int {
 	// Get sleep duration
 	duration, err := time.ParseDuration(L.ToString(1))
 

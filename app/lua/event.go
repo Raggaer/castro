@@ -14,8 +14,8 @@ func SetEventsMetaTable(luaState *lua.LState) {
 	luaState.SetFuncs(eventMetaTable, eventsMethods)
 }
 
-// LuaEvent executes a background event
-func LuaEvent(L *lua.LState) int {
+// BackgroundEvent executes a background event
+func BackgroundEvent(L *lua.LState) int {
 	// Get function
 	f := L.ToFunction(2)
 

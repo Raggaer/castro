@@ -2,36 +2,16 @@
 name: Config
 ---
 
-Castro uses a configuration file to handle all systems. The file `config.toml` is generated at the installation process.
+Castro uses a configuration file to handle all systems. The file `config.toml` is generated at the installation process, some values like for example the cookie hash key are also generated at the installation process.
 
-- [Mode](#mode)
-- [CheckUpdates](#checkupdates)
-- [Port](#port)
-- [URL](#url)
-- [Datapack](#datapack)
+You can access any of these fields from your `lua` files using the  `app` variable:
 
-# Mode
+```lua
+local mode = app.Mode
+--- mode = "dev"
+```
 
-Sets the castro running mode. Possible values are
+Each subtopic, widget or extension can also have its own configuration file, simply create a `config.lua` inside the directory, this way you can overwrite config values while keeping the main file clean, you can even use all the metatables castro exposes.
 
-- `prod`
-- `dev`
-
-While on `dev` mode Castro will reload all pages, widgets and config file on each request. Dont run Castro using `dev` mode while your site is public available, the `dev` mode has a big performance and memory hit on your system and should only be used for local development.
-
-# CheckUpdates
-
-If `true` checks how many commits behind you are running Castro at start-up.
-
-# Port
-
-Determines the port where the HTTP server should listen to. By default browsers will look for port `80`.
-
-# URL
-
-Sets the URL for all links.
-
-# Datapack
-
-Path of your server datapack. Where `config.lua` is located. This path is set at the installation process.
+Check the rest of the pages inside the config topic to learn more about each value of the `config.toml` file.
 

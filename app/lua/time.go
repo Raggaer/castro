@@ -2,13 +2,14 @@ package lua
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
-	"time"
 )
 
-// LuaDate lua object date converted from go
-type LuaDate struct {
+// Date lua object date converted from go
+type Date struct {
 	Year   int
 	Month  int
 	Day    int
@@ -83,7 +84,7 @@ func ParseUnixTimestamp(L *lua.LState) int {
 	if unix64 == 0 {
 
 		// Push empty struct
-		ldate := LuaDate{
+		ldate := Date{
 			Result: "Never",
 		}
 
@@ -97,7 +98,7 @@ func ParseUnixTimestamp(L *lua.LState) int {
 	d := time.Unix(unix64, 0)
 
 	// Create lua date struct
-	ldate := LuaDate{
+	ldate := Date{
 		Year:   d.Year(),
 		Month:  int(d.Month()),
 		Day:    d.Day(),

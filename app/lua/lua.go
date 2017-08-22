@@ -3,12 +3,13 @@ package lua
 import (
 	"errors"
 	"fmt"
-	"github.com/kardianos/osext"
-	"github.com/raggaer/castro/app/util"
-	glua "github.com/yuin/gopher-lua"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/kardianos/osext"
+	"github.com/raggaer/castro/app/util"
+	glua "github.com/yuin/gopher-lua"
 )
 
 // luaStatePool struct used for lua state pooling
@@ -23,6 +24,16 @@ var (
 		saved: make([]*glua.LState, 0, 10),
 	}
 
+	globalFuncList = map[string]func(l *glua.LState) int{
+		"sleep":  ThreadSleep,
+		"Player": PlayerConstructor,
+	}
+	globalVariableList = map[string]glua.LValue{
+		"logFile": glua.LString(
+			fmt.Sprintf("%v-%v-%v.json", util.Logger.LastLoggerDay.Year(), util.Logger.LastLoggerDay.Month(), util.Logger.LastLoggerDay.Day()),
+		),
+		"serverPath": glua.LString(util.Config.Configuration.Datapack),
+	}
 	cryptoMethods = map[string]glua.LGFunction{
 		"sha1":         Sha1Hash,
 		"md5":          Md5Hash,
@@ -151,7 +162,7 @@ var (
 		"render": RenderWidgetTemplate,
 	}
 	eventsMethods = map[string]glua.LGFunction{
-		"new": LuaEvent,
+		"new": BackgroundEvent,
 	}
 	paypalMethods = map[string]glua.LGFunction{
 		"createPayment":      CreatePaypalPayment,
@@ -328,19 +339,19 @@ func GetApplicationState(luaState *glua.LState) {
 	// Create json metatable
 	SetJSONMetaTable(luaState)
 
-	// Set sleep global
-	luaState.SetGlobal("sleep", luaState.NewFunction(LuaSleep))
+	// Loop global functions map
+	for funcName, luaFunc := range globalFuncList {
 
-	// Set player global
-	luaState.SetGlobal("Player", luaState.NewFunction(PlayerConstructor))
+		// Set global function
+		luaState.SetGlobal(funcName, luaState.NewFunction(luaFunc))
+	}
 
-	// Set last log file name
-	luaState.SetGlobal("logFile", glua.LString(
-		fmt.Sprintf("%v-%v-%v.json", util.Logger.LastLoggerDay.Year(), util.Logger.LastLoggerDay.Month(), util.Logger.LastLoggerDay.Day()),
-	))
+	// Loop global variables map
+	for funcName, luaVar := range globalVariableList {
 
-	// Set server path
-	luaState.SetGlobal("serverPath", glua.LString(util.Config.Configuration.Datapack))
+		// Set global variable
+		luaState.SetGlobal(funcName, luaVar)
+	}
 
 	// Get executable folder
 	f, err := osext.ExecutableFolder()
@@ -479,6 +490,7 @@ func ExecuteFile(luaState *glua.LState, path string) error {
 	return nil
 }
 
+// ExecuteControllerPage executes the given subtopic using call by param
 func ExecuteControllerPage(luaState *glua.LState, method string) error {
 	// Call file function
 	if err := luaState.CallByParam(

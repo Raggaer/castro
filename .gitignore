@@ -10,8 +10,6 @@ projectFilesBackup
 fdvdv.png
 pages/test/
 buildOutput/
-obfuscator/*
-deobfuscator/*
 engine/*.castro
 public/images/offer-images/*.png
 extensions/*
