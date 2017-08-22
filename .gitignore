@@ -15,3 +15,5 @@ deobfuscator/*
 engine/*.castro
 public/images/offer-images/*.png
 extensions/*
+public/images/guild-images/*
+!public/images/guild-images/default-guild-logo.png

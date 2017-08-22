@@ -8,10 +8,10 @@ High performance Open Tibia content management system written in **Go** using **
 
 Castro provides lua bindings using a pool of lua states. Each request gets a state from the pool. If there are no states available a new one is created and later saved on the pool.
 
-# Documentation
+## Documentation
 
 Everything you might need [is here](https://docs.castroaac.org/). The official documentation site of Castro
 
-# License
+## License
 
 **Castro** is made available under the **MIT** license.
