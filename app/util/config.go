@@ -3,6 +3,8 @@ package util
 import (
 	"github.com/BurntSushi/toml"
 	"io"
+	"os"
+	"path/filepath"
 	"sync"
 	"time"
 )
@@ -292,4 +294,81 @@ func (c *ConfigurationFile) GetCustomValue(key string) interface{} {
 	}
 
 	return nil
+}
+
+// LoadExternalConfigFiles returns a list of external config lua files
+func LoadExternalConfigFiles() ([]string, error) {
+	// List placeholder
+	list := []string{}
+
+	// Get pages config files
+	if err := filepath.Walk(filepath.Join("pages"), func(path string, info os.FileInfo, err error) error {
+
+		// Return walk problems
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		// Check for config lua file
+		if info.Name() == "config.lua" {
+			list = append(list, path)
+		}
+
+		return nil
+
+	}); err != nil {
+		return nil, err
+	}
+
+	// Get widgets config files
+	if err := filepath.Walk(filepath.Join("widgets"), func(path string, info os.FileInfo, err error) error {
+
+		// Return walk problems
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		// Check for config lua file
+		if info.Name() == "config.lua" {
+			list = append(list, path)
+		}
+
+		return nil
+
+	}); err != nil {
+		return nil, err
+	}
+
+	// Get widgets config files
+	if err := filepath.Walk(filepath.Join("extensions"), func(path string, info os.FileInfo, err error) error {
+
+		// Return walk problems
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		// Check for config lua file
+		if info.Name() == "config.lua" {
+			list = append(list, path)
+		}
+
+		return nil
+
+	}); err != nil {
+		return nil, err
+	}
+
+	return list, nil
 }

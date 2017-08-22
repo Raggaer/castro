@@ -346,3 +346,89 @@ func StructToTable(s interface{}) *lua.LTable {
 
 	return t
 }
+
+// TableToStruct populates the given struct pointer with the contents of a lua table
+func TableToStruct(table *lua.LTable, dst interface{}) {
+	// Get interface element
+	elem := reflect.ValueOf(dst).Elem()
+
+	// Loop struct fields
+	for i := 0; i < elem.NumField(); i++ {
+
+		// Get current field
+		field := elem.Field(i)
+
+		// Get field name
+		fieldName := elem.Type().Field(i).Name
+
+		// Interface layer
+		inter := field.Interface()
+
+		// Switch field type
+		switch inter.(type) {
+		case int, int32, int64:
+
+			// Get field from table
+			value, ok := table.RawGetString(fieldName).(lua.LNumber)
+
+			if !ok {
+				continue
+			}
+
+			// Set struct field
+			field.SetInt(int64(value))
+
+		case string:
+
+			// Get field from table
+			value, ok := table.RawGetString(fieldName).(lua.LString)
+
+			if !ok {
+				continue
+			}
+
+			// Set struct field
+			field.SetString(string(value))
+
+		case bool:
+
+			// Get field from table
+			value, ok := table.RawGetString(fieldName).(lua.LBool)
+
+			if !ok {
+				continue
+			}
+
+			// Set struct field
+			field.SetBool(bool(value))
+
+		case time.Duration:
+
+			// Get field from table as string
+			value := table.RawGetString(fieldName)
+
+			if value.Type() == lua.LTString {
+
+				// Parse duration string
+				dur, err := time.ParseDuration(value.String())
+
+				if err != nil {
+					continue
+				}
+
+				// Set field
+				field.Set(reflect.ValueOf(dur))
+
+				continue
+			}
+
+			// Value needs to be number
+			if value.Type() != lua.LTNumber {
+				continue
+			}
+
+			// Set field
+			field.Set(reflect.ValueOf(time.Duration(int(value.(lua.LNumber)))))
+		}
+	}
+}

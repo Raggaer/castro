@@ -2,13 +2,13 @@ package util
 
 import (
 	"fmt"
+	"github.com/raggaer/castro/app/database"
 	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"io/ioutil"
-	"sync"
-	"path/filepath"
 	"os"
-	"github.com/raggaer/castro/app/database"
+	"path/filepath"
+	"sync"
 )
 
 var (
@@ -123,6 +123,11 @@ func (w *WidgetList) LoadExtensions() error {
 			if !file.IsDir() {
 				continue
 			}
+
+			if file.Name() == "config.file" {
+				continue
+			}
+
 			// Append widget
 			w.List = append(w.List, &Widget{
 				Name: file.Name(),

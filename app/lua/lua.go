@@ -1,6 +1,7 @@
 package lua
 
 import (
+	"errors"
 	"fmt"
 	"github.com/kardianos/osext"
 	"github.com/raggaer/castro/app/util"
@@ -190,6 +191,50 @@ var (
 		"saveFileAsPNG": SaveFormFileAsPNG,
 	}
 )
+
+// OverwriteConfigFile gathers all external config file and pushes globals
+func OverwriteConfigFile() error {
+	// Load external config files
+	list, err := util.LoadExternalConfigFiles()
+
+	if err != nil {
+		return err
+	}
+
+	// Create config state
+	configState := glua.NewState()
+
+	// Set castro metatables
+	GetApplicationState(configState)
+
+	// Loop list
+	for _, config := range list {
+
+		// Execute config file
+		if err := configState.DoFile(config); err != nil {
+			return err
+		}
+	}
+
+	// Get app table
+	appTable, ok := configState.GetGlobal("app").(*glua.LTable)
+
+	if !ok {
+		return errors.New("Cannot get app global as table")
+	}
+
+	// Get custom field
+	customField := appTable.RawGetString("Custom").(*glua.LTable)
+
+	if !ok {
+		return errors.New("Cannot get app.Custom global as table")
+	}
+
+	// Convert table back to a map
+	util.Config.Configuration.Custom = TableToMap(customField)
+
+	return nil
+}
 
 // Get retrieves a lua state from the pool if no states are available we create one
 func (p *luaStatePool) Get() *glua.LState {

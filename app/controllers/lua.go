@@ -36,6 +36,16 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			return
 		}
 
+		// Reload config overwrites
+		if err := lua.OverwriteConfigFile(); err != nil {
+
+			// Set error header
+			w.WriteHeader(500)
+			util.Logger.Logger.Errorf("Cannot reload external config files: %v", err)
+
+			return
+		}
+
 		// Reload pages
 		if err := lua.PageList.Load("pages"); err != nil {
 

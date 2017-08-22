@@ -27,7 +27,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(8)
+	wait.Add(9)
 
 	// Load application logger
 	loadAppLogger()
@@ -57,6 +57,7 @@ func Start() {
 	go widgetTemplates(wait)
 	go loadSubtopics(wait)
 	go loadWidgets(wait)
+	go overwriteConfigFile(wait)
 
 	loadExtensionStaticResources(wait)
 
@@ -68,6 +69,16 @@ func Start() {
 
 	// Execute the init lua file
 	executeInitFile()
+}
+
+func overwriteConfigFile(wg *sync.WaitGroup) {
+	// Overwrite config file
+	if err := lua.OverwriteConfigFile(); err != nil {
+
+	}
+
+	// Finish task
+	wg.Done()
 }
 
 func loadExtensionStaticResources(wg *sync.WaitGroup) {

@@ -15,7 +15,7 @@ func GetLuaFiles(dir string) ([]string, error) {
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 
 		// Check if file has .lua extension
-		if strings.HasSuffix(info.Name(), ".lua") {
+		if strings.HasSuffix(info.Name(), ".lua") && info.Name() != "config.lua" {
 
 			// Append file
 			list = append(list, filepath.Join(
