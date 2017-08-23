@@ -33,6 +33,18 @@ function post()
         cartdata[name].count = count
     end
 
+    if http.postValues.discount ~= nil then
+        local discount = db:singleQuery("SELECT valid_till, discount, uses, unlimited FROM castro_shop_discounts WHERE code = ?", http.postValues.discount)
+
+        if discount ~= nil then
+            if os.time() < tonumber(discount.valid_till) then
+                if discount.unlimited or (not discount.unlimited and discount.uses > 0) then
+                    totalprice = totalprice - ((tonumber(discount.discount) * totalprice) / 100)
+                end
+            end
+        end
+    end
+
     local account = session:loggedAccount()
 
     if account.castro.Points < totalprice then
@@ -40,4 +52,9 @@ function post()
         http:redirect("/subtopic/shop/view")
         return
     end
+
+    db:execute("UPDATE castro_accounts SET points = points - ? WHERE account_id = ?", totalprice, account.Id)
+
+    session:setFlash("success", "You paid " .. totalprice .. " for all your cart items")
+    http:redirect("/subtopic/shop/view")
 end

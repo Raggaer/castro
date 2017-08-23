@@ -3,12 +3,6 @@ package app
 import (
 	"database/sql"
 	"fmt"
-	"github.com/patrickmn/go-cache"
-	"github.com/raggaer/castro/app/database"
-	"github.com/raggaer/castro/app/lua"
-	"github.com/raggaer/castro/app/models"
-	"github.com/raggaer/castro/app/util"
-	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"log"
 	"net/url"
@@ -19,6 +13,13 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/patrickmn/go-cache"
+	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/lua"
+	"github.com/raggaer/castro/app/models"
+	"github.com/raggaer/castro/app/util"
+	glua "github.com/yuin/gopher-lua"
 )
 
 // Start the main execution point for Castro

@@ -5,6 +5,10 @@ import (
 	"time"
 
 	"fmt"
+	"io/ioutil"
+	"path/filepath"
+	"strings"
+
 	"github.com/BurntSushi/toml"
 	"github.com/dchest/uniuri"
 	"github.com/go-sql-driver/mysql"
@@ -14,9 +18,6 @@ import (
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	glua "github.com/yuin/gopher-lua"
-	"io/ioutil"
-	"path/filepath"
-	"strings"
 )
 
 const (
@@ -36,7 +37,7 @@ type znoteTable struct {
 // znoteAccount main znote accounts table
 type znoteAccount struct {
 	ID         uint64
-	Account_id uint64
+	Account_id int64
 	Points     uint
 }
 
@@ -73,7 +74,7 @@ func accountExists(id int64, db *sqlx.Tx) bool {
 	exists := false
 
 	// Check if account exists
-	if err := db.Select(&exists, "SELECT EXISTS (SELECT 1 FROM castro_accounts WHERE account_id = ?)", id); err != nil {
+	if err := db.Get(&exists, "SELECT EXISTS (SELECT 1 FROM castro_accounts WHERE account_id = ?)", id); err != nil {
 		return false
 	}
 
@@ -104,7 +105,11 @@ func installApplication() error {
 	}
 
 	// Connect to database
-	conn, err := database.Open(lua.Config.GetGlobal("mysqlUser").String(), lua.Config.GetGlobal("mysqlPass").String(), lua.Config.GetGlobal("mysqlDatabase").String())
+	conn, err := database.Open(
+		lua.Config.GetGlobal("mysqlUser").String(),
+		lua.Config.GetGlobal("mysqlPass").String(),
+		lua.Config.GetGlobal("mysqlDatabase").String(),
+	)
 
 	if err != nil {
 		return err
@@ -190,6 +195,11 @@ func installApplication() error {
 
 		// Loop znote accounts
 		for _, acc := range znoteAccounts {
+
+			// Check if account exists
+			if accountExists(acc.Account_id, db) {
+				continue
+			}
 
 			// Insert castro account from znote account
 			if _, err := db.Exec("INSERT INTO castro_accounts (account_id, points) VALUES (?, ?)", acc.Account_id, acc.Points); err != nil {

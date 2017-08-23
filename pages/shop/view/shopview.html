@@ -64,6 +64,13 @@
         </ul>
         <form method="post" action="{{ url "subtopic" "shop" "checkout" }}">
             <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
+            <div class="form-group">
+                <label for="input-discount-code">Discount code</label>
+                <input type="text" class="form-control" id="input-discount" name="discount" placeholder="Discount code">
+                <small class="form-text text-muted">
+                    Optional discount code
+                </small>
+            </div>
             <button type="submit" class="btn btn-success">Checkout</button>
         </form>
         {{ else }}
