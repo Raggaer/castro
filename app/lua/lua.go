@@ -28,12 +28,6 @@ var (
 		"sleep":  ThreadSleep,
 		"Player": PlayerConstructor,
 	}
-	globalVariableList = map[string]glua.LValue{
-		"logFile": glua.LString(
-			fmt.Sprintf("%v-%v-%v.json", util.Logger.LastLoggerDay.Year(), util.Logger.LastLoggerDay.Month(), util.Logger.LastLoggerDay.Day()),
-		),
-		"serverPath": glua.LString(util.Config.Configuration.Datapack),
-	}
 	cryptoMethods = map[string]glua.LGFunction{
 		"sha1":         Sha1Hash,
 		"md5":          Md5Hash,
@@ -346,12 +340,13 @@ func GetApplicationState(luaState *glua.LState) {
 		luaState.SetGlobal(funcName, luaState.NewFunction(luaFunc))
 	}
 
-	// Loop global variables map
-	for funcName, luaVar := range globalVariableList {
-
-		// Set global variable
-		luaState.SetGlobal(funcName, luaVar)
-	}
+	// Set global variables
+	luaState.SetGlobal("serverPath", glua.LString(util.Config.Configuration.Datapack))
+	luaState.SetGlobal("logFile",
+		glua.LString(
+			fmt.Sprintf("%v-%v-%v.json", util.Logger.LastLoggerDay.Year(), util.Logger.LastLoggerDay.Month(), util.Logger.LastLoggerDay.Day()),
+		),
+	)
 
 	// Get executable folder
 	f, err := osext.ExecutableFolder()

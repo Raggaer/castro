@@ -2,11 +2,12 @@ package lua
 
 import (
 	"fmt"
+	"io/ioutil"
+	"time"
+
 	"github.com/clbanning/mxj"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
-	"io/ioutil"
-	"time"
 )
 
 // SetXMLMetaTable sets the xml metatable of the given lua state
@@ -75,7 +76,7 @@ func UnmarshalXMLFile(L *lua.LState) int {
 	buff, err := ioutil.ReadFile(src.String())
 
 	if err != nil {
-		L.RaiseError("Cannot unmarshal file. File not found: %", err)
+		L.RaiseError("Cannot unmarshal file. File not found: %v", err)
 		return 0
 	}
 

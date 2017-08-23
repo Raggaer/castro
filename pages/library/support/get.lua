@@ -1,6 +1,7 @@
 function get()
+
     local data = {}
-    local groups = xml:unmarshalFile(serverPath .. "/data/XML/groups.xml")
+    local groups = xml:unmarshalFile(app.Datapack .. "/data/XML/groups.xml")
 
     data.list = {}
 
