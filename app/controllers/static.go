@@ -1,12 +1,14 @@
 package controllers
 
 import (
-	"github.com/julienschmidt/httprouter"
-	"github.com/raggaer/castro/app/util"
 	"net/http"
 	"strings"
+
+	"github.com/julienschmidt/httprouter"
+	"github.com/raggaer/castro/app/util"
 )
 
+// ExtensionStatic serves a static resource for an extension
 func ExtensionStatic(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	// Get extension identifier
 	id := ps.ByName("id")

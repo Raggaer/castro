@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"net/http"
+	"path/filepath"
+
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/util"
-	"net/http"
-	"path/filepath"
 )
 
 // LuaPage executes the given lua page

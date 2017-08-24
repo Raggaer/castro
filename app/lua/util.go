@@ -3,12 +3,13 @@ package lua
 import (
 	"database/sql"
 	"fmt"
-	"github.com/yuin/gopher-lua"
 	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/yuin/gopher-lua"
 )
 
 type castroInterfaceField struct {
@@ -79,6 +80,21 @@ func MapToTable(m map[string]interface{}) *lua.LTable {
 
 					// Append result
 					sliceTable.Append(t)
+
+				case float64:
+
+					// Append result as number
+					sliceTable.Append(lua.LNumber(s.(float64)))
+
+				case string:
+
+					// Append result as string
+					sliceTable.Append(lua.LString(s.(string)))
+
+				case bool:
+
+					// Append result as bool
+					sliceTable.Append(lua.LBool(s.(bool)))
 				}
 			}
 
