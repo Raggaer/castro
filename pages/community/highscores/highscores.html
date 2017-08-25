@@ -5,6 +5,7 @@
 <form method="GET">
     <div class="form-group">
         <select name="voc" class="form-control" id="select-vocation">
+            <option value="0">All vocations</option>
             {{ range $index, $element := .vocList }}
             <option value="{{ $element.ID }}" {{ if eqNumber $.vocType $element.ID }} selected {{ end }}>
                 {{ $element.Name }}

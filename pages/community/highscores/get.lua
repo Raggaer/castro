@@ -3,7 +3,7 @@ require "paginator"
 function get()
     local data = {}
 
-    data.vocList = xml:vocationList()
+    data.vocList = {}
     data.vocType = tonumber(http.getValues.voc)
 
     local cache = false
@@ -16,21 +16,37 @@ function get()
     end
 
     local page = 0
+    local validVocation = false  
+    local allVocations = false
 
-    if data.vocType == nil then
+    if data.vocType == nil or data.vocType == 0 then
         data.vocType = 0
+        allVocations = true
+    end
+
+    for _, v in ipairs(app.Custom.ValidHighscoreVocationList) do
+        table.insert(data.vocList, xml:vocationByID(v))
+        if v == data.vocType then
+            validVocation = true
+        end
+    end
+
+    if not validVocation and not allVocations then
+        http:redirect("/")
+        return
     end
 
     if http.getValues.page ~= nil then
         page = math.floor(tonumber(http.getValues.page) + 0.5)
     end
 
-    if not validator:validVocation(data.vocType) then
-        http:redirect("/")
-        return
-    end
+    local playerCount = 0
 
-    local playerCount = db:singleQuery("SELECT COUNT(*) as total FROM players WHERE vocation = ?", data.vocType, true)
+    if allVocations then
+        playerCount = db:singleQuery("SELECT COUNT(*) as total FROM players")
+    else
+        playerCount = db:singleQuery("SELECT COUNT(*) as total FROM players WHERE vocation = ?", data.vocType)
+    end
 
     data.paginator = paginator(page, 15, tonumber(playerCount.total))
 
@@ -66,7 +82,16 @@ function get()
         query = "skill_fishing"
     end
 
-    data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FROM players WHERE vocation = ? ORDER BY value DESC LIMIT ?, ?", data.vocType, data.paginator.offset, data.paginator.limit, true)
+    data.list = {}
+    cache = false
+
+    if allVocations then
+        data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FROM players ORDER BY value DESC LIMIT ?, ?", data.paginator.offset, data.paginator.limit, true)
+        data.voc = { Name = "All Vocations" }
+    else
+        data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FROM players WHERE vocation = ? ORDER BY value DESC LIMIT ?, ?", data.vocType, data.paginator.offset, data.paginator.limit, true)
+        data.voc = xml:vocationByID(data.vocType)
+    end
 
     if data.list ~= nil then
         if not cache then
@@ -76,8 +101,5 @@ function get()
         end
     end
 
-    data.voc = xml:vocationByID(data.vocType)
-
     http:render("highscores.html", data)
-
 end
