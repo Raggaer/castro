@@ -11,13 +11,41 @@ if http.postValues["character-name"]:len() < 5 or http.postValues["character-nam
     return
 end
 
-if not validator:validVocation(http.postValues["character-vocation"], true) then
+if not validator:validVocation(http.postValues["character-vocation"]) then
+    session:setFlash("validation-error", "Invalid character vocation. Vocation not found")
+    http:redirect()
+    return
+end
+
+local validVocation = false
+
+for _, v in ipairs(app.Custom.ValidVocationList) do
+    if v == tonumber(http.postValues["character-vocation"]) then
+        validVocation = true
+    end
+end
+
+if not validVocation then
     session:setFlash("validation-error", "Invalid character vocation. Vocation not found")
     http:redirect()
     return
 end
 
 if not validator:validTown(http.postValues["character-town"]) then
+    session:setFlash("validation-error", "Invalid character town. Town not found")
+    http:redirect()
+    return
+end
+
+local validTown = false
+
+for _, v in ipairs(app.Custom.ValidTownList) do
+    if v == tonumber(http.postValues["character-town"]) then
+        validTown = true
+    end
+end
+
+if not validTown then
     session:setFlash("validation-error", "Invalid character town. Town not found")
     http:redirect()
     return
