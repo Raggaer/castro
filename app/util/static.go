@@ -1,11 +1,12 @@
 package util
 
 import (
-	"sync"
-	"github.com/raggaer/castro/app/database"
-	"path/filepath"
-	"os"
 	"net/http"
+	"os"
+	"path/filepath"
+	"sync"
+
+	"github.com/raggaer/castro/app/database"
 )
 
 var (
@@ -17,7 +18,7 @@ var (
 
 // StaticList struct used to hold static lists
 type StaticList struct {
-	rw sync.RWMutex
+	rw   sync.RWMutex
 	list map[string]http.FileSystem
 }
 
@@ -79,6 +80,7 @@ func (e *StaticList) Load(d string) error {
 			continue
 		}
 
+		// Add http directory to map
 		e.list[id] = http.Dir(dir)
 	}
 

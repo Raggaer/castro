@@ -2,13 +2,14 @@ package util
 
 import (
 	"fmt"
-	"github.com/raggaer/castro/app/database"
-	glua "github.com/yuin/gopher-lua"
 	"html/template"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/raggaer/castro/app/database"
+	glua "github.com/yuin/gopher-lua"
 )
 
 var (
@@ -139,6 +140,7 @@ func (w *WidgetList) LoadExtensions() error {
 	return nil
 }
 
+// UnloadExtensionWidget removes a widget extension from the list
 func (w *WidgetList) UnloadExtensionWidget(widgetName string) error {
 	for i, widget := range w.List {
 		if widget.Name == widgetName {

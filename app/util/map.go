@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/xml"
-	"github.com/raggaer/otmap"
 	"io/ioutil"
 	"sync"
+
+	"github.com/raggaer/otmap"
 )
 
 var (
