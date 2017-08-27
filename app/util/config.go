@@ -1,12 +1,13 @@
 package util
 
 import (
-	"github.com/BurntSushi/toml"
 	"io"
 	"os"
 	"path/filepath"
 	"sync"
 	"time"
+
+	"github.com/BurntSushi/toml"
 )
 
 // CookieConfig struct used for the cookies configuration options

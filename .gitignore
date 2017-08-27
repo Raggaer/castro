@@ -2,6 +2,7 @@ tmp/
 *.gzip
 config.toml
 vendor/*
+vendor.orig/*
 .idea
 public/images/signature/*.png
 logs/*.json
