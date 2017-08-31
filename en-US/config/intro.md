@@ -13,5 +13,14 @@ local mode = app.Mode
 
 Each subtopic, widget or extension can also have its own configuration file, simply create a `config.lua` inside the directory, this way you can overwrite config values while keeping the main file clean, you can even use all the metatables castro exposes.
 
-Check the rest of the pages inside the config topic to learn more about each value of the `config.toml` file.
+For example, on the create character subtopic there is a  `config.lua` file that sets the valid vocations and towns for new characters:
 
+```lua
+-- Valid town id list
+app.Custom.ValidTownList = {1, 2, 3, 4}
+
+-- Valid vocation id list
+app.Custom.ValidVocationList = {1, 2, 3, 4}
+```
+
+Check the rest of the pages inside the config topic to learn more about each value of the `config.toml` file.

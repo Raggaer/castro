@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+
 	"github.com/raggaer/castro/app/database"
 )
 

@@ -1,10 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{{ template "header.html" }}
+<h3>{{ .house.name }}</h3>
+<hr>
+{{ if .error }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .error }}
+</div>
+{{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+<p>
+    The house contains <b>{{ .house.beds }}</b> beds and its located in <b>{{ .town.Name }}</b>.
+</p>
+<p>
+    The house has a size of <b>{{ .house.size }}</b> sqm with a rent of <b>{{ .house.rent }}</b> gold coins. The rent will be debited <b>{{ .period }}</b> from your bank account.
+</p>
+{{ if not .ownername }}
+    {{ if not .house.bidname }}
+    <p>This house is up for sale. Be the first one to bid for this house using the form below.</p>
+    {{ else }}
+    <p>This house is up for sale. Currently <b><a href="">{{ .house.bidname }}</a></b> is the highest bidder with <b>{{ .house.last_bid }}</b> gold coins.</p>
+    <p>You can place your bid using the form below</p>
+    {{ end }}
+    <hr>
+    {{ if .logged }}
+    <form method="post" action="{{ url "subtopic" "library" "houses" "bid" }}">
+        <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+        <input type="hidden" name="id" value="{{ .house.id }}">
+        <div class="form-group">
+            <select class="form-control" name="character">
+                {{ range $index, $element := .characters }}
+                    <option value="{{ urlEncode $element.name }}">{{ $element.name }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="input-group">
+            <input type="number" name="bid" class="form-control" placeholder="Your bid amount">
+            <span class="input-group-btn">
+                <button type="submit" name="leave" class="btn btn-primary">Place bid</button>
+            </span>
+        </div>
+        <p class="help-block">
+            The bid amount will be removed from your character bank balance
+        </p>
+    </form>
+    {{ else }}
 
-</body>
-</html>
+    {{ end }}
+{{ else }}
+
+{{ end }}
+{{ template "footer.html" . }}

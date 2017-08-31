@@ -82,7 +82,7 @@ func (s *ServerHouses) LoadHouses(file string) error {
 	return xml.Unmarshal(f, &s.List)
 }
 
-// EncodeMap encodes the server map to the given destination
+// EncodeMap encodes the server map
 func EncodeMap(path string) ([]byte, error) {
 	// Parse server map
 	m, err := otmap.Parse(path, true)

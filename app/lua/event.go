@@ -40,6 +40,11 @@ func BackgroundEvent(L *lua.LState) int {
 
 			if err != nil {
 
+				// Weird case
+				if err.Error() == "nil" {
+					break
+				}
+
 				L.RaiseError("Running event returned an error: %v", err)
 				break
 			}
