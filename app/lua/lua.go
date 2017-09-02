@@ -188,6 +188,7 @@ var (
 	globalMethods = map[string]glua.LGFunction{
 		"set": SetGlobalLuaValue,
 		"get": GetGlobalLuaValue,
+		"delete": DeleteGlobalLuaValue,
 	}
 	formFileMethods = map[string]glua.LGFunction{
 		"isValidPNG":    FormFileIsValidPNG,
