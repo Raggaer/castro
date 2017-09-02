@@ -40,7 +40,7 @@ func SetGlobalLuaValue(L *lua.LState) int {
 	}
 
 	// Global value exists placeholder
-	var exists = true
+	var exists = 0
 
 	// Check if key already exists
 	if err := database.DB.Get(&exists, "SELECT id FROM castro_global WHERE `key` = ?", key); err != nil {
