@@ -36,6 +36,101 @@ const (
 )
 
 var (
+	installationSteps = []installationStep{
+		{
+			Name: "Path",
+			URL:  "/",
+			Description: template.HTML(`<p>
+			Welcome to the installation wizard. The wizard will guide you through a very simple process where you will be able to setup some Castro features like the SMTP server and the Google reCAPTCHA service
+		</p>
+		<p>
+			These features are optional and you can activate them later
+		</p>
+		<p>
+			Just fill the information below to start using one of the most powerfull and extensible Open Tibia content management system
+		</p>`),
+			Optional: false,
+			Form: []installationFormField{
+				{
+					Name:        "path",
+					Type:        "text",
+					Placeholder: "Server full path",
+					HelperText:  "We need your full server folder path. Castro will load all the necessary information from your config.lua file",
+				},
+				{
+					Name:        "port",
+					Type:        "number",
+					Placeholder: "Website port",
+					HelperText:  "Port where Castro will listen. You should use port 80 unless you run Castro behind a proxy server like NGINX or Caddy",
+				},
+				{
+					Name:        "url",
+					Type:        "text",
+					Placeholder: "Website url",
+					HelperText:  "Your absolute website URL. This URL will be used to create links. URL/destination",
+				},
+			},
+			Post: func(res http.ResponseWriter, req *http.Request, s installationStep) error {
+				// Install database tables
+				if err := installApplication(req.FormValue("path")); err != nil {
+					return err
+				}
+
+				// Get server port
+				port, err := strconv.Atoi(req.FormValue("port"))
+
+				if err != nil {
+					return err
+				}
+
+				// Set application settings
+				installationConfigFile.Datapack = req.FormValue("path")
+				installationConfigFile.Port = port
+				installationConfigFile.URL = req.FormValue("url")
+
+				return nil
+			},
+		},
+		{
+			Name:     "Captcha",
+			URL:      "/install/captcha",
+			Optional: true,
+			Description: template.HTML(`<p>
+			You can configure your Google reCAPTCHA credentials. reCAPTCHA offers an easy way to stop bots at saturaing your database
+		</p>
+		<p>
+			By default if captcha is enabled it will appear on the registration form, you can use lua bindings to add captcha security to any other form of the website
+		</p>
+		<p>
+			To setup your captcha service head to <a href="https://www.google.com/recaptcha/admin#list">Google reCAPTCHA</a> and create a new application, make sure to select <b>reCAPTCHA v2</b> as your application type. You can also learn how to integreate captchas on Castro by heading to the <a href="https://docs.castroaac.org/docs/lua/captcha">documentation page</a>
+		</p>`),
+			Form: []installationFormField{
+				{
+					Name:        "public",
+					Type:        "text",
+					Placeholder: "Captcha public key",
+					HelperText:  "Google reCAPTCHA public key",
+				},
+				{
+					Name:        "private",
+					Type:        "text",
+					Placeholder: "Captcha private key",
+					HelperText:  "Google reCAPTCHA private key",
+				},
+			},
+			Post: func(res http.ResponseWriter, req *http.Request, s installationStep) error {
+				// Update fields
+				installationConfigFile.Captcha = util.CaptchaConfig{
+					Public:  req.FormValue("public"),
+					Secret:  req.FormValue("private"),
+					Enabled: true,
+				}
+
+				return nil
+			},
+		},
+	}
+
 	installationTemplate = template.New("install")
 
 	installationConfigFile = &util.Configuration{
@@ -109,8 +204,30 @@ type znoteAccount struct {
 	Points     uint
 }
 
-type installError struct {
-	Error string
+type installationStep struct {
+	URL         string
+	Optional    bool
+	Description template.HTML
+	Name        string
+	Form        []installationFormField
+	Post        installationFormHandle
+}
+
+type installationFormHandle func(http.ResponseWriter, *http.Request, installationStep) error
+
+type installationTemplateData struct {
+	Step    installationStep
+	Success string
+	Error   string
+	Next    string
+	Last    bool
+}
+
+type installationFormField struct {
+	Name        string
+	Type        string
+	Placeholder string
+	HelperText  string
 }
 
 // isInstalled check if application is installed
@@ -162,15 +279,18 @@ func startInstallerApplication() error {
 
 	// Create installer router
 	router := httprouter.New()
+	router.GET("/install/finish", showInstallationFinish)
+	router.POST("/install/finish", installationFinish)
 
-	// Declare installation routes
-	router.GET("/", showInstallationPage)
-	router.POST("/install/path", installationServerPath)
-	router.GET("/install/captcha", showInstallationServerCaptcha)
-	router.POST("/install/captcha", installationServerCaptcha)
-	router.GET("/install/encode", showInstallationServerEncode)
-	router.POST("/install/encode", installationServerEncode)
-	router.GET("/install/finish", showInstallationServerFinish)
+	// Loop installation steps
+	for i, step := range installationSteps {
+
+		// Register get route
+		router.GET(step.URL, installationStepGet(i, step))
+
+		// Register post route
+		router.POST(step.URL, installationStepPost(i, step))
+	}
 
 	// Create installer listener
 	listener, err := net.Listen("tcp", ":0")
@@ -193,104 +313,100 @@ func startInstallerApplication() error {
 	return http.Serve(listener, n)
 }
 
-// registerInstallationTemplate register the html template files
-func registerInstallationTemplate() error {
-	// Parse installation html files
-	_, err := installationTemplate.ParseGlob(filepath.Join("views", "*.html"))
+func installationStepPost(i int, step installationStep) httprouter.Handle {
+	// Set template data
+	d := &installationTemplateData{
+		Error:   "",
+		Success: "",
+		Step:    step,
+		Next:    "",
+	}
 
-	return err
+	// Return httprouter handle
+	return func(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+
+		// Parse form
+		if err := req.ParseForm(); err != nil {
+			d.Error = err.Error()
+			installationTemplate.ExecuteTemplate(res, "install.html", d)
+			return
+		}
+
+		// Call form parser
+		if err := step.Post(res, req, step); err != nil {
+			d.Error = err.Error()
+			installationTemplate.ExecuteTemplate(res, "install.html", d)
+			return
+		}
+
+		// Check if there is next step
+		if i+1 >= len(installationSteps) {
+
+			// Redirect to final page
+			http.Redirect(res, req, "/install/finish", 302)
+
+			return
+		}
+
+		// Redirect to next step
+		http.Redirect(res, req, installationSteps[i+1].URL, 302)
+	}
 }
 
-func showInstallationServerFinish(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	// Execute finish template
+func installationStepGet(i int, step installationStep) httprouter.Handle {
+	// Set template data
+	d := &installationTemplateData{
+		Error:   "",
+		Success: "",
+		Step:    step,
+		Next:    "",
+		Last:    false,
+	}
+
+	// Check if step is optional
+	if step.Optional {
+
+		// Check if there are more steps
+		if i+1 < len(installationSteps) {
+			d.Next = installationSteps[i+1].URL
+		}
+	}
+
+	if i+1 >= len(installationSteps) {
+		d.Last = true
+	}
+
+	// Return httprouter handle
+	return func(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+		// Execute step template
+		installationTemplate.ExecuteTemplate(res, "install.html", d)
+	}
+}
+
+func installationFinish(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+	// Create config file
+	if err := createConfigFile("config.toml", installationConfigFile); err != nil {
+		installationTemplate.ExecuteTemplate(res, "install_finish.html", installationTemplateData{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	// Render finish template
 	installationTemplate.ExecuteTemplate(res, "install_finish.html", nil)
 }
 
-// showInstallationPage handles the installation GET request
-func showInstallationPage(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	// Execute install template
-	installationTemplate.ExecuteTemplate(res, "install_path.html", nil)
-}
-
-func installationServerEncode(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	// Encode config struct to file
-	if err := createConfigFile("config.toml", installationConfigFile); err != nil {
-		installationTemplate.ExecuteTemplate(res, "install_encode.html", installError{
-			Error: err.Error(),
-		})
-		return
-	}
-
-	// Redirect to finish page
-	http.Redirect(res, req, "/install/finish", 302)
-}
-
-func showInstallationServerEncode(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	// Execute encode done template
+func showInstallationFinish(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+	// Execute encode layout
 	installationTemplate.ExecuteTemplate(res, "install_encode.html", nil)
 }
 
-func showInstallationServerCaptcha(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	// Execute install captcha template
-	installationTemplate.ExecuteTemplate(res, "install_captcha.html", nil)
-}
+// registerInstallationTemplate register the html template files
+func registerInstallationTemplate() error {
+	// Parse installation html files
+	_, err := installationTemplate.ParseGlob(filepath.Join("views", "install", "*.html"))
 
-func installationServerCaptcha(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	// Parse form
-	if err := req.ParseForm(); err != nil {
-		installationTemplate.ExecuteTemplate(res, "install_captcha.html", installError{
-			Error: err.Error(),
-		})
-		return
-	}
-
-	// Set configuration captcha options
-	installationConfigFile.Captcha = util.CaptchaConfig{
-		Enabled: true,
-		Public:  req.FormValue("public"),
-		Secret:  req.FormValue("public"),
-	}
-
-	// Redirect user to next step
-	http.Redirect(res, req, "/install/encode", 302)
-}
-
-func installationServerPath(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	// Parse form
-	if err := req.ParseForm(); err != nil {
-		installationTemplate.ExecuteTemplate(res, "install_path.html", installError{
-			Error: err.Error(),
-		})
-		return
-	}
-
-	// Get server path
-	location := req.FormValue("path")
-
-	// Install needed database tables
-	if err := installApplication(location); err != nil {
-		installationTemplate.ExecuteTemplate(res, "install_path.html", installError{
-			Error: err.Error(),
-		})
-		return
-	}
-
-	// Get server port
-	port, err := strconv.Atoi(req.FormValue("port"))
-
-	if err != nil {
-		installationTemplate.ExecuteTemplate(res, "install_path.html", installError{
-			Error: err.Error(),
-		})
-		return
-	}
-
-	// Update config values
-	installationConfigFile.Datapack = location
-	installationConfigFile.Port = port
-
-	// Redirect to next step
-	http.Redirect(res, req, "/install/captcha", 302)
+	return err
 }
 
 // installApplication runs the installation process

@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>Castro - Installation</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" href="/images/favicon.ico">
+    
+        <link href='https://fonts.googleapis.com/css?family=Simonetta' rel='stylesheet' type='text/css'>
+        <link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+                <div class="titleheader">
+                    <h1>
+                        <a class="title" href="/">Castro</a>
+                    </h1>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="container">
+                <div class="box black-box">
+                    <div class="clearfix"></div>
+                </div>
+                <div class="box pattern-box">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3>Installation wizard</h3>
+                            <hr>
+                            {{ if .Error }}
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Error!</strong> {{ .Error }}
+                            </div>
+                            {{ end }}
+                            <p>
+                                The last step of the installation process is creating your config.toml file. You can change at any time the settings of Castro by modifying your config.toml file
+                            </p>
+                            <p>
+                                During this process we will execute <b>engine/install.lua</b> to setup your configuration custom fields. Feel free to edit this file before going to the next step
+                            </p>
+                            <p>
+                                You can access any setting from your lua pages. For more information check the <a href="https://docs.castroaac.org/docs/lua/config">documentation page</a>
+                            </p>
+                            <hr>
+                            <form method="POST" action="/install/finish">
+                                <button class="btn btn-success" type="submit">Encode and finish</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

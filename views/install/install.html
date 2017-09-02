@@ -35,18 +35,29 @@
                                 <strong>Error!</strong> {{ .Error }}
                             </div>
                             {{ end }}
-                            <p>
-                                The last step of the installation process is creating your config.toml file. You can change at any time the settings of Castro by modifying your config.toml file
-                            </p>
-                            <p>
-                                During this process we will execute <b>engine/install.lua</b> to setup your configuration custom fields. Feel free to edit this file before going to the next step
-                            </p>
-                            <p>
-                                You can access any setting from your lua pages. For more information check the <a href="https://docs.castroaac.org/docs/lua/config">documentation page</a>
-                            </p>
+                            {{ .Step.Description }}
                             <hr>
-                            <form method="POST" action="/install/encode">
-                                <button class="btn btn-success">Next step</button>
+                            {{ .Last }}
+                            {{ .Step.Optional }}
+                            <form method="POST" action="{{ .Step.URL }}">
+                                {{ range $index, $form := .Step.Form }}
+                                <div class="form-group">
+                                    <input class="form-control" type="{{ $form.Type }}" placeholder="{{ $form.Placeholder }}" name="{{ $form.Name }}">
+                                    <p class="">{{ $form.HelperText }}</p>
+                                </div>
+                                {{ end }}
+                                {{ if .Last }}
+                                    <button type="submit" class="btn btn-success">Finish</button>
+                                {{ else }}
+                                    <button type="submit" class="btn btn-success">Next step</button>
+                                {{ end }}
+                                {{ if .Step.Optional }}
+                                    {{ if not .Last }}
+                                    <a role="button" class="btn btn-danger" href="{{ .Step.Next }}">Skip</a>
+                                    {{ else }}
+                                    <a role="button" class="btn btn-danger" href="/install/finish">Skip and finish</a>
+                                    {{ end }}
+                                {{ end }}
                             </form>
                         </div>
                     </div>
