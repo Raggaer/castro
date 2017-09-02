@@ -6,6 +6,12 @@ import (
 
 	"crypto/tls"
 	"encoding/gob"
+	"log"
+	"net/http/pprof"
+	_ "net/http/pprof"
+	"strings"
+	"time"
+
 	"github.com/gorilla/securecookie"
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app"
@@ -17,11 +23,6 @@ import (
 	"github.com/urfave/negroni"
 	"github.com/yuin/gopher-lua"
 	"golang.org/x/crypto/acme/autocert"
-	"log"
-	"net/http/pprof"
-	_ "net/http/pprof"
-	"strings"
-	"time"
 )
 
 func main() {
@@ -41,20 +42,13 @@ Compiled at: %v
 
 `, util.VERSION, util.BUILD_DATE)
 
-	// Declare our new http router
-	router := httprouter.New()
-
 	// Check if application is installed
 	if !isInstalled() {
 
-		fmt.Println("Castro is not installed. Running installation process")
-
 		// Run the installation process
-		if err := installApplication(); err != nil {
+		if err := startInstallerApplication(); err != nil {
 			log.Fatal(err)
 		}
-
-		fmt.Printf("Configuration file created (%v). Installation process is now done. Restart Castro\r\n", configFileName)
 
 		return
 	}
@@ -73,6 +67,9 @@ Compiled at: %v
 
 	// Create rate-limiter
 	limiter := limiter.NewLimiter(store, rate)
+
+	// Declare our new http router
+	router := httprouter.New()
 
 	// Declare application endpoints
 	router.GET("/", controllers.LuaPage)

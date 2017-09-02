@@ -1,8 +1,16 @@
 package main
 
 import (
+	"html/template"
+	"net"
+	"net/http"
 	"os"
+	"strconv"
 	"time"
+
+	"github.com/dchest/uniuri"
+	"github.com/julienschmidt/httprouter"
+	"github.com/urfave/negroni"
 
 	"fmt"
 	"io/ioutil"
@@ -10,7 +18,6 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/dchest/uniuri"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/raggaer/castro/app/database"
@@ -28,6 +35,67 @@ const (
 	znoteTableName = "znote"
 )
 
+var (
+	installationTemplate = template.New("install")
+
+	installationConfigFile = &util.Configuration{
+		CheckUpdates: true,
+		Template:     "views/default",
+		Mode:         "dev",
+		Port:         80,
+		URL:          "localhost",
+		Datapack:     "",
+		Cookies: util.CookieConfig{
+			Name:     fmt.Sprintf("castro-%v", uniuri.NewLen(5)),
+			MaxAge:   1000000,
+			HashKey:  uniuri.NewLen(32),
+			BlockKey: uniuri.NewLen(32),
+		},
+		Cache: util.CacheConfig{
+			Default: util.NewStringDuration("5m"),
+			Purge:   util.NewStringDuration("1m"),
+		},
+		RateLimit: util.RateLimiterConfig{
+			Number: 100,
+			Time:   util.NewStringDuration("1m"),
+		},
+		Security: util.SecurityConfig{
+			NonceEnabled:      true,
+			STS:               "max-age=10000",
+			XSS:               "1; mode=block",
+			Frame:             "DENY",
+			ContentType:       "nosniff",
+			ReferrerPolicy:    "origin",
+			CrossDomainPolicy: "none",
+			CSP: util.ContentSecurityPolicyConfig{
+				Default: []string{"none"},
+				Frame: util.ContentSecurityPolicyType{
+					SRC: []string{"http://pay.fortumo.com", "https://www.google.com"},
+				},
+				Script: util.ContentSecurityPolicyType{
+					Default: []string{"self"},
+					SRC:     []string{"https://ajax.googleapis.com", "https://assets.fortumo.com", "https://www.google.com", "https://code.jquery.com", "https://cdn.datatables.net", "https://www.gstatic.com"},
+				},
+				Font: util.ContentSecurityPolicyType{
+					Default: []string{"self"},
+					SRC:     []string{"http://fonts.gstatic.com", "http://fonts.googleapis.com"},
+				},
+				Connect: util.ContentSecurityPolicyType{
+					Default: []string{"self"},
+				},
+				Style: util.ContentSecurityPolicyType{
+					Default: []string{"unsafe-inline", "self"},
+					SRC:     []string{"https://assets.fortumo.com", "http://fonts.googleapis.com", "https://cdn.datatables.net"},
+				},
+				Image: util.ContentSecurityPolicyType{
+					Default: []string{"self"},
+					SRC:     []string{"https://assets.fortumo.com", "https://*.githubusercontent.com", "data:"},
+				},
+			},
+		},
+	}
+)
+
 // znoteTable main znote installation table to look for
 type znoteTable struct {
 	Version   int
@@ -39,6 +107,10 @@ type znoteAccount struct {
 	ID         uint64
 	Account_id int64
 	Points     uint
+}
+
+type installError struct {
+	Error string
 }
 
 // isInstalled check if application is installed
@@ -81,22 +153,148 @@ func accountExists(id int64, db *sqlx.Tx) bool {
 	return exists
 }
 
-// installApplication runs the installation process
-func installApplication() error {
+// startInstallerApplication starts the installer server and the installer template
+func startInstallerApplication() error {
+	// Register html files
+	if err := registerInstallationTemplate(); err != nil {
+		return err
+	}
 
-	// Ask user for server directory location
-	fmt.Print("Insert your server location: ")
+	// Create installer router
+	router := httprouter.New()
 
-	// Location holder
-	var location string
+	// Declare installation routes
+	router.GET("/", showInstallationPage)
+	router.POST("/install/path", installationServerPath)
+	router.GET("/install/captcha", showInstallationServerCaptcha)
+	router.POST("/install/captcha", installationServerCaptcha)
+	router.GET("/install/encode", showInstallationServerEncode)
+	router.POST("/install/encode", installationServerEncode)
+	router.GET("/install/finish", showInstallationServerFinish)
 
-	// Get user response
-	_, err := fmt.Scanln(&location)
+	// Create installer listener
+	listener, err := net.Listen("tcp", ":0")
 
 	if err != nil {
 		return err
 	}
 
+	// Create negroni middleware
+	n := negroni.New(
+		negroni.NewStatic(http.Dir("public/")),
+	)
+
+	// Use httprouter router
+	n.UseHandler(router)
+
+	fmt.Println("Castro is not installed. Installer will listen on " + listener.Addr().String())
+
+	// Start installer http server
+	return http.Serve(listener, n)
+}
+
+// registerInstallationTemplate register the html template files
+func registerInstallationTemplate() error {
+	// Parse installation html files
+	_, err := installationTemplate.ParseGlob(filepath.Join("views", "*.html"))
+
+	return err
+}
+
+func showInstallationServerFinish(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+	// Execute finish template
+	installationTemplate.ExecuteTemplate(res, "install_finish.html", nil)
+}
+
+// showInstallationPage handles the installation GET request
+func showInstallationPage(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+	// Execute install template
+	installationTemplate.ExecuteTemplate(res, "install_path.html", nil)
+}
+
+func installationServerEncode(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+	// Encode config struct to file
+	if err := createConfigFile("config.toml", installationConfigFile); err != nil {
+		installationTemplate.ExecuteTemplate(res, "install_encode.html", installError{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	// Redirect to finish page
+	http.Redirect(res, req, "/install/finish", 302)
+}
+
+func showInstallationServerEncode(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+	// Execute encode done template
+	installationTemplate.ExecuteTemplate(res, "install_encode.html", nil)
+}
+
+func showInstallationServerCaptcha(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+	// Execute install captcha template
+	installationTemplate.ExecuteTemplate(res, "install_captcha.html", nil)
+}
+
+func installationServerCaptcha(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+	// Parse form
+	if err := req.ParseForm(); err != nil {
+		installationTemplate.ExecuteTemplate(res, "install_captcha.html", installError{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	// Set configuration captcha options
+	installationConfigFile.Captcha = util.CaptchaConfig{
+		Enabled: true,
+		Public:  req.FormValue("public"),
+		Secret:  req.FormValue("public"),
+	}
+
+	// Redirect user to next step
+	http.Redirect(res, req, "/install/encode", 302)
+}
+
+func installationServerPath(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
+	// Parse form
+	if err := req.ParseForm(); err != nil {
+		installationTemplate.ExecuteTemplate(res, "install_path.html", installError{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	// Get server path
+	location := req.FormValue("path")
+
+	// Install needed database tables
+	if err := installApplication(location); err != nil {
+		installationTemplate.ExecuteTemplate(res, "install_path.html", installError{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	// Get server port
+	port, err := strconv.Atoi(req.FormValue("port"))
+
+	if err != nil {
+		installationTemplate.ExecuteTemplate(res, "install_path.html", installError{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	// Update config values
+	installationConfigFile.Datapack = location
+	installationConfigFile.Port = port
+
+	// Redirect to next step
+	http.Redirect(res, req, "/install/captcha", 302)
+}
+
+// installApplication runs the installation process
+func installApplication(location string) error {
 	// Load config.lua file
 	if err := lua.LoadConfig(
 		filepath.Join(filepath.Join(location, "config.lua")),
@@ -257,12 +455,11 @@ func installApplication() error {
 		return err
 	}
 
-	// Create configuration file
-	return createConfigFile(configFileName, location)
+	return nil
 }
 
 // createConfigFile encodes a configuration file with the given name and location
-func createConfigFile(name, location string) error {
+func createConfigFile(name string, cfg *util.Configuration) error {
 	// Get lua state
 	luaState := glua.NewState()
 
@@ -279,6 +476,7 @@ func createConfigFile(name, location string) error {
 
 	// Create configuration file handle
 	configFile, err := os.Create(name)
+
 	if err != nil {
 		return err
 	}
@@ -287,64 +485,8 @@ func createConfigFile(name, location string) error {
 	defer configFile.Close()
 
 	// Get lua file table
-	tbl := luaState.ToTable(-1)
+	cfg.Custom = lua.TableToMap(luaState.ToTable(-1))
 
 	// Encode the given configuration struct into the file
-	return toml.NewEncoder(configFile).Encode(util.Configuration{
-		CheckUpdates: true,
-		Template:     "views/default",
-		Mode:         "dev",
-		Port:         80,
-		URL:          "localhost",
-		Datapack:     location,
-		Cookies: util.CookieConfig{
-			Name:     fmt.Sprintf("castro-%v", uniuri.NewLen(5)),
-			MaxAge:   1000000,
-			HashKey:  uniuri.NewLen(32),
-			BlockKey: uniuri.NewLen(32),
-		},
-		Cache: util.CacheConfig{
-			Default: util.NewStringDuration("5m"),
-			Purge:   util.NewStringDuration("1m"),
-		},
-		RateLimit: util.RateLimiterConfig{
-			Number: 100,
-			Time:   util.NewStringDuration("1m"),
-		},
-		Security: util.SecurityConfig{
-			NonceEnabled:      true,
-			STS:               "max-age=10000",
-			XSS:               "1; mode=block",
-			Frame:             "DENY",
-			ContentType:       "nosniff",
-			ReferrerPolicy:    "origin",
-			CrossDomainPolicy: "none",
-			CSP: util.ContentSecurityPolicyConfig{
-				Default: []string{"none"},
-				Frame: util.ContentSecurityPolicyType{
-					SRC: []string{"http://pay.fortumo.com", "https://www.google.com"},
-				},
-				Script: util.ContentSecurityPolicyType{
-					Default: []string{"self"},
-					SRC:     []string{"https://ajax.googleapis.com", "https://assets.fortumo.com", "https://www.google.com", "https://code.jquery.com", "https://cdn.datatables.net", "https://www.gstatic.com"},
-				},
-				Font: util.ContentSecurityPolicyType{
-					Default: []string{"self"},
-					SRC:     []string{"http://fonts.gstatic.com", "http://fonts.googleapis.com"},
-				},
-				Connect: util.ContentSecurityPolicyType{
-					Default: []string{"self"},
-				},
-				Style: util.ContentSecurityPolicyType{
-					Default: []string{"unsafe-inline", "self"},
-					SRC:     []string{"https://assets.fortumo.com", "http://fonts.googleapis.com", "https://cdn.datatables.net"},
-				},
-				Image: util.ContentSecurityPolicyType{
-					Default: []string{"self"},
-					SRC:     []string{"https://assets.fortumo.com", "https://*.githubusercontent.com", "data:"},
-				},
-			},
-		},
-		Custom: lua.TableToMap(tbl),
-	})
+	return toml.NewEncoder(configFile).Encode(cfg)
 }

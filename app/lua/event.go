@@ -22,9 +22,6 @@ func BackgroundEvent(L *lua.LState) int {
 	// Create new thread
 	thread, _ := L.NewThread()
 
-	// Close thread
-	defer thread.Close()
-
 	// Infinite loop
 	go func() {
 
@@ -49,6 +46,8 @@ func BackgroundEvent(L *lua.LState) int {
 				break
 			}
 		}
+
+		thread.Close()
 	}()
 
 	return 0
