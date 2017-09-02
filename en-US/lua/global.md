@@ -8,6 +8,7 @@ Easy access to global variables across your system. Values are saved into the da
 
 - [global:set(key, value)](#set)
 - [global:get(key)](#get)
+- [global:delete(key)](#delete)
 
 # set
 
@@ -22,7 +23,7 @@ global:set("Test", data)
 
 # get
 
-Retrieves a global value from the database. You need to provide a key. If the key does not exists this method will return nil.
+Retrieves a global value from the database. You need to provide a key. If the key does not exist this method will return nil.
 
 ```lua
 local data = global:get("Test")
@@ -31,5 +32,16 @@ local data = global:get("Test")
 
 ```lua
 local data = global:get("NoExists")
+--- data = nil
+```
+
+# delete
+
+Deletes a global value from the database. You need to provide a key. If the key does not exist nothing will happen.
+
+```lua
+global:delete("Test")
+
+local data = global:get("Test")
 --- data = nil
 ```

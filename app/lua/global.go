@@ -111,3 +111,15 @@ func GetGlobalLuaValue(L *lua.LState) int {
 
 	return 1
 }
+
+func DeleteGlobalLuaValue(L *lua.LState) int {
+	// Get value key
+	key := L.ToString(2)
+
+	// Delete global value
+	if _, err := database.DB.Exec("DELETE FROM castro_global WHERE `key` = ?", key); err != nil {
+		L.RaiseError("Cannot delete global value: %v", err)
+	}
+
+	return 0
+}
