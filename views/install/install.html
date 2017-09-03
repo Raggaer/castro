@@ -1,68 +1,79 @@
 <html>
-    <head>
-        <title>Castro - Installation</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <link rel="icon" href="/images/favicon.ico">
-    
-        <link href='https://fonts.googleapis.com/css?family=Simonetta' rel='stylesheet' type='text/css'>
-        <link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
-        <link href="/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/css/style.css" rel="stylesheet">
-    </head>
-    <body>
-        <div class="container">
+        
+        <head>
+            <title>Castro - Installation</title>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+            <link rel="icon" href="/images/favicon.ico">
+        
+            <link href='https://fonts.googleapis.com/css?family=Simonetta' rel='stylesheet' type='text/css'>
+            <link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+            <link href="/css/bootstrap.min.css" rel="stylesheet">
+            <link href="/css/style.css" rel="stylesheet">
+        </head>
+        
+        <body>
+            <div class="container">
                 <div class="titleheader">
                     <h1>
-                        <a class="title" href="/">Castro</a>
-                    </h1>
-                <div class="clearfix"></div>
+                                <a class="title" href="/">Castro</a>
+                            </h1>
+                    <div class="clearfix"></div>
+                </div>
             </div>
-        </div>
-        <div class="container">
+            <div class="container">
                 <div class="box black-box">
                     <div class="clearfix"></div>
                 </div>
                 <div class="box pattern-box">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <h3>Installation wizard</h3>
-                            <hr>
-                            {{ if .Error }}
-                            <div class="alert alert-danger" role="alert">
-                                <strong>Error!</strong> {{ .Error }}
-                            </div>
-                            {{ end }}
-                            {{ .Step.Description }}
-                            <hr>
-                            {{ .Last }}
-                            {{ .Step.Optional }}
-                            <form method="POST" action="{{ .Step.URL }}">
-                                {{ range $index, $form := .Step.Form }}
-                                <div class="form-group">
-                                    <input class="form-control" type="{{ $form.Type }}" placeholder="{{ $form.Placeholder }}" name="{{ $form.Name }}">
-                                    <p class="">{{ $form.HelperText }}</p>
+                    <div class="col-sm-9">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h3>Installation wizard</h3>
+                                <hr> {{ if .Error }}
+                                <div class="alert alert-danger" role="alert">
+                                    <strong>Error!</strong> {{ .Error }}
                                 </div>
-                                {{ end }}
-                                {{ if .Last }}
+                                {{ end }} {{ .Step.Description }}
+                                <hr> {{ .Last }} {{ .Step.Optional }}
+                                <form method="POST" action="{{ .Step.URL }}">
+                                    {{ range $index, $form := .Step.Form }}
+                                    <div class="form-group">
+                                        <input class="form-control" type="{{ $form.Type }}" placeholder="{{ $form.Placeholder }}" name="{{ $form.Name }}">
+                                        <p class="">{{ $form.HelperText }}</p>
+                                    </div>
+                                    {{ end }} {{ if .Last }}
                                     <button type="submit" class="btn btn-success">Finish</button>
-                                {{ else }}
-                                    <button type="submit" class="btn btn-success">Next step</button>
-                                {{ end }}
-                                {{ if .Step.Optional }}
-                                    {{ if not .Last }}
-                                    <a role="button" class="btn btn-danger" href="{{ .Step.Next }}">Skip</a>
                                     {{ else }}
-                                    <a role="button" class="btn btn-danger" href="/install/finish">Skip and finish</a>
-                                    {{ end }}
-                                {{ end }}
-                            </form>
+                                    <button type="submit" class="btn btn-success">Next step</button>
+                                    {{ end }} {{ if .Step.Optional }} {{ if not .Last }}
+                                    <a role="button" class="btn btn-danger" href="{{ .Next }}">Skip</a> {{ else }}
+                                    <a role="button" class="btn btn-danger" href="/install/finish">Skip and finish</a> {{ end }} {{ end }}
+                                </form>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-sm-3">
+                        {{ range $i, $step := .Sidebar }}
+                        <div class="panel panel-default">
+                             <div class="panel-body">
+                                {{ $step.Name }}
+                            </div>
+                        </div>
+                        {{ end }}
+                    </div>
+                    <div class="clearfix"></div>
                 </div>
             </div>
-        </div>
-    </body>
-</html>
+            <div class="container" id="footer">
+                <div class="footer">
+                    <h6>
+                        Installation wizard - Engine by <a href="https://castroaac.org">Castro</a>
+                    </h6>
+                </div>
+            </div>
+        </body>
+        
+        </html>

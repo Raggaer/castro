@@ -40,15 +40,11 @@ var (
 		{
 			Name: "Path",
 			URL:  "/",
-			Description: template.HTML(`<p>
-			Welcome to the installation wizard. The wizard will guide you through a very simple process where you will be able to setup some Castro features like the SMTP server and the Google reCAPTCHA service
-		</p>
-		<p>
-			These features are optional and you can activate them later
-		</p>
-		<p>
-			Just fill the information below to start using one of the most powerfull and extensible Open Tibia content management system
-		</p>`),
+			Description: template.HTML(`
+			<p>Welcome to the installation wizard. The wizard will guide you through a very simple process where you will be able to setup some Castro features like the SMTP server and the Google reCAPTCHA service</p>
+			<p>These features are optional and you can activate them later</p>
+			<p>Just fill the information below to start using one of the most powerfull and extensible Open Tibia content management system</p>
+			`),
 			Optional: false,
 			Form: []installationFormField{
 				{
@@ -95,15 +91,11 @@ var (
 			Name:     "Captcha",
 			URL:      "/install/captcha",
 			Optional: true,
-			Description: template.HTML(`<p>
-			You can configure your Google reCAPTCHA credentials. reCAPTCHA offers an easy way to stop bots at saturaing your database
-		</p>
-		<p>
-			By default if captcha is enabled it will appear on the registration form, you can use lua bindings to add captcha security to any other form of the website
-		</p>
-		<p>
-			To setup your captcha service head to <a href="https://www.google.com/recaptcha/admin#list">Google reCAPTCHA</a> and create a new application, make sure to select <b>reCAPTCHA v2</b> as your application type. You can also learn how to integreate captchas on Castro by heading to the <a href="https://docs.castroaac.org/docs/lua/captcha">documentation page</a>
-		</p>`),
+			Description: template.HTML(`
+			<p>You can configure your Google reCAPTCHA credentials. reCAPTCHA offers an easy way to stop bots at saturaing your database</p>
+			<p>By default if captcha is enabled it will appear on the registration form, you can use lua bindings to add captcha security to any other form of the website</p>
+			<p>To setup your captcha service head to <a href="https://www.google.com/recaptcha/admin#list">Google reCAPTCHA</a> and create a new application, make sure to select <b>reCAPTCHA v2</b> as your application type. You can also learn how to integreate captchas on Castro by heading to the <a href="https://docs.castroaac.org/docs/lua/captcha">documentation page</a></p>
+			`),
 			Form: []installationFormField{
 				{
 					Name:        "public",
@@ -124,6 +116,59 @@ var (
 					Public:  req.FormValue("public"),
 					Secret:  req.FormValue("private"),
 					Enabled: true,
+				}
+
+				return nil
+			},
+		},
+		{
+			Name:     "Mail",
+			URL:      "/install/mail",
+			Optional: true,
+			Description: template.HTML(`
+			<p>You can configure an SMTP server to send emails within Castro. Please fill the form below</p>
+			<p>If you want to read more about sending emails using Castro lua bindings head to the <a href="https://docs.castroaac.org/docs/lua/mail">documentation page</a></p>
+			`),
+			Form: []installationFormField{
+				{
+					Name:        "server",
+					Type:        "text",
+					Placeholder: "SMTP server address",
+					HelperText:  "Address of your SMTP server",
+				},
+				{
+					Name:        "port",
+					Type:        "number",
+					Placeholder: "SMTP server port",
+					HelperText:  "Port where your SMTP server listens on",
+				},
+				{
+					Name:        "username",
+					Type:        "text",
+					Placeholder: "SMTP server username",
+					HelperText:  "Login username for your SMTP server",
+				},
+				{
+					Name:        "password",
+					Type:        "password",
+					Placeholder: "SMTP server password",
+					HelperText:  "Login password for your SMTP server",
+				},
+			},
+			Post: func(res http.ResponseWriter, req *http.Request, s installationStep) error {
+				// Get server port
+				port, err := strconv.Atoi(req.FormValue("port"))
+
+				if err != nil {
+					return err
+				}
+
+				// Update fields
+				installationConfigFile.Mail = util.MailConfig{
+					Server:   req.FormValue("server"),
+					Port:     port,
+					Username: req.FormValue("username"),
+					Password: req.FormValue("password"),
 				}
 
 				return nil
@@ -221,6 +266,7 @@ type installationTemplateData struct {
 	Error   string
 	Next    string
 	Last    bool
+	Sidebar []installationStep
 }
 
 type installationFormField struct {
@@ -320,6 +366,7 @@ func installationStepPost(i int, step installationStep) httprouter.Handle {
 		Success: "",
 		Step:    step,
 		Next:    "",
+		Sidebar: installationSteps,
 	}
 
 	// Return httprouter handle
@@ -361,6 +408,7 @@ func installationStepGet(i int, step installationStep) httprouter.Handle {
 		Step:    step,
 		Next:    "",
 		Last:    false,
+		Sidebar: installationSteps,
 	}
 
 	// Check if step is optional
