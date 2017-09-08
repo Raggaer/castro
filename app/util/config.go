@@ -67,6 +67,7 @@ type PaygolConfig struct {
 	Service  int
 	Currency string
 	Language string
+	Secret   string
 }
 
 // PayPalConfig struct used for the paypal configuration options

@@ -1,8 +1,7 @@
 function get()
-    if not app.Mode == "dev" then
-        if http:getRemoteAddress() ~= "109.70.3.48" or http:getRemoteAddress() ~= "109.70.3.146" or http:getRemoteAddress() ~= "109.70.3.210" then
-            return
-        end
+    if http.getValues['key'] ~= app.PayGol.Secret then
+        http:redirect("/")
+        return
     end
 
     local transaction_id = http.getValues['transaction_id'];
