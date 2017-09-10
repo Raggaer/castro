@@ -442,7 +442,8 @@ func CreateRequestClient(L *glua.LState) int {
 	content := data.RawGetString("data")
 
 	// Data holder
-	contentString := url.Values{}
+	contentValues := url.Values{}
+	contentString := ""
 
 	// Loop content table
 	if content.Type() == glua.LTTable {
@@ -451,8 +452,17 @@ func CreateRequestClient(L *glua.LState) int {
 		content.(*glua.LTable).ForEach(func(key glua.LValue, v glua.LValue) {
 
 			// Set field
-			contentString.Set(key.String(), v.String())
+			contentValues.Set(key.String(), v.String())
 		})
+
+		// Set content string
+		contentString = contentValues.Encode()
+	}
+
+	// Use raw string
+	if content.Type() == glua.LTString {
+		// Set content string
+		contentString = content.String()
 	}
 
 	// Create client
@@ -464,7 +474,7 @@ func CreateRequestClient(L *glua.LState) int {
 	req, err := http.NewRequest(
 		method.String(),
 		requestURL.String(),
-		bytes.NewBufferString(contentString.Encode()),
+		bytes.NewBufferString(contentString),
 	)
 
 	if err != nil {
