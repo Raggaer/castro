@@ -30,10 +30,16 @@ var (
 	}
 	cryptoMethods = map[string]glua.LGFunction{
 		"sha1":         Sha1Hash,
+		"sha256":       Sha256Hash,
+		"hmacsha256":   HmacSha256,
 		"md5":          Md5Hash,
 		"randomString": RandomString,
 		"qr":           GenerateQRCode,
 		"qrKey":        GenerateAuthSecretKey,
+	}
+	base64Methods = map[string]glua.LGFunction{
+		"encode":    Base64Encode,
+		"decode":    Base64Decode,
 	}
 	mysqlMethods = map[string]glua.LGFunction{
 		"query":       Query,

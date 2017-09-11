@@ -73,6 +73,9 @@ const (
 	// CryptoMetaTableName the name of the crypto metatable
 	CryptoMetaTableName = "crypto"
 
+	// Base64MetaTableName the name of the log metatable
+	Base64MetaTableName = "base64"
+
 	// ValidatorMetaTableName the name of the validator metatable
 	ValidatorMetaTableName = "validator"
 

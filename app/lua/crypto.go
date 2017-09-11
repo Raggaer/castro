@@ -3,6 +3,9 @@ package lua
 import (
 	"crypto/md5"
 	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/hmac"
+	"encoding/hex"
 	"encoding/base64"
 	"fmt"
 	"github.com/dchest/uniuri"
@@ -41,6 +44,62 @@ func Sha1Hash(L *lua.LState) int {
 			fmt.Sprintf("%x", data),
 		),
 	)
+
+	return 1
+}
+
+// Sha256Hash returns the sha256 hash of the given string
+func Sha256Hash(L *lua.LState) int {
+	// Get string to be hashed
+	str := L.Get(2)
+
+	// Check for valid string type
+	if str.Type() != lua.LTString {
+
+		L.ArgError(1, "Invalid string format. Expected string")
+		return 0
+	}
+
+	// Hash string using sha1
+	data := sha256.Sum256([]byte(str.String()))
+
+	// Convert byte array to string and push to stack
+	L.Push(
+		lua.LString(
+			fmt.Sprintf("%x", data),
+		),
+	)
+
+	return 1
+}
+
+// HmacSha256 returns the hmac-sha256 for the given message + secret
+func HmacSha256(L *lua.LState) int {
+	// Get message string to be hashed
+	message := L.Get(2)
+
+	// Check for valid string type
+	if message.Type() != lua.LTString {
+
+		L.ArgError(1, "Invalid message format. Expected string")
+		return 0
+	}
+
+	// Get secret string
+	secret := L.Get(3)
+
+	// Check for valid string type
+	if secret.Type() != lua.LTString {
+
+		L.ArgError(1, "Invalid secret format. Expected string")
+		return 0
+	}
+
+	hash := hmac.New(sha256.New, []byte(secret.String()))
+	hash.Write([]byte(message.String()))
+
+	// Convert hash to hex string and push to stack
+	L.Push(lua.LString(hex.EncodeToString(hash.Sum(nil))))
 
 	return 1
 }
