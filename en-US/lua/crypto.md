@@ -7,6 +7,8 @@ name: crypto
 Provides access to cryptography methods
 
 - [crypto:sha1(string)](#sha1)
+- [crypto:sha256(string)](#sha256)
+- [crypto:hmacsha256(secret, message)](#sha1)
 - [crypto:md5(string)](#md5)
 - [crypto:randomString(length)](#randomstring)
 - [crypto:qr(code)](#qr)
@@ -19,6 +21,24 @@ Returns the sha1 hash of the given string.
 ```lua
 local hash = crypto:sha1("hello")
 -- hash = aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
+```
+
+# sha256
+
+Returns the sha256 hash of the given string.
+
+```lua
+local hash = crypto:sha256("hello")
+-- hash = 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
+```
+
+# hmacsha256
+
+Returns the HMAC-sha256 hash of the given secret and message.
+
+```lua
+local hash = crypto:hmacsha256("secret", "hello")
+-- hash = 88aab3ede8d3adf94d26ab90d3bafd4a2083070c3bcce9c014ee04a443847c0b
 ```
 
 # md5

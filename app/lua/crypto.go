@@ -75,23 +75,23 @@ func Sha256Hash(L *lua.LState) int {
 
 // HmacSha256 returns the hmac-sha256 for the given message + secret
 func HmacSha256(L *lua.LState) int {
-	// Get message string to be hashed
-	message := L.Get(2)
-
-	// Check for valid string type
-	if message.Type() != lua.LTString {
-
-		L.ArgError(1, "Invalid message format. Expected string")
-		return 0
-	}
-
 	// Get secret string
-	secret := L.Get(3)
+	secret := L.Get(2)
 
 	// Check for valid string type
 	if secret.Type() != lua.LTString {
 
 		L.ArgError(1, "Invalid secret format. Expected string")
+		return 0
+	}
+
+	// Get message string to be hashed
+	message := L.Get(3)
+
+	// Check for valid string type
+	if message.Type() != lua.LTString {
+
+		L.ArgError(2, "Invalid message format. Expected string")
 		return 0
 	}
 

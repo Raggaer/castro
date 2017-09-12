@@ -313,6 +313,9 @@ func GetApplicationState(luaState *glua.LState) {
 	// Create crypto metatable
 	SetCryptoMetaTable(luaState)
 
+	// Create base64 metatable
+	SetBase64MetaTable(luaState)
+
 	// Create validator metatable
 	SetValidatorMetaTable(luaState)
 
