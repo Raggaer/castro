@@ -14,4 +14,4 @@ Everything you might need [is here](https://docs.castroaac.org/). The official d
 
 ## License
 
-**Castro** is made available under the **MIT** license.
+**Castro** is available under the **MIT** license.
