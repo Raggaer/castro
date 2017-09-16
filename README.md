@@ -4,7 +4,7 @@
 [![lICENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/Raggaer/castro/blob/master/LICENSE)
 [![Build status](https://ci.appveyor.com/api/projects/status/yhrx9l6jrbvxhw5p?svg=true)](https://ci.appveyor.com/project/Raggaer/castro)
 
-High performance Open Tibia content management system written in **Go** using **Lua** scripting
+High performance Open Tibia content management system written in **Go** using **Lua** for the scripting part
 
 Castro provides lua bindings. Using a pool of lua states. Each request gets a state from the pool. If there are no states available a new one is created and later saved on the pool.
 
