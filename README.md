@@ -6,7 +6,7 @@
 
 High performance Open Tibia content management system written in **Go** using **Lua** scripting
 
-Castro provides lua bindings using a pool of lua states. Each request gets a state from the pool. If there are no states available a new one is created and later saved on the pool.
+Castro provides lua bindings. Using a pool of lua states. Each request gets a state from the pool. If there are no states available a new one is created and later saved on the pool.
 
 ## Documentation
 
