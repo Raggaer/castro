@@ -1,10 +1,11 @@
 package lua
 
 import (
+	"net/http"
+
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
-	"net/http"
 )
 
 // SetSessionMetaTable sets the session metatable on the given lua state
@@ -98,7 +99,6 @@ func GetLoggedAccount(L *lua.LState) int {
 	account, castroAccount, err := models.GetAccountByName(accountName)
 
 	if err != nil {
-
 		L.RaiseError("Cannot get account by name: %v", err)
 		return 0
 	}
@@ -126,14 +126,12 @@ func IsAdmin(L *lua.LState) int {
 	// If element does not exist push false
 	if !ok {
 		L.Push(lua.LBool(false))
-
 		return 1
 	}
 
 	// Check the session value
 	if !b {
 		L.Push(lua.LBool(false))
-
 		return 1
 	}
 
