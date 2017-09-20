@@ -38,3 +38,13 @@ CREATE TABLE `castro_extension_widgets` (
   PRIMARY KEY (`uid`),
   FOREIGN KEY (`extension_id`) REFERENCES `castro_extensions` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `castro_extension_templatehooks` (
+  `uid` INT NOT NULL AUTO_INCREMENT,
+  `extension_id` VARCHAR(45) DEFAULT NULL,
+  `type` VARCHAR(45) DEFAULT NULL,
+  `template` VARCHAR(45) DEFAULT NULL,
+  `enabled` BIT NOT NULL DEFAULT b'1',
+  PRIMARY KEY (`uid`),
+  FOREIGN KEY (`extension_id`) REFERENCES `castro_extensions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

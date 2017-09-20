@@ -22,6 +22,15 @@ var (
 
 	// FuncMap holds the main FuncMap definition
 	FuncMap template.FuncMap
+
+	// TemplateHooks holds the hook types available
+	TemplateHooks = [...]string {
+		"head",
+		"beforeContent",
+		"afterContent",
+		"footer",
+		"scriptIncludes",
+	}
 )
 
 // Tmpl struct that holds an application template wrapper for the Go template used in the lua bindings
@@ -219,6 +228,9 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 			Logger.Logger.Errorf("Cannot load extension subtopic template: %v", err.Error())
 			return
 		}
+
+		// Reload all template hooks
+		t.LoadTemplateHooks()
 	}
 
 	// Check if args is a valid map
@@ -250,6 +262,18 @@ func (t Tmpl) RenderTemplate(w http.ResponseWriter, req *http.Request, name stri
 		w.Write([]byte("Cannot read nonce value"))
 		return
 	}
+
+	// Get session map
+	session, ok := req.Context().Value("session").(map[string]interface{})
+
+	if !ok {
+		w.WriteHeader(500)
+		w.Write([]byte("Cannot read session map"))
+		return
+	}
+
+	// Set session map
+	args["session"] = session
 
 	// Set nonce value
 	args["nonce"] = nonce
@@ -283,4 +307,67 @@ func (t Tmpl) Render(wr io.Writer, name string, args interface{}) error {
 
 	// Execute template and return error
 	return t.Tmpl.ExecuteTemplate(wr, name, args)
+}
+
+func (t Tmpl) TemplateHook(hookName string) error {
+	// Lock mutex
+	t.rw.Lock()
+	defer t.rw.Unlock()
+
+	var err error
+
+	// Set empty define in case there is a problem later (avoid no such template error)
+	t.Tmpl, err = t.Tmpl.Parse(fmt.Sprintf(`{{ define %q }}{{ end }}`, hookName))
+
+	if err != nil {
+		return err
+	}
+
+	// Get active hooks from database
+	hooks, err := models.GetTemplateHooksByName(hookName)
+
+	if err != nil {
+		return err
+	}
+
+	// Return if no active hooks
+	if len(hooks) == 0 {
+		return nil
+	}
+
+	// Hold string to parse
+	defineString := ""
+
+	for _, hook := range(hooks) {
+		// Concatenate templates to render
+		defineString = fmt.Sprintf("%v{{ template %q . }}\n", defineString, hook.Template)
+	}
+
+	// Put templates inside define statement
+	defineString = fmt.Sprintf(`{{ define %q }}%v{{ end }}`, hookName, defineString)
+
+	// Parse into a temporary variable to ensure that live template does not break in case of error here
+	tmp, err := t.Tmpl.Parse(defineString)
+
+	if err != nil {
+		return err
+	}
+
+	// Apply template
+	t.Tmpl = tmp
+
+	return nil
+}
+
+func (t Tmpl) LoadTemplateHooks() {
+	// Range over hook types
+	for _, hookName := range(TemplateHooks) {
+		// Parse hook templates
+		if err := t.TemplateHook(hookName); err != nil {
+			// Log error but continue loading other hooks
+			Logger.Logger.Errorf("Cannot load template hook: %v", err)
+			continue
+		}
+	}
+	return
 }
