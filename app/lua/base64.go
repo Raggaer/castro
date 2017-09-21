@@ -1,12 +1,13 @@
 package lua
 
 import (
-	"fmt"
 	"encoding/base64"
+	"fmt"
+
 	"github.com/yuin/gopher-lua"
 )
 
-// SetLogMetaTable sets the base64 metatable for the given state
+// SetBase64MetaTable sets the base64 metatable for the given state
 func SetBase64MetaTable(luaState *lua.LState) {
 	// Create and set the log metatable
 	base64MetaTable := luaState.NewTypeMetatable(Base64MetaTableName)

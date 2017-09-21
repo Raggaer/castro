@@ -112,6 +112,7 @@ func GetGlobalLuaValue(L *lua.LState) int {
 	return 1
 }
 
+// DeleteGlobalLuaValue deletes the given global value
 func DeleteGlobalLuaValue(L *lua.LState) int {
 	// Get value key
 	key := L.ToString(2)

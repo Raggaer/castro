@@ -1,7 +1,7 @@
 package lua
 
 const (
-	// OutfitFileMetaTableName the name of the outfit metatable
+	// OutfitMetaTableName the name of the outfit metatable
 	OutfitMetaTableName = "outfit"
 
 	// FormFileMetaTableName the name of the form file metatable
