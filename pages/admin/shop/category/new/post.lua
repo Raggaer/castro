@@ -11,17 +11,6 @@ function post()
         return
     end
 
-    if http.postValues.action == "preview" then
-        local data = {}
-
-        data.text = http.postValues.text
-        data.preview = http.postValues.text:parseBBCode()
-        data.title = http.postValues.title
-
-        http:render("shopcategory.html", data)
-        return
-    end
-
     if http.postValues.action ~= "add" then
         http:redirect("/")
         return

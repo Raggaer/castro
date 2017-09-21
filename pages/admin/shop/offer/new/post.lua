@@ -20,13 +20,6 @@ function post()
         return
     end
 
-    if http.postValues.submit and http.postValues.submit == "preview" then
-        data.description = http.postValues["offer-description"]
-        data.parsedDescription = http.postValues["offer-description"]:parseBBCode()
-        http:render("newoffer.html", data)
-        return
-    end
-
     if http.postValues["offer-price"] == nil then
         session:setFlash("validationError", "Invalid offer price range")
         http:redirect("/subtopic/admin/shop/offer/new?categoryId=" .. data.category.id)

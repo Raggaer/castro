@@ -2,15 +2,16 @@ package lua
 
 import (
 	"bytes"
-	"github.com/kardianos/osext"
-	"github.com/nfnt/resize"
-	"github.com/yuin/gopher-lua"
 	"image/png"
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/kardianos/osext"
+	"github.com/nfnt/resize"
+	"github.com/yuin/gopher-lua"
 )
 
 type formFileUserData struct {
@@ -36,6 +37,9 @@ func createFormFileMetaTable(file []byte, header *multipart.FileHeader, L *lua.L
 
 	// Set user data as field
 	L.SetField(table, "__file", u)
+
+	// Set filename as field
+	L.SetField(table, "name", lua.LString(header.Filename))
 
 	return table
 }

@@ -449,6 +449,9 @@ func templateFuncs() template.FuncMap {
 				date.Format("2006 - Mon Jan 2 15:04:05"),
 			)
 		},
+		"str2html": func(text string) template.HTML {
+			return template.HTML(text)
+		},
 		"nl2br": func(text string) template.HTML {
 			return template.HTML(
 				strings.Replace(text, "\r\n", "<br>", -1),

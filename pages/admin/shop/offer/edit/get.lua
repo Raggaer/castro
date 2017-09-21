@@ -29,7 +29,5 @@ function get()
         return
     end
 
-    data.parsedDescription = data.offer.description:parseBBCode()
-
     http:render("editoffer.html", data)
 end

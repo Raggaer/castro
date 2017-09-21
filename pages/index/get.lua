@@ -1,5 +1,4 @@
 require "paginator"
-require "bbcode"
 
 function get()
     local page = 0
@@ -28,7 +27,6 @@ function get()
     if data.articles ~= nil then
         if not cache then
             for _, article in pairs(data.articles) do
-                article.text = article.text:parseBBCode()
                 article.created = time:parseUnix(article.created_at)
             end
         end

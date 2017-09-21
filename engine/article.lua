@@ -17,22 +17,17 @@ function editArticle(editMode)
 	}
 
 	article.heading = (article.editmode == "edit" and "Edit article" or "New article")
-	if article.action ~= "preview" then
-		if not article.title or article.title:len() < 1 then
-			article.validationError = "Title can not be empty."
-			http:render("editarticle.html", article)
-			return
-		elseif not article.text or article.text:len() < 1 then
-			article.validationError = "Text field can not be empty."
-			http:render("editarticle.html", article)
-			return
-		end
-	elseif article.action == "preview" then
-		article.preview = article.text:parseBBCode()
-		article.created_at = os.time()
+
+	if not article.title or article.title:len() < 1 then
+		article.validationError = "Title can not be empty."
+		http:render("editarticle.html", article)
+		return
+	elseif not article.text or article.text:len() < 1 then
+		article.validationError = "Text field can not be empty."
 		http:render("editarticle.html", article)
 		return
 	end
+	
 
 	if article.action == "new" then
 		db:execute("INSERT INTO castro_articles (title, text, created_at) VALUES (?, ?, NOW())", article.title, article.text)

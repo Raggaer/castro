@@ -27,13 +27,6 @@ function post()
         return
     end
 
-    if http.postValues.submit and http.postValues.submit == "preview" then
-        data.offer.description = http.postValues["offer-description"]
-        data.parsedDescription = http.postValues["offer-description"]:parseBBCode()
-        http:render("editoffer.html", data)
-        return
-    end
-
     if tonumber(http.postValues["offer-price"]) <= 0 then
         session:setFlash("validationError", "Invalid offer price range")
         http:redirect("/subtopic/admin/shop/offer/edit?id=" .. data.offer.id)

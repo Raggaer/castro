@@ -82,7 +82,7 @@
     {{ range $index, $element := .categories }}
         <div role="tabpanel" class="tab-pane {{ if eq $index 0 }} active {{ end }}" id="category-{{ $element.id }}">
             <p id="shop-overview-text">
-                {{ nl2br $element.parsedDescription }}
+                {{ str2html $element.description }}
             </p>
             {{ if $element.offers }}
                 {{ range $index, $element := $element.offers }}
@@ -96,7 +96,7 @@
                                     <img style="margin-right: 10px;" src="{{ $element.image }}" class="media-object pull-left">
                                 </div>
                                 <div class="media-body">
-                                    <p>{{ nl2br $element.parsedDescription }}</p>
+                                    <p>{{ str2html $element.description }}</p>
                                 </div>
                             </div>
                         </div>
