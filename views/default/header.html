@@ -13,6 +13,7 @@
     <link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
+    {{ template "head" . }}
 </head>
 <body>
 
@@ -67,3 +68,4 @@
         <div class="col-sm-9">
             <div class="panel panel-default">
                 <div class="panel-body">
+                    {{ template "beforeContent" . }}

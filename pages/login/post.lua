@@ -21,6 +21,7 @@ function post()
     end
 
     session:set("logged", true)
-    session:set("logged-account", account.name)
+    session:set("loggedAccount", account.name)
+    session:set("admin", session:isAdmin())
     http:redirect("/subtopic/account/dashboard")
 end

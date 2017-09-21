@@ -367,6 +367,9 @@ func appTemplates(wg *sync.WaitGroup) {
 		util.Logger.Logger.Errorf("Cannot load extension subtopic templates: %v", err)
 	}
 
+	// Load template hooks
+	util.Template.LoadTemplateHooks()
+
 	// Tell the wait group we are done
 	wg.Done()
 }

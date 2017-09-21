@@ -86,7 +86,7 @@ func GetLoggedAccount(L *lua.LState) int {
 	}
 
 	// Get logged account name
-	accountName, ok := session["logged-account"].(string)
+	accountName, ok := session["loggedAccount"].(string)
 
 	if !ok {
 
@@ -136,7 +136,7 @@ func IsAdmin(L *lua.LState) int {
 	}
 
 	// Get logged account name
-	accountName, ok := session["logged-account"].(string)
+	accountName, ok := session["loggedAccount"].(string)
 
 	if !ok {
 
