@@ -38,8 +38,8 @@ var (
 		"qrKey":        GenerateAuthSecretKey,
 	}
 	base64Methods = map[string]glua.LGFunction{
-		"encode":    Base64Encode,
-		"decode":    Base64Decode,
+		"encode": Base64Encode,
+		"decode": Base64Decode,
 	}
 	mysqlMethods = map[string]glua.LGFunction{
 		"query":       Query,
@@ -192,8 +192,8 @@ var (
 		"info":  LogInfo,
 	}
 	globalMethods = map[string]glua.LGFunction{
-		"set": SetGlobalLuaValue,
-		"get": GetGlobalLuaValue,
+		"set":    SetGlobalLuaValue,
+		"get":    GetGlobalLuaValue,
 		"delete": DeleteGlobalLuaValue,
 	}
 	formFileMethods = map[string]glua.LGFunction{
@@ -201,6 +201,9 @@ var (
 		"getFile":       GetFormFileByteArray,
 		"saveFile":      SaveFormFile,
 		"saveFileAsPNG": SaveFormFileAsPNG,
+	}
+	outfitMethods = map[string]glua.LGFunction{
+		"generate": GenerateOutfit,
 	}
 )
 
@@ -268,6 +271,9 @@ func (p *luaStatePool) Get() *glua.LState {
 
 // GetApplicationState returns a page configured lua state
 func GetApplicationState(luaState *glua.LState) {
+	// Create outfit metatable
+	SetOutfitMetaTable(luaState)
+
 	// Create global metatable
 	SetGlobalMetaTable(luaState)
 

@@ -11,23 +11,23 @@ Providess easy access to server players. You first need to create a new instance
 
 # new.name
 
-Get a player by the given name
+Get a player by the given name.
 
 ```lua
 local data = Player("test")
 ```
 
-This will return a new `player` metatable
+This will return a new `player` metatable.
 
 # new.id
 
-Get a player by the unique identifier
+Get a player by the unique identifier.
 
 ```lua
 local data = Player(1)
 ```
 
-This will return a new `player` metatable
+This will return a new `player` metatable.
 
 # Player metatable
 

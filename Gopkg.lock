@@ -20,6 +20,12 @@
   version = "v3.3.2"
 
 [[projects]]
+  name = "github.com/anthonynsimon/bild"
+  packages = ["blend","clone","fcolor","math/f64","parallel"]
+  revision = "35fd1904d43f809ded0959922164885e25577aa2"
+  version = "v0.10.0"
+
+[[projects]]
   name = "github.com/asaskevich/govalidator"
   packages = ["."]
   revision = "4918b99a7cb949bb295f3c7bbaf24b577d806e35"
@@ -203,6 +209,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4fd4088bbe01aec270a8dc8aee179ee6579b6add3a56b9c4131e5593fb14155e"
+  inputs-digest = "97c8c3d150368446d00fd435ae247a336004047e6da19725af490476b94d26c3"
   solver-name = "gps-cdcl"
   solver-version = 1
