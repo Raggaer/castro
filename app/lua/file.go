@@ -1,9 +1,10 @@
 package lua
 
 import (
-	"github.com/yuin/gopher-lua"
-	"os"
 	"io/ioutil"
+	"os"
+
+	"github.com/yuin/gopher-lua"
 )
 
 // SetFileMetaTable sets the file metatable of the given state
@@ -74,6 +75,32 @@ func GetDirectories(L *lua.LState) int {
 	}
 
 	// Push directory list
+	L.Push(tbl)
+
+	return 1
+}
+
+// GetFiles gets a list of files for the given directory
+func GetFiles(L *lua.LState) int {
+	// Get files
+	files, err := ioutil.ReadDir(L.ToString(2))
+
+	if err != nil {
+		L.Push(lua.LNil)
+		return 1
+	}
+
+	// Result table
+	tbl := L.NewTable()
+
+	for _, f := range files {
+		if !f.IsDir() {
+			// Append file name
+			tbl.Append(lua.LString(f.Name()))
+		}
+	}
+
+	// Push file list
 	L.Push(tbl)
 
 	return 1

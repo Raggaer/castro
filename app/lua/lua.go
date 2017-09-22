@@ -181,6 +181,7 @@ var (
 		"mod":            GetFileModTime,
 		"exists":         CheckFileExists,
 		"getDirectories": GetDirectories,
+		"getFiles":       GetFiles,
 	}
 	envMethods = map[string]glua.LGFunction{
 		"set": SetEnvVariable,

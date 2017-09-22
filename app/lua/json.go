@@ -1,9 +1,10 @@
 package lua
 
 import (
+	"io/ioutil"
+
 	"github.com/clbanning/mxj"
 	"github.com/yuin/gopher-lua"
-	"io/ioutil"
 )
 
 // SetJSONMetaTable sets the json metatable of the given state
