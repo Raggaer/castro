@@ -1,20 +1,22 @@
 {{ template "header.html" }}
+<link href="/css/froala_style.min.css" rel="stylesheet">
 {{ if .articles }}
+<div class="fr-view">
     {{ range $index, $element := .articles }}
-<div class="row">
-    <div class="col-md-12">
-        <div class="news-box">
-            <h3>{{ $element.title }}</h3>
-            <span class="label label-primary">
-                {{ $element.created.Result }}
-            </span>
-            <hr>
-            <p>
-                {{ str2html $element.text }}
-            </p>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="news-box">
+                <h3>{{ $element.title }}</h3>
+                <span class="label label-primary">
+                    {{ $element.created.Result }}
+                </span>
+                <hr>
+                <p>
+                    {{ str2html $element.text }}
+                </p>
+            </div>
         </div>
     </div>
-</div>
     {{ end }}
     <ul class="pagination pagination-sm">
         {{ if .paginator.prev }}
@@ -27,6 +29,7 @@
         <li><a href="{{ url "subtopic" "index" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
         {{ end }}
     </ul>
+</div>
 {{ else }}
 <div class="news-box">
     <p>There are no articles</p>

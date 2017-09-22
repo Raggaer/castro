@@ -52,6 +52,7 @@ Copy-Item public buildOutput\data\public -recurse
 Copy-Item views buildOutput\data\views -recurse
 Copy-Item engine buildOutput\data\engine -recurse
 Copy-Item migrations buildOutput\data\migrations -recurse
+Copy-Item extensions buildOutput\data\extensions -recurse
 Copy-Item LICENSE buildOutput\LICENSE
 
 New-Item -ItemType Directory -Force -Path "buildOutput\data\logs"

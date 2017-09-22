@@ -14,6 +14,7 @@ buildOutput/
 engine/*.castro
 public/images/offer-images/*.png
 extensions/*
+!extensions/.gitkeep
 public/images/guild-images/*
 !public/images/guild-images/default-guild-logo.png
 public/images/outfits/*.png
