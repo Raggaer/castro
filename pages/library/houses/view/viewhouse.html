@@ -24,8 +24,8 @@
     <p>This house is up for sale. Currently <b><a href="">{{ .house.bidname }}</a></b> is the highest bidder with <b>{{ .house.last_bid }}</b> gold coins.</p>
     <p>You can place your bid using the form below</p>
     {{ end }}
-    <hr>
     {{ if .logged }}
+    <hr>
     <form method="post" action="{{ url "subtopic" "library" "houses" "bid" }}">
         <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
         <input type="hidden" name="id" value="{{ .house.id }}">
@@ -47,7 +47,10 @@
         </p>
     </form>
     {{ else }}
-
+    <hr>
+    <p>
+        Please login to place a bid for this house
+    </p>
     {{ end }}
 {{ else }}
 
