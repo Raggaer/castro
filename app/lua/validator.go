@@ -1,11 +1,12 @@
 package lua
 
 import (
+	"regexp"
+
 	"github.com/asaskevich/govalidator"
 	"github.com/dgryski/dgoogauth"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
-	"regexp"
 )
 
 // methods holds all the validation methods related to govalidator

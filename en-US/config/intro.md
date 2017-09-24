@@ -23,4 +23,4 @@ app.Custom.ValidTownList = {1, 2, 3, 4}
 app.Custom.ValidVocationList = {1, 2, 3, 4}
 ```
 
-Check the rest of the pages inside the config topic to learn more about each value of the `config.toml` file.
+You can then access these variables on your lua pages. Check the rest of the pages inside the config topic to learn more about each value of the `config.toml` file.
