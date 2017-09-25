@@ -176,7 +176,7 @@ func NewStringDuration(s string) StringDuration {
 
 // MarshalText use toml interface to convert string durations to strings
 func (s StringDuration) MarshalText() ([]byte, error) {
-	return []byte(s.Duration.String()), nil
+	return []byte(s.String), nil
 }
 
 // UnmarshalText use toml interface to convert strings to durations

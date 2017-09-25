@@ -27,6 +27,7 @@ var (
 	globalFuncList = map[string]func(l *glua.LState) int{
 		"sleep":  ThreadSleep,
 		"Player": PlayerConstructor,
+		"try":    TryCatch,
 	}
 	cryptoMethods = map[string]glua.LGFunction{
 		"sha1":         Sha1Hash,
