@@ -4,10 +4,10 @@ name: try
 
 # Try and catch
 
-Castro supports try/catch blocks using lua functions. The syntax is the following
+Castro supports try/catch blocks using lua functions. The error is passed to teh catch function.
 
 ```lua
-try(tryfunction(), catchfunction())
+try(tryfunction(), catchfunction(err))
 ```
 
 Below is a simple example of the try/catch function:
@@ -17,8 +17,8 @@ try(
     function()
         print(1 + "aa")
     end,
-    function()
-        print("Something went wrong!")
+    function(err)
+        print("Something went wrong: " .. err)
     end
 )
 ```
