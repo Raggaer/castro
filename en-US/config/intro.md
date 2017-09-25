@@ -2,6 +2,8 @@
 name: Config
 ---
 
+# Config
+
 Castro uses a configuration file to handle all systems. The file `config.toml` is generated at the installation process, some values like for example the cookie hash key are also generated at the installation process.
 
 You can access any of these fields from your `lua` files using the  `app` variable:

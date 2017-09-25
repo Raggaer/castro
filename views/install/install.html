@@ -37,7 +37,7 @@
                                     <strong>Error!</strong> {{ .Error }}
                                 </div>
                                 {{ end }} {{ .Step.Description }}
-                                <hr> {{ .Last }} {{ .Step.Optional }}
+                                <hr>
                                 <form method="POST" action="{{ .Step.URL }}">
                                     {{ range $index, $form := .Step.Form }}
                                     <div class="form-group">

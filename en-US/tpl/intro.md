@@ -48,4 +48,4 @@ The templating engine has a custom but easy syntax. Below is an example of the `
 
 With this approach we separate code from HTML making it easier to work with (for example making custom layouts) the templating engine is very solid and allows the declare variables, loop, if conditions and run functions.
 
-All text is escaped automatically. Safe to use.
+All text is escaped automatically. Safe to use on your templates.

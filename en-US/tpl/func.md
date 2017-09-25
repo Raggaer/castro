@@ -13,6 +13,7 @@ Castro provides a list of already defined functions you can use on your template
 - [nl2br](#nl2br)
 - [urlEncode](#urlencode)
 - [isDev](#isdev)
+- [str2html](#str2html)
 
 # url
 
@@ -34,7 +35,7 @@ Returns the name of the given vocation identifier.
 
 # serverName 
 
-Returns the `config.lua` server name
+Returns the `config.lua` server name.
 
 ```html
 {{ serverName }}
@@ -42,7 +43,7 @@ Returns the `config.lua` server name
 
 # serverMotd
 
-Returns the `config.lua` server motd
+Returns the `config.lua` server motd.
 
 ```html
 {{ serverMotd }}
@@ -58,7 +59,7 @@ Similar to the `PHP` function. It converts all newlines to `<br>`. Useful for te
 
 # urlEncode
 
-Encodes the given value so its safe to use inside an URL
+Encodes the given value so its safe to use inside an URL.
 
 ```html
 <a href="/test?name={{ urlEncode .name }}">Test</a>
@@ -66,10 +67,18 @@ Encodes the given value so its safe to use inside an URL
 
 # isDev
 
-Checks if Castro runs on development mode
+Checks if Castro runs on development mode.
 
 ```html
 {{ if isDev }}
 <p>Development</p>
 {{ end }}
+```
+
+# str2html
+
+Converts the given string to HTML output. By default Castro sanitizes all HTML output for variables.
+
+```html
+{{ str2html .text }}
 ```

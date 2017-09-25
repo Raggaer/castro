@@ -1,0 +1,7 @@
+---
+name: Static
+---
+
+# Static
+
+wip

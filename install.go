@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"html/template"
 	"net"
 	"net/http"
@@ -67,15 +68,15 @@ var (
 				},
 			},
 			Post: func(res http.ResponseWriter, req *http.Request, s installationStep) error {
-				// Install database tables
-				if err := installApplication(req.FormValue("path")); err != nil {
-					return err
-				}
-
 				// Get server port
 				port, err := strconv.Atoi(req.FormValue("port"))
 
 				if err != nil {
+					return errors.New("Invalid port number")
+				}
+
+				// Install database tables
+				if err := installApplication(req.FormValue("path")); err != nil {
 					return err
 				}
 
@@ -176,8 +177,10 @@ var (
 		},
 	}
 
+	// Installation template holder
 	installationTemplate = template.New("install")
 
+	// Installation config file holder
 	installationConfigFile = &util.Configuration{
 		CheckUpdates: true,
 		Template:     "views/default",
