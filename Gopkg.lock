@@ -2,16 +2,16 @@
 
 
 [[projects]]
+  branch = "master"
   name = "github.com/BurntSushi/toml"
   packages = ["."]
-  revision = "b26d9c308763d68093482582cea63d69be07a0f0"
-  version = "v0.3.0"
+  revision = "a368813c5e648fee92e5f6c30e3944ff9d5e8895"
 
 [[projects]]
   name = "github.com/Sirupsen/logrus"
   packages = ["."]
-  revision = "a3f95b5c423586578a4e099b11a46c2479628cac"
-  version = "1.0.2"
+  revision = "f006c2ac4710855cf0f916dd6b77acf6b048dc6e"
+  version = "v1.0.3"
 
 [[projects]]
   name = "github.com/ant0ine/go-json-rest"
@@ -107,7 +107,7 @@
   branch = "master"
   name = "github.com/lucasb-eyer/go-colorful"
   packages = ["."]
-  revision = "d1be5f1fbc7f63e693f460df83d52772eae2ca54"
+  revision = "231272389856c976b7500c4fffcc52ddf06ff4eb"
 
 [[projects]]
   branch = "master"
@@ -143,13 +143,13 @@
   branch = "master"
   name = "github.com/skip2/go-qrcode"
   packages = [".","bitset","reedsolomon"]
-  revision = "0bb60b5a716144fa55da373bab578cca49a537d7"
+  revision = "695fc75a09738f9be56aaa3aecfd7dac28e66b63"
 
 [[projects]]
-  branch = "master"
   name = "github.com/ulule/limiter"
   packages = ["."]
-  revision = "c242da0b4c9524723c5a2dc8e7d49c228d1bb33c"
+  revision = "619f3ae8cc00f54934d27591e7010c8f6216c5ca"
+  version = "v1.0.0"
 
 [[projects]]
   name = "github.com/urfave/negroni"
@@ -161,31 +161,31 @@
   branch = "master"
   name = "github.com/yuin/gopher-lua"
   packages = [".","ast","parse","pm"]
-  revision = "2243d714d6c94951d8ccca8c851836ff47d401c9"
+  revision = "eb1c7299435cc746b72514f37f74a5154dfe460f"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["acme","acme/autocert"]
-  revision = "558b6879de74bc843225cde5686419267ff707ca"
+  packages = ["acme","acme/autocert","ssh/terminal"]
+  revision = "847319b7fc94cab682988f93da778204da164588"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/image"
   packages = ["draw","font","font/gofont/goregular","math/f64","math/fixed"]
-  revision = "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d"
+  revision = "e20db36d77bd0cb36cea8fe49d5c37d82d21591f"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "f5079bd7f6f74e23c4d65efa0f4ce14cbd6a3c0f"
+  revision = "0744d001aa8470aaa53df28d32e5ceeb8af9bd70"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix"]
-  revision = "0f826bdd13b500be0f1d4004938ad978fcc6031e"
+  packages = ["unix","windows"]
+  revision = "429f518978ab01db8bb6f44b66785088e7fba58b"
 
 [[projects]]
   branch = "v3"
@@ -209,6 +209,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "97c8c3d150368446d00fd435ae247a336004047e6da19725af490476b94d26c3"
+  inputs-digest = "1ada771b2dd687cc09fa0cde16e6dade6c8468f1a7ac61bfc3cf750b7725e74c"
   solver-name = "gps-cdcl"
   solver-version = 1
