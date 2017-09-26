@@ -15,7 +15,6 @@ function get()
     end
 
     local online = db:singleQuery("SELECT 1 FROM players_online WHERE player_id = ?", character.id)
-
     local img = image:new(500, 150)
 
     img:setBackground("public/images/signature-bg.png")
@@ -30,7 +29,6 @@ function get()
     img:writeText("Vocation: " .. character:getVocation().Name, "#000000", 16, 20, 80)
     img:writeText("Town: " .. character:getTown().Name, "#000000", 16, 20, 100)
     img:save("public/images/signature/" .. character:getName() .. ".png")
-
 
     http:serveFile("public/images/signature/" .. character:getName() .. ".png")
 end

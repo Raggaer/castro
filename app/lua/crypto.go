@@ -1,13 +1,14 @@
 package lua
 
 import (
+	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
-	"crypto/hmac"
-	"encoding/hex"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
+
 	"github.com/dchest/uniuri"
 	"github.com/skip2/go-qrcode"
 	"github.com/yuin/gopher-lua"

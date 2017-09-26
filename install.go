@@ -44,7 +44,7 @@ var (
 			Description: template.HTML(`
 			<p>Welcome to the installation wizard. The wizard will guide you through a very simple process where you will be able to setup some Castro features like the SMTP server and the Google reCAPTCHA service</p>
 			<p>These features are optional and you can activate them later</p>
-			<p>Just fill the information below to start using one of the most powerfull and extensible Open Tibia content management system</p>
+			<p>Just fill the information below to start using one of the most powerful and extensible Open Tibia content management system</p>
 			`),
 			Optional: false,
 			Form: []installationFormField{

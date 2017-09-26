@@ -102,7 +102,6 @@ Compiled at: %v
 	// Use negroni logger only in development mode
 	if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
 		n.Use(negroni.NewLogger())
-
 	}
 
 	// Disable httprouter not found handler

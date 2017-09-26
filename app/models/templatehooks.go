@@ -4,7 +4,7 @@ import (
 	"github.com/raggaer/castro/app/database"
 )
 
-// Struct used for template hooks
+// TemplateHook Struct used for template hooks
 type TemplateHook struct {
 	ExtensionId string
 	Template    string
@@ -27,12 +27,12 @@ func GetTemplateHooksByName(name string) ([]TemplateHook, error) {
 
 	// Loop rows
 	for rows.Next() {
-		var extensionId, template string
-		if err := rows.Scan(&extensionId, &template); err != nil {
+		var extensionID, template string
+		if err := rows.Scan(&extensionID, &template); err != nil {
 			return hooks, err
 		}
 
-		hooks = append(hooks, TemplateHook{ExtensionId: extensionId, Template: template})
+		hooks = append(hooks, TemplateHook{ExtensionId: extensionID, Template: template})
 	}
 	return hooks, nil
 }

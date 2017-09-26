@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/raggaer/castro/app/models"
-	"github.com/raggaer/castro/app/database"
 	"html/template"
 	"io"
 	"net/http"
@@ -14,6 +12,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/models"
 )
 
 var (
@@ -24,7 +25,7 @@ var (
 	FuncMap template.FuncMap
 
 	// TemplateHooks holds the hook types available
-	TemplateHooks = [...]string {
+	TemplateHooks = [...]string{
 		"head",
 		"beforeContent",
 		"afterContent",
@@ -338,7 +339,7 @@ func (t Tmpl) TemplateHook(hookName string) error {
 	// Hold string to parse
 	defineString := ""
 
-	for _, hook := range(hooks) {
+	for _, hook := range hooks {
 		// Concatenate templates to render
 		defineString = fmt.Sprintf("%v{{ template %q . }}\n", defineString, hook.Template)
 	}
@@ -361,7 +362,7 @@ func (t Tmpl) TemplateHook(hookName string) error {
 
 func (t Tmpl) LoadTemplateHooks() {
 	// Range over hook types
-	for _, hookName := range(TemplateHooks) {
+	for _, hookName := range TemplateHooks {
 		// Parse hook templates
 		if err := t.TemplateHook(hookName); err != nil {
 			// Log error but continue loading other hooks
