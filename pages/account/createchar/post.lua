@@ -10,6 +10,12 @@ function post()
         return
     end
 
+    if not validator::validGender(http.postValues["character-gender"]) then
+        session:setFlash("validation-error", "Invalid character gender. Gender not found")
+        http:redirect()
+        return
+    end
+
     if not validator:validVocation(http.postValues["character-vocation"]) then
         session:setFlash("validation-error", "Invalid character vocation. Vocation not found")
         http:redirect()
@@ -43,8 +49,9 @@ function post()
     end
 
     db:execute(
-        "INSERT INTO players (name, account_id, vocation, town_id, conditions, level, health, healthmax, mana, manamax, cap, soul) VALUES (?, ?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?)", 
+        "INSERT INTO players (name, sex, account_id, vocation, town_id, conditions, level, health, healthmax, mana, manamax, cap, soul) VALUES (?, ?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?)", 
         http.postValues["character-name"], 
+        http.postValues["character-gender"], 
         account.ID, 
         xml:vocationByName(http.postValues["character-vocation"]).ID, 
         otbm:townByName(http.postValues["character-town"]).ID,

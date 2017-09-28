@@ -70,6 +70,23 @@ func CheckQRCode(L *lua.LState) int {
 	return 1
 }
 
+// ValidGender checks if the given gender is valid
+func ValidGender(L *lua.LState) int {
+	// Get gender identifier
+	gender := L.ToInt(2)
+
+	// Check gender values
+	if gender < 0 && gender > 1 {
+		L.Push(lua.LBool(false))
+		return 1
+	}
+
+	// Valid gender
+	L.Push(lua.LBool(true))
+
+	return 1
+}
+
 // ValidGuildName checks if the given guild name is valid
 func ValidGuildName(L *lua.LState) int {
 	// Get string to validate

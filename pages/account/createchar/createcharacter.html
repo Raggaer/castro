@@ -14,6 +14,13 @@
         <small class="form-text text-muted">Your character name must only use letters A-Z and spaces</small>
     </div>
     <div class="form-group">
+        <label for="character-vocation">Character gender</label>
+        <select name="character-gender" class="form-control" id="character-gender">
+            <option value="0">Male</option>
+            <option value="1">Female</option>
+        </select>
+    </div>
+    <div class="form-group">
         <label for="character-vocation">Character vocation</label>
         <select name="character-vocation" class="form-control" id="character-vocation">
             {{ range $index, $element := .vocations }}
