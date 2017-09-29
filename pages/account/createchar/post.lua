@@ -10,7 +10,7 @@ function post()
         return
     end
 
-    if not validator::validGender(http.postValues["character-gender"]) then
+    if not validator:validGender(http.postValues["character-gender"]) then
         session:setFlash("validation-error", "Invalid character gender. Gender not found")
         http:redirect()
         return
