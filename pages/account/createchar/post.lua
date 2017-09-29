@@ -49,7 +49,7 @@ function post()
     end
 
     db:execute(
-        "INSERT INTO players (name, sex, account_id, vocation, town_id, conditions, level, health, healthmax, mana, manamax, cap, soul) VALUES (?, ?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?)", 
+        "INSERT INTO players (name, sex, account_id, vocation, town_id, conditions, level, health, healthmax, mana, manamax, cap, soul) VALUES (?, ?, ?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?)",
         http.postValues["character-name"], 
         http.postValues["character-gender"], 
         account.ID, 

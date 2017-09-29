@@ -6,6 +6,23 @@
     <strong>Success!</strong> {{ .success }}
 </div>
 {{ end }}
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .account.PendingDeletions }}
+<form id="form-character-undelete" action="{{url "subtopic" "account" "undeletechar" }}" method="POST">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+</form>
+    {{ range $index, $character := .account.PendingDeletions }}
+    <div class="alert alert-info" role="alert">
+        <strong>Pending deletion!</strong> The character {{ $character.name }} is pending deletion and will be deleted on {{ $character.deletion.Result }}.
+        <br>
+        <button class="btn btn-xs btn-default" form="form-character-undelete" type="submit" name="undelete-character" value="{{ $character.name }}">Cancel</button>
+    </div>
+    {{ end }}
+{{ end }}
 <table class="table table-striped">
     <thead class="thead-inverse">
         <tr>
@@ -72,6 +89,9 @@
 </table>
 <h3>My Characters</h3>
 <hr>
+<form id="form-character-delete" action="{{ url "subtopic" "account" "deletechar" }}" method="POST">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+</form>
 <table class="table table-striped">
     <thead class="thead-inverse">
     <tr>
@@ -79,6 +99,7 @@
         <th>Name</th>
         <th>Vocation</th>
         <th>Level</th>
+        <th>Delete</th>
     </tr>
     </thead>
     <tbody>
@@ -93,6 +114,13 @@
             </td>
             <td>{{ vocation $element.vocation }}</td>
             <td>{{ $element.level }}</td>
+            <td>
+                {{ if eqNumber $element.deletion 0 }}
+                <button class="btn btn-xs btn-danger require-confirmation" type="submit" form="form-character-delete" name="delete-character" value="{{ $element.name }}">Delete</button>
+                {{ else }}
+                <button class="btn btn-xs btn-default" form="form-character-undelete" type="submit" name="undelete-character" value="{{ $element.name }}">Cancel</button>
+                {{ end }}
+            </td>
         </tr>
         {{ end }}
     {{ else }}
@@ -103,3 +131,13 @@
     </tbody>
 </table>
 {{ template "footer.html" . }}
+<script>
+    $(document).ready(function(){
+        $(".require-confirmation").click(function(e){
+            var response = confirm("Are you sure that you want to delete character: "+$(this).val()+"?")
+            if (response == false) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>

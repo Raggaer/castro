@@ -8,10 +8,21 @@ function get()
     local data = {}
 
     data.success = session:getFlash("success")
-    data.list = db:query("SELECT name, vocation, level FROM players WHERE account_id = ? ORDER BY id DESC", account.ID)
+    data.validationError = session:getFlash("validationError")
+    data.list = db:query("SELECT name, vocation, level, deletion FROM players WHERE account_id = ? ORDER BY id DESC", account.ID)
     data.account = session:loggedAccount()
     data.account.Creation = time:parseUnix(data.account.Creation)
     data.account.Lastday = time:parseUnix(data.account.Lastday)
+    data.account.PendingDeletions = {}
+
+    for _, character in pairs(data.list) do
+        character.deletion = tonumber(character.deletion)
+        if character.deletion ~= 0 then
+            if character.deletion > os.time() then
+                table.insert(data.account.PendingDeletions, {name = character.name, deletion = time:parseUnix(character.deletion)})
+            end
+        end
+    end
 
     if account.Secret == nil then
         data.twofa = false
