@@ -1,7 +1,9 @@
 local list = {
     "onStartup",
     "onNewArticle",
-    "onEditArticle"
+    "onEditArticle",
+    "onLogin",
+    "onLogout"
 }
 
 function listExtensionHooks()
