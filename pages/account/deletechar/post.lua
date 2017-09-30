@@ -34,7 +34,7 @@ function post()
         return
     end
 
-    local delay = os.time() + time:parseDuration(app.Custom.CharacterDeletionDelay)
+    local delay = os.time() + app.Custom.CharacterDeletionDelay
     db:execute("UPDATE players SET deletion = ? WHERE id = ?", delay, character.id)
     session:setFlash("success", "Character " .. character.name .. " has been marked for deletion.")
     http:redirect("/subtopic/account/dashboard")

@@ -19,7 +19,7 @@
     <div class="alert alert-info" role="alert">
         <strong>Pending deletion!</strong> The character {{ $character.name }} is pending deletion and will be deleted on {{ $character.deletion.Result }}.
         <br>
-        <button class="btn btn-xs btn-default" form="form-character-undelete" type="submit" name="undelete-character" value="{{ $character.name }}">Cancel</button>
+        <button class="btn btn-danger btn-xs" form="form-character-undelete" type="submit" name="undelete-character" value="{{ $character.name }}">Cancel</button>
     </div>
     {{ end }}
 {{ end }}
