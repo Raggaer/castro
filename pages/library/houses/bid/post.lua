@@ -30,6 +30,12 @@ function post()
         return
     end
 
+    if http.postValues.bid == "" then
+        session:setFlash("error", "Invalid bid amount")
+        http:redirect("/subtopic/library/houses/view?id=" .. house.id)
+        return
+    end
+
     if character.balance < tonumber(http.postValues.bid) then
         session:setFlash("error", "You need more gold coins to place that bid")
         http:redirect("/subtopic/library/houses/view?id=" .. house.id)
