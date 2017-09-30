@@ -1,3 +1,5 @@
+require "extensionhooks"
+
 function post()
     if session:isLogged() then
         http:redirect("/")
@@ -23,5 +25,14 @@ function post()
     session:set("logged", true)
     session:set("loggedAccount", account.name)
     session:set("admin", session:isAdmin())
+
+    -- Extension hook
+    local status = {continue = true}
+    executeHook("onLogin", session:loggedAccount(), status)
+    -- Allow extensions to take over
+    if not status.continue then
+        return
+    end
+
     http:redirect("/subtopic/account/dashboard")
 end

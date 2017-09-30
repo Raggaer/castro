@@ -13,13 +13,15 @@ function get()
     data.account = session:loggedAccount()
     data.account.Creation = time:parseUnix(data.account.Creation)
     data.account.Lastday = time:parseUnix(data.account.Lastday)
-    data.account.PendingDeletions = {}
 
-    for _, character in pairs(data.list) do
-        character.deletion = tonumber(character.deletion)
-        if character.deletion ~= 0 then
-            if character.deletion > os.time() then
-                table.insert(data.account.PendingDeletions, {name = character.name, deletion = time:parseUnix(character.deletion)})
+    if data.list then
+        for _, character in pairs(data.list) do
+            character.deletion = tonumber(character.deletion)
+            if character.deletion ~= 0 then
+                if character.deletion > os.time() then
+                    data.account.PendingDeletions = data.account.PendingDeletions or {}
+                    table.insert(data.account.PendingDeletions, {name = character.name, deletion = time:parseUnix(character.deletion)})
+                end
             end
         end
     end
