@@ -2,13 +2,14 @@ package lua
 
 import (
 	"fmt"
-	"github.com/raggaer/castro/app/database"
-	"github.com/raggaer/castro/app/util"
-	glua "github.com/yuin/gopher-lua"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/raggaer/castro/app/database"
+	"github.com/raggaer/castro/app/util"
+	glua "github.com/yuin/gopher-lua"
 )
 
 var (
@@ -151,6 +152,7 @@ func (s *stateList) LoadExtensions() error {
 	return nil
 }
 
+// Get retrieves a state from the pool
 func (s *stateList) Get(path string) (*glua.LState, error) {
 	// Set path as lowercase
 	path = strings.ToLower(path)
@@ -181,6 +183,7 @@ func (s *stateList) Get(path string) (*glua.LState, error) {
 	return x, nil
 }
 
+// Put returns a state to the pool
 func (s *stateList) Put(state *glua.LState, path string) {
 	// Set path as lowercase
 	path = strings.ToLower(path)

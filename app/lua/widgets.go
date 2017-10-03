@@ -2,11 +2,12 @@ package lua
 
 import (
 	"errors"
-	"github.com/raggaer/castro/app/util"
-	"github.com/yuin/gopher-lua"
 	"html/template"
 	"net/http"
 	"path/filepath"
+
+	"github.com/raggaer/castro/app/util"
+	"github.com/yuin/gopher-lua"
 )
 
 // setWidgetMetaTable sets the widget metatable to the given state

@@ -474,6 +474,7 @@ func installApplication(location string) error {
 		lua.Config.GetGlobal("mysqlUser").String(),
 		lua.Config.GetGlobal("mysqlPass").String(),
 		lua.Config.GetGlobal("mysqlDatabase").String(),
+		"&multiStatements=true",
 	)
 
 	if err != nil {
