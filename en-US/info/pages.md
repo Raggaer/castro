@@ -57,7 +57,7 @@ This example loads the server latest news from database, we are also using the p
 Lastly we render our template and pass the data we want.
 
 ```html
-{{ template "header.html" }}
+{{ template "header.html" . }}
 {{ if .articles }}
     {{ range $index, $element := .articles }}
     <div class="news-box">

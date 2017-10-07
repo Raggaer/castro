@@ -1,4 +1,4 @@
-{{ template "header.html" }}
+{{ template "header.html" . }}
 {{ if .query }}
 <h3>Search characters: "{{ .query }}"</h3>
 {{ else }}

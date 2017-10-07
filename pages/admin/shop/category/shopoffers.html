@@ -1,4 +1,4 @@
-{{ template "header.html" }}
+{{ template "header.html" . }}
 <h3>Shop offers for: {{ .category.name }}</h3>
 <hr>
 <a role="button" href="{{ url "subtopic" "admin" "shop" "offer" "new" }}?categoryId={{ .category.id }}" class="btn btn-primary">New offer</a>

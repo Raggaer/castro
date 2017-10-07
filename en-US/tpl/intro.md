@@ -9,7 +9,7 @@ Castro separates the template code from the logic code. This allows to keep a cl
 The templating engine has a custom but easy syntax. Below is an example of the `login.html` file.
 
 ```html
-{{ template "header.html" }}
+{{ template "header.html" . }}
 <h3>Login to your account</h3>
 <hr>
 {{ if .validationError }}

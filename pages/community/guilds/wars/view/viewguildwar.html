@@ -1,4 +1,4 @@
-{{ template "header.html" }}
+{{ template "header.html" . }}
 <h3>War: <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode .war.name1 }}">{{ .war.name1 }}</a> versus <a href="{{ url "subtopic" "community" "guilds" "view" }}?name={{ urlEncode .war.name2 }}">{{ .war.name2 }}</a> {{ .war.guild1_kills }} - {{ .war.guild2_kills }}</h3>
 <hr>
 {{ if .war }}
