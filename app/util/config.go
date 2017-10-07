@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
+	"github.com/raggaer/castro/app/database"
 )
 
 // CookieConfig struct used for the cookies configuration options
@@ -349,28 +350,38 @@ func LoadExternalConfigFiles() ([]string, error) {
 		return nil, err
 	}
 
-	// Get widgets config files
-	if err := filepath.Walk(filepath.Join("extensions"), func(path string, info os.FileInfo, err error) error {
-
-		// Return walk problems
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() {
-			return nil
-		}
-
-		// Check for config lua file
-		if info.Name() == "config.lua" {
-			list = append(list, path)
-		}
-
-		return nil
-
-	}); err != nil {
+	// Installed extensions placeholder
+	var installed []string
+	// Get installed extensions
+	if err := database.DB.Select(&installed, "SELECT id FROM castro_extensions WHERE installed = b'1'"); err != nil {
 		return nil, err
 	}
+
+	// Get extensions config files
+	for _, extension := range installed {
+		// Walk extension directory 
+		if err := filepath.Walk(filepath.Join("extensions", extension), func(path string, info os.FileInfo, err error) error {
+			
+			// Return walk problems
+			if err != nil {
+				return err
+			}
+	
+			if info.IsDir() {
+				return nil
+			}
+	
+			// Check for config lua file
+			if info.Name() == "config.lua" {
+				list = append(list, path)
+			}
+	
+			return nil
+	
+		}); err != nil {
+			return nil, err
+		}
+	}	
 
 	return list, nil
 }
