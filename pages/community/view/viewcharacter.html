@@ -110,6 +110,23 @@
         </tr>
     </tbody>
 </table>
+
+{{ if .deaths }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+        <tr>
+            <th scope="row" colspan="2">Latest deaths</th>
+        </tr>
+    </thead>
+    {{ range $index, $element := .deaths }}
+    <tr>
+        <td><a href="{{ url "subtopic" "community" "view"}}?name={{ urlEncode $element.victim }}">{{ $element.victim }}</a> was killed at level {{ $element.level }} by {{ if eqNumber $element.is_player 1 }} <a href="{{ url "subtopic" "community" "view"}}?name={{ urlEncode $element.killed_by }}">{{ $element.killed_by }}</a>{{ else }}{{ $element.killed_by }}{{ end }}{{ if eqNumber $element.unjustified 1 }} <span style="color: red; font-style: italic;">unjustified</span>{{ end }}</td>
+        <td>{{ unixToDate $element.time }}</td>
+    </tr>
+    {{ end }}
+</table>
+{{ end }}
+
 {{ if .characterList }}
 <table class="table table-striped">
     <thead class="thead-inverse">

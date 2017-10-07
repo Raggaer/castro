@@ -9,6 +9,8 @@ function get()
         return
     end
 
+    data.deaths = db:query("SELECT d.level, p.name AS victim, d.time, d.is_player, d.killed_by, d.unjustified FROM player_deaths AS d INNER JOIN players AS p ON d.player_id = p.id WHERE p.id = ? ORDER BY time DESC LIMIT ?", data.info.id, app.Custom.CharacterView.Deaths, true)
+
     if not cache then
         data.info.accountCreation = time:parseUnix(data.info.creation)
         data.info.vocation = xml:vocationByID(data.info.vocation)
