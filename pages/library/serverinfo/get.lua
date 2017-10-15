@@ -1,6 +1,7 @@
 function get()
     local data = {}
 
+    data.experience = config:get("rateExp")
     data.magic = config:get("rateMagic")
     data.skill = config:get("rateSkill")
     data.loot = config:get("rateLoot")
@@ -13,7 +14,7 @@ function get()
 
     local stages = xml:unmarshalFile(serverPath .. "/data/XML/stages.xml")
 
-    if stages.stages["-config"] then
+    if stages.stages.config["-enabled"] == "1" then
         data.stages = stages
     end
 

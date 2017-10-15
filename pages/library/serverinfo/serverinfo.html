@@ -8,6 +8,12 @@
         </tr>
     </thead>
     <tbody>
+        {{ if not .stages }}
+        <tr>
+            <th>Experience rate</th>
+            <td>{{ .experience }}x</td>
+        </tr>
+        {{ end }}
         <tr>
             <th>Skills rate</th>
             <td>{{ .skill }}x</td>
