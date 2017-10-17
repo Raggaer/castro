@@ -52,7 +52,8 @@ function post()
         return
     end
 
-    db:execute("UPDATE castro_accounts SET points = points - ? WHERE account_id = ?", totalprice, account.Id)
+    db:execute("UPDATE castro_accounts SET points = points - ? WHERE account_id = ?", totalprice, account.ID)
+    session:set("shop-cart", {})
     session:setFlash("success", "You paid " .. totalprice .. " for all your cart items")
     http:redirect("/subtopic/shop/view")
 end
