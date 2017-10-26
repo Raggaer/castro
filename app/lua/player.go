@@ -1,11 +1,12 @@
 package lua
 
 import (
+	"html"
+
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
-	"html"
 )
 
 // PlayerConstructor returns a new player metatable for the given ID or name
@@ -16,17 +17,15 @@ func PlayerConstructor(L *lua.LState) int {
 	// Get player by ID
 	if i.Type() == lua.LTNumber {
 
-		// Data holder
-		player := models.Player{}
-
-		// Get player by ID
-		if err := database.DB.Get(&player, "SELECT id, sex, accound_id, name, level, vocation, town_id FROM players WHERE id = ?", L.ToInt64(1)); err != nil {
+		// Get player by id
+		player, err := models.GetPlayerByID(L.ToInt64(1))
+		if err != nil {
 			L.Push(lua.LNil)
 			return 1
 		}
 
 		// Create player metatable
-		L.Push(createPlayerMetaTable(&player, L))
+		L.Push(createPlayerMetaTable(player, L))
 
 		return 1
 	}
@@ -36,17 +35,15 @@ func PlayerConstructor(L *lua.LState) int {
 		return 0
 	}
 
-	// Data holder
-	player := models.Player{}
-
 	// Get player by name
-	if err := database.DB.Get(&player, "SELECT id, sex, account_id, name, level, vocation, town_id FROM players WHERE name = ?", L.ToString(1)); err != nil {
+	player, err := models.GetPlayerByName(L.ToString(1))
+	if err != nil {
 		L.Push(lua.LNil)
 		return 1
 	}
 
 	// Create player metatable
-	L.Push(createPlayerMetaTable(&player, L))
+	L.Push(createPlayerMetaTable(player, L))
 
 	return 1
 }
@@ -99,11 +96,9 @@ func GetPlayerBankBalance(L *lua.LState) int {
 	// Get player struct
 	player := getPlayerObject(L)
 
-	// Data holder
-	balance := 0
-
-	// Get balance value
-	if err := database.DB.Get(&balance, "SELECT balance FROM players WHERE id = ?", player.ID); err != nil {
+	// Get balance
+	balance, err := player.GetBalance()
+	if err != nil {
 		L.RaiseError("Cannot get player bank balance: %v", err)
 		return 0
 	}
@@ -123,7 +118,7 @@ func SetPlayerBankBalance(L *lua.LState) int {
 	newBalance := L.ToInt(2)
 
 	// Update bank balance
-	if _, err := executeQueryHelper(L, "UPDATE players SET balance = ? WHERE id = ?", newBalance, player.ID); err != nil {
+	if err := player.SetBalance(newBalance); err != nil {
 		L.RaiseError("Cannot update player balance: %v")
 		return 0
 	}
@@ -136,12 +131,10 @@ func IsPlayerOnline(L *lua.LState) int {
 	// Get player struct
 	player := getPlayerObject(L)
 
-	// Data holder
-	online := false
-
-	// Get online value
-	if err := database.DB.Get(&online, "SELECT 1 FROM players_online WHERE player_id = ?", player.ID); err != nil {
-		L.RaiseError("Cannot check if player is online: %v", err)
+	// Get player online status
+	online, err := player.IsOnline()
+	if err != nil {
+		L.RaiseError("Cannot get player online status: %v", err)
 		return 0
 	}
 
@@ -165,17 +158,15 @@ func GetPlayerStorageValue(L *lua.LState) int {
 		return 0
 	}
 
-	// Data holder
-	storage := models.Storage{}
-
-	// Get storage value
-	if err := database.DB.Get(&storage, "SELECT key, value FROM players_storage WHERE player_id = ?", player.ID); err != nil {
-		L.RaiseError("Cannot get player storage: %v", err)
+	// Retrieve player storage value
+	storage, err := player.GetStorageValue(L.ToInt(2))
+	if err != nil {
+		L.RaiseError("Unable to get player storage value (%s) %v", key, err)
 		return 0
 	}
 
 	// Push storage as table
-	L.Push(StructToTable(&storage))
+	L.Push(StructToTable(storage))
 
 	return 1
 }
@@ -203,9 +194,9 @@ func SetPlayerStorageValue(L *lua.LState) int {
 		return 0
 	}
 
-	// Insert storage value
-	if _, err := executeQueryHelper(L, "INSERT INTO player_storage (player_id, key, value) VALUES (?, ?, ?)", player.ID, L.ToInt(2), L.ToInt(3)); err != nil {
-		L.RaiseError("Cannot set player storage value: %v", err)
+	// Set storage value
+	if err := player.SetStorageValue(L.ToInt(2), L.ToInt(3)); err != nil {
+		L.RaiseError("Unable to set player storage value: %v", err)
 		return 0
 	}
 
@@ -252,17 +243,14 @@ func GetPlayerPremiumDays(L *lua.LState) int {
 	// Get player struct
 	player := getPlayerObject(L)
 
-	// Premium days holder
-	days := 0
-
-	// Get premium days
-	if err := database.DB.Get(&days, "SELECT premdays FROM accounts WHERE id = ?", player.Account_id); err != nil {
-		L.RaiseError("Cannot get player premium days: %v", err)
+	premDays, err := player.GetPremiumDays()
+	if err != nil {
+		L.RaiseError("Unable to get player premium days: %v", err)
 		return 0
 	}
 
 	// Push days as number
-	L.Push(lua.LNumber(days))
+	L.Push(lua.LNumber(premDays))
 
 	return 1
 }
@@ -317,12 +305,10 @@ func GetPlayerExperience(L *lua.LState) int {
 	// Get player struct
 	player := getPlayerObject(L)
 
-	// Experience placeholder
-	experience := 0
-
-	// Retrieve experience from database
-	if err := database.DB.Get(&experience, "SELECT experience FROM players WHERE id = ?", player.ID); err != nil {
-		L.RaiseError("Cannot get player experience from database: %v", err)
+	// Get player experience
+	experience, err := player.GetExperience()
+	if err != nil {
+		L.RaiseError("Unable to get player experience value : %v", err)
 		return 0
 	}
 
@@ -337,17 +323,15 @@ func GetPlayerCapacity(L *lua.LState) int {
 	// Get player struct
 	player := getPlayerObject(L)
 
-	// Capacity placeholder
-	capacity := 0
-
-	// Retrieve experience from database
-	if err := database.DB.Get(&capacity, "SELECT capacity FROM players WHERE id = ?", player.ID); err != nil {
-		L.RaiseError("Cannot get player capacity from database: %v", err)
+	// Get player capacity
+	cap, err := player.GetCapacity()
+	if err != nil {
+		L.RaiseError("Unable to get player capacity")
 		return 0
 	}
 
 	// Push player capacity as number
-	L.Push(lua.LNumber(capacity))
+	L.Push(lua.LNumber(cap))
 
 	return 1
 }
