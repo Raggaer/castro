@@ -4,8 +4,13 @@ name: Rate limit
 
 Provides access to the website request rate-limiter.
 
+- [Enabled](#enabled)
 - [Number](#number)
 - [Time](#time)
+
+# Enabled
+
+Disables or enables the rate-limiter module.
 
 # Number
 

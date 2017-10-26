@@ -199,8 +199,9 @@ var (
 			Purge:   util.NewStringDuration("1m"),
 		},
 		RateLimit: util.RateLimiterConfig{
-			Number: 100,
-			Time:   util.NewStringDuration("1m"),
+			Number:  100,
+			Enabled: false,
+			Time:    util.NewStringDuration("1m"),
 		},
 		Security: util.SecurityConfig{
 			NonceEnabled:      true,

@@ -34,6 +34,12 @@ func newRateLimitHandler(limiter *limiter.Limiter) *rateLimitHandler {
 }
 
 func (r *rateLimitHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+	// Check if rate-limit is not enabled
+	if !util.Config.Configuration.RateLimit.Enabled {
+		next(w, req)
+		return
+	}
+
 	// IP data holder
 	ip := ""
 

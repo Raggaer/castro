@@ -34,8 +34,9 @@ type PluginConfig struct {
 
 // RateLimiterConfig struct used for the rate limiting configuration options
 type RateLimiterConfig struct {
-	Number int64
-	Time   StringDuration
+	Enabled bool
+	Number  int64
+	Time    StringDuration
 }
 
 // CacheConfig struct used for the cache configuration options
@@ -359,29 +360,29 @@ func LoadExternalConfigFiles() ([]string, error) {
 
 	// Get extensions config files
 	for _, extension := range installed {
-		// Walk extension directory 
+		// Walk extension directory
 		if err := filepath.Walk(filepath.Join("extensions", extension), func(path string, info os.FileInfo, err error) error {
-			
+
 			// Return walk problems
 			if err != nil {
 				return err
 			}
-	
+
 			if info.IsDir() {
 				return nil
 			}
-	
+
 			// Check for config lua file
 			if info.Name() == "config.lua" {
 				list = append(list, path)
 			}
-	
+
 			return nil
-	
+
 		}); err != nil {
 			return nil, err
 		}
-	}	
+	}
 
 	return list, nil
 }
