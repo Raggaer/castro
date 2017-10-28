@@ -4,7 +4,7 @@ name: try
 
 # Try and catch
 
-Castro supports try/catch blocks using lua functions. The error is passed to teh catch function.
+Castro supports try/catch blocks using lua functions. The error is passed to the catch function.
 
 ```lua
 try(tryfunction(), catchfunction(err))
