@@ -1,4 +1,5 @@
 require "bbcode"
+require "util"
 
 function post()
     if not app.Shop.Enabled then
@@ -10,7 +11,7 @@ function post()
         http:redirect("/")
         return
     end
-
+   
     local data = {}
 
     data.category = db:singleQuery("SELECT id, name FROM castro_shop_categories WHERE id = ?", http.postValues.id)
@@ -53,6 +54,7 @@ function post()
     http:parseMultiPartForm()
 
     local offerImage = http:formFile("offer-image")
+    local offerImagePath = ""
 
     if offerImage ~= nil then
 
@@ -63,30 +65,27 @@ function post()
         end
 
         offerImage:saveFileAsPNG("public/images/offer-images/" .. http.postValues["offer-name"] .. ".png", 32, 32)
-
-        db:execute(
-            "INSERT INTO castro_shop_offers (category_id, description, price, name, created_at, updated_at, image) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            data.category.id,
-            http.postValues["offer-description"],
-            http.postValues["offer-price"],
-            http.postValues["offer-name"],
-            os.time(),
-            os.time(),
-            "/images/offer-images/" .. http.postValues["offer-name"] .. ".png"
-        )
-
-    else
-
-        db:execute(
-            "INSERT INTO castro_shop_offers (category_id, description, price, name, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-            data.category.id,
-            http.postValues["offer-description"],
-            http.postValues["offer-price"],
-            http.postValues["offer-name"],
-            os.time(),
-            os.time()
-        )
+        offerImagePath = "public/images/offer-images/" .. http.postValues["offer-name"] .. ".png"
     end
+
+    db:execute(
+        [[INSERT INTO castro_shop_offers 
+        (category_id, description, price, name, created_at, updated_at, image, give_item, give_item_amount, container_item, container_give_item) 
+        VALUES 
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]],
+        data.category.id,
+        http.postValues["offer-description"],
+        http.postValues["offer-price"],
+        http.postValues["offer-name"],
+        os.time(),
+        os.time(),
+        offerImagePath,
+        ternary(http.postValues["give-item"] == nil, 0, http.postValues["give-item"]),
+        ternary(http.postValues["give-item-amount"] == nil, 0, http.postValues["give-item-amount"]),
+        ternary(http.postValues["container-id"] == nil, 0, http.postValues["container-id"]),
+        table.concat(explode(",", http.postValues["container-item[]"]), ","),
+        table.concat(explode(",", http.postValues["container-item-amount[]"]), ",")
+    )
 
     session:setFlash("success", "Shop offer created")
     http:redirect("/subtopic/admin/shop/category?id=" .. data.category.id)

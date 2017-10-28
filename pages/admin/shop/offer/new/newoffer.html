@@ -1,48 +1,107 @@
 {{ template "header.html" . }}
 <link href="/css/froala_editor.pkgd.min.css" rel="stylesheet">
 <h3>New offer for: {{ .category.name }}</h3>
-<hr>
-{{ if .validationError }}
+<hr> {{ if .validationError }}
 <div class="alert alert-danger" role="alert">
     <strong>Error!</strong> {{ .validationError }}
 </div>
 {{ end }}
-<form enctype="multipart/form-data" method="post" action="{{ url "subtopic" "admin" "shop" "offer" "new" }}">
-    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
-    <input type="hidden" name="id" value="{{ .category.id }}">
-    <div class="form-group">
-        <label for="offer-name">Offer name</label>
-        <input id="offer-name" class="form-control" type="text" name="offer-name" placeholder="Offer name">
-    </div>
-    <div class="form-group">
-        <label for="article-text">Offer description</label>
-        <textarea name="offer-description" rows="8" id="offer-text" class="form-control">{{ .description }}</textarea>
-        <p class="help-block">
-            Extensive description about the offer. You can use BB codes
-        </p>
-    </div>
-    <div class="form-group">
-        <label for="offer-price">Offer price</label>
-        <input id="offer-price" class="form-control" type="number" min="0" name="offer-price" placeholder="Offer price">
-    </div>
-    <div class="form-group">
-        <label for="offer-image">Offer image</label>
-        <input type="file" id="offer-image" name="offer-image" class="form-control">
-        <p class="help-block">
-            Optional offer image. You can omit this field if the offer does not have an image. All images will be resized to a 64x64 size.
-        </p>
-    </div>
-    <div class="form-group">
-        <button class="btn btn-success" name="submit" value="create" type="submit">Create offer</button>
-    </div>
-</form>
+<div id="offer-tabs">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">General</a></li>
+        <li role="presentation"><a href="#item" aria-controls="offer" role="tab" data-toggle="tab">Item</a></li>
+        <li role="presentation"><a href="#container" aria-controls="container" role="tab" data-toggle="tab">Container</a></li>
+    </ul>
+    <form enctype="multipart/form-data" method="post" action="{{ url "subtopic" "admin" "shop" "offer" "new" }}">
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="general">
+                <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                <input type="hidden" name="id" value="{{ .category.id }}">
+                <div class="form-group">
+                    <label for="offer-name">Offer name</label>
+                    <input id="offer-name" class="form-control" type="text" name="offer-name" placeholder="Offer name">
+                </div>
+                <div class="form-group">
+                    <label for="article-text">Offer description</label>
+                    <textarea name="offer-description" rows="8" id="offer-text" class="form-control">{{ .description }}</textarea>
+                    <p class="help-block">
+                        Extensive description about the offer. You can use BB codes
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label for="offer-price">Offer price</label>
+                    <input id="offer-price" class="form-control" type="number" min="0" name="offer-price" placeholder="Offer price">
+                </div>
+                <div class="form-group">
+                    <label for="offer-image">Offer image</label>
+                    <input type="file" id="offer-image" name="offer-image" class="form-control">
+                    <p class="help-block">
+                        Optional offer image. You can omit this field if the offer does not have an image. All images will be resized to a 64x64
+                        size.
+                    </p>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="item">
+                <div class="form-group">
+                    <label for="item-id">Item ID</label>
+                    <input type="number" id="item-id" name="give-item" placeholder="Item ID" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="item-amount">Item amount</label>
+                    <input type="number" id="item-amount" name="give-item-amount" placeholder="Item amount" class="form-control">
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="container">
+                <div class="form-group">
+                    <label for="container-id">Container ID</label>
+                    <input type="number" id="container-id" name="container-id" placeholder="Container ID" class="form-control">
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="container-item-list">
+                            <div class="container-item-ext" id="container-item-1">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="container-id">Container item</label>
+                                            <input type="number" id="container-item" name="container-item[]" placeholder="Container item" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="container-id">Item amount</label>
+                                            <input type="number" id="container-item-amount" name="container-item-amount[]" placeholder="Container item amount" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info btn-xs" id="add-container-item">Add item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success" name="submit" value="create" type="submit">Create offer</button>
+        </div>
+    </form>
+</div>
 
 {{ template "footer.html" . }}
 <script src="/js/froala_editor.pkgd.min.js"></script>
 <script nonce={{ .nonce }}>
-	var csrfToken = {{ .csrfToken }}
+    var csrfToken = {{ .csrfToken }}
 </script>
 <script src="/js/froala.js"></script>
 <script nonce={{ .nonce }}>
-	froala("#offer-text");
+    froala("#offer-text");
+    var i = 1;
+    $('#add-container-item').on('click', function() {
+        var e = $('#container-item-1').clone();
+        i++;
+        e.attr("id", "container-item-" + i);
+        $('#container-item-list').append(e);
+    });
 </script>

@@ -95,3 +95,30 @@ function json:unmarshalFile(path)
     f:close()
     return t
 end
+
+-- Explode a string into a table
+function explode(d,p)
+   local t, ll
+   t={}
+   ll=0
+   if(#p == 1) then
+      return {p}
+   end
+   while true do
+      l = string.find(p, d, ll, true) -- find the next d in the string
+      if l ~= nil then -- if "not not" found then..
+        if string.sub(p,ll,l-1) ~= "" and string.sub(p,ll,l-1) ~= " " then
+            table.insert(t, trim(string.sub(p,ll,l-1))) -- Save it in our array.
+        end
+        ll = l + 1 -- save just after where we found it for searching next time.
+      else
+        table.insert(t, trim(string.sub(p,ll))) -- Save what's left in our array.
+        break -- Break at end, as it should be, according to the lua manual.
+      end
+   end
+   return t
+end
+
+function trim(s)
+  return s:match "^%s*(.-)%s*$"
+end

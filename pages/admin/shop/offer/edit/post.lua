@@ -1,4 +1,4 @@
-require "bbcode"
+require "util"
 
 function post()
     if not app.Shop.Enabled then
@@ -49,38 +49,42 @@ function post()
 
     local offerImage = http:formFile("offer-image")
 
-    if offerImage == nil then
+    if offerImage ~= nil then
 
-        db:execute(
-            "UPDATE castro_shop_offers SET description = ?, price = ?, name = ?, updated_at = ? WHERE id = ?",
-            http.postValues["offer-description"],
-            http.postValues["offer-price"],
-            http.postValues["offer-name"],
-            os.time(),
-            data.offer.id
-        )
-
-    else
-
-        if not offerImage:isValidPNG() then
+         if not offerImage:isValidPNG() then
             session:setFlash("validationError", "Offer image needs to be a valid png image")
             http:redirect("/subtopic/admin/shop/offer/edit?id=" .. data.offer.id)
             return
         end
 
         offerImage:saveFileAsPNG("public/images/offer-images/" .. http.postValues["offer-name"] .. ".png", 32, 32)
-
-        db:execute(
-            "UPDATE castro_shop_offers SET description = ?, price = ?, name = ?, updated_at = ?, image = ? WHERE id = ?",
-            http.postValues["offer-description"],
-            http.postValues["offer-price"],
-            http.postValues["offer-name"],
-            os.time(),
-            "/images/offer-images/" .. http.postValues["offer-name"] .. ".png",
-            data.offer.id
-        )
-
     end
+
+    db:execute(
+        [[UPDATE castro_shop_offers 
+        SET description = ?, 
+        price = ?, 
+        name = ?, 
+        updated_at = ?, 
+        image = ?, 
+        give_item = ?, 
+        give_item_amount = ?, 
+        container_item = ?, 
+        container_give_item = ?,
+        container_give_amount = ?
+        WHERE id = ?]],
+        http.postValues["offer-description"],
+        http.postValues["offer-price"],
+        http.postValues["offer-name"],
+        os.time(),
+        "/images/offer-images/" .. http.postValues["offer-name"] .. ".png",
+        ternary(http.postValues["give-item"] == nil, 0, http.postValues["give-item"]),
+        ternary(http.postValues["give-item-amount"] == nil, 0, http.postValues["give-item-amount"]),
+        ternary(http.postValues["container-id"] == nil, 0, http.postValues["container-id"]),
+        table.concat(explode(",", http.postValues["container-item[]"]), ","),
+        table.concat(explode(",", http.postValues["container-item-amount[]"]), ","),
+        data.offer.id
+    )
 
     session:setFlash("success", "Shop offer edited")
     http:redirect("/subtopic/admin/shop/category?id=" .. data.category.id)
