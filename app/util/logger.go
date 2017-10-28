@@ -1,14 +1,16 @@
 package util
 
 import (
+	"bytes"
 	"fmt"
-	"github.com/Sirupsen/logrus"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"sync"
 	"time"
+
+	"github.com/Sirupsen/logrus"
 )
 
 var (
@@ -30,6 +32,19 @@ type ApplicationLogger struct {
 	LastLoggerDay time.Time
 }
 
+// Custom logrus formatter interface
+type castroFormatter struct {
+}
+
+// Format converts a logrus text into a valid byte array for castro logging
+func (c *castroFormatter) Format(e *logrus.Entry) ([]byte, error) {
+	buff := &bytes.Buffer{}
+	buff.WriteString(
+		fmt.Sprintf("[%s] (%s) %s \r\n", e.Level, e.Time.Format("2006-01-02 15:04:05"), e.Message),
+	)
+	return buff.Bytes(), nil
+}
+
 // CreateLogFile creates a log file with the current time
 func CreateLogFile() (*os.File, time.Time, error) {
 	// Get current time
@@ -38,14 +53,20 @@ func CreateLogFile() (*os.File, time.Time, error) {
 	// Create log file
 	f, err := os.OpenFile(filepath.Join(
 		"logs",
-		fmt.Sprintf("%v-%v-%v.json", t.Year(), t.Month(), t.Day()),
+		fmt.Sprintf("%v-%v-%v.txt", t.Year(), t.Month(), t.Day()),
 	), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0777)
 
 	if err != nil {
 		return nil, t, err
 	}
 
-	return f, t, nil
+	// Get file stat
+	loggerFileInfo, err := f.Stat()
+	if err != nil {
+		return nil, t, err
+	}
+
+	return f, loggerFileInfo.ModTime(), nil
 }
 
 // CreateLogger creates a new logrus logger with the given output
@@ -57,7 +78,7 @@ func CreateLogger(out io.Writer) *logrus.Logger {
 	l.Out = out
 
 	// Set logger format
-	l.Formatter = &logrus.JSONFormatter{}
+	l.Formatter = &castroFormatter{}
 
 	// Set fatal handler
 	logrus.RegisterExitHandler(func() {
@@ -65,7 +86,7 @@ func CreateLogger(out io.Writer) *logrus.Logger {
 		// Show panic message
 		log.Printf(
 			"Fatal error encountered. Castro will now exit. For more information check %v",
-			filepath.Join("logs", fmt.Sprintf("%v-%v-%v.json", Logger.LastLoggerDay.Year(), Logger.LastLoggerDay.Month(), Logger.LastLoggerDay.Day())),
+			filepath.Join("logs", fmt.Sprintf("%v-%v-%v.txt", Logger.LastLoggerDay.Year(), Logger.LastLoggerDay.Month(), Logger.LastLoggerDay.Day())),
 		)
 	})
 
@@ -75,7 +96,7 @@ func CreateLogger(out io.Writer) *logrus.Logger {
 // RenewLogger runs a routine to check if the logger needs to be renewed if true a new logger file is created
 func RenewLogger() {
 	// Create time ticker
-	ticker := time.NewTicker(time.Hour * 24)
+	ticker := time.NewTicker(time.Second)
 
 	// Stop ticker
 	defer ticker.Stop()
@@ -85,9 +106,23 @@ func RenewLogger() {
 		select {
 		case <-ticker.C:
 
+			// Check if file is outdated
+			if time.Date(
+				Logger.LastLoggerDay.Year(),
+				Logger.LastLoggerDay.Month(),
+				Logger.LastLoggerDay.Day(),
+				0,
+				0,
+				0,
+				0,
+				Logger.LastLoggerDay.Location(),
+			).Add(time.Hour * 24).After(time.Now()) {
+				continue
+			}
+
 			// Lock mutex
 			Logger.rw.Lock()
-			Logger.rw.Unlock()
+			defer Logger.rw.Unlock()
 
 			Logger.Logger.Info("Creating new log file")
 

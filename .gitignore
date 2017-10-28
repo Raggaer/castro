@@ -5,7 +5,7 @@ vendor/*
 vendor.orig/*
 .idea
 public/images/signature/*.png
-logs/*.json
+logs/*.txt
 *.exe
 projectFilesBackup
 fdvdv.png
