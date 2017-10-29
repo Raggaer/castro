@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dchest/uniuri"
@@ -220,6 +221,14 @@ func newCsrfHandler() *csrfHandler {
 }
 
 func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+	// Skip nocsrf routes
+	if strings.HasPrefix(req.URL.Path, "/nocsrf") {
+
+		// Run next handler
+		next(w, req)
+		return
+	}
+
 	// Get session
 	session, ok := req.Context().Value("session").(map[string]interface{})
 
