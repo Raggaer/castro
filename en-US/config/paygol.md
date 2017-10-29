@@ -14,7 +14,7 @@ Enables or disables the PayGol service.
 
 # Service
 
-Its the PayGol servide identifier number.
+Its the PayGol service identifier number.
 
 # Secret
 

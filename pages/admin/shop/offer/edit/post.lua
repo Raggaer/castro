@@ -48,6 +48,7 @@ function post()
     http:parseMultiPartForm()
 
     local offerImage = http:formFile("offer-image")
+    local offerImagePath = ""
 
     if offerImage ~= nil then
 
@@ -58,6 +59,7 @@ function post()
         end
 
         offerImage:saveFileAsPNG("public/images/offer-images/" .. http.postValues["offer-name"] .. ".png", 32, 32)
+        offerImagePath = "/images/offer-images/" .. http.postValues["offer-name"] .. ".png"
     end
 
     db:execute(
@@ -77,7 +79,7 @@ function post()
         http.postValues["offer-price"],
         http.postValues["offer-name"],
         os.time(),
-        "/images/offer-images/" .. http.postValues["offer-name"] .. ".png",
+        offerImagePath,
         ternary(http.postValues["give-item"] == nil, 0, http.postValues["give-item"]),
         ternary(http.postValues["give-item-amount"] == nil, 0, http.postValues["give-item-amount"]),
         ternary(http.postValues["container-id"] == nil, 0, http.postValues["container-id"]),

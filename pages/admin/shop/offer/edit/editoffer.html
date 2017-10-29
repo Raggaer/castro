@@ -1,6 +1,6 @@
 {{ template "header.html" . }}
 <link href="/css/froala_editor.pkgd.min.css" rel="stylesheet">
-<h3>New offer for: {{ .category.name }}</h3>
+<h3>Edit offer for: {{ .category.name }}</h3>
 <hr> {{ if .validationError }}
 <div class="alert alert-danger" role="alert">
     <strong>Error!</strong> {{ .validationError }}

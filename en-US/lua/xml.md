@@ -66,6 +66,6 @@ function get()
 end
 ```
 
-Inline element keys follow this structure `-element`.
+Inline element keys follow this structure: `-element`.
 
-Its recommended that you cache the results, parsing an XML file on each request is not the way to go, [xml:unmarshalFile(filename)](#unmarshalfile) will save the XML result in the cache by default.
+Its recommended that you cache the results, parsing an XML file on each request is not the way to go, however, [xml:unmarshalFile(filename)](#unmarshalfile) will save the XML result in the cache by default.

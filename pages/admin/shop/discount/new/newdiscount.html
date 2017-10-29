@@ -24,26 +24,28 @@
     </div>
     <div class="form-group">
         <label for="code">Discount code valid until</label>
-        <input id="until" class="form-control" type="date" min="{{ .current }}" name="until" placeholder="Discount code valid until">
+        <input id="until" class="form-control" type="datetime" min="{{ .current }}" name="until" placeholder="Discount code valid until">
         <p class="help-block">
-            When the discount code will stop working
+            When the discount code will stop working. Valid format 2017-10-29
         </p>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="checkbox">
-                <input id="unlimited" type="radio" value="1" name="unlimited"> Unlimited player uses
-                <p class="help-block">
-                    Players can use this code on every transaction
-                </p>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="checkbox">
+                    <input id="unlimited" type="radio" value="1" name="unlimited"> Unlimited player uses
+                    <p class="help-block">
+                        Players can use this code on every transaction
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="checkbox">
-                <input id="uses" type="radio" value="0" name="unlimited"> Limited player uses
-                <p class="help-block">
-                    Players can use this code a limited number of transactions
-                </p>
+            <div class="col-md-6">
+                <div class="checkbox">
+                    <input id="uses" type="radio" value="0" name="unlimited"> Limited player uses
+                    <p class="help-block">
+                        Players can use this code a limited number of transactions
+                    </p>
+                </div>
             </div>
         </div>
     </div>
