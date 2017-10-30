@@ -57,7 +57,7 @@ func (r *rateLimitHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, n
 	}
 
 	// Get rate-limit context
-	ctx, err := r.Limiter.Get(ip)
+	ctx, err := r.Limiter.Get(req.Context(), ip)
 
 	if err != nil {
 		http.Error(w, "Cannot get rate-limit instance", 500)

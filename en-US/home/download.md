@@ -10,7 +10,7 @@ You can either compile Castro or download an already compiled version.
 
 You can grab the latest stable release from the [github release page](https://github.com/Raggaer/castro/releases). 
 
-However you can get the latest commit compiled at AppVeyor. Please note all AppVeyor releases are not tested.
+However you can get the latest commit compiled at [AppVeyor](https://ci.appveyor.com/project/Raggaer/castro). **Please note not all AppVeyor builds are tested.**
 
 ## Compiling
 

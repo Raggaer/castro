@@ -20,6 +20,7 @@ import (
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"github.com/ulule/limiter"
+	"github.com/ulule/limiter/drivers/store/memory"
 	"github.com/urfave/negroni"
 	"github.com/yuin/gopher-lua"
 	"golang.org/x/crypto/acme/autocert"
@@ -63,10 +64,10 @@ Compiled at: %v
 	}
 
 	// Create rate-limiter storage
-	store := limiter.NewMemoryStore()
+	store := memory.NewStore()
 
 	// Create rate-limiter
-	limiter := limiter.NewLimiter(store, rate)
+	limiter := limiter.New(store, rate)
 
 	// Declare our new http router
 	router := httprouter.New()

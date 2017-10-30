@@ -14,12 +14,6 @@
   version = "v1.0.3"
 
 [[projects]]
-  name = "github.com/ant0ine/go-json-rest"
-  packages = ["rest","rest/trie"]
-  revision = "ce4b71cdf7ba29ef443d704bd923f5bbf281ee30"
-  version = "v3.3.2"
-
-[[projects]]
   name = "github.com/anthonynsimon/bild"
   packages = ["blend","clone","fcolor","math/f64","parallel"]
   revision = "35fd1904d43f809ded0959922164885e25577aa2"
@@ -38,6 +32,12 @@
   version = "v1.6.1"
 
 [[projects]]
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
+  version = "v1.1.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/dchest/uniuri"
   packages = ["."]
@@ -48,12 +48,6 @@
   name = "github.com/dgryski/dgoogauth"
   packages = ["."]
   revision = "96977cbd42e27be71f9f731db6634123de7e861a"
-
-[[projects]]
-  name = "github.com/garyburd/redigo"
-  packages = ["internal","redis"]
-  revision = "433969511232c397de61b1442f9fd49ec06ae9ba"
-  version = "v1.1.0"
 
 [[projects]]
   name = "github.com/go-sql-driver/mysql"
@@ -122,6 +116,18 @@
   version = "v2.0.0"
 
 [[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
+
+[[projects]]
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/raggaer/goimage"
   packages = ["."]
@@ -146,10 +152,16 @@
   revision = "695fc75a09738f9be56aaa3aecfd7dac28e66b63"
 
 [[projects]]
+  name = "github.com/stretchr/testify"
+  packages = ["assert","require"]
+  revision = "69483b4bd14f5845b5a1e55bca19e954e827f1d0"
+  version = "v1.1.4"
+
+[[projects]]
   name = "github.com/ulule/limiter"
-  packages = ["."]
-  revision = "619f3ae8cc00f54934d27591e7010c8f6216c5ca"
-  version = "v1.0.0"
+  packages = [".","drivers/store/common","drivers/store/memory"]
+  revision = "fe4c2975cbe8dfd005b4450464817499ec10d1dd"
+  version = "v2.0.0"
 
 [[projects]]
   name = "github.com/urfave/negroni"
@@ -209,6 +221,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "1ada771b2dd687cc09fa0cde16e6dade6c8468f1a7ac61bfc3cf750b7725e74c"
+  inputs-digest = "e7fd23db6d24dd3520328d259f69512cc237ebbf4b039d174082e573156adaf2"
   solver-name = "gps-cdcl"
   solver-version = 1
