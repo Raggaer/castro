@@ -211,7 +211,6 @@ func executeMigrations() {
 		return nil
 
 	}); err != nil {
-
 		util.Logger.Logger.Fatalf("Cannot run migration files: %v", err)
 	}
 }
@@ -325,7 +324,10 @@ func createCache() {
 	// Create a new cache instance with the given options
 	// first parameter is the default item duration on the cache
 	// second parameter is the tick time to purge all dead cache items
-	util.Cache = cache.New(util.Config.Configuration.Cache.Default.Duration, util.Config.Configuration.Cache.Purge.Duration)
+	util.Cache = cache.New(
+		util.Config.Configuration.Cache.Default.Duration,
+		util.Config.Configuration.Cache.Purge.Duration,
+	)
 }
 
 func loadWidgetList(wg *sync.WaitGroup) {

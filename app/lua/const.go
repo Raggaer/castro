@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// ExtensionMetaTableName the name of the extension metatable
+	ExtensionMetaTableName = "extension"
+
 	// OutfitMetaTableName the name of the outfit metatable
 	OutfitMetaTableName = "outfit"
 

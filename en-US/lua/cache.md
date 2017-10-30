@@ -2,9 +2,9 @@
 Name: cache
 ---
 
-# Metatable:cache
+# Cache metatable
 
-Provides access to the application cache object
+Provides access to the application cache instance.
 
 - [cache:set(key, value, duration)](#set)
 - [cache:get(key)](#get)

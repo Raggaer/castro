@@ -105,3 +105,16 @@ func GetFiles(L *lua.LState) int {
 
 	return 1
 }
+
+// CreateDirectory creates the given directory
+func CreateDirectory(L *lua.LState) int {
+	// Get directory path
+	path := L.ToString(2)
+
+	// Create any missing directory
+	if err := os.MkdirAll(path, os.ModeDir); err != nil {
+		L.RaiseError("Cannot create missing directories: %v", err)
+	}
+
+	return 0
+}

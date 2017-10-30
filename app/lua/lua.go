@@ -181,10 +181,11 @@ var (
 		"setBackground": SetBackgroundGoImage,
 	}
 	fileMethods = map[string]glua.LGFunction{
-		"mod":            GetFileModTime,
-		"exists":         CheckFileExists,
-		"getDirectories": GetDirectories,
-		"getFiles":       GetFiles,
+		"mod":             GetFileModTime,
+		"exists":          CheckFileExists,
+		"getDirectories":  GetDirectories,
+		"getFiles":        GetFiles,
+		"createDirectory": CreateDirectory,
 	}
 	envMethods = map[string]glua.LGFunction{
 		"set": SetEnvVariable,
@@ -208,6 +209,9 @@ var (
 	}
 	outfitMethods = map[string]glua.LGFunction{
 		"generate": GenerateOutfit,
+	}
+	extensionMethods = map[string]glua.LGFunction{
+		"reload": ReloadExtensions,
 	}
 )
 

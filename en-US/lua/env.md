@@ -2,7 +2,7 @@
 Name: env
 ---
 
-# Metatable:env
+# Environment metatable
 
 Provides access environment variables
 
