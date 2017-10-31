@@ -14,5 +14,9 @@ If the map is already parsed Castro will check how old the map is and update if 
 
 All town data is gathered from the parsed map. If you add new towns you have two options to reload the map:
 
-- Restart castro: Castro will check for any updates on your map file.
+- Restart: Castro will check for any updates on your map file.
 - Wait: Castro service will eventually notice about your map beeing updated.
+
+## Reload
+
+While Castro is running, as you have seen, the map is reloaded when you make changes to it. The period of time between changes is configured on the [map watcher configuration field](/docs/config/mapwatch)

@@ -1,10 +1,12 @@
 ---
-name: Mail
+name: Mapwatch
 ---
+
+# Map-watcher
 
 Provides access to the map watcher configuration options.
 
-- [Enabled])(#enabled)
+- [Enabled](#enabled)
 - [Check](#check)
 
 # Enabled

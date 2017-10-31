@@ -2,6 +2,8 @@
 name: Mail
 ---
 
+# Mail
+
 Provides access to the mail client options. You can send mails using lua.
 
 - [Enabled](#enabled)

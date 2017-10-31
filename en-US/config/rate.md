@@ -2,6 +2,8 @@
 name: Rate limit
 ---
 
+# Rate-limiter
+
 Provides access to the website request rate-limiter.
 
 - [Enabled](#enabled)
