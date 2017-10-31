@@ -19,6 +19,7 @@ The manifest can contain the following fields:
 - templateHooks (optional): same as hooks except the file should be a html template.
 
 ## Example extension.json
+
 ```json
 {
     "author":"Castro",

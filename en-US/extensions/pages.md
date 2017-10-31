@@ -9,6 +9,7 @@ A page in `my-extension/pages/path/to/page`, will correspond to `example.com/sub
 You can also add a new page to an existing folder. For example if you want to add a new page to `subtopic/community`, you just have to place your page in `my-extension/pages/community/my-page`.
 
 ## Files
+
 Pages consists of 2 types of files, html for templates and Lua for logic. The Lua and html files for extension pages works the same way as [custom pages](/docs/info/pages).
 
 ### Folder structure
@@ -26,6 +27,7 @@ my_extension /
 In addition to adding new pages, you may also override any default page or template.
 
 ### Template
+
 If you wish to override the template of a page only, all you have to do is put a html file with the exact same name as the file one you wish to replace in your `pages` folder. To replace the home page template, you would put your own template in `my-extension/pages` and name it `home.html`. Any variables passed by the default Lua files will be available to your template.
 
 Keep in mind that since you can overwrite any existing template by adding your own version, you might also overwrite a template by accident if you use a too generic name for your template. To avoid accidental overwrites it is a good idea to include, for example, your extenion's id in the filename, `my-extension.my-page.html`.
