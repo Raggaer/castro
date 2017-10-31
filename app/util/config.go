@@ -19,6 +19,12 @@ type CookieConfig struct {
 	BlockKey string
 }
 
+// MapWatchConfig map watcher goroutine configuration options
+type MapWatchConfig struct {
+	Enabled bool
+	Check   StringDuration
+}
+
 // ShopConfig struct used for the shop configuration options
 type ShopConfig struct {
 	Enabled bool
@@ -126,6 +132,7 @@ type Configuration struct {
 	Port         int
 	URL          string
 	Datapack     string
+	MapWatch     MapWatchConfig
 	Security     SecurityConfig
 	Plugin       PluginConfig
 	Mail         MailConfig

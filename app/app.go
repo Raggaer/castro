@@ -46,6 +46,7 @@ func Start() {
 	go func(wait *sync.WaitGroup) {
 
 		loadMap()
+		go mapWatcher()
 		go loadHouses(wait)
 		go loadVocations(wait)
 	}(wait)
@@ -75,7 +76,7 @@ func Start() {
 func overwriteConfigFile(wg *sync.WaitGroup) {
 	// Overwrite config file
 	if err := lua.OverwriteConfigFile(); err != nil {
-
+		util.Logger.Logger.Fatalf("Cannot overwrite config file: %v", err)
 	}
 
 	// Finish task
@@ -92,13 +93,40 @@ func loadExtensionStaticResources(wg *sync.WaitGroup) {
 	wg.Done()
 }
 
+func mapWatcher() {
+	// Check if watcher is enabled
+	if !util.Config.Configuration.MapWatch.Enabled {
+		return
+	}
+
+	// Create watcher ticker
+	ticker := time.NewTicker(util.Config.Configuration.MapWatch.Check.Duration)
+	defer ticker.Stop()
+
+	// Start watcher loop
+	for {
+		select {
+		case <-ticker.C:
+			// Reload map
+			loadMap()
+		}
+	}
+}
+
 func loadMap() {
 	// Map holder
 	m := models.Map{}
 
-	// Check if map is encoded
-	err := database.DB.Get(&m, "SELECT id, name, data, created_at, updated_at FROM castro_map WHERE name = ? ORDER BY id DESC", lua.Config.GetGlobal("mapName").String())
+	// Get map mod time
+	fileInformation, err := os.Stat(filepath.Join(util.Config.Configuration.Datapack, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"))
+	if err != nil {
+		util.Logger.Logger.Fatalf("Cannot get map file information: %v", err)
+	}
 
+	// Check if map is encoded
+	err = database.DB.Get(&m, "SELECT id, name, data, created_at, updated_at, last_modtime FROM castro_map WHERE name = ? ORDER BY id DESC", lua.Config.GetGlobal("mapName").String())
+
+	// Unexpected error
 	if err != nil && err != sql.ErrNoRows {
 		util.Logger.Logger.Fatalf("Cannot retrieve map from database: %v", err)
 	}
@@ -123,15 +151,23 @@ func loadMap() {
 		m.Data = mapData
 		m.Created_at = time.Now()
 		m.Updated_at = time.Now()
+		m.Last_modtime = fileInformation.ModTime()
 
 		// Save map
-		if _, err := database.DB.Exec("INSERT INTO castro_map (name, data, created_at, updated_at) VALUES (?, ?, ?, ?)", m.Name, m.Data, m.Created_at, m.Updated_at); err != nil {
+		if _, err := database.DB.Exec(
+			"INSERT INTO castro_map (name, data, created_at, updated_at, last_modtime) VALUES (?, ?, ?, ?, ?)",
+			m.Name,
+			m.Data,
+			m.Created_at,
+			m.Updated_at,
+			m.Last_modtime,
+		); err != nil {
 			util.Logger.Logger.Fatalf("Cannot save encoded map file: %v", err)
 		}
 	}
 
 	// Check if map is old
-	if m.Updated_at.Add(time.Hour).Before(time.Now()) {
+	if !fileInformation.ModTime().Round(time.Second).Equal(m.Last_modtime) {
 
 		fmt.Println(">> Encoded map is outdated. Generating new map data")
 		util.Logger.Logger.Info("Encoded map is outdated. Generating new map data")
@@ -150,6 +186,7 @@ func loadMap() {
 		m.Data = mapData
 		m.Created_at = time.Now()
 		m.Updated_at = time.Now()
+		m.Last_modtime = fileInformation.ModTime()
 
 		// Save map
 		if _, err := database.DB.Exec("UPDATE castro_map SET data = ?, created_at = ?, updated_at = ? WHERE name = ?", m.Data, m.Created_at, m.Updated_at, m.Name); err != nil {

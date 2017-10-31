@@ -188,6 +188,10 @@ var (
 		Port:         80,
 		URL:          "localhost",
 		Datapack:     "",
+		MapWatch: util.MapWatchConfig{
+			Enabled: true,
+			Check:   util.NewStringDuration("1h"),
+		},
 		Cookies: util.CookieConfig{
 			Name:     fmt.Sprintf("castro-%v", uniuri.NewLen(5)),
 			MaxAge:   1000000,

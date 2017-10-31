@@ -6,7 +6,7 @@ name: Behind a proxy
 
 The best setup for Castro is to be behind a HTTP server. The recommended servers are:
 
-- [nginx](https://nginx.org/en/)
+- [nginx](https://nginx.org/)
 - [Caddy](https://caddyserver.com/)
 
 Below are some examples on how to setup Castro behind one of these servers. You need to pass a `X-Forwarded-To` header if running behind a proxy to make the rate-limiter work properly.
