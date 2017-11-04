@@ -92,6 +92,16 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 				util.Logger.Logger.Errorf("Cannot load extension widgets when executing %v subtopic: %v", ps.ByName("page"), err)
 			}
 		}
+		
+		// Reload widget list
+		if err := util.Widgets.Load("widgets/"); err != nil {
+			util.Logger.Logger.Fatalf("Cannot load widget list: %v", err)
+		}
+
+		// Reload extension widget list
+		if err := util.Widgets.LoadExtensions(); err != nil {
+			util.Logger.Logger.Errorf("Cannot load extension widget list: %v", err)
+		}
 	}
 
 	// Get session

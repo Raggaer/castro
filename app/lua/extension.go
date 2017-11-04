@@ -1,6 +1,9 @@
 package lua
 
-import lua "github.com/yuin/gopher-lua"
+import (
+	lua "github.com/yuin/gopher-lua"
+	"github.com/raggaer/castro/app/util"
+)
 
 // SetExtensionMetaTable sets the extension metatable for the given state
 func SetExtensionMetaTable(luaState *lua.LState) {
@@ -16,7 +19,17 @@ func SetExtensionMetaTable(luaState *lua.LState) {
 func ReloadExtensions(L *lua.LState) int {
 	// Reload extension pages
 	if err := PageList.LoadExtensions(); err != nil {
-		L.RaiseError("Cannot reload extension list: %v", err)
+		L.RaiseError("Cannot reload extension page list: %v", err)
+	}
+
+	// Reload extension widgets
+	if err := WidgetList.LoadExtensions(); err != nil {
+		L.RaiseError("Cannot reload extension widget list: %v", err)
+	}
+
+	// Reload extension widget list
+	if err := util.Widgets.LoadExtensions(); err != nil {
+		L.RaiseError("Cannot reload extension widget list: %v", err)
 	}
 
 	return 0
