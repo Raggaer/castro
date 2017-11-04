@@ -87,12 +87,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 		// Reload extension widgets
 		if err := lua.WidgetList.LoadExtensions(); err != nil {
-			// If AAC is running on development mode log error
-			if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
-				util.Logger.Logger.Errorf("Cannot load extension widgets when executing %v subtopic: %v", ps.ByName("page"), err)
-			}
+			util.Logger.Logger.Errorf("Cannot load extension widgets when executing %v subtopic: %v", ps.ByName("page"), err)
 		}
-		
+
 		// Reload widget list
 		if err := util.Widgets.Load("widgets/"); err != nil {
 			util.Logger.Logger.Fatalf("Cannot load widget list: %v", err)
