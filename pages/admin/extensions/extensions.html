@@ -1,71 +1,71 @@
 {{ template "header.html" . }}
 <h3>
-    Extensions
-    {{ if .author }}
-    {{ $author := index .list.Data 0 }}
-    made by {{ $author.AuthorName }}
-    {{ end }}
+    Extension list
 </h3>
-<hr>
+<hr> 
 {{ if .error }}
 <div class="alert alert-danger" role="alert">
     <strong>Error!</strong> {{ .error }}
 </div>
 {{ end }}
-{{ if .list.Error }}
-<div class="alert alert-danger" role="alert">
-    <strong>Error!</strong> {{ .list.Message }}
-</div>
+<p>
+    You can also check the extensions on the <a href="https://plugins.castroaac.org">official site</a>. After downloading an extension you need to <a href="{{ url "subtopic" "admin" "extensions" "install" }}">install</a> it
+</p>
+<p>
+    You can search extensions by name using the form below
+</p>
+<hr>
+<form method="post" action="{{ url "subtopic" "admin" "extensions" }}">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <div class="form-group">
+        <input name="name" type="text" class="form-control" placeholder="Extension name">
+    </div>
+    <button type="submit" class="btn btn-success">Search</button>
+</form>
+<hr> 
+{{ if .list.List }}
+<table class="table table-striped table-hover">
+    <thead class="thead-inverse">
+        <tr>
+            <th>Name</th>
+            <th>Commits</th>
+            <th>Releases</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range $index, $element := .list.List }}
+        <tr>
+            <td><a href="{{ str2url $.origin }}/view/{{ urlEncode $element.Name }}">{{ $element.Name }}</a></td>
+            <td>
+                <span class="badge">{{ $element.CommitNumber }}</span>
+            </td>
+            <td>
+                <span class="badge">{{ $element.ReleaseNumber }}</span>
+            </td>
+            <td>
+                {{ if $element.LastRelease }}
+                <a href="{{ str2url $element.LastRelease.ZipballUrl }}" role="button" class="btn btn-info btn-xs">Download</a>
+                {{ else }}
+                No releases
+                {{ end }}
+            </td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+<ul class="pagination pagination-sm">
+    {{ if .list.Prev }}
+    <li><a href="{{ url "subtopic" "admin" "extensions" }}?page={{ .list.PrevPage }}">Prev</a></li>
+    {{ end }}
+    </li>
+    {{ if .list.Next }}
+    <li><a href="{{ url " subtopic" "admin" "extensions" }}?page={{ .list.NextPage }}">Next</a></li>
+    {{ end }}
+</ul>
 {{ else }}
-
-            <p>
-                Navigate through the extensions. You can get more information about a given extension, download or even subscribe.
-            </p>
-            <p>
-                When subscribing to an extension Castro will check for updates when initiating
-            </p>
-            <hr>
-            {{ if .list.Data }}
-            <table class="table table-striped table-hover">
-                <thead class="thead-inverse">
-                <tr>
-                    <th>Name</th>
-                    <th>Author</th>
-                    <th>Views</th>
-                    <th>Downloads</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {{ range $index, $element := .list.Data }}
-                <tr>
-                    <td>{{ $element.Name }}</td>
-                    <td><a href="{{ url "subtopic" "admin" "extensions" }}?author={{ $element.Author }}">{{ $element.AuthorName }}</a></td>
-                    <td>{{ $element.Views }}</td>
-                    <td>{{ $element.Downloads }}</td>
-                    <td>
-                        <a href="{{ url "subtopic" "admin" "extensions" "view" }}?id={{ $element.ID }}" role="button" class="btn btn-info btn-xs">View</a>
-                    </td>
-                </tr>
-                {{ end }}
-                </tbody>
-            </table>
-            <ul class="pagination pagination-sm">
-                {{ if .paginator.prev }}
-                <li><a href="{{ url "subtopic" "admin" "extensions" }}?page={{ .paginator.firstpage.num }}">First</a></li>
-                <li><a href="{{ url "subtopic" "admin" "extensions" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
-                {{ end }}
-                </li>
-                {{ if $.paginator.last }}
-                <li><a href="{{ url "subtopic" "admin" "extensions" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
-                <li><a href="{{ url "subtopic" "admin" "extensions" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
-                {{ end }}
-            </ul>
-            {{ else }}
-            <p>
-                No plugins
-            </p>
-            {{ end }}
-
-{{ end }}
+<p>
+    No plugins
+</p>
+{{ end }} 
 {{ template "footer.html" . }}

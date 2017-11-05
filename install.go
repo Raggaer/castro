@@ -188,6 +188,10 @@ var (
 		Port:         80,
 		URL:          "localhost",
 		Datapack:     "",
+		Plugin: util.PluginConfig{
+			Enabled: true,
+			Origin:  "https://plugins.castroaac.org",
+		},
 		MapWatch: util.MapWatchConfig{
 			Enabled: true,
 			Check:   util.NewStringDuration("1h"),

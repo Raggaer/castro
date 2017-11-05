@@ -491,6 +491,12 @@ func templateFuncs() template.FuncMap {
 		"str2html": func(text string) template.HTML {
 			return template.HTML(text)
 		},
+		"str2attr": func(text string) template.HTMLAttr {
+			return template.HTMLAttr(text)
+		},
+		"str2url": func(text string) template.URL {
+			return template.URL(text)
+		},
 		"nl2br": func(text string) template.HTML {
 			return template.HTML(
 				strings.Replace(text, "\r\n", "<br>", -1),

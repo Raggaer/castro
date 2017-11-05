@@ -32,10 +32,8 @@ type ShopConfig struct {
 
 // PluginConfig struct used for the plugin listener
 type PluginConfig struct {
-	Enabled  bool
-	Username string
-	Password string
-	Origin   string
+	Enabled bool
+	Origin  string
 }
 
 // RateLimiterConfig struct used for the rate limiting configuration options
