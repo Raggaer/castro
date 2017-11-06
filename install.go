@@ -351,7 +351,7 @@ func startInstallerApplication() error {
 	}
 
 	// Create installer listener
-	listener, err := net.Listen("tcp", ":0")
+	listener, err := net.Listen("tcp", ":8080")
 
 	if err != nil {
 		return err
