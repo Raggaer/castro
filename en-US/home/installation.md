@@ -8,6 +8,8 @@ Castro does not need a HTTP server, this means you dont need Apache, XAMPP, NGIN
 
 **You need however a running MySQL server.**
 
+> **Make sure you run Castro from the main directory (Castro folder)**
+
 # Installation
 
 Castro comes with a very handy installation wizard. If its your first time using Castro start the application, Castro will tell you the running port of the installation wizard then just head over to that page and follow the simple steps.
