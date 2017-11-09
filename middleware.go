@@ -191,7 +191,6 @@ func (s *sessionHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, nex
 		cookie.Value,
 		&v,
 	); err != nil {
-
 		util.Logger.Logger.Errorf("Cannot decode cookie value: %v", err)
 		return
 	}

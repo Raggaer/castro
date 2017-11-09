@@ -14,6 +14,7 @@ Castro provides a list of already defined functions you can use on your template
 - [urlEncode](#urlencode)
 - [isDev](#isdev)
 - [str2html](#str2html)
+- [str2url](#str2url)
 
 # url
 
@@ -81,4 +82,12 @@ Converts the given string to HTML output. By default Castro sanitizes all HTML o
 
 ```html
 {{ str2html .text }}
+```
+
+# str2url
+
+Converts the given string to a safe URL output. By default Castro sanitizes URL values to prevent any kind of attacks.
+
+```html
+<a href="/test/{{ str2url "hello }}">
 ```

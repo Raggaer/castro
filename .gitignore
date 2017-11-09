@@ -21,3 +21,4 @@ public/images/outfits/*.png
 public/froala/images/*.png
 public/froala/files/*
 !public/froala/files/.gitkeep
+tls

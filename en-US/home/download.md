@@ -10,7 +10,7 @@ You can either compile Castro or download an already compiled version.
 
 You can grab the latest stable release from the [github release page](https://github.com/Raggaer/castro/releases).
 
-You can grab the latest compiled version from [AppVeyor artifacts](https://ci.appveyor.com/project/Raggaer/castro/build/artifacts) you will need to download an executable for your system and the **buildOutput/release.zip** folder.
+You can grab the latest compiled version from [AppVeyor artifacts](https://ci.appveyor.com/project/Raggaer/castro/build/artifacts). You will need to download an executable for your system and the **buildOutput/release.zip** folder.
 
 > **Please note not all AppVeyor builds are tested**
 

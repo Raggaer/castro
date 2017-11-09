@@ -498,8 +498,9 @@ func templateFuncs() template.FuncMap {
 			return template.URL(text)
 		},
 		"nl2br": func(text string) template.HTML {
+			text = template.HTMLEscapeString(text)
 			return template.HTML(
-				strings.Replace(text, "\r\n", "<br>", -1),
+				strings.Replace(text, "\n", "<br>", -1),
 			)
 		},
 		"urlEncode": func(t string) template.URL {

@@ -1,8 +1,8 @@
 ---
-name: SSL
+name: HTTPS
 ---
 
-# SSL
+# HTTPS
 
 Provides access to Secure Socket Layer options.
 
