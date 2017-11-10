@@ -78,6 +78,8 @@ Compiled at: %v
 	router.POST("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/extensions/:id/static/*filepath", controllers.ExtensionStatic)
+	router.POST("/nocsrf/*filepath", controllers.LuaPage)
+	
 
 	// Register pprof router only on development mode
 	if util.Config.Configuration.IsDev() {

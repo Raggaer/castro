@@ -57,6 +57,20 @@ func SetHTTPUserData(luaState *glua.LState, w http.ResponseWriter, r *http.Reque
 	httpR.Value = r
 	luaState.SetField(httpMetaTable, HTTPRequestName, httpR)
 
+	// Request body placeholder
+	body := ""
+
+	// Read request body
+	buf, err := ioutil.ReadAll(r.Body)
+	if err == nil {
+
+		// Update request body
+		body = string(buf[:])
+	}
+
+	// Set request body
+	luaState.SetField(httpMetaTable, HTTPMetaTableBodyName, glua.LString(body))
+
 	// Set GET values as lua table
 	luaState.SetField(httpMetaTable, HTTPGetValuesName, URLValuesToTable(r.URL.Query()))
 

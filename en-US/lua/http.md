@@ -6,6 +6,9 @@ Name: http
 
 Provides access to HTTP related functions.
 
+- [http.method](#method)
+- [http.subtopic](#subtopic)
+- [http.body](#body)
 - [http:redirect(url, header)](#redirect)
 - [http:render(template, data)](#render)
 - [http:write(string)](#write)
@@ -17,6 +20,35 @@ Provides access to HTTP related functions.
 - [http:getRemoteAddress()](#getremoteaddress)
 - [http:curl(data)](#curl)
 - [http:formFile(name)](#formfile)
+
+# method
+
+Holds the incoming request method.
+
+```lua
+local method = http.method
+-- method = "GET"
+```
+
+# subtopic
+
+Holds the current subtopic uri.
+
+```lua
+-- example.com/subtopic/test
+
+local subtopic = http.subtopic
+-- subtopic = "/subtopic/test"
+```
+
+# body
+
+Holds the incoming request body, useful for creating a JSON API. Will be an empty string if there is no body attached.
+
+```lua
+local body = http.body
+-- body = "<html>...</html>"
+```
 
 # redirect
 

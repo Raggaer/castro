@@ -123,4 +123,7 @@ const (
 
 	// HTTPCurrentSubtopic the field name of the current subtopic uri
 	HTTPCurrentSubtopic = "subtopic"
+
+	// HTTPMetaTableBodyName the field name of the http body
+	HTTPMetaTableBodyName = "body"
 )
