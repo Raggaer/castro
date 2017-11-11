@@ -1,6 +1,11 @@
 require "paypal"
 
 function post()
+    if not app.PayGol.Enabled then
+        http:redirect("/")
+        return
+    end
+    
     if not session:isLogged() then
         http:redirect("/subtopic/login")
         return
