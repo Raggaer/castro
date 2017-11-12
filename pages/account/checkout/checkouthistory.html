@@ -20,9 +20,9 @@
             <td>{{ $element.amount }}</td>
             <td>
                 {{ if $element.given }}
-                Given
+                <button class="btn btn-success btn-xs">Given</button>
                 {{ else }}
-                Wait
+                <button class="btn btn-danger btn-xs">Waiting</button>
                 {{ end }}
             </td>
         </tr>

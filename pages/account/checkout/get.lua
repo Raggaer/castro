@@ -27,7 +27,7 @@ function get()
     local pg = paginator(page, 15, tonumber(count.total))
     local data = {}
 
-    data.list = db:query("SELECT a.name, b.given, b.amount FROM castro_shop_offers a, castro_shop_checkout b WHERE a.id = b.offer AND b.account = ? ORDER BY created_at DESC LIMIT ?, ?", account.ID, pg.offset, pg.limit)
+    data.list = db:query("SELECT a.name, b.given, b.amount FROM castro_shop_offers a, castro_shop_checkout b WHERE a.id = b.offer AND b.account = ? ORDER BY b.id DESC LIMIT ?, ?", account.ID, pg.offset, pg.limit)
     data.paginator = pg
 
     http:render("checkouthistory.html", data)

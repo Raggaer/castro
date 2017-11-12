@@ -10,6 +10,7 @@ function widget()
     data.paypal = app.PayPal.Enabled
     data.paygol = app.PayGol.Enabled
     data.fortumo = app.Fortumo.Enabled
+    data.shop = app.Shop.Enabled
 
     widgets:render("account.html", data)
 end

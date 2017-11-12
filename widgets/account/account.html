@@ -13,6 +13,9 @@
         <ul class="list-group list-widget">
             <li class="list-group-item"><a class="light" href="{{ url "subtopic" "account" "dashboard" }}">Dashboard</a></li>
             <li class="list-group-item"><a class="light" href="{{ url "subtopic" "account" "createchar" }}">Create character</a></li>
+            {{ if .shop }}
+            <li class="list-group-item"><a class="light" href="{{ url "subtopic" "account" "checkout" }}">Checkout history</a></li>
+            {{ end }}
             {{ if .paypal }}
             <li class="list-group-item"><a class="light" href="{{ url "subtopic" "account" "paypal" }}">PayPal payments</a></li>
             {{ end }}
