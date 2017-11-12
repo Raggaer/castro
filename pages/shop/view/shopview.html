@@ -65,6 +65,13 @@
         <form method="post" action="{{ url "subtopic" "shop" "checkout" }}">
             <input type="hidden" name="_csrf" value="{{ $.csrfToken }}">
             <div class="form-group">
+                <select name="player" class="form-control">
+                    {{ range $index, $element := .players }}
+                    <option value="{{ urlEncode $element.name }}">{{ $element.name }}</option>
+                    {{ end }}
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="input-discount-code">Discount code</label>
                 <input type="text" class="form-control" id="input-discount" name="discount" placeholder="Discount code">
                 <small class="form-text text-muted">

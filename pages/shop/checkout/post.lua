@@ -16,6 +16,14 @@ function post()
         return
     end
 
+    local account = session:loggedAccount()
+    local character = db:singleQuery("SELECT id, name FROM players WHERE account_id = ? AND name = ?", account.ID, url:decode(http.postValues["player"]))
+
+    if character == nil then
+        http:redirect("/")
+        return
+    end
+
     local cartdata = {}
     local totalprice = 0
 
@@ -44,8 +52,6 @@ function post()
         end
     end
 
-    local account = session:loggedAccount()
-
     if account.castro.Points < totalprice then
         session:setFlash("error", "You need more points")
         http:redirect("/subtopic/shop/view")
@@ -55,7 +61,7 @@ function post()
     db:execute("UPDATE castro_accounts SET points = points - ? WHERE account_id = ?", totalprice, account.ID)
     
     for name, offer in pairs(cartdata) do
-        db:execute("INSERT INTO castro_shop_checkout (offer, amount, account, given) VALUES (?, ?, ?, 0)", offer.offer.id, offer.count, account.ID)
+        db:execute("INSERT INTO castro_shop_checkout (offer, amount, player, given) VALUES (?, ?, ?, 0)", offer.offer.id, offer.count, character.name)
     end
 
     session:set("shop-cart", {})

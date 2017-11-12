@@ -8,7 +8,6 @@ function post()
     local character = db:singleQuery("SELECT id, name FROM players WHERE account_id = ? AND name = ?", account.ID, url:decode(http.postValues["guild-owner"]))
 
     if character == nil then
-        http:redirect("/")
         http:redirect()
         return
     end
