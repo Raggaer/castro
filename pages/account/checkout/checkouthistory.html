@@ -1,0 +1,51 @@
+{{ template "header.html" . }}
+<h3>My shop checkouts</h3>
+<hr>
+{{ if .list }}
+<table class="table table-striped">
+    <thead class="thead-inverse">
+    <tr>
+        <th>Offer</th>
+        <th>Amount</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ if .list }}
+        {{ range $index, $element := .list }}
+        <tr>
+            <td>
+                <a href="{{ url "subtopic" "shop" }}">{{ $element.name }}</a>
+            </td>
+            <td>{{ $element.amount }}</td>
+            <td>
+                {{ if $element.given }}
+                Given
+                {{ else }}
+                Wait
+                {{ end }}
+            </td>
+        </tr>
+        {{ end }}
+    {{ else }}
+    <tr>
+        <td colspan="3">No transactions made</td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
+<ul class="pagination pagination-sm">
+    {{ if .paginator.prev }}
+    <li><a href="{{ url "subtopic" "account" "checkout" }}?page={{ .paginator.firstpage.num }}">First</a></li>
+    <li><a href="{{ url "subtopic" "account" "checkout" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
+    {{ end }}
+    </li>
+    {{ if $.paginator.last }}
+    <li><a href="{{ url "subtopic" "account" "checkout" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
+    <li><a href="{{ url "subtopic" "account" "checkout" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
+    {{ end }}
+</ul>
+{{ else }}
+<p>No payments made</p>
+{{ end }}
+{{ template "footer.html" . }}

@@ -21,14 +21,14 @@ function post()
 
     for name, count in pairs(cart) do
         cartdata[name] = {}
-        cartdata[name].offer = db:singleQuery("SELECT name, price FROM castro_shop_offers WHERE name = ?", name)
+        cartdata[name].offer = db:singleQuery("SELECT id, name, price FROM castro_shop_offers WHERE name = ?", name)
 
         if cartdata[name].offer == nil then
             http:redirect("/")
             return
         end
 
-        totalprice = tonumber(cartdata[name].offer.price) * count
+        totalprice = totalprice + tonumber(cartdata[name].offer.price) * count
 
         cartdata[name].count = count
     end
@@ -53,7 +53,12 @@ function post()
     end
 
     db:execute("UPDATE castro_accounts SET points = points - ? WHERE account_id = ?", totalprice, account.ID)
+    
+    for name, offer in pairs(cartdata) do
+        db:execute("INSERT INTO castro_shop_checkout (offer, amount, account, given) VALUES (?, ?, ?, 0)", offer.offer.id, offer.count, account.ID)
+    end
+
     session:set("shop-cart", {})
-    session:setFlash("success", "You paid " .. totalprice .. " for all your cart items")
+    session:setFlash("success", "You paid " .. totalprice .. " for all your cart items. You will get your items in-game")
     http:redirect("/subtopic/shop/view")
 end

@@ -18,7 +18,7 @@ function get()
     end
 
     if page < 0 then
-        http:redirect("/subtopic/account/paypal")
+        http:redirect("/subtopic/account/paygol")
         return
     end
 
