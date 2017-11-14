@@ -35,3 +35,26 @@ http:render("test.html", data)
 ```
 
 All these variables are always secure to use.
+
+# Global variables
+
+Variables that are available on each request:
+
+- [widgets](#widgets)
+- [microtime](#microtime)
+
+## Widgets
+
+Contains all the widgets html text. You can loop this variable to show the widgets:
+
+```html
+{{ range $index, $element := .widgets }}
+    {{ $element }}
+{{ end }}
+```
+
+## Microtime
+
+Time that took to generate the page. This value is a string with the format `x seconds`.
+
+**Microtime starts on a HTTP middleware so the value is always a little bit higher than what it should be**.

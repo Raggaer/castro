@@ -2,10 +2,11 @@ package lua
 
 import (
 	"database/sql"
+	"strings"
+
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
-	"strings"
 )
 
 // SetDatabaseMetaTable sets the database metatable of the given state

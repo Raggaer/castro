@@ -20,6 +20,8 @@ Provides access to HTTP related functions.
 - [http:getRemoteAddress()](#getremoteaddress)
 - [http:curl(data)](#curl)
 - [http:formFile(name)](#formfile)
+- [http:setCookie(name, value, expiration)](#setcookie)
+- [http:getCookie(name)](#getcookie)
 
 # method
 
@@ -286,4 +288,30 @@ local file = http:formFile("guild-image")
 
 local f = file:getFile()
 -- f = <file byte array>
+```
+
+# setCookie
+
+Sets a HTTP cookie. You need to pass a name, a value (string) and an expiration value (date in seconds).
+
+```lua
+http:setCookie("Hello", "World", os.time() + 5 * 60)
+```
+
+The example above will set a cookie named `Hello` with a value `World` that will expire in 5 minutes.
+
+# getCookie
+
+Returns a HTTP cookie by the given name.
+
+```lua
+local c = http:getCookie("Hello")
+-- c = "World"
+```
+
+If the cookie is not set (or expired) this method will return `nil`.
+
+```lua
+local c = http:getCookie("Test")
+-- c = nil
 ```

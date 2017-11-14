@@ -53,6 +53,8 @@ var (
 		"setCustom": SetConfigCustomValue,
 	}
 	httpMethods = map[string]glua.LGFunction{
+		"setCookie":          SetCookie,
+		"getCookie":          GetCookie,
 		"redirect":           Redirect,
 		"render":             RenderTemplate,
 		"write":              WriteResponse,

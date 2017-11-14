@@ -98,6 +98,51 @@ func getRequestAndResponseWriter(L *glua.LState) (*http.Request, http.ResponseWr
 	return req, w
 }
 
+// SetCookie sets the given HTTP cookie by its name
+func SetCookie(L *glua.LState) int {
+	// Get HTTP request and HTTP response writer
+	_, w := getRequestAndResponseWriter(L)
+
+	// Create cookie
+	c := &http.Cookie{
+		Name:     L.ToString(2),
+		Value:    L.ToString(3),
+		Path:     "/",
+		Expires:  time.Unix(L.ToInt64(4), 0),
+		Secure:   util.Config.Configuration.IsSSL(),
+		HttpOnly: true,
+	}
+
+	// Set HTTP cookie
+	http.SetCookie(w, c)
+	return 0
+}
+
+// GetCookie returns the given HTTP cookie by its name
+func GetCookie(L *glua.LState) int {
+	// Get HTTP request and HTTP response writer
+	req, _ := getRequestAndResponseWriter(L)
+
+	// Retrieve cookie
+	cookie, err := req.Cookie(L.ToString(2))
+
+	if err != nil {
+
+		// If cookie does not exists push nil
+		if err == http.ErrNoCookie {
+			L.Push(glua.LNil)
+			return 1
+		}
+
+		L.RaiseError("Unable to retrieve HTTP cookie: %v", err)
+		return 0
+	}
+
+	// Return cookie value
+	L.Push(glua.LString(cookie.Value))
+	return 1
+}
+
 // ParseMultiPartForm parses a multi-part form encoded
 func ParseMultiPartForm(L *glua.LState) int {
 	// Get HTTP request and HTTP response writer
