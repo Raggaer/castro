@@ -15,7 +15,7 @@
         {{ range $index, $element := .list }}
         <tr>
             <td>
-                <a href="{{ url "subtopic" "shop" }}">{{ $element.name }}</a>
+                <a href="{{ url "subtopic" "shop" "view" }}">{{ $element.name }}</a>
             </td>
             <td>{{ $element.amount }}</td>
             <td>

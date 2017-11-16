@@ -620,8 +620,23 @@ func installApplication(location string) error {
 		return err
 	}
 
+	// Get map modtime
+	mapStat, err := os.Stat(filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"))
+
+	if err != nil {
+		db.Rollback()
+		return err
+	}
+
 	// Save encoded map
-	if _, err := db.Exec("INSERT INTO castro_map (name, data, created_at, updated_at) VALUES (?, ?, ?, ?)", lua.Config.GetGlobal("mapName").String(), mapData, time.Now(), time.Now()); err != nil {
+	if _, err := db.Exec(
+		"INSERT INTO castro_map (name, data, created_at, updated_at, last_modtime) VALUES (?, ?, ?, ?, ?)",
+		lua.Config.GetGlobal("mapName").String(),
+		mapData,
+		time.Now(),
+		time.Now(),
+		mapStat.ModTime(),
+	); err != nil {
 		db.Rollback()
 		return err
 	}
