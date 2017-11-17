@@ -2,6 +2,8 @@
 name: Paygol
 ---
 
+# Paygol
+
 Provides access to the website PayGol configuration values.
 
 - [Enabled](#enabled)

@@ -2,6 +2,8 @@
 name: Fortumo
 ---
 
+# Fortumo
+
 Provides access to the website Fortumo configuration values.
 
 - [Enabled](#enabled)

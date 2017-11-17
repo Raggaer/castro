@@ -2,6 +2,8 @@
 name: Cache
 ---
 
+# Cache
+
 Provides access to server-side cache storage.
 
 - [Default](#default)

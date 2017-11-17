@@ -2,6 +2,8 @@
 name: Paypal
 ---
 
+# Paypal
+
 Provides access to the website PayPal configuration values.
 
 - [Enabled](#enabled)
