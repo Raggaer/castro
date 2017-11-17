@@ -15,6 +15,7 @@ Castro provides a list of already defined functions you can use on your template
 - [isDev](#isdev)
 - [str2html](#str2html)
 - [str2url](#str2url)
+- [menuPages](#menuPages)
 
 # url
 
@@ -90,4 +91,86 @@ Converts the given string to a safe URL output. By default Castro sanitizes URL 
 
 ```html
 <a href="/test/{{ str2url "hello }}">
+```
+
+# menuPages
+
+Returns an array of menu pages, usually you call this function to render your template menu pages.
+
+```html
+{{ range $index, $element := menuPages }}
+    <li>Menu page number {{ $index }}</li>
+{{ end }}
+```
+
+This function returns an array of menu pages, each page has the following attributes you can use:
+
+- [Name](#name)
+- [Link](#link)
+- [Dropdown](#dropdown)
+- [DropdownItems](#dropdownitems)
+
+## Name
+
+Returns the menu item name.
+
+```html
+{{ range $index, $element := menuPages }}
+    <li>{{ $element.Name }}</li>
+{{ end }}
+```
+
+## Link
+
+Returns the menu item url.
+
+```html
+{{ range $index, $element := menuPages }}
+    <li><a href="{{ url $element.Link }}">{{ $element.Name }}</a></li>
+{{ end }}
+```
+
+## Dropdown
+
+Boolean field that returns true or false depending if the page is a dropdown.
+
+```html
+{{ range $index, $element := menuPages }}
+    {{ if not $element.Dropdown }}
+        <li><a href="{{ url $element.Link }}">{{ $element.Name }}</a></li>
+    {{ end }}
+{{ end }}
+```
+
+## DropdownItems
+
+Returns an array of all the items inside a dropdown.
+
+```html
+{{ range $index, $element := menuPages }}
+    {{ if $element.Dropdown }}
+        {{ range $base, $item := $element.DropdownItems }}
+            Dropdown {{ $index }} - Sub-item number {{ $base }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+```
+
+This function returns an array of sub-items with the following attributes:
+
+- [Link](#link) (same as a non-dropdown item)
+- [Text](#text)
+
+### Text
+
+Returns the name of the dropdown item.
+
+```html
+{{ range $index, $element := menuPages }}
+    {{ if $element.Dropdown }}
+        {{ range $base, $item := $element.DropdownItems }}
+            <li><a href="{{ url $item.Link }}">{{ $item.Text }}</a></li>
+        {{ end }}
+    {{ end }}
+{{ end }}
 ```
