@@ -2,28 +2,34 @@
 
 
 [[projects]]
-  branch = "master"
   name = "github.com/BurntSushi/toml"
   packages = ["."]
-  revision = "a368813c5e648fee92e5f6c30e3944ff9d5e8895"
+  revision = "b26d9c308763d68093482582cea63d69be07a0f0"
+  version = "v0.3.0"
 
 [[projects]]
   name = "github.com/Sirupsen/logrus"
   packages = ["."]
-  revision = "f006c2ac4710855cf0f916dd6b77acf6b048dc6e"
-  version = "v1.0.3"
+  revision = "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
+  version = "v1.0.4"
 
 [[projects]]
   name = "github.com/anthonynsimon/bild"
-  packages = ["blend","clone","fcolor","math/f64","parallel"]
+  packages = [
+    "blend",
+    "clone",
+    "fcolor",
+    "math/f64",
+    "parallel"
+  ]
   revision = "35fd1904d43f809ded0959922164885e25577aa2"
   version = "v0.10.0"
 
 [[projects]]
   name = "github.com/asaskevich/govalidator"
   packages = ["."]
-  revision = "4918b99a7cb949bb295f3c7bbaf24b577d806e35"
-  version = "v6"
+  revision = "521b25f4b05fd26bec69d9dedeb8f9c9a83939a8"
+  version = "v8"
 
 [[projects]]
   name = "github.com/clbanning/mxj"
@@ -47,7 +53,7 @@
   branch = "master"
   name = "github.com/dgryski/dgoogauth"
   packages = ["."]
-  revision = "96977cbd42e27be71f9f731db6634123de7e861a"
+  revision = "fd153d5969d30bd701e10f3530228f001213047c"
 
 [[projects]]
   name = "github.com/go-sql-driver/mysql"
@@ -58,7 +64,11 @@
 [[projects]]
   branch = "master"
   name = "github.com/golang/freetype"
-  packages = [".","raster","truetype"]
+  packages = [
+    ".",
+    "raster",
+    "truetype"
+  ]
   revision = "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
 
 [[projects]]
@@ -76,8 +86,11 @@
 [[projects]]
   branch = "master"
   name = "github.com/jmoiron/sqlx"
-  packages = [".","reflectx"]
-  revision = "d9bd385d68c068f1fabb5057e3dedcbcbb039d0f"
+  packages = [
+    ".",
+    "reflectx"
+  ]
+  revision = "de8647470aafe4854c976707c431dbe1eb2822c6"
 
 [[projects]]
   name = "github.com/julienschmidt/httprouter"
@@ -112,8 +125,8 @@
 [[projects]]
   name = "github.com/patrickmn/go-cache"
   packages = ["."]
-  revision = "1881a9bccb818787f68c52bfba648c6cf34c34fa"
-  version = "v2.0.0"
+  revision = "a3647f8e31d79543b2d0f0ae2fe5c379d72cedc0"
+  version = "v2.1.0"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -148,56 +161,85 @@
 [[projects]]
   branch = "master"
   name = "github.com/skip2/go-qrcode"
-  packages = [".","bitset","reedsolomon"]
-  revision = "695fc75a09738f9be56aaa3aecfd7dac28e66b63"
+  packages = [
+    ".",
+    "bitset",
+    "reedsolomon"
+  ]
+  revision = "80895b4a9eff675bc0f8ea09f60106bca9ac44c8"
 
 [[projects]]
   name = "github.com/stretchr/testify"
-  packages = ["assert","require"]
+  packages = [
+    "assert",
+    "require"
+  ]
   revision = "69483b4bd14f5845b5a1e55bca19e954e827f1d0"
   version = "v1.1.4"
 
 [[projects]]
   name = "github.com/ulule/limiter"
-  packages = [".","drivers/store/common","drivers/store/memory"]
-  revision = "fe4c2975cbe8dfd005b4450464817499ec10d1dd"
-  version = "v2.0.0"
+  packages = [
+    ".",
+    "drivers/store/common",
+    "drivers/store/memory"
+  ]
+  revision = "0d25c13867d07314999d01525f9d69d40c6bf235"
+  version = "v2.1.0"
 
 [[projects]]
   name = "github.com/urfave/negroni"
   packages = ["."]
-  revision = "fde5e16d32adc7ad637e9cd9ad21d4ebc6192535"
-  version = "v0.2.0"
+  revision = "5dbbc83f748fc3ad38585842b0aedab546d0ea1e"
+  version = "v0.3.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/yuin/gopher-lua"
-  packages = [".","ast","parse","pm"]
-  revision = "eb1c7299435cc746b72514f37f74a5154dfe460f"
+  packages = [
+    ".",
+    "ast",
+    "parse",
+    "pm"
+  ]
+  revision = "3d9c8196b0034e3c36481248e02dc39953bcc849"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["acme","acme/autocert","ssh/terminal"]
-  revision = "847319b7fc94cab682988f93da778204da164588"
+  packages = [
+    "acme",
+    "acme/autocert",
+    "ssh/terminal"
+  ]
+  revision = "d585fd2cc9195196078f516b69daff6744ef5e84"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/image"
-  packages = ["draw","font","font/gofont/goregular","math/f64","math/fixed"]
-  revision = "e20db36d77bd0cb36cea8fe49d5c37d82d21591f"
+  packages = [
+    "draw",
+    "font",
+    "font/gofont/goregular",
+    "math/f64",
+    "math/fixed"
+  ]
+  revision = "12117c17ca67ffa1ce22e9409f3b0b0a93ac08c7"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "0744d001aa8470aaa53df28d32e5ceeb8af9bd70"
+  revision = "d866cfc389cec985d6fda2859936a575a55a3ab6"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix","windows"]
-  revision = "429f518978ab01db8bb6f44b66785088e7fba58b"
+  packages = [
+    "unix",
+    "windows"
+  ]
+  revision = "83801418e1b59fb1880e363299581ee543af32ca"
 
 [[projects]]
   branch = "v3"
@@ -206,11 +248,10 @@
   revision = "2caba252f4dc53eaf6b553000885530023f54623"
 
 [[projects]]
-  branch = "master"
   name = "gopkg.in/gomail.v2"
   packages = ["."]
-  revision = "81ebce5c23dfd25c6c67194b37d3dd3f338c98b1"
-  source = "https://github.com/go-gomail/gomail.git"
+  revision = "41f3572897373c5538c50a2402db15db079fa4fd"
+  version = "2.0.0"
 
 [[projects]]
   name = "gopkg.in/square/go-jose.v1"
@@ -221,6 +262,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e7fd23db6d24dd3520328d259f69512cc237ebbf4b039d174082e573156adaf2"
+  inputs-digest = "20c0fc1622ecbe5e58f6273751a3911971c3b696125f7e61e5a5aad75eb6d7eb"
   solver-name = "gps-cdcl"
   solver-version = 1
