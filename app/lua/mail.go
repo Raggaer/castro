@@ -71,7 +71,7 @@ func SendMail(L *lua.LState) int {
 	m.SetBody("text/html", body)
 
 	// Create dialer
-	d := gomail.NewDialer(
+	d := gomail.NewPlainDialer(
 		util.Config.Configuration.Mail.Server,
 		util.Config.Configuration.Mail.Port,
 		util.Config.Configuration.Mail.Username,
