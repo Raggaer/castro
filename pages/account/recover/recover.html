@@ -1,0 +1,8 @@
+{{ template "header.html" . }}
+<h3>Account recovery</h3>
+<hr>
+<p>
+    You can recover your <a href="{{ url "subtopic" "account" "recover" "account" }}">account name</a>, 
+    <a href="{{ url "subtopic" "account" "recover" "password" }}">password</a> or remove your <a href="{{ url "subtopic" "account" "recover" "twofa" }}">two-factor athenticator</a>
+</p>
+{{ template "footer.html" . }}

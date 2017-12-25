@@ -1,0 +1,34 @@
+{{ template "header.html" . }}
+<h3>Recover your acocunt name</h3>
+<hr>
+{{ if .validationError }}
+<div class="alert alert-danger" role="alert">
+    <strong>Error!</strong> {{ .validationError }}
+</div>
+{{ end }}
+{{ if .success }}
+<div class="alert alert-success" role="alert">
+    <strong>Success!</strong> {{ .success }}
+</div>
+{{ end }}
+<form method="POST" action="{{ url "subtopic" "account" "recover" "account" }}">
+    <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+    <div class="form-group">
+        <label for="input-account-name">Email</label>
+        <input type="email" class="form-control" id="input-account-name" name="email" placeholder="Account name">
+    </div>
+    <div class="form-group">
+        <label for="input-account-name">Password</label>
+        <input autocomplete="off" type="password" class="form-control" id="input-password" name="password" placeholder="Password">
+    </div>
+    {{ if captchaEnabled }}
+    <div class="form-group">
+        <div class="g-recaptcha" data-sitekey="{{ captchaKey }}"></div>
+        <small class="form-text text-muted">We need to verify you are not a bot. Usually a single click is enough</small>
+    </div>
+    {{ end }}
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Recover</button>
+    </div>
+</form>
+{{ template "footer.html" . }}

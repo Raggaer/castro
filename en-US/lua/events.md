@@ -4,7 +4,7 @@ Name: events
 
 # Events metatable
 
-Allows execution of tick events
+Allows execution of backrground tasks:
 
 - [events:new(function)](#new)
 
