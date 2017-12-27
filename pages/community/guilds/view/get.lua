@@ -39,7 +39,7 @@ function get()
 
     data.invitations = db:query("SELECT a.id, a.name FROM players a, guild_invites b WHERE b.guild_id = ? AND b.player_id = a.id", data.guild.id)
 
-    if session:isLogged() then
+    if session:isLogged() and characters ~= nil then
         if data.invitations ~= nil then
             for _, v in pairs(data.invitations) do
                 for _, p in pairs(characters) do

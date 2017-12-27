@@ -1,5 +1,8 @@
 function isGuildOwner(accountid, guild)
     local characters = db:query("SELECT id FROM players WHERE account_id = ?", accountid)
+    if characters == nil then
+        return false
+    end
     for _, val in pairs(characters) do
         if val.id == tonumber(guild.ownerid) then
             return true
