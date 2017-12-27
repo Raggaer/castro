@@ -10,7 +10,17 @@ Castro uses lua to handle all your pages. To create a new page navigate to pages
 
 On your new folder you can then create a `get.lua` (to handle GET requests) or `post.lua` (to handle POST requests)
 
-Each file must contain a function with the method they correspond to. `get.lua` files should have the `function get()` and `post.lua` files should have the `function post()`. Below is an example on how a simple page will look like:
+Each file must contain a function with the method they correspond to. `get.lua` files should have the `function get()` and `post.lua` files should have the `function post()`. If you are not familiar with `GET` and `POST` requests below is a very limited example ([more information](https://stackoverflow.com/questions/3477333/what-is-the-difference-between-post-and-get):
+
+## Get
+
+GET requests are fired when a user request data from your server, in other words, when a user enters a webpage "otserver.com/subtopic/login" and you want to display a nice login form you will use a GET request.
+
+## Post
+
+POST requests are fired when a user submits data to your server, usually from a form, in other words, when a user press the login button you will handle everything using a POST method.
+
+## Example
 
 ```lua
 require "paginator"
