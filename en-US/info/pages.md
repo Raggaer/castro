@@ -10,7 +10,7 @@ Castro uses lua to handle all your pages. To create a new page navigate to pages
 
 On your new folder you can then create a `get.lua` (to handle GET requests) or `post.lua` (to handle POST requests)
 
-Each file must contain a function with the method they correspond to. `get.lua` files should have the `function get()` and `post.lua` files should have the `function post()`. If you are not familiar with `GET` and `POST` requests below is a very limited example ([more information](https://stackoverflow.com/questions/3477333/what-is-the-difference-between-post-and-get):
+Each file must contain a function with the method they correspond to. `get.lua` files should have the `function get()` and `post.lua` files should have the `function post()`. If you are not familiar with `GET` and `POST` requests below is a very limited example ([more information](https://stackoverflow.com/questions/3477333/what-is-the-difference-between-post-and-get)):
 
 ## Get
 
@@ -100,4 +100,4 @@ Lastly we render our template and pass the data we want.
 {{ template "footer.html" . }}
 ```
 
-We first include our header and our footer, check if the articles variable is not nil then loop that variable to show the news. We also add pagination buttons at the end using the paginator variable.
+We first include our header and our footer templates, check if the articles variable is not nil then loop that variable to show the news. We also add pagination buttons at the end using the paginator variable.
