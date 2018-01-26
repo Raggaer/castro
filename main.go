@@ -79,7 +79,6 @@ Compiled at: %v
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/extensions/:id/static/*filepath", controllers.ExtensionStatic)
 	router.POST("/nocsrf/*filepath", controllers.LuaPage)
-	
 
 	// Register pprof router only on development mode
 	if util.Config.Configuration.IsDev() {
@@ -147,9 +146,17 @@ Compiled at: %v
 			server.TLSConfig = &tls.Config{
 				GetCertificate: m.GetCertificate,
 			}
+
+			// Listen to non-https ACME challenges connections
+			go http.ListenAndServe(":http", m.HTTPHandler(nil))
+
+			// Listen to https connections using autocert
+			if err := server.ListenAndServeTLS("", ""); err != nil {
+				util.Logger.Logger.Fatalf("Cannot start Castro autocert HTTPS server: %v", err)
+			}
 		}
 
-		// Listen to non-https connections
+		// Redirect all non https connections
 		go httpsRedirect()
 
 		// If SSL is enabled listen with cert and key
@@ -159,6 +166,7 @@ Compiled at: %v
 		); err != nil {
 			util.Logger.Logger.Fatalf("Cannot start Castro HTTPS server: %v", err)
 		}
+
 	} else {
 
 		// Listen without using ssl

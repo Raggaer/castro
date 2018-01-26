@@ -90,7 +90,7 @@
     ".",
     "reflectx"
   ]
-  revision = "de8647470aafe4854c976707c431dbe1eb2822c6"
+  revision = "05cef0741ade10ca668982355b3f3f0bcf0ff0a8"
 
 [[projects]]
   name = "github.com/julienschmidt/httprouter"
@@ -166,7 +166,7 @@
     "bitset",
     "reedsolomon"
   ]
-  revision = "80895b4a9eff675bc0f8ea09f60106bca9ac44c8"
+  revision = "cf5f9fa2f0d847edb8e038db7ed975e239095e1a"
 
 [[projects]]
   name = "github.com/stretchr/testify"
@@ -174,8 +174,8 @@
     "assert",
     "require"
   ]
-  revision = "69483b4bd14f5845b5a1e55bca19e954e827f1d0"
-  version = "v1.1.4"
+  revision = "b91bfb9ebec76498946beb6af7c0230c7cc7ba6c"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/ulule/limiter"
@@ -202,7 +202,7 @@
     "parse",
     "pm"
   ]
-  revision = "3d9c8196b0034e3c36481248e02dc39953bcc849"
+  revision = "7d7bc8747e3f614c5c587729a341fe7d8903cdb8"
 
 [[projects]]
   branch = "master"
@@ -212,7 +212,7 @@
     "acme/autocert",
     "ssh/terminal"
   ]
-  revision = "d585fd2cc9195196078f516b69daff6744ef5e84"
+  revision = "0efb9460aaf800c6376acf625be2853bceac2e06"
 
 [[projects]]
   branch = "master"
@@ -230,7 +230,7 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "d866cfc389cec985d6fda2859936a575a55a3ab6"
+  revision = "0ed95abb35c445290478a5348a7b38bb154135fd"
 
 [[projects]]
   branch = "master"
@@ -239,7 +239,7 @@
     "unix",
     "windows"
   ]
-  revision = "83801418e1b59fb1880e363299581ee543af32ca"
+  revision = "03467258950d845cd1877eab69461b98e8c09219"
 
 [[projects]]
   branch = "v3"
