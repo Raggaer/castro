@@ -32,7 +32,7 @@ We need to create an `extension.json` file in order to be able to install our ex
   }
 ```
 
-** The ID field must be the same as your extension main folder**
+**The ID field must be the same as your extension main folder**
 
 ## Login form
 
