@@ -50,6 +50,13 @@ func CreateLogFile() (*os.File, time.Time, error) {
 	// Get current time
 	t := time.Now()
 
+	// Create logs folder if needed
+	if _, err := os.Stat("logs"); os.IsNotExist(err) {
+		if err := os.Mkdir("logs", os.ModeDir); err != nil {
+			return nil, t, err
+		}
+	}
+
 	// Create log file
 	f, err := os.OpenFile(filepath.Join(
 		"logs",
@@ -85,7 +92,7 @@ func CreateLogger(out io.Writer) *logrus.Logger {
 
 		// Show panic message
 		log.Printf(
-			"Fatal error encountered. Castro will now exit. For more information check %v",
+			"Fatal error encountered. For more information check %v",
 			filepath.Join("logs", fmt.Sprintf("%v-%v-%v.txt", Logger.LastLoggerDay.Year(), Logger.LastLoggerDay.Month(), Logger.LastLoggerDay.Day())),
 		)
 	})

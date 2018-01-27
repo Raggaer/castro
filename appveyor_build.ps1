@@ -55,9 +55,6 @@ Copy-Item migrations buildOutput\data\migrations -recurse
 Copy-Item extensions buildOutput\data\extensions -recurse
 Copy-Item LICENSE buildOutput\LICENSE
 
-New-Item -ItemType Directory -Force -Path "buildOutput\data\logs"
-New-Item -ItemType File -Force -Path "buildOutput\data\logs\.gitkeep"
-
 echo "Compressing data directories"
 
 $files = Get-ChildItem -Path "buildOutput\data\*"
