@@ -446,7 +446,7 @@ func installationStepGet(i int, step installationStep) httprouter.Handle {
 func installationFinish(res http.ResponseWriter, req *http.Request, params httprouter.Params) {
 	// Create config file
 	if err := createConfigFile("config.toml", installationConfigFile); err != nil {
-		installationTemplate.ExecuteTemplate(res, "install_finish.html", installationTemplateData{
+		installationTemplate.ExecuteTemplate(res, "install_encode.html", installationTemplateData{
 			Error: err.Error(),
 		})
 		return
@@ -608,7 +608,7 @@ func installApplication(location string) error {
 		}
 	}
 
-	fmt.Println(">> Encoding map file. This process can take several minutes")
+	fmt.Print(">> Encoding map file. This process can take several minutes")
 
 	// Encode server map
 	mapData, err := util.EncodeMap(
@@ -619,6 +619,8 @@ func installApplication(location string) error {
 		db.Rollback()
 		return err
 	}
+
+	fmt.Println(" (done)")
 
 	// Get map modtime
 	mapStat, err := os.Stat(filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"))

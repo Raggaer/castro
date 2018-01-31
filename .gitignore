@@ -7,6 +7,7 @@ vendor.orig/*
 public/images/signature/*.png
 logs/*.txt
 *.exe
+*.exe~
 projectFilesBackup
 fdvdv.png
 pages/test/
