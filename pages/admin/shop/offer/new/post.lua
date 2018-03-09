@@ -70,9 +70,9 @@ function post()
 
     db:execute(
         [[INSERT INTO castro_shop_offers 
-        (category_id, description, price, name, created_at, updated_at, image, give_item, give_item_amount, container_item, container_give_item) 
+        (category_id, description, price, name, created_at, updated_at, image, give_item, give_item_amount, charges, container_item, container_give_item) 
         VALUES 
-        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]],
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]],
         data.category.id,
         http.postValues["offer-description"],
         http.postValues["offer-price"],
@@ -82,6 +82,7 @@ function post()
         offerImagePath,
         ternary(http.postValues["give-item"] == nil, 0, http.postValues["give-item"]),
         ternary(http.postValues["give-item-amount"] == nil, 0, http.postValues["give-item-amount"]),
+        ternary(http.postValues["charges"] == nil, 0, http.postValues["charges"]),
         ternary(http.postValues["container-id"] == nil, 0, http.postValues["container-id"]),
         table.concat(explode(",", http.postValues["container-item[]"]), ","),
         table.concat(explode(",", http.postValues["container-item-amount[]"]), ",")
