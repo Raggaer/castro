@@ -60,9 +60,15 @@ function post()
 
     db:execute("UPDATE castro_accounts SET points = points - ? WHERE account_id = ?", totalprice, account.ID)
     
+    local offers = ""
+    local amount = ""
     for name, offer in pairs(cartdata) do
-        db:execute("INSERT INTO castro_shop_checkout (offer, amount, player, given) VALUES (?, ?, ?, 0)", offer.offer.id, offer.count, character.name)
+        offers = offers .. offer.offer.id .. ","
+        amount = amount .. offer.count .. ","
     end
+    offers = string.sub(offers, 1, -2)
+    amount = string.sub(amount, 1, -2)
+    db:execute("INSERT INTO castro_shop_checkout (offer, amount, player, given) VALUES (?, ?, ?, 0)", offers, amount, character.name)
 
     session:set("shop-cart", {})
     session:setFlash("success", "You paid " .. totalprice .. " for all your cart items. You will get your items in-game")

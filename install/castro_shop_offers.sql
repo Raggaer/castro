@@ -9,6 +9,7 @@ CREATE TABLE `castro_shop_offers` (
   `image` varchar(255) DEFAULT NULL,
   `give_item` int(11) DEFAULT 0,
   `give_item_amount` int(11) DEFAULT 0,
+  `charges` int(11) DEFAULT 1,
   `container_give_item` varchar(255) DEFAULT NULL,
   `container_give_amount` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
