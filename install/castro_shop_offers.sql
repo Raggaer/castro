@@ -12,6 +12,6 @@ CREATE TABLE `castro_shop_offers` (
   `charges` int(11) DEFAULT 1,
   `container_give_item` varchar(255) DEFAULT NULL,
   `container_give_amount` varchar(255) DEFAULT NULL,
-  `container_give_charges` varchar(255) DEFAULT NULL,
+  `container_give_charges` int(11) DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
