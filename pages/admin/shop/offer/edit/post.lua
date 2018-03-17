@@ -63,17 +63,18 @@ function post()
     end
 
     db:execute(
-        [[UPDATE castro_shop_offers 
-        SET description = ?, 
-        price = ?, 
-        name = ?, 
-        updated_at = ?, 
-        image = ?, 
-        give_item = ?, 
-        give_item_amount = ?, 
-        container_item = ?, 
+        [[UPDATE castro_shop_offers
+        SET description = ?,
+        price = ?,
+        name = ?,
+        updated_at = ?,
+        image = ?,
+        give_item = ?,
+        give_item_amount = ?,
+        charges = ?,
         container_give_item = ?,
-        container_give_amount = ?
+        container_give_amount = ?,
+        container_give_charges = ?
         WHERE id = ?]],
         http.postValues["offer-description"],
         http.postValues["offer-price"],
@@ -82,9 +83,10 @@ function post()
         offerImagePath,
         ternary(http.postValues["give-item"] == nil, 0, http.postValues["give-item"]),
         ternary(http.postValues["give-item-amount"] == nil, 0, http.postValues["give-item-amount"]),
-        ternary(http.postValues["container-id"] == nil, 0, http.postValues["container-id"]),
+        ternary(http.postValues["charges"] == nil, 0, http.postValues["charges"]),
         table.concat(explode(",", http.postValues["container-item[]"]), ","),
         table.concat(explode(",", http.postValues["container-item-amount[]"]), ","),
+        table.concat(explode(",", http.postValues["container-item-charges[]"]), ","),
         data.offer.id
     )
 

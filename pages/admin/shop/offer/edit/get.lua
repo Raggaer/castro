@@ -13,7 +13,7 @@ function get()
 
     local data = {}
 
-    data.offer = db:singleQuery("SELECT id, category_id, name, price, description, give_item, give_item_amount, container_item, container_give_item, container_give_amount FROM castro_shop_offers WHERE id = ?", http.getValues.id)
+    data.offer = db:singleQuery("SELECT id, category_id, name, price, description, give_item, give_item_amount, container_give_item, container_give_amount, container_give_charges FROM castro_shop_offers WHERE id = ?", http.getValues.id)
     data.validationError = session:getFlash("validationError")
 
     if data.offer == nil then
@@ -34,6 +34,10 @@ function get()
 
     if data.offer.container_give_amount ~= "" and data.offer.container_give_amount ~= nil then
         data.offer.containerAmounts = explode(",", data.offer.container_give_amount)
+    end 
+
+    if data.offer.container_give_charges ~= "" and data.offer.container_give_charges ~= nil then
+        data.offer.containerCharges = explode(",", data.offer.container_give_charges)
     end 
 
     http:render("editoffer.html", data)

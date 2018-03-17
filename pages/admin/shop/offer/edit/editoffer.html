@@ -50,12 +50,12 @@
                     <label for="item-amount">Item amount</label>
                     <input type="number" value="{{ .offer.give_item_amount }}" id="item-amount" name="give-item-amount" placeholder="Item amount" class="form-control">
                 </div>
+                <div class="form-group">
+                    <label for="item-charges">Charges</label>
+                    <input type="number" value="{{ .offer.charges }}" id="item-charges" name="charges" placeholder="charges" class="form-control">
+                </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="container">
-                <div class="form-group">
-                    <label for="container-id">Container ID</label>
-                    <input type="number" id="container-id" value="{{ .offer.container_item }}" name="container-id" placeholder="Container ID" class="form-control">
-                </div>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div id="container-item-list">
@@ -63,16 +63,22 @@
                                 {{ range $index, $element := .offer.containerItems }}
                                 <div class="container-item-ext" id="container-item-1">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="container-id">Container item</label>
                                                 <input type="number" value="{{ $element }}" id="container-item" name="container-item[]" placeholder="Container item" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="container-id">Item amount</label>
                                                 <input type="number" value="{{ index $.offer.containerAmounts $index }}" id="container-item-amount" name="container-item-amount[]" placeholder="Container item amount" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="container-id">Charges</label>
+                                                <input type="number" value="{{ index $.offer.containerCharges $index }}" id="container-item-charges" name="container-item-charges[]" placeholder="Container item charges" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -81,16 +87,22 @@
                             {{ else }}
                             <div class="container-item-ext" id="container-item-1">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="container-id">Container item</label>
                                                 <input type="number" id="container-item" name="container-item[]" placeholder="Container item" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="container-id">Item amount</label>
                                                 <input type="number" id="container-item-amount" name="container-item-amount[]" placeholder="Container item amount" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="container-id">Charges</label>
+                                                <input type="number" id="container-item-charges" name="container-item-charges[]" placeholder="Container item charges" class="form-control">
                                             </div>
                                         </div>
                                     </div>
