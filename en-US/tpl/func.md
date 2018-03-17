@@ -16,6 +16,11 @@ Castro provides a list of already defined functions you can use on your template
 - [str2html](#str2html)
 - [str2url](#str2url)
 - [menuPages](#menuPages)
+- [eq](#eq)
+- [eqNumber](#eqNumber)
+- [gtNumber](#gtNumber)
+- [lsNumber](#lsNumber)
+- [unixToDate](#unixToDate)
 
 # url
 
@@ -173,4 +178,53 @@ Returns the name of the dropdown item.
         {{ end }}
     {{ end }}
 {{ end }}
+```
+
+# eq
+
+Compares two objects and return true if they are equal.
+
+```html
+{{ if eq "hello" "world" }}
+    <p>Not equal</p>
+{{ end }}
+```
+
+# eqNumber
+
+Compares two numbers a  == b.
+
+```html
+{{ if eqNumber 5 4 }}
+    <p>Not equal</p>
+{{ end }}
+```
+
+# gtNumber
+
+Compares two numbers a > b.
+
+```html
+{{ if gtNumber 5 1 }}
+    <p>Greater</p>
+{{ end }}
+```
+
+# lsNumber
+
+Compares two numbers a < b.
+
+```html
+{{ if lsNumber 1 5 }}
+    <p>Less</p>
+{{ end }}
+```
+
+# unixToDate
+
+Returns a date string for the given UNIX timestamp.
+
+```html
+{{ $d := unixToDate 1521285384 }}
+<p>Current date: {{ $d }}</p>
 ```
