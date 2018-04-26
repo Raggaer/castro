@@ -174,7 +174,6 @@ Compiled at: %v
 			util.Logger.Logger.Fatalf("Cannot start Castro HTTP server: %v", err)
 		}
 	}
-
 }
 
 // wrapHandler converts a normal http handler to a httprouter handler
