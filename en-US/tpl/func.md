@@ -99,6 +99,8 @@ Converts the given string to HTML output. By default Castro sanitizes all HTML o
 {{ str2html .text }}
 ```
 
+So in order to be able to use HTML elements from your variables (like for example a news article where you use HTML tags) you need to call this function.
+
 # str2url
 
 Converts the given string to a safe URL output. By default Castro sanitizes URL values to prevent any kind of attacks.
