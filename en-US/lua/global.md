@@ -6,6 +6,8 @@ name: global
 
 Easy access to global variables across your system. Values are saved into the database. Currently only lua tables are supported.
 
+Usually you should use this table to share values across requests.
+
 - [global:set(key, value)](#set)
 - [global:get(key)](#get)
 - [global:delete(key)](#delete)
