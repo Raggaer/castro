@@ -12,6 +12,7 @@ Castro provides a list of already defined functions you can use on your template
 - [serverMotd](#servermotd)
 - [nl2br](#nl2br)
 - [urlEncode](#urlencode)
+- [urlDecode](#urldecode)
 - [isDev](#isdev)
 - [str2html](#str2html)
 - [str2url](#str2url)
@@ -70,6 +71,14 @@ Encodes the given value so its safe to use inside an URL.
 
 ```html
 <a href="/test?name={{ urlEncode .name }}">Test</a>
+```
+
+# urlDecode
+
+Decodes the given encoded URL string.
+
+```html
+<p>Decoded value is: {{ urlDecode "My+encoded+url" }}</p>
 ```
 
 # isDev

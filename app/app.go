@@ -506,6 +506,13 @@ func templateFuncs() template.FuncMap {
 		"urlEncode": func(t string) template.URL {
 			return template.URL(url.QueryEscape(t))
 		},
+		"urlDecode": func(t string) string {
+			v, err := url.QueryUnescape(t)
+			if err != nil {
+				return v
+			}
+			return ""
+		},
 		"serverName": func() string {
 			return lua.Config.GetGlobal("serverName").String()
 		},
