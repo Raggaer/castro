@@ -24,7 +24,7 @@ func GetPlayerByID(id int64) (*Player, error) {
 	// Data holder
 	p := &Player{}
 
-	if err := database.DB.Get(&p, "SELECT id, sex, accound_id, name, level, vocation, town_id FROM players WHERE id = ?", id); err != nil {
+	if err := database.DB.Get(p, "SELECT id, sex, account_id, name, level, vocation, town_id FROM players WHERE id = ?", id); err != nil {
 		return nil, err
 	}
 
@@ -36,7 +36,7 @@ func GetPlayerByName(name string) (*Player, error) {
 	// Data holder
 	p := &Player{}
 
-	if err := database.DB.Get(&p, "SELECT id, sex, accound_id, name, level, vocation, town_id FROM players WHERE name = ?", name); err != nil {
+	if err := database.DB.Get(p, "SELECT id, sex, account_id, name, level, vocation, town_id FROM players WHERE name = ?", name); err != nil {
 		return nil, err
 	}
 

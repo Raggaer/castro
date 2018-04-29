@@ -4,12 +4,12 @@ Name: player
 
 # Overview
 
-Providess easy access to server players. You first need to create a new instance:
+Provides easy access to server players. You first need to create a new instance:
 
-- [Player(name)](#new.name)
-- [Player(id)](#new.id)
+- [Player(name)](#player(name))
+- [Player(id)](#player(id))
 
-# new.name
+# Player(name)
 
 Get a player by the given name.
 
@@ -19,7 +19,7 @@ local data = Player("test")
 
 This will return a new `player` metatable.
 
-# new.id
+# Player(id)
 
 Get a player by the unique identifier.
 
@@ -33,6 +33,7 @@ This will return a new `player` metatable.
 
 Provides access to the player information.
 
+- [player:getGuild()](#getguild)
 - [player:getAccountId()](#getaccountid)
 - [player:isOnline()](#isonline)
 - [player:getBankBalance()](#getbankbalance)
@@ -48,6 +49,26 @@ Provides access to the player information.
 - [player:getExperience()](#getexperience)
 - [player:getCapacity()](#getcapacity)
 - [player:getCustomField()](#getcustomfield)
+
+The table also contains some additional fields regarding player information:
+
+- `player.ID`
+- `player.Name`
+- `player.Level`
+- `player.Sex`
+- `player.Vocation`
+- `player.Town_id`
+- `player.Account_id`
+
+# getGuild
+
+Returns the player guild id.
+
+```lua
+local data = Player("test")
+local g = data:getGuild()
+-- g = 10
+```
 
 # getAccountID
 

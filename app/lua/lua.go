@@ -27,6 +27,7 @@ var (
 	globalFuncList = map[string]func(l *glua.LState) int{
 		"sleep":   ThreadSleep,
 		"Player":  PlayerConstructor,
+		"Guild":   GuildConstructor,
 		"try":     TryCatch,
 		"ternary": Ternary,
 	}
@@ -162,6 +163,10 @@ var (
 		"getExperience":   GetPlayerExperience,
 		"getCapacity":     GetPlayerCapacity,
 		"getCustomField":  GetPlayerCustomField,
+		"getGuild":        GetPlayerGuild,
+	}
+	guildMethods = map[string]glua.LGFunction{
+		"getOwner": GetGuildOwner,
 	}
 	widgetMethods = map[string]glua.LGFunction{
 		"render": RenderWidgetTemplate,

@@ -264,6 +264,13 @@ func ValueToGo(lv lua.LValue) interface{} {
 	}
 }
 
+// MergeTableFields merges two tables into one
+func MergeTableFields(src *lua.LTable, dest *lua.LTable) {
+	src.ForEach(func(k lua.LValue, v lua.LValue) {
+		dest.RawSet(k, v)
+	})
+}
+
 // StructToTable converts a go struct pointer to a lua table
 func StructToTable(s interface{}) *lua.LTable {
 	// Data holder

@@ -1,7 +1,10 @@
 package lua
 
 import (
+	"errors"
 	"html"
+
+	"reflect"
 
 	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/models"
@@ -11,44 +14,42 @@ import (
 
 // PlayerConstructor returns a new player metatable for the given ID or name
 func PlayerConstructor(L *lua.LState) int {
-	// Get name or ID
-	i := L.Get(1)
+	// Retrieve player
+	v := L.Get(1)
+	var player *models.Player
+	var err error
 
-	// Get player by ID
-	if i.Type() == lua.LTNumber {
-
-		// Get player by id
-		player, err := models.GetPlayerByID(L.ToInt64(1))
-		if err != nil {
-			L.Push(lua.LNil)
-			return 1
-		}
-
-		// Create player metatable
-		L.Push(createPlayerMetaTable(player, L))
-
-		return 1
+	if v.Type() == lua.LTNumber {
+		player, err = playerTableConstructor(L.ToInt64(1))
 	}
 
-	if i.Type() != lua.LTString {
-		L.ArgError(1, "Invalid player ID or name")
-		return 0
+	if v.Type() == lua.LTString {
+		player, err = playerTableConstructor(L.ToString(1))
 	}
 
-	// Get player by name
-	player, err := models.GetPlayerByName(L.ToString(1))
 	if err != nil {
 		L.Push(lua.LNil)
 		return 1
 	}
 
-	// Create player metatable
 	L.Push(createPlayerMetaTable(player, L))
-
 	return 1
 }
 
-// createPlayerMetaTable returns a new player metatable
+func playerTableConstructor(i interface{}) (*models.Player, error) {
+	// Get player by ID
+	if reflect.TypeOf(i).Kind() == reflect.Int64 {
+		return models.GetPlayerByID(i.(int64))
+	}
+
+	if reflect.TypeOf(i).Kind() != reflect.String {
+		return nil, errors.New("Invalid player name or id")
+	}
+
+	// Get player by name
+	return models.GetPlayerByName(i.(string))
+}
+
 func createPlayerMetaTable(player *models.Player, luaState *lua.LState) *lua.LTable {
 	// Create a player metatable
 	playerMetaTable := luaState.NewTable()
@@ -65,10 +66,12 @@ func createPlayerMetaTable(player *models.Player, luaState *lua.LState) *lua.LTa
 	// Set all player metatable functions
 	luaState.SetFuncs(playerMetaTable, playerMethods)
 
+	// Set all player public fields
+	MergeTableFields(StructToTable(player), playerMetaTable)
+
 	return playerMetaTable
 }
 
-// getPlayerObject returns a player struct from a user data value
 func getPlayerObject(luaState *lua.LState) *models.Player {
 	// Get metatable
 	tbl := luaState.ToTable(1)
@@ -78,6 +81,22 @@ func getPlayerObject(luaState *lua.LState) *models.Player {
 
 	// Return user data as pointer to struct
 	return data.Value.(*models.Player)
+}
+
+// GetPlayerGuild gets a player guild
+func GetPlayerGuild(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Get guild
+	guild, err := models.GetGuildByPlayerID(player.ID)
+	if err != nil {
+		L.RaiseError("Unable to retrieve player guild: %v", err)
+		return 0
+	}
+
+	L.Push(lua.LNumber(guild.ID))
+	return 1
 }
 
 // GetPlayerAccountID gets a player account ID
