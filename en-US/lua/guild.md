@@ -2,6 +2,8 @@
 Name: guild
 ---
 
+# Overview
+
 Provides easy access to server guilds. You first need to create a new instance:
 
 - [Guild(name)](#player(name))
