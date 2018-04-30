@@ -14,23 +14,29 @@ Castro provides lua bindings using a pool of lua states. Each request gets a sta
 
 - Standalone application.
     - Castro can run by itself without Apache or NGINX.
+
 - Extensible and solid lua support.
     - Create your own logic using exclusively lua 
     - Everything you need is exposed by Castro.
+
 - Simple installation. 
     - One click process. 
     - Everything is gathered from your config and map files.   
     - Converts normal and znote accounts.
+
 - Plugin manager. 
-    - Manage your extensions through Castro itself.     
+    - Manage your extensions through Castro itself.
+
 - Clean templates. 
     - Logic is separated from templates. 
-    - No more messy files.    
+    - No more messy files.
+
 - Security
     - All OWASP headers are covered.
     - Highly customizable Content Security Policy.
     - Prepared statements.
     - Template data is escaped by default.
+
 - Shop
     - Highly customizable web integrated shop.
     - PayPal payment processing using REST API.
@@ -39,4 +45,4 @@ Castro provides lua bindings using a pool of lua states. Each request gets a sta
 
 ## Development status
 
-Castro is currently still on development
+Castro is production ready
