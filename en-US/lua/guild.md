@@ -75,3 +75,4 @@ local g = Guild("Test")
 local k = g:getLeader()
 local name = k.Name
 -- name = "Test"
+```

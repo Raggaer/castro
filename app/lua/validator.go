@@ -3,6 +3,8 @@ package lua
 import (
 	"regexp"
 
+	"strings"
+
 	"github.com/asaskevich/govalidator"
 	"github.com/dgryski/dgoogauth"
 	"github.com/raggaer/castro/app/util"
@@ -396,5 +398,22 @@ func BlackList(L *lua.LState) int {
 		),
 	)
 
+	return 1
+}
+
+// EscapeString converts the given string into a safe to-use string
+// Usually you dont need this for queries but just in case you do some magic
+func EscapeString(L *lua.LState) int {
+	value := L.ToString(2)
+
+	// Create replace map
+	replace := map[string]string{`;`: `\x1a`, "\\": "\\\\", "'": `\'`, "\\0": "\\\\0", "\n": "\\n", "\r": "\\r", `"`: `\"`, "\x1a": "\\Z"}
+
+	// Replace characters
+	for b, a := range replace {
+		value = strings.Replace(value, b, a, -1)
+	}
+
+	L.Push(lua.LString(value))
 	return 1
 }

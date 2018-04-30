@@ -6,6 +6,7 @@ name: validator
 
 Provides access to data validation functions.
 
+- [validator:escapeString(string)](#escapestring)
 - [validator:validQRToken(token, secret)](#validqrtoken)
 - [validator:validGuildName(name)](#validguildname)
 - [validator:validGuildRank(rank)](#validguildrank)
@@ -14,6 +15,16 @@ Provides access to data validation functions.
 - [validator:validUsername(name)](#validusername)
 - [validator:blackList(data, tokens)](#blacklist)
 - [validator:validate(method, data)](#validate)
+
+# escapeString
+
+Escapes the given string returning a secure string to use for RAW SQL queries. If you use placeholders on your queries you dont need this
+
+```lua
+local notSafe = "This ; is not ; safe, 'hello' . 'world'"
+local safe = validator:escapeString(notSafe)
+-- safe = "This \x1a is not \x1a safe, \'hello\' . \'world\'"
+```
 
 # validQRToken
 

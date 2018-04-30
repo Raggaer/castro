@@ -84,6 +84,7 @@ var (
 		"validGuildRank": ValidGuildRank,
 		"validQRToken":   CheckQRCode,
 		"validGender":    ValidGender,
+		"escapeString":   EscapeString,
 	}
 	sessionMethods = map[string]glua.LGFunction{
 		"isLogged":      IsLogged,
