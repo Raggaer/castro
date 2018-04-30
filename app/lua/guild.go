@@ -22,7 +22,10 @@ func GuildConstructor(L *lua.LState) int {
 	return 1
 }
 
-func guildTableConstructor(i interface{}) (*models.Guild, error) {
+func guildTableConstructor(v lua.LValue) (*models.Guild, error) {
+	// Lua value to Go
+	i := ValueToGo(v)
+
 	// Get guild by ID
 	if reflect.TypeOf(i).Kind() == reflect.Int64 {
 		return models.GetGuildByID(i.(int64))
@@ -76,5 +79,45 @@ func GetGuildOwner(L *lua.LState) int {
 
 	// Push owner as player metatable
 	L.Push(lua.LNumber(guild.Ownerid))
+	return 1
+}
+
+// GetGuildMembers retrieves guild members
+func GetGuildMembers(L *lua.LState) int {
+	// Retrieve guild object
+	guild := getGuildObject(L)
+
+	// Retrieve all guild players
+	players, err := models.GetGuildMembers(guild.ID)
+	if err != nil {
+		L.RaiseError("Unable to retrieve guild member list: %v", err)
+		return 0
+	}
+
+	g := L.NewTable()
+
+	// Create a table with all the player metatables
+	for _, player := range players {
+		p := createPlayerMetaTable(player, L)
+		g.Append(p)
+	}
+
+	L.Push(g)
+	return 1
+}
+
+// GetGuildLeader retrieves the guild leader
+func GetGuildLeader(L *lua.LState) int {
+	// Retrieve guild object
+	guild := getGuildObject(L)
+
+	// Retrieve guild leader
+	leader, err := models.GetGuildMember(guild.ID, guild.Ownerid)
+	if err != nil {
+		L.RaiseError("Unable to retrieve guild leader: %v", err)
+		return 0
+	}
+
+	L.Push(createPlayerMetaTable(leader, L))
 	return 1
 }

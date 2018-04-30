@@ -34,6 +34,8 @@ This will return a new `guild` metatable.
 Provides access to the guild information.
 
 - [guild:getOwner()](#getowner)
+- [guild:getMembers()](#getmembers)
+- [guild:getLeader()](#getleader)
 
 The table also contains some additional fields regarding guild information:
 
@@ -52,3 +54,24 @@ local g = Guild("test")
 local owner = g:getOwner()
 -- owner = 10
 ```
+
+# getMembers
+
+Returns the list of all guild members (each element is a [player table](/docs/lua/player))
+
+```lua
+local g = Guild("Test")
+local k = g:getMembers()
+local name = k[1].Name
+-- name = "Test"
+```
+
+# getLeader
+
+Returns the guild leader (returned value is a [player table](/docs/lua/player))
+
+```lua
+local g = Guild("Test")
+local k = g:getLeader()
+local name = k.Name
+-- name = "Test"

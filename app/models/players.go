@@ -17,6 +17,7 @@ type Player struct {
 	Vocation   int
 	Town_id    uint32
 	Account_id int64
+	Experience int
 }
 
 // GetPlayerByID returns a player by the identifier

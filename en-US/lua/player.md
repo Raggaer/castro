@@ -59,6 +59,7 @@ The table also contains some additional fields regarding player information:
 - `player.Vocation`
 - `player.Town_id`
 - `player.Account_id`
+- `player.Experience`
 
 # getGuild
 

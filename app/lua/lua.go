@@ -166,7 +166,9 @@ var (
 		"getGuild":        GetPlayerGuild,
 	}
 	guildMethods = map[string]glua.LGFunction{
-		"getOwner": GetGuildOwner,
+		"getOwner":   GetGuildOwner,
+		"getMembers": GetGuildMembers,
+		"getLeader":  GetGuildLeader,
 	}
 	widgetMethods = map[string]glua.LGFunction{
 		"render": RenderWidgetTemplate,
