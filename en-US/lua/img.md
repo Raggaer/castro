@@ -4,13 +4,13 @@ Name: img
 
 # Img metatable
 
-Provides access to image manipulation functions
+Provides access to image manipulation functions.
 
 - [img:new(width, height)](#new)
 
 # new
 
-Returns a new `goimage` instance. You can then manipulate this image as your needs
+Returns a new `goimage` instance. You can then manipulate this image.
 
 ```lua
 local test = img:new(500, 500)
@@ -18,7 +18,7 @@ local test = img:new(500, 500)
 
 # Goimage metatable
 
-Provides access to image manipulation functions
+Provides access to image manipulation functions:
 
 - [goimage:writeText(text, color, size, x, y)](#writetext)
 - [goimage:setBackground(filepath)](#setbackground)

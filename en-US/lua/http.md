@@ -231,11 +231,24 @@ local file = http:formFile("guild-image")
 
 This function returns a metatable with the following functions:
 
+- [formFile:contentType()](#contentype)
 - [formFile:isValidExtension(type)](#isvalidextension)
 - [formFile:isValidPNG()](#isvalidpng)
 - [formFile:saveFile(destination)](#destination)
 - [formFile:saveFileAsPNG(destination, width, height)](#savefileaspng)
+- [formFile:saveFileAsJPEG(destination, quality, width, height)](#savefileasjpeg)
 - [formFile:getFile()](#getfile)
+
+# contentType
+
+Returns the file content type.
+
+```lua
+local file = http:formFile("guild-image")
+
+local c = file:contentType()
+-- c = "image/png"
+```
 
 # isValidExtension
 
@@ -261,7 +274,8 @@ local isPNG = file:isValidPNG()
 
 # saveFile
 
-Saves the current form file to the given destination. This method can be used for any file extension, if you want to save it as a image file use [formFile:saveFileAsPNG(destination, width, height)](#savefileaspng).
+Saves the current form file to the given destination. This method can be used for any file extension,
+if the file is an image you should use one of the save as image method instead (this methods are more secure to use for images since files are decoded/encoded before beeing saved)
 
 ```lua
 local file = http:formFile("guild-image")
@@ -277,6 +291,16 @@ Saves the current form file as a `png` image to the given destination. You can p
 local file = http:formFile("guild-image")
 
 file:saveFileAsPNG("public/images/guild-image.png", 64, 64)
+```
+
+# saveFileAsJPEG
+
+Saves the current form file as a `jpeg` image to the given destination. You can pass the quality you want the image to be saved (as a default value images are saved with 50 quality) you can also pass a width and a height as optional values to resize the image.
+
+```lua
+local file = http:formFile("guild-image")
+
+file:saveFileAsPNG("public/images/guild-image.png", 100, 64, 64)
 ```
 
 # getFile
