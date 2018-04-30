@@ -39,3 +39,15 @@ In this example we load the top five players from database and pass it to our te
 ```
 
 We check if our top variable is not nil, loop over that variable and show the players
+
+## Displaying widgets
+
+You can display your widgets (on any template) using the  `.widgets` variable inside your templates,
+usually you display them inside the `footer.html` or `header.html` templates to make sure widgets are visible on all pages
+
+```html
+{{ widget .widgets "account" }}
+```
+
+This example will display the account widget
+

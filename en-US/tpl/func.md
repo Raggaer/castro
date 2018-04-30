@@ -22,6 +22,7 @@ Castro provides a list of already defined functions you can use on your template
 - [gtNumber](#gtnumber)
 - [lsNumber](#lsnumber)
 - [unixToDate](#unixtodate)
+- [widget](#widget)
 
 # url
 
@@ -157,3 +158,13 @@ Returns a date string for the given UNIX timestamp.
 {{ $d := unixToDate 1521285384 }}
 <p>Current date: {{ $d }}</p>
 ```
+
+# widget
+
+Displays the given widget from the list.
+
+```html
+{{ widget .widgets "account"
+```
+
+You always need to pass a valid widget list.

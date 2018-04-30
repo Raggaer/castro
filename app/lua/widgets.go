@@ -58,10 +58,9 @@ func RenderWidgetTemplate(L *lua.LState) int {
 	return 0
 }
 
-func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string]interface{}) ([]template.HTML, error) {
+func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string]interface{}) (map[string]template.HTML, error) {
 	// Data holder
-	results := []template.HTML{}
-
+	results := map[string]template.HTML{}
 	// Loop widget list
 	for _, widget := range util.Widgets.List {
 
@@ -113,7 +112,7 @@ func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string
 		}
 
 		// Append data
-		results = append(results, templateData)
+		results[widget.Name] = templateData
 	}
 
 	return results, nil

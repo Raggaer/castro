@@ -2,9 +2,9 @@
 </div>
 </div>
 <div class="col-sm-3">
-    {{ range $index, $element := .widgets }}
-        {{ $element }}
-    {{ end }}
+    {{ widget .widgets "account" }}
+    {{ widget .widgets "toplevel" }}
+    {{ widget .widgets "admin" }}
 </div>
 <div class="clearfix"></div>
 </div>

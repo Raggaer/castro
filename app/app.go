@@ -543,5 +543,12 @@ func templateFuncs() template.FuncMap {
 		"menuPages": func() interface{} {
 			return util.Config.GetCustomValue("MenuPages")
 		},
+		"widget": func(list map[string]template.HTML, index string) template.HTML {
+			v, ok := list[index]
+			if !ok {
+				return ""
+			}
+			return v
+		},
 	}
 }
