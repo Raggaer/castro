@@ -4,7 +4,7 @@ name: Logging
 
 # Logging
 
-Castro creates a log file at startup with the following format `year-Month-day.txt`. A new file is created each day automatically.
+Castro creates a log file at startup with the following format `year-Month-day.txt`. **A new file is created each day automatically.**
 
 The contents of this file are in text. Each message follows the same structure:
 
