@@ -212,10 +212,13 @@ var (
 		"delete": DeleteGlobalLuaValue,
 	}
 	formFileMethods = map[string]glua.LGFunction{
-		"isValidPNG":    FormFileIsValidPNG,
-		"getFile":       GetFormFileByteArray,
-		"saveFile":      SaveFormFile,
-		"saveFileAsPNG": SaveFormFileAsPNG,
+		"isValidPNG":       FormFileIsValidPNG,
+		"isValidExtension": FormFileIsValidExtension,
+		"contentType":      FormFileDetectContentType,
+		"getFile":          GetFormFileByteArray,
+		"saveFile":         SaveFormFile,
+		"saveFileAsPNG":    SaveFormFileAsPNG,
+		"SaveFileAsJPEG":   SaveFormFileAsJPEG,
 	}
 	outfitMethods = map[string]glua.LGFunction{
 		"generate": GenerateOutfit,

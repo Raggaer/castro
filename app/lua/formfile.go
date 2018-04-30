@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"image/jpeg"
+
 	"github.com/kardianos/osext"
 	"github.com/nfnt/resize"
 	"github.com/yuin/gopher-lua"
@@ -93,6 +95,17 @@ func FormFileIsValidExtension(L *lua.LState) int {
 	return 1
 }
 
+// FormFileDetectContentType returns the form file content type
+func FormFileDetectContentType(L *lua.LState) int {
+	// Get form file
+	formFile := getFormFileObject(L)
+
+	// Push file content type
+	L.Push(lua.LString(http.DetectContentType(formFile.File)))
+
+	return 1
+}
+
 // GetFormFileByteArray returns the form file byte array as a lua string
 func GetFormFileByteArray(L *lua.LState) int {
 	// Get form file
@@ -123,6 +136,73 @@ func SaveFormFile(L *lua.LState) int {
 	// Write file to handle
 	if err := ioutil.WriteFile(filepath.Join(f, destination), formFile.File, 0666); err != nil {
 		L.RaiseError("Cannot save file to destination: %v", err)
+	}
+
+	return 0
+}
+
+// SaveFormFileAsJPEG saves the current form file as a jpeg with resizing optional
+func SaveFormFileAsJPEG(L *lua.LState) int {
+	// Get form file
+	formFile := getFormFileObject(L)
+
+	// Get executable folder
+	f, err := osext.ExecutableFolder()
+
+	if err != nil {
+		L.RaiseError("Cannot get executable folder path: %v", err)
+		return 0
+	}
+
+	// Get destination
+	destination := L.ToString(2)
+
+	// Create file handle
+	file, err := os.OpenFile(filepath.Join(f, destination), os.O_CREATE|os.O_WRONLY, 0666)
+
+	if err != nil {
+		L.RaiseError("Cannot get file handle: %v", err)
+		return 0
+	}
+
+	// Close file handle
+	defer file.Close()
+
+	// Create png image from byte array
+	pngImage, err := jpeg.Decode(bytes.NewBuffer(formFile.File))
+
+	if err != nil {
+		L.RaiseError("Cannot decode image from byte array: %v", err)
+		return 0
+	}
+
+	// Get quality
+	imageQuality := L.ToInt(3)
+
+	// Get desired image sizes
+	imageWidth := L.ToInt(4)
+	imageHeight := L.ToInt(5)
+
+	// Set default image quality
+	if imageQuality <= 0 {
+		imageQuality = 50
+	}
+
+	// Check if valid max quality
+	if imageQuality >= 100 {
+		imageQuality = 100
+	}
+
+	// Resize if wanted using nearest neighbor algorithm
+	if imageWidth > 0 && imageHeight > 0 {
+		pngImage = resize.Resize(uint(imageWidth), uint(imageHeight), pngImage, resize.NearestNeighbor)
+	}
+
+	// Encode image to file handle
+	if err := jpeg.Encode(file, pngImage, &jpeg.Options{
+		Quality: imageQuality,
+	}); err != nil {
+		L.RaiseError("Cannot encode jpeg image to handle: %v", err)
 	}
 
 	return 0
@@ -174,7 +254,7 @@ func SaveFormFileAsPNG(L *lua.LState) int {
 
 	// Encode image to file handle
 	if err := png.Encode(file, pngImage); err != nil {
-		L.RaiseError("Cannot decode png image to handle: %v", err)
+		L.RaiseError("Cannot encode png image to handle: %v", err)
 	}
 
 	return 0
