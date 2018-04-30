@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/castro-aac/Lobby](https://badges.gitter.im/castro-aac/Lobby.svg)](https://gitter.im/castro-aac/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Raggaer/castro)](https://goreportcard.com/report/github.com/Raggaer/castro)
-[![lICENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/Raggaer/castro/blob/master/LICENSE)
+[![LICENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/Raggaer/castro/blob/master/LICENSE)
 [![Build status](https://ci.appveyor.com/api/projects/status/yhrx9l6jrbvxhw5p?svg=true)](https://ci.appveyor.com/project/Raggaer/castro)
 
 High performance Open Tibia content management system written in **Go** using **Lua** for the scripting part.
@@ -12,6 +12,8 @@ Castro provides lua bindings. Using a pool of lua states. Each request gets a st
 ## Documentation
 
 Everything you might need [is here](https://docs.castroaac.org/). The official documentation site of Castro.
+
+Castro also ships with the documentation so you cna view it offline. Everything is located under **/en-US/** directory.
 
 ## Extensions
 
