@@ -53,6 +53,7 @@ Copy-Item views buildOutput\data\views -recurse
 Copy-Item engine buildOutput\data\engine -recurse
 Copy-Item migrations buildOutput\data\migrations -recurse
 Copy-Item extensions buildOutput\data\extensions -recurse
+Copy-Item i18n buildOutput\data\i18n -recurse
 Copy-Item LICENSE buildOutput\LICENSE
 
 echo "Compressing data directories"
