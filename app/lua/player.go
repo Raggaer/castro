@@ -3,7 +3,6 @@ package lua
 import (
 	"errors"
 	"html"
-
 	"reflect"
 
 	"github.com/raggaer/castro/app/database"
@@ -70,6 +69,20 @@ func createPlayerMetaTable(player *models.Player, luaState *lua.LState) *lua.LTa
 	MergeTableFields(StructToTable(player), playerMetaTable)
 
 	return playerMetaTable
+}
+
+func updatePlayerMetaTable(player *models.Player, state *lua.LState, t *lua.LTable) {
+	// Set user data
+	u := state.NewUserData()
+
+	// Set user data value
+	u.Value = player
+
+	// Set user data field
+	state.SetField(t, "__player", u)
+
+	// Set all player public fields
+	MergeTableFields(StructToTable(player), t)
 }
 
 func getPlayerObject(luaState *lua.LState) *models.Player {
@@ -353,6 +366,56 @@ func GetPlayerCapacity(L *lua.LState) int {
 	L.Push(lua.LNumber(cap))
 
 	return 1
+}
+
+// SetPlayerCustomField sets a fie from the player table
+func SetPlayerCustomField(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	// Get field name
+	fieldName := L.ToString(2)
+
+	// Get field value
+	fieldValue := L.Get(3)
+
+	// Retrieve current schema
+	schema := Config.GetGlobal("mysqlDatabase").String()
+
+	// Column name placeholder
+	nameList := []models.PlayerColumn{}
+
+	// Get all player column names
+	if err := database.DB.Select(&nameList, "SELECT COLUMN_NAME AS name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?", "players", schema); err != nil {
+		L.RaiseError("Cannot get list of column names from information_schema: %v", err)
+		return 0
+	}
+
+	// Loop column list
+	for _, column := range nameList {
+
+		// Check for valid column name
+		if column.Name == fieldName {
+
+			// Set custom field
+			if _, err := database.DB.Exec("UPDATE players SET "+html.EscapeString(fieldName)+" = ? WHERE id = ?", fieldValue.String(), player.ID); err != nil {
+				L.RaiseError("Cannot set custom field %s: %v", fieldName, err)
+				return 0
+			}
+
+			// Update players table
+			player, err := models.GetPlayerByID(player.ID)
+			if err != nil {
+				L.RaiseError("Cannot update player metatable: %v", err)
+				return 0
+			}
+
+			updatePlayerMetaTable(player, L, L.ToTable(1))
+			return 0
+		}
+	}
+
+	return 0
 }
 
 // GetPlayerCustomField retrieves a field from the player table as string

@@ -61,6 +61,20 @@ func createGuildMetaTable(guild *models.Guild, luaState *lua.LState) *lua.LTable
 	return guildMetaTable
 }
 
+func updateGuildMetaTable(guild *models.Guild, state *lua.LState, t *lua.LTable) {
+	// Set user data
+	u := state.NewUserData()
+
+	// Set user data value
+	u.Value = guild
+
+	// Set user data field
+	state.SetField(t, "__guild", u)
+
+	// Set guild public fields
+	MergeTableFields(StructToTable(guild), t)
+}
+
 func getGuildObject(luaState *lua.LState) *models.Guild {
 	// Get metatable
 	tbl := luaState.ToTable(1)

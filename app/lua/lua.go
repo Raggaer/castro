@@ -164,6 +164,7 @@ var (
 		"getExperience":   GetPlayerExperience,
 		"getCapacity":     GetPlayerCapacity,
 		"getCustomField":  GetPlayerCustomField,
+		"setCustomField":  SetPlayerCustomField,
 		"getGuild":        GetPlayerGuild,
 	}
 	guildMethods = map[string]glua.LGFunction{

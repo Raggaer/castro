@@ -49,6 +49,7 @@ Provides access to the player information.
 - [player:getExperience()](#getexperience)
 - [player:getCapacity()](#getcapacity)
 - [player:getCustomField()](#getcustomfield)
+- [player:setCustomField()](#setcustomfield)
 
 The table also contains some additional fields regarding player information:
 
@@ -248,4 +249,13 @@ Retrieves the given field as a string.
 local data = Player(1)
 local points = tonumber(data:getCustomField("points"))
 -- points = 100
+```
+
+# setCustomField
+
+Sets the given field on the player table
+
+```lua
+local data = Player("Test")
+data:setCustomField("level", 999)
 ```
