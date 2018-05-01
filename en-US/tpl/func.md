@@ -6,6 +6,7 @@ name: Functions
 
 Castro provides a list of already defined functions you can use on your templates:
 
+- [i18n](#i18n)
 - [url](#url)
 - [vocation](#vocation)
 - [serverName](#servername)
@@ -23,6 +24,26 @@ Castro provides a list of already defined functions you can use on your template
 - [lsNumber](#lsnumber)
 - [unixToDate](#unixtodate)
 - [widget](#widget)
+
+# i18n
+
+Function to work with different languages, you must first create language files inside the `i18n` directory.
+
+```html
+<p>The english text is: {{ i18n "english" "example" }}</p>
+```
+
+The example below will retrieve the `example` fields from the `english.i18n` file and display it on the browser, you can also work with formatted strings:
+
+```toml
+example = "Hello %s!"
+```
+
+```html
+<p>The english text is: {{ i18n "english" "example" "Raggaer" }}</p>
+```
+
+In the last example we pass an additional field `Raggaer` to the language string, since the string contains `%s` it expects a string to be passed.
 
 # url
 
