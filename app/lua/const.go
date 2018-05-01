@@ -1,6 +1,9 @@
 package lua
 
 const (
+	// I18nMetaTableName the name of the i18n metatable
+	I18nMetaTableName = "i18n"
+
 	// ExtensionMetaTableName the name of the extension metatable
 	ExtensionMetaTableName = "extension"
 

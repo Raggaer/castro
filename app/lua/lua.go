@@ -227,6 +227,9 @@ var (
 	extensionMethods = map[string]glua.LGFunction{
 		"reload": ReloadExtensions,
 	}
+	i18nMethods = map[string]glua.LGFunction{
+		"get": GetLanguageIndex,
+	}
 )
 
 // OverwriteConfigFile gathers all external config file and pushes globals
@@ -293,6 +296,9 @@ func (p *luaStatePool) Get() *glua.LState {
 
 // GetApplicationState returns a page configured lua state
 func GetApplicationState(luaState *glua.LState) {
+	// Create i18n metatable
+	SetI18nMetaTable(luaState)
+
 	// Create outfit metatable
 	SetOutfitMetaTable(luaState)
 
