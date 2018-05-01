@@ -28,7 +28,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(9)
+	wait.Add(10)
 
 	// Load application logger
 	loadAppLogger()
@@ -54,6 +54,7 @@ func Start() {
 	// Create application cache
 	createCache()
 
+	go loadLanguageFiles(wait)
 	go loadWidgetList(wait)
 	go appTemplates(wait)
 	go widgetTemplates(wait)
@@ -71,6 +72,16 @@ func Start() {
 
 	// Execute the init lua file
 	executeInitFile()
+}
+
+func loadLanguageFiles(wg *sync.WaitGroup) {
+	// Load language files
+	if err := util.Loadi18n("i18n"); err != nil {
+		util.Logger.Logger.Fatalf("Cannot load language files: %v", err)
+	}
+
+	// Finish task
+	wg.Done()
 }
 
 func overwriteConfigFile(wg *sync.WaitGroup) {
@@ -549,6 +560,21 @@ func templateFuncs() template.FuncMap {
 				return ""
 			}
 			return v
+		},
+		"i18n": func(lang, index string, args ...interface{}) string {
+			// Load language
+			language, ok := util.LanguageFiles.Get(lang)
+			if !ok {
+				return ""
+			}
+
+			// Load language string
+			str, ok := language.Data[index]
+			if !ok {
+				return ""
+			}
+
+			return fmt.Sprintf(str, args...)
 		},
 	}
 }
