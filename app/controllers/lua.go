@@ -112,6 +112,16 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
+	// Get request language
+	language, ok := r.Context().Value("language").([]string)
+	if !ok {
+		// Set error header
+		w.WriteHeader(500)
+		util.Logger.Logger.Error("Cannot get language as string slice")
+
+		return
+	}
+
 	// Set LUA file name
 	pageName := ps.ByName("filepath")
 
@@ -143,6 +153,9 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	// Set session user data
 	lua.SetSessionMetaTableUserData(s, session)
+
+	// Set language user data
+	lua.SetI18nUserData(s, language)
 
 	if err := lua.ExecuteControllerPage(s, r.Method); err != nil {
 

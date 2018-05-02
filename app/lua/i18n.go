@@ -15,6 +15,15 @@ func SetI18nMetaTable(luaState *lua.LState) {
 	luaState.SetFuncs(i18nMetaTable, i18nMethods)
 }
 
+// SetI18nUserData sets the i18n language value
+func SetI18nUserData(luaState *lua.LState, lang []string) {
+	// Get metatable
+	i18nMetatable := luaState.GetTypeMetatable(I18nMetaTableName)
+
+	// Set language field
+	luaState.SetField(i18nMetatable, "Language", StringSliceToTable(lang))
+}
+
 // GetLanguageIndex retrieves the given language index
 func GetLanguageIndex(L *lua.LState) int {
 	// Language file

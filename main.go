@@ -98,6 +98,7 @@ Compiled at: %v
 		newSessionHandler(),
 		newMicrotimeHandler(),
 		newCsrfHandler(),
+		newI18nHandler(),
 		negroni.NewStatic(http.Dir("public/")),
 	)
 

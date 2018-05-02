@@ -29,6 +29,24 @@ type rateLimitHandler struct {
 	Limiter *limiter.Limiter
 }
 
+// i18nHandler used to detect user language
+type i18nHandler struct{}
+
+// newI18nHandler creates and returns a new i18nHandler instance
+func newI18nHandler() *i18nHandler {
+	return &i18nHandler{}
+}
+
+func (i *i18nHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
+	// Retrieve request language header
+	accept := strings.Split(req.Header.Get("Accept-Language"), ",")
+
+	// Create new context with language value
+	ctx := context.WithValue(req.Context(), "language", accept)
+
+	next(w, req.WithContext(ctx))
+}
+
 // newRateLimitHandler creates and returns a new rateLimitHandler instance
 func newRateLimitHandler(limiter *limiter.Limiter) *rateLimitHandler {
 	return &rateLimitHandler{limiter}

@@ -188,6 +188,19 @@ func URLValuesToTable(m url.Values) *lua.LTable {
 	return &t
 }
 
+// StringSliceToTable converts a []string to a lua table
+func StringSliceToTable(m []string) *lua.LTable {
+	// Data holder
+	t := lua.LTable{}
+
+	// Loop string slice and append to table
+	for _, e := range m {
+		t.Append(lua.LString(e))
+	}
+
+	return &t
+}
+
 // TableToURLValues converts a lua table to a map[string][]string
 func TableToURLValues(t *lua.LTable) url.Values {
 	// Data holder
