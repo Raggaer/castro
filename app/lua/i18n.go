@@ -1,6 +1,8 @@
 package lua
 
 import (
+	"fmt"
+
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
 )
@@ -32,20 +34,40 @@ func GetLanguageIndex(L *lua.LState) int {
 	// Index
 	i := L.ToString(3)
 
+	// Format args
+	args := []interface{}{}
+	x := 4
+
+	// Retrieve args
+	for {
+		v := L.Get(x)
+		if v == lua.LNil {
+			break
+		}
+		args = append(args, ValueToGo(v))
+		x++
+	}
+
 	// Retrieve language file
 	langFile, ok := util.LanguageFiles.Get(lang)
-	if !ok {
-		L.Push(lua.LNil)
-		return 1
+	if ok {
+		langStr, ok := langFile.Data[i]
+		if ok {
+			L.Push(lua.LString(fmt.Sprintf(langStr, args...)))
+			return 1
+		}
 	}
 
-	// Retrieve language index
+	// Retrieve default language
+	langFile, ok = util.LanguageFiles.Get("default")
+
+	// Retrieve default language index
 	langStr, ok := langFile.Data[i]
-	if !ok {
-		L.Push(lua.LNil)
+	if ok {
+		L.Push(lua.LString(fmt.Sprintf(langStr, args...)))
 		return 1
 	}
 
-	L.Push(lua.LString(langStr))
+	L.Push(lua.LNil)
 	return 1
 }

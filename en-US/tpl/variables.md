@@ -42,6 +42,7 @@ Variables that are available on each request:
 
 - [widgets](#widgets)
 - [microtime](#microtime)
+- [session](#session)
 
 ## Widgets
 
@@ -58,3 +59,7 @@ Contains all the widgets html text. You can loop this variable to show the widge
 Time that took to generate the page. This value is a string with the format `x seconds`.
 
 **Microtime starts on a HTTP middleware so the value is always a little bit higher than what it should be**.
+
+## Session
+
+Provides access to the session map, usually you should access this by passing the session data to the template (with `http:render`) however sometimes you need to access the session map (for `i18n` for example)

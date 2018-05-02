@@ -564,17 +564,23 @@ func templateFuncs() template.FuncMap {
 		"i18n": func(lang, index string, args ...interface{}) string {
 			// Load language
 			language, ok := util.LanguageFiles.Get(lang)
-			if !ok {
-				return ""
+			if ok {
+				str, ok := language.Data[index]
+				if ok {
+					return fmt.Sprintf(str, args...)
+				}
 			}
 
-			// Load language string
-			str, ok := language.Data[index]
-			if !ok {
-				return ""
+			// Load default language string
+			language, ok = util.LanguageFiles.Get("default")
+			if ok {
+				str, ok := language.Data[index]
+				if ok {
+					return fmt.Sprintf(str, args...)
+				}
 			}
 
-			return fmt.Sprintf(str, args...)
+			return ""
 		},
 	}
 }
