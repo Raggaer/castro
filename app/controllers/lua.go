@@ -142,9 +142,6 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	// Return state to the pool
-	defer lua.PageList.Put(s, filepath.Join("pages", pageName, r.Method+".lua"))
-
 	// Create HTTP metatable
 	lua.SetHTTPMetaTable(s)
 
@@ -165,4 +162,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// Log error
 		util.Logger.Logger.Errorf("Cannot execute subtopic %v: %v", pageName, err)
 	}
+
+	// Return state
+	lua.PageList.Put(s, filepath.Join("pages", pageName, r.Method+".lua"))
 }

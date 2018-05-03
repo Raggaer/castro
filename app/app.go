@@ -561,7 +561,10 @@ func templateFuncs() template.FuncMap {
 			}
 			return v
 		},
-		"i18n": func(lang, index string, args ...interface{}) string {
+		"i18n": func(ilang interface{}, index string, args ...interface{}) string {
+			// Convert to string
+			lang := fmt.Sprintf("%v", ilang)
+
 			// Load language
 			language, ok := util.LanguageFiles.Get(lang)
 			if ok {

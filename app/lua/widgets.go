@@ -61,6 +61,13 @@ func RenderWidgetTemplate(L *lua.LState) int {
 func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string]interface{}) (map[string]template.HTML, error) {
 	// Data holder
 	results := map[string]template.HTML{}
+
+	// Get request language
+	language, ok := req.Context().Value("language").([]string)
+	if !ok {
+		return nil, errors.New("Unable to retrieve language contenxt at widget list")
+	}
+
 	// Loop widget list
 	for _, widget := range util.Widgets.List {
 
@@ -71,8 +78,8 @@ func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string
 			return nil, err
 		}
 
-		// Return state
-		defer WidgetList.Put(state, filepath.Join("widgets", widget.Name, widget.Name+".lua"))
+		// Set language user data
+		SetI18nUserData(state, language)
 
 		// Set widget metatable
 		setWidgetMetaTable(state)
@@ -88,6 +95,7 @@ func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string
 
 		// Call widget function
 		if err := ExecuteControllerPage(state, "widget"); err != nil {
+			WidgetList.Put(state, filepath.Join("widgets", widget.Name, widget.Name+".lua"))
 			return nil, err
 		}
 
@@ -101,6 +109,7 @@ func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string
 		data, ok := widgetData.(*lua.LUserData)
 
 		if !ok {
+			WidgetList.Put(state, filepath.Join("widgets", widget.Name, widget.Name+".lua"))
 			return nil, errors.New("Cannot convert widget data to user data")
 		}
 
@@ -108,11 +117,13 @@ func compileWidgetList(req *http.Request, w http.ResponseWriter, sess map[string
 		templateData, ok := data.Value.(template.HTML)
 
 		if !ok {
+			WidgetList.Put(state, filepath.Join("widgets", widget.Name, widget.Name+".lua"))
 			return nil, errors.New("Cannot convert widget user data to template HTML")
 		}
 
 		// Append data
 		results[widget.Name] = templateData
+		WidgetList.Put(state, filepath.Join("widgets", widget.Name, widget.Name+".lua"))
 	}
 
 	return results, nil

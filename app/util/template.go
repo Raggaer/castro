@@ -57,6 +57,11 @@ func (t *Tmpl) LoadTemplates(dir string) error {
 	// Walk over the views directory
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 
+		// Check for walking error
+		if err != nil {
+			return err
+		}
+
 		// Check if file has .html extension
 		if strings.HasSuffix(info.Name(), ".html") {
 			if t.Tmpl, err = t.Tmpl.ParseFiles(path); err != nil {
