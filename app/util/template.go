@@ -185,6 +185,16 @@ func (t Tmpl) RenderWidget(req *http.Request, name string, args map[string]inter
 		return nil, errors.New("Cannot get nonce value")
 	}
 
+	// Get session map
+	session, ok := req.Context().Value("session").(map[string]interface{})
+
+	if !ok {
+		return nil, errors.New("Cannot get session value")
+	}
+
+	// Set session value
+	args["session"] = session
+
 	// Set nonce value
 	args["nonce"] = nonce
 
