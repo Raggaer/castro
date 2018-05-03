@@ -623,3 +623,12 @@ func CreateRequestClient(L *glua.LState) int {
 
 	return 3
 }
+
+// GetRelativeURL returns the relative request URL
+func GetRelativeURL(L *glua.LState) int {
+	// Get request
+	req, _ := getRequestAndResponseWriter(L)
+
+	L.Push(glua.LString(req.URL.String()))
+	return 1
+}

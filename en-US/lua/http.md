@@ -22,6 +22,7 @@ Provides access to HTTP related functions.
 - [http:formFile(name)](#formfile)
 - [http:setCookie(name, value, expiration)](#setcookie)
 - [http:getCookie(name)](#getcookie)
+- [http:getRelativeURL()](#getrelativeurl)
 
 # method
 
@@ -339,3 +340,13 @@ If the cookie is not set (or expired) this method will return `nil`.
 local c = http:getCookie("Test")
 -- c = nil
 ```
+
+# getRelativeURL
+
+Returns the current relative URL of the request (similar to `http.subtopic`):
+
+```lua
+local u = http:getRelativeURL()
+-- u = "/subtopic/test?test=test"
+```
+

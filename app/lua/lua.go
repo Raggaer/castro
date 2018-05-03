@@ -68,6 +68,7 @@ var (
 		"curl":               CreateRequestClient,
 		"formFile":           GetFormFile,
 		"parseMultiPartForm": ParseMultiPartForm,
+		"GetRelativeURL":     GetRelativeURL,
 	}
 	httpRegularMethods = map[string]glua.LGFunction{
 		"curl":     CreateRequestClient,
