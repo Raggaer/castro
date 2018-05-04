@@ -6,6 +6,7 @@ name: Functions
 
 Castro provides a list of already defined functions you can use on your templates:
 
+- [formatFloat](#formatfloat)
 - [atoi](#atoi)
 - [itoa](#itoa)
 - [i18n](#i18n)
@@ -26,6 +27,18 @@ Castro provides a list of already defined functions you can use on your template
 - [lsNumber](#lsnumber)
 - [unixToDate](#unixtodate)
 - [widget](#widget)
+
+# formatFloat
+
+Converts the given float to a string (with -1 precision), usually you use this to convert lua numbers to strings.
+
+```lua
+data.test = 12
+```
+
+```html
+{{ itoa .test }}
+```
 
 # atoi
 

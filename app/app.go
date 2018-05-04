@@ -592,6 +592,9 @@ func templateFuncs() template.FuncMap {
 			}
 			return v
 		},
+		"formatFloat": func(i float64) string {
+			return strconv.FormatFloat(i, 'f', -1, 64)
+		},
 		"itoa": func(i int) string {
 			return strconv.Itoa(i)
 		},
