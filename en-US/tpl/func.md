@@ -6,6 +6,8 @@ name: Functions
 
 Castro provides a list of already defined functions you can use on your templates:
 
+- [atoi](#atoi)
+- [itoa](#itoa)
 - [i18n](#i18n)
 - [url](#url)
 - [vocation](#vocation)
@@ -24,6 +26,22 @@ Castro provides a list of already defined functions you can use on your template
 - [lsNumber](#lsnumber)
 - [unixToDate](#unixtodate)
 - [widget](#widget)
+
+# atoi
+
+Converts the given string to an integer, if the string is not a valid integer `0` will be returned
+
+```html
+<p>I am {{ atoi "12" }} years old</p>
+```
+
+# itoa
+
+Converts the given integer to a string.
+
+```html
+{{ itoa 12 }}
+```
 
 # i18n
 
