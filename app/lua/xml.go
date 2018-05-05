@@ -8,6 +8,7 @@ import (
 	"github.com/clbanning/mxj"
 	"github.com/raggaer/castro/app/util"
 	"github.com/yuin/gopher-lua"
+	"golang.org/x/net/html/charset"
 )
 
 // SetXMLMetaTable sets the xml metatable of the given lua state
@@ -32,6 +33,7 @@ func MarshalXML(L *lua.LState) int {
 	}
 
 	// Convert table to map
+	mxj.XmlCharsetReader = charset.NewReaderLabel
 	r := mxj.Map(TableToMap(L.ToTable(2)))
 
 	// Marshal converted table
@@ -81,10 +83,11 @@ func UnmarshalXMLFile(L *lua.LState) int {
 	}
 
 	// Unmarshal string
+	mxj.XmlCharsetReader = charset.NewReaderLabel
 	result, err := mxj.NewMapXml(buff)
 
 	if err != nil {
-		L.RaiseError("Cannot unmarshal the given string: %v", err)
+		L.RaiseError("Cannot unmarshal the given file: %v", err)
 		return 0
 	}
 
@@ -116,6 +119,7 @@ func UnmarshalXML(L *lua.LState) int {
 	}
 
 	// Unmarshal string
+	mxj.XmlCharsetReader = charset.NewReaderLabel
 	result, err := mxj.NewMapXml([]byte(src.String()))
 
 	if err != nil {
