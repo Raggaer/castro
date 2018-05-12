@@ -21,6 +21,7 @@
             <tr><th>Title</th><th>Created</th><th>Updated</th><th colspan="2">Action</th></tr>
         </thead>
         <tbody>
+        {{ if .articles }}
             {{ range $index, $element := .articles }}
             <tr>
                 <td>{{ $element.title }}</td>
@@ -32,6 +33,11 @@
                </td>
             </tr>
             {{ end }}
+        {{ else }}
+            <tr>
+                <td colspan="5">No articles</td>
+            </tr>
+        {{ end }}
         </tbody>
     </table>
 </form>

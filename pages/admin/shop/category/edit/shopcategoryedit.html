@@ -1,6 +1,5 @@
 {{ template "header.html" . }}
-<link href="/css/froala_editor.pkgd.min.css" rel="stylesheet">
-<link href="/css/froala_style.min.css" rel="stylesheet">
+<script src="//cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
 <h3>Edit shop category</h3>
 <hr>
 {{ if .validationError }}
@@ -22,11 +21,9 @@
 </form>
 
 {{ template "footer.html" . }}
-<script src="/js/froala_editor.pkgd.min.js"></script>
 <script nonce={{ .nonce }}>
-	var csrfToken = {{ .csrfToken }}
-</script>
-<script src="/js/froala.js"></script>
-<script nonce={{ .nonce }}>
-	froala("#category-text");
+    CKEDITOR.replace('article-text', {
+        extraPlugins: 'uploadimage',
+        imageUploadUrl: '/subtopic/admin/ckeditor/image/upload?_csrf={{ .csrfToken }}',
+    });
 </script>

@@ -1,5 +1,5 @@
 {{ template "header.html" . }}
-<link href="/css/froala_editor.pkgd.min.css" rel="stylesheet">
+<script src="//cdn.ckeditor.com/4.9.2/standard/ckeditor.js"></script>
 <h3>New offer for: {{ .category.name }}</h3>
 <hr> {{ if .validationError }}
 <div class="alert alert-danger" role="alert">
@@ -96,13 +96,13 @@
 </div>
 
 {{ template "footer.html" . }}
-<script src="/js/froala_editor.pkgd.min.js"></script>
 <script nonce={{ .nonce }}>
-    var csrfToken = {{ .csrfToken }}
+    CKEDITOR.replace('article-text', {
+        extraPlugins: 'uploadimage',
+        imageUploadUrl: '/subtopic/admin/ckeditor/image/upload?_csrf={{ .csrfToken }}',
+    });
 </script>
-<script src="/js/froala.js"></script>
 <script nonce={{ .nonce }}>
-    froala("#offer-text");
     var i = 1;
     $('#add-container-item').on('click', function() {
         var e = $('#container-item-1').clone();

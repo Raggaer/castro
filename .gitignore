@@ -19,7 +19,6 @@ extensions/*
 public/images/guild-images/*
 !public/images/guild-images/default-guild-logo.png
 public/images/outfits/*.png
-public/froala/images/*.png
-public/froala/files/*
-!public/froala/files/.gitkeep
+public/ckeditor/images/*.png
+!public/ckeditor/images/.gitkeep
 tls
