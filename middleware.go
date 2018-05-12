@@ -302,7 +302,7 @@ func (c *csrfHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, next h
 	}
 
 	// Check if valid token
-	if req.Method == http.MethodPost && req.FormValue("_csrf") != token.Token {
+	if req.Method == http.MethodPost && (req.FormValue("_csrf") != token.Token && req.URL.Query().Get("_csrf") != token.Token) {
 		return
 	}
 
