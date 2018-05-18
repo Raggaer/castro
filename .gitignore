@@ -21,4 +21,5 @@ public/images/guild-images/*
 public/images/outfits/*.png
 public/ckeditor/images/*.png
 !public/ckeditor/images/.gitkeep
+i18n/*.i18n
 tls
