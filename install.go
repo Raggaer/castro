@@ -188,6 +188,10 @@ var (
 		Port:         80,
 		URL:          "localhost",
 		Datapack:     "",
+		Static: util.StaticConfig{
+			Enabled:   true,
+			Directory: "public/",
+		},
 		Plugin: util.PluginConfig{
 			Enabled: true,
 			Origin:  "https://plugins.castroaac.org",

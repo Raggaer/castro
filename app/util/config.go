@@ -11,6 +11,12 @@ import (
 	"github.com/raggaer/castro/app/database"
 )
 
+// StaticConfig struct used for the static asset handler options
+type StaticConfig struct {
+	Enabled   bool
+	Directory string
+}
+
 // CookieConfig struct used for the cookies configuration options
 type CookieConfig struct {
 	Name     string
@@ -143,6 +149,7 @@ type Configuration struct {
 	Cookies      CookieConfig
 	Cache        CacheConfig
 	RateLimit    RateLimiterConfig
+	Static       StaticConfig
 	Custom       map[string]interface{}
 }
 

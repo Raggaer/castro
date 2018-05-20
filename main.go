@@ -16,7 +16,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/raggaer/castro/app"
 	"github.com/raggaer/castro/app/controllers"
-	"github.com/raggaer/castro/app/database"
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
 	"github.com/ulule/limiter"
@@ -100,8 +99,12 @@ Compiled at: %v
 		newMicrotimeHandler(),
 		newCsrfHandler(),
 		newI18nHandler(),
-		negroni.NewStatic(http.Dir("public/")),
 	)
+
+	// Use static handler if enabled
+	if util.Config.Configuration.Static.Enabled {
+		n.Use(negroni.NewStatic(http.Dir(util.Config.Configuration.Static.Directory)))
+	}
 
 	// Use negroni logger only in development mode
 	if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
@@ -113,9 +116,6 @@ Compiled at: %v
 
 	// Tell negroni to use our http router
 	n.UseHandler(router)
-
-	// Close database handle when the main function ends
-	defer database.DB.Close()
 
 	// Create castro server
 	server := http.Server{
