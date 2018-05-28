@@ -78,7 +78,7 @@ Compiled at: %v
 	router.GET("/subtopic/*filepath", controllers.LuaPage)
 	router.GET("/extensions/:id/static/*filepath", controllers.ExtensionStatic)
 	router.POST("/nocsrf/*filepath", controllers.LuaPage)
-	router.NotFound = PageNotFound
+	router.NotFound = http.HandlerFunc(PageNotFound)
 
 	// Register pprof router only on development mode
 	if util.Config.Configuration.IsDev() {
