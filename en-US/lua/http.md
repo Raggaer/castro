@@ -50,7 +50,16 @@ Holds the incoming request body, useful for creating a JSON API. Will be an empt
 
 ```lua
 local body = http.body
--- body = "<html>...</html>"
+-- body = "{data}"
+```
+
+This can be used to handle JSON or XML requests, for example the Tibia 11 client webservice sends some JSON data to the server, we can work with that data like this:
+
+```lua
+function get()
+  local data = json:unmarshal(http.body)
+  print(data.password)
+end
 ```
 
 # redirect
