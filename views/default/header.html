@@ -14,6 +14,11 @@
     <link href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
+    
+    {{ if captchaEnabled }}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    {{ end }}
+
     {{ template "head" . }}
 </head>
 <body>

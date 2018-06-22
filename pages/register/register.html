@@ -1,7 +1,4 @@
 {{ template "header.html" . }}
-{{ if captchaEnabled }}
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-{{ end }}
 <h3>Register at {{ .serverName }}</h3>
 <hr>
 {{ if .validationError }}
