@@ -13,6 +13,7 @@
 
 .news-box {
     margin-bottom: 35px;
+    word-wrap: break-word;
 }
 
 .info-panel {
