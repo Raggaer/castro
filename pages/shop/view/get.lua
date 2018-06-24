@@ -9,12 +9,18 @@ function get()
     local data = {}
 
     data.categories = db:query("SELECT id, name, description FROM castro_shop_categories ORDER BY id")
-    data.players = db:query("SELECT name FROM players WHERE account_id = ?", session:loggedAccount().ID)
+
+    if data.categories == nil then 
+        data.error = 'There are no shop categories on the shop'
+        http:render("shopview.html", data)
+        return
+    end
 
     for _, category in ipairs(data.categories) do
         category.offers = db:query("SELECT id, image, name, description, price FROM castro_shop_offers WHERE category_id = ?", category.id)
     end
 
+    data.players = db:query("SELECT name FROM players WHERE account_id = ?", session:loggedAccount().ID)
     data.success = session:getFlash("success")
     data.error = session:getFlash("error")
 
