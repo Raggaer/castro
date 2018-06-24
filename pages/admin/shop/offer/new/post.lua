@@ -58,8 +58,10 @@ function post()
 
     if offerImage ~= nil then
 
-        if not offerImage:isValidPNG() then
-            session:setFlash("validationError", "Offer image can only be .png")
+        local validImage = offerImage:isValidExtension("image/png") or offerImage:isValidExtension("image/jpeg") or offerImage:isValidExtension("image/gif")
+
+        if not validImage then
+            session:setFlash("validationError", "Offer image can only be .png, .jpeg or .gif")
             http:redirect("/subtopic/admin/shop/offer/new?categoryId=" .. data.category.id)
             return
         end
@@ -83,9 +85,9 @@ function post()
         ternary(http.postValues["give-item"] == nil, 0, http.postValues["give-item"]),
         ternary(http.postValues["give-item-amount"] == nil, 0, http.postValues["give-item-amount"]),
         ternary(http.postValues["charges"] == nil, 0, http.postValues["charges"]),
-        table.concat(explode(",", http.postValues["container-item[]"]), ","),
-        table.concat(explode(",", http.postValues["container-item-amount[]"]), ","),
-        table.concat(explode(",", http.postValues["container-item-charges[]"]), ",")
+        ternary(http.postValues["container-item[]"] == "", "", table.concat(explode(",", http.postValues["container-item[]"]), ",")),
+        ternary(http.postValues["container-item-amount[]"] == "", "", table.concat(explode(",", http.postValues["container-item-amount[]"]), ",")),
+        ternary(http.postValues["container-item-charges[]"] == "", "", table.concat(explode(",", http.postValues["container-item-charges[]"]), ","))
     )
 
     session:setFlash("success", "Shop offer created")
