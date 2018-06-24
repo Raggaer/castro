@@ -2,6 +2,7 @@ package lua
 
 import (
 	"bytes"
+	"image"
 	"image/png"
 	"io/ioutil"
 	"mime/multipart"
@@ -9,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
+	_ "image/gif"
 	"image/jpeg"
 
 	"github.com/kardianos/osext"
@@ -169,7 +171,7 @@ func SaveFormFileAsJPEG(L *lua.LState) int {
 	defer file.Close()
 
 	// Create png image from byte array
-	pngImage, err := jpeg.Decode(bytes.NewBuffer(formFile.File))
+	pngImage, _, err := image.Decode(bytes.NewBuffer(formFile.File))
 
 	if err != nil {
 		L.RaiseError("Cannot decode image from byte array: %v", err)
@@ -236,7 +238,7 @@ func SaveFormFileAsPNG(L *lua.LState) int {
 	defer file.Close()
 
 	// Create png image from byte array
-	pngImage, err := png.Decode(bytes.NewBuffer(formFile.File))
+	pngImage, _, err := image.Decode(bytes.NewBuffer(formFile.File))
 
 	if err != nil {
 		L.RaiseError("Cannot decode image from byte array: %v", err)
