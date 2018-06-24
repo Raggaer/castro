@@ -16,7 +16,7 @@ function get()
     local pg = paginator(page, 5, tonumber(articleCount.total))
     local data = {}
 
-    data.articles, cache = db:query("SELECT title, text, created_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.offset, pg.limit, true)
+    data.articles, cached = db:query("SELECT title, text, created_at FROM castro_articles ORDER BY id DESC LIMIT ?, ?", pg.offset, pg.limit, true)
     data.paginator = pg
 
     if data.articles == nil and page > 0 then
@@ -25,7 +25,7 @@ function get()
     end
 
     if data.articles ~= nil then
-        if not cache then
+        if not cached then
             for _, article in pairs(data.articles) do
                 article.created = time:parseUnix(article.created_at)
             end
