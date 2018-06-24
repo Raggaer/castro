@@ -264,9 +264,6 @@ func Query(L *lua.LState) int {
 
 			results := q.(*lua.LTable)
 
-			// Set cache status
-			L.Push(lua.LBool(true))
-
 			// If there are no results return nil
 			if results.Len() == 0 {
 				L.Push(lua.LNil)
