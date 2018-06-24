@@ -16,8 +16,6 @@ function post()
         return
     end
 
-    print(http.postValues.title:len(), http.postValues.title:len() > 45)
-
     if http.postValues.title:len() > 45 then
         session:setFlash("validationError", "Category title must have less than 45 characters")
         http:redirect("/subtopic/admin/shop/category/new")

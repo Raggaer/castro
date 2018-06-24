@@ -26,8 +26,6 @@ function post()
     local validUntil = time:parseDate(http.postValues["until"], "2006-01-02")
     local unlimited = tonumber(http.postValues.unlimited) == 1
 
-    print(unlimited)
-
     if unlimited then
         http.postValues["code-uses"] = 0
     end
