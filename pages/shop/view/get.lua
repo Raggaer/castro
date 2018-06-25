@@ -20,7 +20,6 @@ function get()
         category.offers = db:query("SELECT id, image, name, description, price FROM castro_shop_offers WHERE category_id = ?", category.id)
     end
 
-    data.players = db:query("SELECT name FROM players WHERE account_id = ?", session:loggedAccount().ID)
     data.success = session:getFlash("success")
     data.error = session:getFlash("error")
 
@@ -28,6 +27,8 @@ function get()
         http:render("shopview.html", data)
         return
     end
+
+    data.players = db:query("SELECT name FROM players WHERE account_id = ?", session:loggedAccount().ID)
 
     local cart = session:get("shop-cart")
 

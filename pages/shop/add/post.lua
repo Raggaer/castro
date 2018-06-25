@@ -4,6 +4,12 @@ function post()
         return
     end
 
+    if not session:isLogged() then
+        session:setFlash("error", "You need to be logged in")
+        http:redirect("/subtopic/shop/view")
+        return
+    end
+
     local offer = db:singleQuery("SELECT id, name, description, price FROM castro_shop_offers WHERE id = ?", http.postValues["offer"])
 
     if offer == nil then
