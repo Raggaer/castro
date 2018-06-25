@@ -67,7 +67,7 @@ function post()
         end
 
         offerImage:saveFileAsPNG("public/images/offer-images/" .. http.postValues["offer-name"] .. ".png", 32, 32)
-        offerImagePath = "public/images/offer-images/" .. http.postValues["offer-name"] .. ".png"
+        offerImagePath = "/images/offer-images/" .. http.postValues["offer-name"] .. ".png"
     end
 
     db:execute(
