@@ -128,9 +128,18 @@ type SecurityConfig struct {
 	CSP               ContentSecurityPolicyConfig
 }
 
+// ConfigTown struct used to manually populate the server map information
+type ConfigTown struct {
+	Name string
+	ID   uint32
+}
+
 // Configuration struct used for the main Castro config file TOML file
 type Configuration struct {
 	CheckUpdates bool
+	LoadMap      bool
+	MapHouseFile string
+	Towns        []ConfigTown
 	Template     string
 	Mode         string
 	Port         int

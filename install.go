@@ -66,6 +66,33 @@ var (
 					Placeholder: "Website url",
 					HelperText:  "Your absolute website URL. This URL will be used to create links. URL/destination",
 				},
+				{
+					Name:     "map",
+					IsSelect: true,
+					SelectOptions: []installationSelectOption{
+						{
+							Name:  "map",
+							Value: "Load from map",
+						},
+						{
+							Name:  "config",
+							Value: "Load from config",
+						},
+					},
+					HelperText: `Load towns from the .otbm map file. If for some reason your map is not compatible use the option 'Load from config'.
+					You will need to fill the Map house file field and populate your town list`,
+				},
+				{
+					Name:        "housefile",
+					Type:        "text",
+					Placeholder: "Map house file. Only fill this field if you use 'Load from config' map option",
+					HelperText:  "Map house file name. Only fill this field if you use 'Load from config' map option",
+				},
+				{
+					Name:       "towns",
+					IsTextArea: true,
+					HelperText: "List of map towns. Using the following format: Town id - Town name. Only fill this field if you use 'Load from config' map option",
+				},
 			},
 			Post: func(res http.ResponseWriter, req *http.Request, s installationStep) error {
 				// Get server port
@@ -74,6 +101,11 @@ var (
 				if err != nil {
 					return errors.New("Invalid port number")
 				}
+
+				// Set load map settings
+				installationConfigFile.LoadMap = req.FormValue("map") == "map"
+				installationConfigFile.MapWatch.Enabled = req.FormValue("map") == "map"
+				installationConfigFile.MapHouseFile = req.FormValue("housefile")
 
 				// Install database tables
 				if err := installApplication(req.FormValue("path")); err != nil {
@@ -85,6 +117,26 @@ var (
 				installationConfigFile.Port = port
 				installationConfigFile.URL = req.FormValue("url")
 
+				if installationConfigFile.LoadMap {
+					return nil
+				}
+
+				// Parse textarea towns
+				towns := strings.Split(req.FormValue("towns"), "\r\n")
+				for _, town := range towns {
+					townData := strings.Split(strings.TrimSpace(town), "-")
+					if len(townData) < 2 {
+						continue
+					}
+					townID, err := strconv.ParseUint(strings.TrimSpace(townData[0]), 10, 32)
+					if err != nil {
+						return err
+					}
+					installationConfigFile.Towns = append(installationConfigFile.Towns, util.ConfigTown{
+						Name: strings.TrimSpace(townData[1]),
+						ID:   uint32(townID),
+					})
+				}
 				return nil
 			},
 		},
@@ -183,6 +235,7 @@ var (
 	// Installation config file holder
 	installationConfigFile = &util.Configuration{
 		CheckUpdates: true,
+		LoadMap:      true,
 		Template:     "views/default",
 		Mode:         "dev",
 		Port:         80,
@@ -286,10 +339,18 @@ type installationTemplateData struct {
 }
 
 type installationFormField struct {
-	Name        string
-	Type        string
-	Placeholder string
-	HelperText  string
+	Name          string
+	Type          string
+	Placeholder   string
+	HelperText    string
+	IsSelect      bool
+	IsTextArea    bool
+	SelectOptions []installationSelectOption
+}
+
+type installationSelectOption struct {
+	Name  string
+	Value string
 }
 
 // isInstalled check if application is installed
@@ -612,39 +673,41 @@ func installApplication(location string) error {
 		}
 	}
 
-	fmt.Print(">> Encoding map file. This process can take several minutes")
+	if installationConfigFile.LoadMap {
+		fmt.Print(">> Encoding map file. This process can take several minutes")
 
-	// Encode server map
-	mapData, err := util.EncodeMap(
-		filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
-	)
+		// Encode server map
+		mapData, err := util.EncodeMap(
+			filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"),
+		)
 
-	if err != nil {
-		db.Rollback()
-		return err
-	}
+		if err != nil {
+			db.Rollback()
+			return err
+		}
 
-	fmt.Println(" (done)")
+		fmt.Println(" (done)")
 
-	// Get map modtime
-	mapStat, err := os.Stat(filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"))
+		// Get map modtime
+		mapStat, err := os.Stat(filepath.Join(location, "data", "world", lua.Config.GetGlobal("mapName").String()+".otbm"))
 
-	if err != nil {
-		db.Rollback()
-		return err
-	}
+		if err != nil {
+			db.Rollback()
+			return err
+		}
 
-	// Save encoded map
-	if _, err := db.Exec(
-		"INSERT INTO castro_map (name, data, created_at, updated_at, last_modtime) VALUES (?, ?, ?, ?, ?)",
-		lua.Config.GetGlobal("mapName").String(),
-		mapData,
-		time.Now(),
-		time.Now(),
-		mapStat.ModTime(),
-	); err != nil {
-		db.Rollback()
-		return err
+		// Save encoded map
+		if _, err := db.Exec(
+			"INSERT INTO castro_map (name, data, created_at, updated_at, last_modtime) VALUES (?, ?, ?, ?, ?)",
+			lua.Config.GetGlobal("mapName").String(),
+			mapData,
+			time.Now(),
+			time.Now(),
+			mapStat.ModTime(),
+		); err != nil {
+			db.Rollback()
+			return err
+		}
 	}
 
 	// Commit changes

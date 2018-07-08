@@ -19,6 +19,7 @@ import (
 	"github.com/raggaer/castro/app/lua"
 	"github.com/raggaer/castro/app/models"
 	"github.com/raggaer/castro/app/util"
+	"github.com/raggaer/otmap"
 	glua "github.com/yuin/gopher-lua"
 )
 
@@ -45,8 +46,13 @@ func Start() {
 	// Execute our tasks
 	go func(wait *sync.WaitGroup) {
 
-		loadMap()
-		go mapWatcher()
+		if util.Config.Configuration.LoadMap {
+			loadMap()
+			go mapWatcher()
+		} else {
+			loadConfigMap()
+		}
+
 		go loadHouses(wait)
 		go loadVocations(wait)
 	}(wait)
@@ -122,6 +128,24 @@ func mapWatcher() {
 			loadMap()
 		}
 	}
+}
+
+func loadConfigMap() {
+	mapTowns := []otmap.Town{}
+
+	// Convert config towns to map towns
+	for _, t := range util.Config.Configuration.Towns {
+		mapTowns = append(mapTowns, otmap.Town{
+			Name: t.Name,
+			ID:   t.ID,
+		})
+	}
+
+	// Set map global
+	util.OTBMap.Load(&util.CastroMap{
+		HouseFile: util.Config.Configuration.MapHouseFile,
+		Towns:     mapTowns,
+	})
 }
 
 func loadMap() {
@@ -597,6 +621,9 @@ func templateFuncs() template.FuncMap {
 		},
 		"itoa": func(i int) string {
 			return strconv.Itoa(i)
+		},
+		"addInt": func(a, b int) int {
+			return a + b
 		},
 	}
 }

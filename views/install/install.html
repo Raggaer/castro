@@ -41,8 +41,22 @@
                                 <form method="POST" action="{{ .Step.URL }}">
                                     {{ range $index, $form := .Step.Form }}
                                     <div class="form-group">
-                                        <input class="form-control" type="{{ $form.Type }}" placeholder="{{ $form.Placeholder }}" name="{{ $form.Name }}">
-                                        <p class="">{{ $form.HelperText }}</p>
+                                        {{ if $form.IsTextArea }}
+                                            <textarea name="{{ $form.Name }}" class="form-control"></textarea>
+                                            <p class="">{{ $form.HelperText }}</p>
+                                        {{ else }}
+                                            {{ if $form.IsSelect }}
+                                            <select name="{{ $form.Name }}" class="form-control">
+                                                {{ range $i, $e := $form.SelectOptions }}
+                                                <option name="{{ $e.Name }}">{{ $e.Value }}</option>
+                                                {{ end }}
+                                            </select>
+                                            <p class="">{{ $form.HelperText }}</p>
+                                            {{ else }}
+                                            <input class="form-control" type="{{ $form.Type }}" placeholder="{{ $form.Placeholder }}" name="{{ $form.Name }}">
+                                            <p class="">{{ $form.HelperText }}</p>
+                                            {{ end }}
+                                        {{ end }}
                                     </div>
                                     {{ end }} {{ if .Last }}
                                     <button type="submit" class="btn btn-success">Finish</button>
@@ -75,5 +89,4 @@
                 </div>
             </div>
         </body>
-        
-        </html>
+</html>
