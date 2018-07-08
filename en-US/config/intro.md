@@ -9,6 +9,8 @@ Below are the main configuration fields:
 - [Port](#port)
 - [URL](#url)
 - [Datapack](#datapack)
+- [LoadMap](#loadmap)
+- [MapHouseFile](#maphousefile)
 
 # Mode
 
@@ -35,3 +37,10 @@ Sets the URL for all links.
 
 Path of your server datapack. Where `config.lua` is located. This path is set at the installation process.
 
+# LoadMap
+
+If enabled your map data will be loaded from your `*.otbm` file, sometimes this wont work (using old map protocol for example), in this case you might want to disable this and manually configure towns and house map file
+
+# MapHouseFile
+
+Name of your map house file, this field is only needed when setting the field `LoadMap` to false

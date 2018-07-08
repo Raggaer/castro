@@ -21,7 +21,7 @@ During this process Castro executes your `engine/install.lua` file to set some c
 To sum the whole process here is what you should do in order to start using Castro:
 
 - Get the executable (for your platform) and the needed folders.
-- Configure the `config.toml` file
 - Start the executable (from the castro directory) and head over to the installation interface (**port: 8080**).
-- Follow the installation process (this will encode your map and create a configuration file).
+- Follow the installation process (this will encode your map if enabled and create a configuration file).
+- Configure the `config.toml` file
 - Restart Castro.

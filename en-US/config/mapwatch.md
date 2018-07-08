@@ -4,7 +4,7 @@ name: Mapwatch
 
 # Map-watcher
 
-Provides access to the map watcher configuration options.
+Provides access to the map watcher configuration options. Only if the field `LoadMap` is enabled
 
 - [Enabled](#enabled)
 - [Check](#check)
