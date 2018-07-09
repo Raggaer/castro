@@ -30,6 +30,10 @@ func BackgroundEvent(L *lua.LState) int {
 			// Resume function using  a new state thread
 			status, err, _ := L.Resume(thread, f)
 
+			if status == lua.ResumeError {
+				break
+			}
+
 			// Check if event finished execution
 			if status == lua.ResumeOK {
 				break

@@ -13,7 +13,7 @@ function post()
     end
 
     local account = db:singleQuery(
-        "SELECT id, name FROM accounts WHERE email = ? AND name = ?",
+        "SELECT id, name, email FROM accounts WHERE email = ? AND name = ?",
         http.postValues["email"],
         http.postValues["name"]
     )
@@ -38,7 +38,7 @@ function post()
                 mail:send(m)
             end
         )
-        session:setFlash("success", "Account found. You will get an email with your username soon")
+        session:setFlash("success", "Account found. You will get an email with your password soon")
         http:redirect("/subtopic/account/recover/password")
         return
     end
