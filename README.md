@@ -11,13 +11,11 @@ Castro provides lua bindings. Using a pool of lua states. Each request gets a st
 
 ## Documentation
 
-Everything you might need [is here](https://docs.castroaac.org/). The official documentation site of Castro.
-
 Castro also ships with the documentation so you can view it offline. Everything is located under **/en-US/** directory.
 
 ## Extensions
 
-Castro ships with a very solid extension system. You can read more about it on the [documentation page](https://castroaac.org/docs/extensions) and grab your extensions on the [plugin list](https://plugins.castroaac.org).
+Castro ships with a very solid extension system. You can read more about it on the extensions part of the documentation.
 
 ## License
 
