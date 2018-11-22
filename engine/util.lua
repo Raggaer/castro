@@ -136,8 +136,8 @@ function print_r ( t )
                 for pos,val in pairs(t) do
                     if (type(val)=="table") then
                         print(indent.."["..pos.."] => "..tostring(t).." {")
-                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
-                        print(indent..string.rep(" ",string.len(pos)+6).."}")
+                        sub_print_r(val,indent..string.rep(" ",string.len(tostring(pos))+8))
+                        print(indent..string.rep(" ",string.len(tostring(pos))+6).."}")
                     else
                         print(indent.."["..pos.."] => "..tostring(val))
                     end
