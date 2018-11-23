@@ -27,12 +27,12 @@ app.Custom.NewCharacterValues = {
 	    soul = 100
 	},
 	[3] = { -- druid
-		inherit_from = 1, -- remove this line if you want to use custom values
+		inherit_from = 2 -- remove this line if you want to use custom values
 	},
 	[4] = { -- paladin
-		inherit_from = 1
+		inherit_from = 2
 	},
 	[5] = { -- knight
-		inherit_from = 1
+		inherit_from = 2
 	}
 }
