@@ -24,7 +24,9 @@ app.Custom.NewCharacterValues = {
 	    mana = 35,
 	    manamax = 35,
 	    cap = 470,
-	    soul = 100
+	    soul = 100,
+	    -- extra = {["maglevel"] = 45, ["skill_shielding"] = 20}
+	    -- NOTE: the keys in extra ( ["key"] = value ) must be valid column names in your players table.
 	},
 	[3] = { -- druid
 		inherit_from = 2 -- remove this line if you want to use custom values
