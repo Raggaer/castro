@@ -58,8 +58,18 @@ function post()
 
     ncv = fetchValues(tonumber(xml:vocationByName(http.postValues["character-vocation"]).ID)+1) -- new char values
 
+    local eStr = "" -- extra string
+    local vStr = "" -- value string
+
+    if ncv.extra ~= nil then
+        for k, value in pairs(ncv.extra) do
+            eStr = eStr ..tostring(k)..", "
+            vStr = vStr .. value .. ", "
+        end
+    end
+
     db:execute(
-        "INSERT INTO players (name, sex, account_id, vocation, town_id, conditions, level, health, healthmax, mana, manamax, cap, soul) VALUES (?, ?, ?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO `players` ("..eStr.."name, sex, account_id, vocation, town_id, conditions, level, health, healthmax, mana, manamax, cap, soul) VALUES ("..vStr.."?,?,?,?,?,'',?,?,?,?,?,?,?)",
         http.postValues["character-name"],
         http.postValues["character-gender"],
         account.ID,
