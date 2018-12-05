@@ -19,7 +19,7 @@ The documentation is also hosted at [castroaac.org](https://castroaac.org).
 
 Castro ships with a very solid extension system. You can read more about it on the extensions part of the documentation.
 
-There is a public plugin list hosted at [plugins.castroaac.org](plugins.castroaac.org)
+There is a public plugin list hosted at [plugins.castroaac.org](https://plugins.castroaac.org)
 
 ## License
 
