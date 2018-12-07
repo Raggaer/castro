@@ -6,8 +6,8 @@ name: Functions
 
 Castro provides a list of already defined functions you can use on your templates:
 
-- [toTitle](#toTitle)
-- [toLower](#toLower)
+- [toTitle](#totitle)
+- [toLower](#tolower)
 - [formatFloat](#formatfloat)
 - [atoi](#atoi)
 - [itoa](#itoa)
