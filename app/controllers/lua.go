@@ -48,7 +48,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 
 		// Reload pages
-		if err := lua.PageList.Load("pages"); err != nil {
+		if err := lua.CompiledPageList.CompileFiles("pages"); err != nil {
 
 			// Set error header
 			w.WriteHeader(500)
@@ -131,16 +131,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	// Get state from the pool
-	s, err := lua.PageList.Get(filepath.Join("pages", pageName, r.Method+".lua"))
-
-	if err != nil {
-
-		// Set not found header
-		w.WriteHeader(404)
-		util.Logger.Logger.Errorf("Cannot get %v subtopic source: %v", pageName, err)
-
-		return
-	}
+	s := lua.NewState()
 
 	// Create HTTP metatable
 	lua.SetHTTPMetaTable(s)
@@ -154,15 +145,26 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Set language user data
 	lua.SetI18nUserData(s, language)
 
-	if err := lua.ExecuteControllerPage(s, r.Method); err != nil {
-
-		// Set error header
-		w.WriteHeader(500)
-
-		// Log error
-		util.Logger.Logger.Errorf("Cannot execute subtopic %v: %v", pageName, err)
+	// Retrieve compiled proto
+	proto, err := lua.CompiledPageList.Get(filepath.Join("pages", pageName, r.Method+".lua"))
+	if err != nil {
+		w.WriteHeader(404)
+		util.Logger.Logger.Errorf("Cannot find lua proto, subtopic source: %v", pageName, err)
+		return
 	}
 
-	// Return state
-	lua.PageList.Put(s, filepath.Join("pages", pageName, r.Method+".lua"))
+	// Execute compiled file
+	if err := lua.DoCompiledFile(
+		s,
+		proto,
+	); err != nil {
+		w.WriteHeader(404)
+		util.Logger.Logger.Errorf("Cannot get %v subtopic source: %v", pageName, err)
+		return
+	}
+
+	if err := lua.ExecuteControllerPage(s, r.Method); err != nil {
+		w.WriteHeader(500)
+		util.Logger.Logger.Errorf("Cannot execute subtopic %v: %v", pageName, err)
+	}
 }

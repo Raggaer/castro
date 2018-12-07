@@ -1,11 +1,15 @@
 package lua
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/yuin/gopher-lua/parse"
 
 	"github.com/kardianos/osext"
 	"github.com/raggaer/castro/app/util"
@@ -232,6 +236,33 @@ var (
 		"get": GetLanguageIndex,
 	}
 )
+
+// CompileLua reads the passed lua file from disk and compiles it.
+func CompileLua(filePath string) (*glua.FunctionProto, error) {
+	file, err := os.Open(filePath)
+	defer file.Close()
+	if err != nil {
+		return nil, err
+	}
+	reader := bufio.NewReader(file)
+	chunk, err := parse.Parse(reader, filePath)
+	if err != nil {
+		return nil, err
+	}
+	proto, err := glua.Compile(chunk, filePath)
+	if err != nil {
+		return nil, err
+	}
+	return proto, nil
+}
+
+// DoCompiledFile takes a FunctionProto, as returned by CompileLua, and runs it in the LState. It is equivalent
+// to calling DoFile on the LState with the original source file.
+func DoCompiledFile(state *glua.LState, proto *glua.FunctionProto) error {
+	lfunc := state.NewFunctionFromProto(proto)
+	state.Push(lfunc)
+	return state.PCall(0, glua.MultRet, nil)
+}
 
 // OverwriteConfigFile gathers all external config file and pushes globals
 func OverwriteConfigFile() error {
@@ -506,6 +537,22 @@ func (p *luaStatePool) Put(state *glua.LState) {
 
 // New creates and returns a lua state
 func (p *luaStatePool) New() *glua.LState {
+	// Create a new lua state
+	state := glua.NewState(
+		glua.Options{
+			IncludeGoStackTrace: util.Config.Configuration.IsDev(),
+		},
+	)
+
+	// Set castro metatables
+	GetApplicationState(state)
+
+	// Return the lua state
+	return state
+}
+
+// NewState creates and returns a new lua state
+func NewState() *glua.LState {
 	// Create a new lua state
 	state := glua.NewState(
 		glua.Options{
