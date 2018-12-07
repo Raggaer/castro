@@ -625,5 +625,11 @@ func templateFuncs() template.FuncMap {
 		"addInt": func(a, b int) int {
 			return a + b
 		},
+		"toLower": func(s string) string {
+			return strings.ToLower(s)
+		},
+		"toTitle": func(s string) string {
+			return strings.ToTitle(s)
+		},
 	}
 }
