@@ -6,13 +6,33 @@ name: xml
 
 Provides access to XML manipulation functions.
 
+- [xml:monsterList](#monsterlist)
+- [xml:monsterByName(name)](#monsterbyname)
 - [xml:marshal(data)](#marshal)
 - [xml:unmarshal(string)](#unmarshal)
 - [xml:unmarshalFile(filename)](#unmarshalfile)
 
+# monsterList
+
+Returns a list of monsters, retrieved from monsters.xml and each monster file.
+
+```lua
+local list = xml:monsterList()
+local first = list[0].Name
+--- first = "Amazon"
+```
+
+# monsterByName
+
+Retrieves a monster by its name.
+
+```lua
+local monster = xml:monsterByName("Demon")
+```
+
 # marshal
 
-Convers the given lua table to a valid XML string.
+Converts the given lua table to a valid XML string.
 
 ```lua
 local data = {}
