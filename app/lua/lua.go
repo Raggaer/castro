@@ -119,6 +119,8 @@ var (
 		"marshal":        MarshalXML,
 		"unmarshal":      UnmarshalXML,
 		"unmarshalFile":  UnmarshalXMLFile,
+		"monsterList":    MonsterList,
+		"monsterByName":  MonsterByName,
 	}
 	mailMethods = map[string]glua.LGFunction{
 		"send": SendMail,

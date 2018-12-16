@@ -3,6 +3,7 @@ package lua
 import (
 	"fmt"
 	"io/ioutil"
+	"strings"
 	"time"
 
 	"github.com/clbanning/mxj"
@@ -19,6 +20,67 @@ func SetXMLMetaTable(luaState *lua.LState) {
 
 	// Set all xml metatable functions
 	luaState.SetFuncs(xmlMetaTable, xmlMethods)
+}
+
+// MonsterList retrieves the monster list as a lua table
+func MonsterList(L *lua.LState) int {
+	tbl := L.NewTable()
+	for _, m := range util.MonstersList {
+		monsterTbl := StructToTable(m)
+		monsterTbl.RawSetString("Look", StructToTable(&m.Look))
+
+		// Generate monster loot table
+		lootTable := L.NewTable()
+		for _, l := range m.Loot.Loot {
+			lootTable.Append(StructToTable(&l))
+		}
+
+		monsterTbl.RawSetString("Loot", lootTable)
+		monsterTbl.RawSetString("Health", StructToTable(&m.Health))
+		tbl.Append(monsterTbl)
+	}
+	L.Push(tbl)
+	return 1
+}
+
+// MonsterByName retrieves a monster by name
+func MonsterByName(L *lua.LState) int {
+	monsterName := strings.ToLower(L.ToString(2))
+
+	// Find monster by name
+	for i, m := range util.MonstersList {
+		if strings.ToLower(m.Name) == monsterName {
+			monsterTbl := StructToTable(m)
+
+			// Back and forth buttons
+			if i > 0 {
+				monsterTbl.RawSetString("_back", lua.LString(util.MonstersList[i-1].Name))
+			} else {
+				monsterTbl.RawSetString("_back", lua.LNil)
+			}
+			if i < len(util.MonstersList)-1 {
+				monsterTbl.RawSetString("_forth", lua.LString(util.MonstersList[i+1].Name))
+			} else {
+				monsterTbl.RawSetString("_forth", lua.LNil)
+			}
+
+			monsterTbl.RawSetString("Look", StructToTable(&m.Look))
+
+			// Generate monster loot table
+			lootTable := L.NewTable()
+			for _, l := range m.Loot.Loot {
+				lootTable.Append(StructToTable(&l))
+			}
+
+			monsterTbl.RawSetString("Loot", lootTable)
+			monsterTbl.RawSetString("Health", StructToTable(&m.Health))
+			L.Push(monsterTbl)
+			return 1
+		}
+	}
+
+	L.Push(lua.LNil)
+	return 1
 }
 
 // MarshalXML marshals the given lua table

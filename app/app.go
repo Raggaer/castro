@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -29,7 +30,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(10)
+	wait.Add(11)
 
 	// Load application logger
 	loadAppLogger()
@@ -55,6 +56,7 @@ func Start() {
 
 		go loadHouses(wait)
 		go loadVocations(wait)
+		go loadServerMonsters(wait)
 	}(wait)
 
 	// Create application cache
@@ -78,6 +80,19 @@ func Start() {
 
 	// Execute the init lua file
 	executeInitFile()
+}
+
+func loadServerMonsters(wg *sync.WaitGroup) {
+	// Load server monsters
+	if err := util.LoadServerMonsters(util.Config.Configuration.Datapack); err != nil {
+		util.Logger.Logger.Fatalf("Cannot load server monsters: %v", err)
+	}
+
+	// Sort server monsters list
+	sort.Slice(util.MonstersList, func(i, j int) bool {
+		return util.MonstersList[i].Name < util.MonstersList[j].Name
+	})
+	wg.Done()
 }
 
 func loadLanguageFiles(wg *sync.WaitGroup) {
