@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/xml"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -195,7 +196,7 @@ func LoadServerMonsters(path string) error {
 		}
 		mst, err := LoadMonster(filepath.Join(path, "data", "monster", m.File))
 		if err != nil {
-			return err
+			return fmt.Errorf("Unable to load monster %s: %s", m.Name, err.Error())
 		}
 		MonstersList = append(MonstersList, mst)
 	}
