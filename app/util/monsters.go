@@ -196,7 +196,9 @@ func LoadServerMonsters(path string) error {
 		}
 		mst, err := LoadMonster(filepath.Join(path, "data", "monster", m.File))
 		if err != nil {
-			return fmt.Errorf("Unable to load monster %s: %s", m.Name, err.Error())
+			fmt.Println(">> Unable to load monster " + m.Name + ". Check log file for more details")
+			Logger.Logger.Errorf("Unable to load monster %s: %s", m.Name, err.Error())
+			continue
 		}
 		MonstersList = append(MonstersList, mst)
 	}
