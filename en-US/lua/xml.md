@@ -6,11 +6,38 @@ name: xml
 
 Provides access to XML manipulation functions.
 
+- [xml:vocationList](#vocationlist)
+- [xml:vocationByName](#vocationbyname)
+- [xml:vocationByID](#vocationbyid)
 - [xml:monsterList](#monsterlist)
 - [xml:monsterByName(name)](#monsterbyname)
 - [xml:marshal(data)](#marshal)
 - [xml:unmarshal(string)](#unmarshal)
 - [xml:unmarshalFile(filename)](#unmarshalfile)
+
+# vocationList
+
+Returns a list of server vocations.
+
+```lua
+local vocs = xml:vocationList()
+```
+
+# vocationByName
+
+Returns a vocation by the name.
+
+```lua
+local voc = xml:vocationByName("Sorcerer")
+```
+
+# vocationByID
+
+Returns a vocation by its identifier.
+
+```lua
+local voc = xml:vocationByID(4)
+```
 
 # monsterList
 
