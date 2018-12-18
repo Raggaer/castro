@@ -184,11 +184,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2aefe283a46ab6121d4697a7b1cf2c2795d416cab918e3d73a575d091fef1019"
+  digest = "1:a0bc86ca142b7e75fa93c6d4c651d4f2db9195930aeb8961bd023651d1e82ba6"
   name = "github.com/raggaer/goimage"
   packages = ["."]
   pruneopts = ""
-  revision = "9dc6613be265357c99bf892ab7d534f20df06058"
+  revision = "b7c29c1142b8f50ae40f6458cde40c2e989d556e"
 
 [[projects]]
   branch = "master"

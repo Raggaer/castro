@@ -1,12 +1,12 @@
 ---
-Name: img
+Name: image
 ---
 
-# Img metatable
+# Image metatable
 
 Provides access to image manipulation functions.
 
-- [img:new(width, height)](#new)
+- [image:new(width, height)](#new)
 
 # new
 
@@ -35,7 +35,7 @@ Writes a text string to the given `goimage` instance. These are the list of mand
 - y: Y position on the image.
 
 ```lua
-local image = img:new(500, 500)
+local image = image:new(500, 500)
 
 image:writeText("Hello World", "#D40000", 12, 40, 40)
 ```
@@ -47,9 +47,9 @@ image:writeText("Hello World", "#D40000", 12, 40, 40)
 Sets the background for the given `goimage`
 
 ```lua
-local image = img:new(500, 500)
+local image = image:new(500, 500)
 
-img:setBackground("my_bg.jpg")
+image:setBackground("my_bg.jpg")
 ```
 
 # save
@@ -57,7 +57,7 @@ img:setBackground("my_bg.jpg")
 Saves the given `goimage` result. Only `png` format is currently supported.
 
 ```lua
-local image = img:new(500, 500)
+local image = image:new(500, 500)
 
 image:writeText("Hello World", "#D40000", 12, 40, 40)
 image:save("/images/example.png")
