@@ -78,8 +78,26 @@ func WriteGoImageText(L *lua.LState) int {
 		return 0
 	}
 
-	// Write text to the image
-	if err := img.WriteText(
+	// Check if font is beeing declared
+	font := L.ToString(7)
+	if font == "" {
+
+		// Write text to the image
+		if err := img.WriteText(
+			L.ToString(2),
+			textColor,
+			float64(L.ToInt(4)),
+			L.ToInt(5),
+			L.ToInt(6),
+		); err != nil {
+			L.RaiseError("Cannot write string to image: %v", err)
+			return 0
+		}
+	}
+
+	// Write text with declared font
+	if err := img.WriteTextFont(
+		font,
 		L.ToString(2),
 		textColor,
 		float64(L.ToInt(4)),
@@ -87,9 +105,7 @@ func WriteGoImageText(L *lua.LState) int {
 		L.ToInt(6),
 	); err != nil {
 		L.RaiseError("Cannot write string to image: %v", err)
-		return 0
 	}
-
 	return 0
 }
 

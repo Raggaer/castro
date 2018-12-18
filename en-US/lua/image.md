@@ -20,7 +20,7 @@ local test = img:new(500, 500)
 
 Provides access to image manipulation functions:
 
-- [goimage:writeText(text, color, size, x, y)](#writetext)
+- [goimage:writeText(text, color, size, x, y, optional font)](#writetext)
 - [goimage:setBackground(filepath)](#setbackground)
 - [goimage:save(path)](#save)
 
@@ -41,6 +41,14 @@ image:writeText("Hello World", "#D40000", 12, 40, 40)
 ```
 
 `goimage` uses [go-font](https://blog.golang.org/go-fonts) as the default font family.
+
+You can however specify your custom font file path:
+
+```lua
+local image = image:new(500, 500)
+
+image:writeText("Hello World", "#D40000", 12, 40, 40, "Martel.ttf")
+```
 
 # setBackground
 
