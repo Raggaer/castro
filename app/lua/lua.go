@@ -197,6 +197,7 @@ var (
 		"writeText":     WriteGoImageText,
 		"save":          SaveGoImage,
 		"setBackground": SetBackgroundGoImage,
+		"encode":        GetGoImageAsString,
 	}
 	fileMethods = map[string]glua.LGFunction{
 		"mod":             GetFileModTime,

@@ -20,9 +20,25 @@ local test = img:new(500, 500)
 
 Provides access to image manipulation functions:
 
+- [goimage:encode()](#encode)
 - [goimage:writeText(text, color, size, x, y, optional font)](#writetext)
 - [goimage:setBackground(filepath)](#setbackground)
 - [goimage:save(path)](#save)
+
+# encode
+
+Encodes the image into a byte array string. You can later use this string:
+
+```lua
+local test = image:new(500, 500)
+test:writeText("Hello World", "#D40000", 12, 40, 40)
+
+local v = test:encode()
+
+http:write(v)
+```
+
+On the example we create a image and serve it on the fly (without saving it as a file)
 
 # writeText
 
