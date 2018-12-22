@@ -45,6 +45,17 @@ type stateList struct {
 	Type string
 }
 
+// Exists checks if a proto path exists
+func (s *compiledStateList) Exists(path string) bool {
+	path = strings.ToLower(path)
+	for p, _ := range s.List {
+		if strings.ToLower(p) == path {
+			return true
+		}
+	}
+	return false
+}
+
 // CompileFiles compiles all lua files into function protos
 func (s *compiledStateList) CompileFiles(dir string) error {
 	s.rw.Lock()

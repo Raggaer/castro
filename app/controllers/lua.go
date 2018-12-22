@@ -146,10 +146,14 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	lua.SetI18nUserData(s, language)
 
 	// Retrieve compiled proto
-	proto, err := lua.CompiledPageList.Get(filepath.Join("pages", pageName, r.Method+".lua"))
+	protoPath := filepath.Join("pages", pageName, r.Method+".lua")
+	if !lua.CompiledPageList.Exists(protoPath) {
+		protoPath = filepath.Join("pages", "404", r.Method+".lua")
+	}
+	proto, err := lua.CompiledPageList.Get(protoPath)
 	if err != nil {
 		w.WriteHeader(404)
-		util.Logger.Logger.Errorf("Cannot find lua proto, subtopic source: %v", pageName, err)
+		util.Logger.Logger.Errorf("Cannot find lua proto, subtopic source (%s) %v", pageName, err)
 		return
 	}
 
@@ -159,7 +163,7 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		proto,
 	); err != nil {
 		w.WriteHeader(404)
-		util.Logger.Logger.Errorf("Cannot get %v subtopic source: %v", pageName, err)
+		util.Logger.Logger.Errorf("Cannot get %v subtopic source (%s) %v", pageName, err)
 		return
 	}
 
