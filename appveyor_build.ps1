@@ -2,6 +2,7 @@ If (Test-Path "buildOutput") {
 	Remove-Item "buildOutput" -recurse
 }
 
+$env:GO111MODULE = "on"
 $date = (Get-Date).AddDays(-1).ToString('MM-dd-yyyy_HH:mm:ss')
 $version = git rev-parse HEAD
 
