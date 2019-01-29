@@ -19,7 +19,7 @@
     <div class="alert alert-info" role="alert">
         <strong>Pending deletion!</strong> The character {{ $character.name }} is pending deletion and will be deleted on {{ $character.deletion.Result }}.
         <br>
-        <button class="btn btn-danger btn-xs" form="form-character-undelete" type="submit" name="undelete-character" value="{{ $character.name }}">Cancel</button>
+        <button class="btn btn-danger btn-sm" form="form-character-undelete" type="submit" name="undelete-character" value="{{ $character.name }}">Cancel</button>
     </div>
     {{ end }}
 {{ end }}
@@ -34,9 +34,9 @@
             <th>Two-factor</th>
             <td>
                 {{ if .twofa }}
-                <button class="btn btn-success btn-xs">Enabled</button>
+                <button class="btn btn-success btn-sm">Enabled</button>
                 {{ else }}
-                <a role="button" href="{{ url "subtopic" "account" "twofa" "enable" }}" class="btn btn-danger btn-xs">Disabled</a>
+                <a role="button" href="{{ url "subtopic" "account" "twofa" "enable" }}" class="btn btn-danger btn-sm">Disabled</a>
                 {{ end }}
             </td>
         </tr>
@@ -72,7 +72,7 @@
     <tr>
         <th></th>
         <td>
-            <a role="button" href="{{ url "subtopic" "account" "changepassword" }}" class="btn btn-xs btn-primary">
+            <a role="button" href="{{ url "subtopic" "account" "changepassword" }}" class="btn btn-sm btn-primary">
             Change password
             </a>
         </td>
@@ -80,7 +80,7 @@
     <tr>
         <th></th>
         <td>
-            <a role="button" href="{{ url "subtopic" "account" "changemail" }}" class="btn btn-xs btn-default">
+            <a role="button" href="{{ url "subtopic" "account" "changemail" }}" class="btn btn-sm btn-default">
             Change email
             </a>
         </td>
@@ -116,9 +116,9 @@
             <td>{{ $element.level }}</td>
             <td>
                 {{ if eqNumber $element.deletion 0 }}
-                <button class="btn btn-xs btn-danger require-confirmation" type="submit" form="form-character-delete" name="delete-character" value="{{ $element.name }}">Delete</button>
+                <button class="btn btn-sm btn-danger require-confirmation" type="submit" form="form-character-delete" name="delete-character" value="{{ $element.name }}">Delete</button>
                 {{ else }}
-                <button class="btn btn-xs btn-default" form="form-character-undelete" type="submit" name="undelete-character" value="{{ $element.name }}">Cancel</button>
+                <button class="btn btn-sm btn-default" form="form-character-undelete" type="submit" name="undelete-character" value="{{ $element.name }}">Cancel</button>
                 {{ end }}
             </td>
         </tr>

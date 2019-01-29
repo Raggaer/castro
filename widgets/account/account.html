@@ -1,14 +1,14 @@
-<div class="panel panel-default">
+<div class="card">
     {{ if .logged }}
-    <div class="panel-heading">
-        <span class="glyphicon glyphicon-user"></span> My account
+    <div class="card-heading">
+        <i class="fas fa-users-cog"></i> My account
     </div>
     {{ else }}
-    <div class="panel-heading">
-        <span class="glyphicon glyphicon-user"></span> Login
+    <div class="card-heading">
+        <i class="fas fa-users-cog"></i> Login
     </div>
     {{ end }}
-    <div class="panel-body">
+    <div class="card-body">
         {{ if .logged }}
         <ul class="list-group list-widget">
             <li class="list-group-item"><a class="light" href="{{ url "subtopic" "account" "dashboard" }}">Dashboard</a></li>
@@ -36,14 +36,14 @@
                 <input type="password" autocomplete="off" class="form-control" id="input-password" name="password" placeholder="Account password">
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Login</button>
-                <a href="{{ url "subtopic" "register" }}" role="button" class="btn btn-default">Register</a>
+                <button type="submit" class="btn btn-sm btn-primary">Login</button>
+                <a href="{{ url "subtopic" "register" }}" role="button" class="btn btn-sm btn-secondary">Register</a>
             </div>
         </form>
         {{ end }}
     </div>
     {{ if .logged }}
-    <div class="panel-footer">
+    <div class="card-footer">
         <form method="POST" action="{{ url "subtopic" "logout" }}">
             <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
             <button type="submit" class="btn btn-sm btn-danger">Logout</button>
