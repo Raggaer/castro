@@ -15,12 +15,6 @@ Castro also ships with the documentation so you can view it offline. Everything 
 
 The documentation is also hosted at [castroaac.org](https://castroaac.org).
 
-## Extensions
-
-Castro ships with a very solid extension system. You can read more about it on the extensions part of the documentation.
-
-There is a public plugin list hosted at [plugins.castroaac.org](https://plugins.castroaac.org)
-
 ## License
 
 **Castro** is licensed under the **MIT** license.
