@@ -7,6 +7,53 @@
     background-color: #F5F5F5;
 }
 
+.navbar-expand-md {
+    background-color: #333333;
+}
+
+.navbar-expand-sm {
+    height: 58px;
+    background-color: #333333;
+}
+
+.navbar-nav>li>a {
+    line-height: 35px;
+}
+
+.navbar .nav-item {
+    margin: 0 6px;
+}
+
+.navbar .nav-item:hover {
+    background-color: rgba(0,0,0,.3);
+}
+
+.navbar .nav-link {
+    color: white;
+}
+
+.navbar .nav-link:hover {
+    color: rgba(245,245,245,0.6);
+}
+
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+    color: white;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(0,0,0,.3);
+    color: white;
+}
+
+.dropdown-menu {
+    border-radius: 0;
+    background-color: #333333;
+}
+
 .small-info {
     font-size: 12px;
 }
@@ -43,10 +90,20 @@
     margin-top: 30px;
 }
 
-.titleheader h3 {
+.titleheader h5 {
     font-family: Simonetta;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, .5);
     color: #fff;
+}
+
+.titleheader h1 a {
+    color: #008cba;
+    font-family: Simonetta;
+}
+
+.titleheader h1 a:hover {
+    text-decoration: none;
+    color: rgba(0,140,186,0.7);
 }
 
 .col-sm-3.sidebar {
@@ -109,22 +166,16 @@
 body {
     background-color: black;
     background-image: url("/images/bg.png");
+    font-size: 15px;
+    line-height: 1.2;
 }
 
 #footer {
     margin-bottom: 30px;
 }
 
-a.title {
-    text-decoration: none;
-}
-
 tr.skills {
     text-align: center;
-}
-
-.navbar-nav>li>a {
-    line-height: 35px;
 }
 
 .box {
@@ -152,13 +203,20 @@ tr.skills {
 
 }
 
-.panel-body h3 {
+.card-body {
+    padding: 10px;
+}
+
+.card-body h3 {
     color: #008cba;
 }
 
-.panel {
+.card {
     border: 1px solid #c8c8c8;
     box-shadow: 0 1px 5px 0 #c8c8c8;
+    padding: 10px;
+    background-color: white;
+    margin: 8px;
 }
 
 .list-widget {
@@ -176,4 +234,24 @@ tr.skills {
 #shop-overview-text {
     margin-bottom: 25px;
     margin-top: 25px;
+}
+
+.btn {
+    border-radius: 0;
+}
+
+.main-container {
+    /*font-family: Simonetta;*/
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.footer {
+    color: whitesmoke;
+    font-size: 14px;
+}
+
+.list-group-item {
+    padding-top: 6px;
+    padding-bottom: 6px;
 }

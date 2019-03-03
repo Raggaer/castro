@@ -16,15 +16,19 @@
 </p>
 
 {{ if .categories }}
-<ul class="nav nav-tabs" role="tablist">
+<ul class="nav nav-tabs" id="shopTab" role="tablist">
     {{ range $index, $element := .categories }}
-        <li role="presentation" {{ if eq $index 0 }} class="active" {{ end }}>
-            <a href="#category-{{ $element.id }}" aria-controls="{{ $element.name }}" role="tab" data-toggle="tab">{{ $element.name }}</a>
+        <li role="presentation" {{ if eq $index 0 }} class="nav-item" {{ end }}>
+            {{ if eq $index 0 }}
+                <a class="nav-link active" href="#category-{{ $element.id }}" aria-controls="{{ $element.name }}" role="tab" data-toggle="tab" aria-selected="true">{{ $element.name }}</a>
+            {{ else }}
+                <a class="nav-link" href="#category-{{ $element.id }}" aria-controls="{{ $element.name }}" role="tab" data-toggle="tab" aria-selected="false">{{ $element.name }}</a>
+            {{ end }}
         </li>
     {{ end }}
-    <li role="presentation" class="pull-right">
-        <a href="#checkout" role="tab" aria-controls="checkout" data-toggle="tab">
-            <i class="glyphicon glyphicon-shopping-cart"></i> Checkout
+    <li role="presentation" class="nav-item pull-right">
+        <a class="nav-link" id="checkout-tab" href="#checkout" role="tab" aria-controls="checkout" data-toggle="tab" aria-selected="false">
+            <i class="fas fa-shopping-cart"></i> Checkout
         </a>
     </li>
 </ul>
