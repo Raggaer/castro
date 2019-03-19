@@ -58,12 +58,10 @@ func LuaPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		}
 
 		// Reload extension pages
-		if err := lua.PageList.LoadExtensions(); err != nil {
+		if err := lua.CompiledPageList.CompileExtensions("pages"); err != nil {
 
-			// If AAC is running on development mode log error
-			if util.Config.Configuration.IsDev() || util.Config.Configuration.IsLog() {
-				util.Logger.Logger.Errorf("Cannot load extension subtopic %v: %v", ps.ByName("page"), err)
-			}
+			// Log error
+			util.Logger.Logger.Errorf("Cannot reload extension subtopic %v: %v", ps.ByName("page"), err)
 		}
 
 		// Reload extension static list

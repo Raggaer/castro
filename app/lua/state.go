@@ -14,12 +14,6 @@ import (
 )
 
 var (
-	// PageList list of subtopic states
-	PageList = &stateList{
-		List: make(map[string][]*glua.LState),
-		Type: "page",
-	}
-
 	// WidgetList list of widget states
 	WidgetList = &stateList{
 		List: make(map[string][]*glua.LState),
@@ -82,6 +76,62 @@ func (s *compiledStateList) CompileFiles(dir string) error {
 		return err
 	}
 	s.List = files
+	return nil
+}
+
+// CompileExtensions compiles extension lua files into function protos
+func (s *compiledStateList) CompileExtensions(extType string) error {
+	s.rw.Lock()
+	defer s.rw.Unlock()
+
+	// Get extensions from database
+	rows, err := database.DB.Queryx(strings.Replace("SELECT extension_id FROM castro_extension_? WHERE enabled = 1", "?", extType, -1))
+
+	if err != nil {
+		return err
+	}
+
+	// Close rows
+	defer rows.Close()
+
+	// Loop rows
+	for rows.Next() {
+
+		// Hold extension id
+		var extensionID string
+
+		if err := rows.Scan(&extensionID); err != nil {
+			return err
+		}
+
+		dir := filepath.Join("extensions", extensionID, extType)
+
+		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if info.IsDir() {
+				return nil
+			}
+			if strings.HasSuffix(info.Name(), ".lua") {
+				// Compile lua file
+				proto, err := CompileLua(path)
+				if err != nil {
+					return err
+				}
+
+				// Set virtual path
+				path := strings.ToLower(strings.Replace(path, dir, extType, -1))
+
+				// Add to the list
+				s.List[path] = proto
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 

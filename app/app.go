@@ -339,9 +339,9 @@ func loadSubtopics(wg *sync.WaitGroup) {
 		util.Logger.Logger.Fatalf("Cannot compile application subtopic list: %v", err)
 	}
 
-	// Load extension subtopics
-	if err := lua.PageList.LoadExtensions(); err != nil {
-		util.Logger.Logger.Errorf("Cannot load extension subtopic list: %v", err)
+	// Compile extension pages files
+	if err := lua.CompiledPageList.CompileExtensions("pages"); err != nil {
+		util.Logger.Logger.Errorf("Cannot compile extension subtopic list: %v", err)
 	}
 
 	// Tell the wait group we are done
