@@ -1,6 +1,7 @@
 package lua
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -13,23 +14,136 @@ import (
 )
 
 var (
-	// PageList list of subtopic states
-	PageList = &stateList{
-		List: make(map[string][]*glua.LState),
-		Type: "page",
-	}
-
 	// WidgetList list of widget states
 	WidgetList = &stateList{
 		List: make(map[string][]*glua.LState),
 		Type: "widget",
 	}
+
+	// CompiledPageList list of compiled subtopic states
+	CompiledPageList = &compiledStateList{
+		List: make(map[string]*glua.FunctionProto),
+		Type: "page",
+	}
 )
+
+type compiledStateList struct {
+	rw   sync.Mutex
+	List map[string]*glua.FunctionProto
+	Type string
+}
 
 type stateList struct {
 	rw   sync.Mutex
 	List map[string][]*glua.LState
 	Type string
+}
+
+// Exists checks if a proto path exists
+func (s *compiledStateList) Exists(path string) bool {
+	path = strings.ToLower(path)
+	for p, _ := range s.List {
+		if strings.ToLower(p) == path {
+			return true
+		}
+	}
+	return false
+}
+
+// CompileFiles compiles all lua files into function protos
+func (s *compiledStateList) CompileFiles(dir string) error {
+	s.rw.Lock()
+	defer s.rw.Unlock()
+	files := map[string]*glua.FunctionProto{}
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		if strings.HasSuffix(info.Name(), ".lua") {
+			// Compile lua file
+			proto, err := CompileLua(path)
+			if err != nil {
+				return err
+			}
+			files[path] = proto
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	s.List = files
+	return nil
+}
+
+// CompileExtensions compiles extension lua files into function protos
+func (s *compiledStateList) CompileExtensions(extType string) error {
+	s.rw.Lock()
+	defer s.rw.Unlock()
+
+	// Get extensions from database
+	rows, err := database.DB.Queryx(strings.Replace("SELECT extension_id FROM castro_extension_? WHERE enabled = 1", "?", extType, -1))
+
+	if err != nil {
+		return err
+	}
+
+	// Close rows
+	defer rows.Close()
+
+	// Loop rows
+	for rows.Next() {
+
+		// Hold extension id
+		var extensionID string
+
+		if err := rows.Scan(&extensionID); err != nil {
+			return err
+		}
+
+		dir := filepath.Join("extensions", extensionID, extType)
+
+		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if info.IsDir() {
+				return nil
+			}
+			if strings.HasSuffix(info.Name(), ".lua") {
+				// Compile lua file
+				proto, err := CompileLua(path)
+				if err != nil {
+					return err
+				}
+
+				// Set virtual path
+				path := strings.ToLower(strings.Replace(path, dir, extType, -1))
+
+				// Add to the list
+				s.List[path] = proto
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Get retrieves a compiled lua function proto
+func (s *compiledStateList) Get(path string) (*glua.FunctionProto, error) {
+	path = strings.ToLower(path)
+	for p, proto := range s.List {
+		if strings.ToLower(p) == path {
+			return proto, nil
+		}
+	}
+	return nil, errors.New("Compiled lua proto not found")
 }
 
 // Load loads the given state list

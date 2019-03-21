@@ -1,6 +1,8 @@
 package lua
 
 import (
+	"bytes"
+
 	"github.com/lucasb-eyer/go-colorful"
 	"github.com/raggaer/goimage"
 	"github.com/yuin/gopher-lua"
@@ -78,8 +80,26 @@ func WriteGoImageText(L *lua.LState) int {
 		return 0
 	}
 
-	// Write text to the image
-	if err := img.WriteText(
+	// Check if font is beeing declared
+	font := L.Get(7)
+	if font.Type() == lua.LTNil {
+
+		// Write text to the image
+		if err := img.WriteText(
+			L.ToString(2),
+			textColor,
+			float64(L.ToInt(4)),
+			L.ToInt(5),
+			L.ToInt(6),
+		); err != nil {
+			L.RaiseError("Cannot write string to image: %v", err)
+		}
+		return 0
+	}
+
+	// Write text with declared font
+	if err := img.WriteTextFont(
+		L.ToString(7),
 		L.ToString(2),
 		textColor,
 		float64(L.ToInt(4)),
@@ -87,9 +107,7 @@ func WriteGoImageText(L *lua.LState) int {
 		L.ToInt(6),
 	); err != nil {
 		L.RaiseError("Cannot write string to image: %v", err)
-		return 0
 	}
-
 	return 0
 }
 
@@ -103,6 +121,22 @@ func SetBackgroundGoImage(L *lua.LState) int {
 		return 0
 	}
 
+	return 1
+}
+
+// GetGoImageAsString returns the underlying go image as a byte array string
+func GetGoImageAsString(L *lua.LState) int {
+	// Get goimage
+	img := getGoImage(L)
+
+	buff := &bytes.Buffer{}
+	if err := img.Encode(buff); err != nil {
+		L.RaiseError("Cannot encode image: %v", err)
+		return 0
+	}
+
+	// Push byte array as string
+	L.Push(lua.LString(string(buff.Bytes())))
 	return 1
 }
 

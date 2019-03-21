@@ -6,6 +6,8 @@ name: Functions
 
 Castro provides a list of already defined functions you can use on your templates:
 
+- [toTitle](#totitle)
+- [toLower](#tolower)
 - [formatFloat](#formatfloat)
 - [atoi](#atoi)
 - [itoa](#itoa)
@@ -27,6 +29,30 @@ Castro provides a list of already defined functions you can use on your template
 - [lsNumber](#lsnumber)
 - [unixToDate](#unixtodate)
 - [widget](#widget)
+
+# toTitle
+
+Convers the given strings to a proper title heading. For example hello world will be converted to Hello World.
+
+```lua
+data.test = "hello world"
+```
+
+```html
+{{ toTitle .test }}
+```
+
+# toLower
+
+Converts the given string to lowercase.
+
+```lua
+data.test = "hello world"
+```
+
+```html
+{{ toLower .test }}
+```
 
 # formatFloat
 

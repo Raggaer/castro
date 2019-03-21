@@ -23,3 +23,6 @@ public/ckeditor/images/*.png
 !public/ckeditor/images/.gitkeep
 i18n/*.i18n
 tls
+*.swp
+*~
+castro

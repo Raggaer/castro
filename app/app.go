@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -29,7 +30,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(10)
+	wait.Add(11)
 
 	// Load application logger
 	loadAppLogger()
@@ -55,6 +56,7 @@ func Start() {
 
 		go loadHouses(wait)
 		go loadVocations(wait)
+		go loadServerMonsters(wait)
 	}(wait)
 
 	// Create application cache
@@ -78,6 +80,19 @@ func Start() {
 
 	// Execute the init lua file
 	executeInitFile()
+}
+
+func loadServerMonsters(wg *sync.WaitGroup) {
+	// Load server monsters
+	if err := util.LoadServerMonsters(util.Config.Configuration.Datapack); err != nil {
+		util.Logger.Logger.Fatalf("Cannot load server monsters: %v", err)
+	}
+
+	// Sort server monsters list
+	sort.Slice(util.MonstersList, func(i, j int) bool {
+		return util.MonstersList[i].Name < util.MonstersList[j].Name
+	})
+	wg.Done()
 }
 
 func loadLanguageFiles(wg *sync.WaitGroup) {
@@ -319,14 +334,14 @@ func loadWidgets(wg *sync.WaitGroup) {
 }
 
 func loadSubtopics(wg *sync.WaitGroup) {
-	// Load subtopic list
-	if err := lua.PageList.Load("pages"); err != nil {
-		util.Logger.Logger.Fatalf("Cannot load application subtopic list: %v", err)
+	// Compile pages files
+	if err := lua.CompiledPageList.CompileFiles("pages"); err != nil {
+		util.Logger.Logger.Fatalf("Cannot compile application subtopic list: %v", err)
 	}
 
-	// Load extension subtopics
-	if err := lua.PageList.LoadExtensions(); err != nil {
-		util.Logger.Logger.Errorf("Cannot load extension subtopic list: %v", err)
+	// Compile extension pages files
+	if err := lua.CompiledPageList.CompileExtensions("pages"); err != nil {
+		util.Logger.Logger.Errorf("Cannot compile extension subtopic list: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -624,6 +639,12 @@ func templateFuncs() template.FuncMap {
 		},
 		"addInt": func(a, b int) int {
 			return a + b
+		},
+		"toLower": func(s string) string {
+			return strings.ToLower(s)
+		},
+		"toTitle": func(s string) string {
+			return strings.ToTitle(s)
 		},
 	}
 }

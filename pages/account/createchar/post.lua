@@ -1,3 +1,11 @@
+local function fetchValues(voc)
+    local v = app.Custom.NewCharacterValues[voc]
+    if v.inherit_from ~= nil then
+        v = app.Custom.NewCharacterValues[v.inherit_from]
+    end
+    return v
+end
+
 function post()
     if not session:isLogged() then
         http:redirect("/")
@@ -48,20 +56,32 @@ function post()
         return
     end
 
+    ncv = fetchValues(tonumber(xml:vocationByName(http.postValues["character-vocation"]).ID)+1) -- new char values
+
+    local eStr = "" -- extra string
+    local vStr = "" -- value string
+
+    if ncv.extra ~= nil then
+        for k, value in pairs(ncv.extra) do
+            eStr = eStr ..tostring(k)..", "
+            vStr = vStr .. value .. ", "
+        end
+    end
+
     db:execute(
-        "INSERT INTO players (name, sex, account_id, vocation, town_id, conditions, level, health, healthmax, mana, manamax, cap, soul) VALUES (?, ?, ?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?)",
-        http.postValues["character-name"], 
-        http.postValues["character-gender"], 
-        account.ID, 
-        xml:vocationByName(http.postValues["character-vocation"]).ID, 
+        "INSERT INTO `players` ("..eStr.."name, sex, account_id, vocation, town_id, conditions, level, health, healthmax, mana, manamax, cap, soul) VALUES ("..vStr.."?,?,?,?,?,'',?,?,?,?,?,?,?)",
+        http.postValues["character-name"],
+        http.postValues["character-gender"],
+        account.ID,
+        xml:vocationByName(http.postValues["character-vocation"]).ID,
         otbm:townByName(http.postValues["character-town"]).ID,
-        app.Custom.NewCharacterValues.level,
-        app.Custom.NewCharacterValues.health,
-        app.Custom.NewCharacterValues.healthmax,
-        app.Custom.NewCharacterValues.mana,
-        app.Custom.NewCharacterValues.manamax,
-        app.Custom.NewCharacterValues.cap,
-        app.Custom.NewCharacterValues.soul
+        ncv.level,
+        ncv.health,
+        ncv.healthmax,
+        ncv.mana,
+        ncv.manamax,
+        ncv.cap,
+        ncv.soul
     )
 
     session:setFlash("success", "Character created")

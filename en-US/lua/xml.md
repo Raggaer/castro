@@ -6,13 +6,60 @@ name: xml
 
 Provides access to XML manipulation functions.
 
+- [xml:vocationList](#vocationlist)
+- [xml:vocationByName](#vocationbyname)
+- [xml:vocationByID](#vocationbyid)
+- [xml:monsterList](#monsterlist)
+- [xml:monsterByName(name)](#monsterbyname)
 - [xml:marshal(data)](#marshal)
 - [xml:unmarshal(string)](#unmarshal)
 - [xml:unmarshalFile(filename)](#unmarshalfile)
 
+# vocationList
+
+Returns a list of server vocations.
+
+```lua
+local vocs = xml:vocationList()
+```
+
+# vocationByName
+
+Returns a vocation by the name.
+
+```lua
+local voc = xml:vocationByName("Sorcerer")
+```
+
+# vocationByID
+
+Returns a vocation by its identifier.
+
+```lua
+local voc = xml:vocationByID(4)
+```
+
+# monsterList
+
+Returns a list of monsters, retrieved from monsters.xml and each monster file.
+
+```lua
+local list = xml:monsterList()
+local first = list[0].Name
+--- first = "Amazon"
+```
+
+# monsterByName
+
+Retrieves a monster by its name.
+
+```lua
+local monster = xml:monsterByName("Demon")
+```
+
 # marshal
 
-Convers the given lua table to a valid XML string.
+Converts the given lua table to a valid XML string.
 
 ```lua
 local data = {}
