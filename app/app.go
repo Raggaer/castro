@@ -487,7 +487,12 @@ func connectDatabase() {
 	var err error
 
 	// Connect to the MySQL database
-	if database.DB, err = database.Open(lua.Config.GetGlobal("mysqlUser").String(), lua.Config.GetGlobal("mysqlPass").String(), lua.Config.GetGlobal("mysqlDatabase").String(), ""); err != nil {
+	if database.DB, err = database.Open(lua.Config.GetGlobal("mysqlUser").String(), 
+		lua.Config.GetGlobal("mysqlPass").String(), 
+		lua.Config.GetGlobal("mysqlHost").String(), 
+		lua.Config.GetGlobal("mysqlPort").String(),
+		lua.Config.GetGlobal("mysqlDatabase").String(),
+		""); err != nil {
 		util.Logger.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
 }
