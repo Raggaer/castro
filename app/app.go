@@ -339,9 +339,9 @@ func loadSubtopics(wg *sync.WaitGroup) {
 		util.Logger.Logger.Fatalf("Cannot compile application subtopic list: %v", err)
 	}
 
-	// Load extension subtopics
-	if err := lua.PageList.LoadExtensions(); err != nil {
-		util.Logger.Logger.Errorf("Cannot load extension subtopic list: %v", err)
+	// Compile extension pages files
+	if err := lua.CompiledPageList.CompileExtensions("pages"); err != nil {
+		util.Logger.Logger.Errorf("Cannot compile extension subtopic list: %v", err)
 	}
 
 	// Tell the wait group we are done
@@ -487,7 +487,12 @@ func connectDatabase() {
 	var err error
 
 	// Connect to the MySQL database
-	if database.DB, err = database.Open(lua.Config.GetGlobal("mysqlUser").String(), lua.Config.GetGlobal("mysqlPass").String(), lua.Config.GetGlobal("mysqlDatabase").String(), ""); err != nil {
+	if database.DB, err = database.Open(lua.Config.GetGlobal("mysqlUser").String(), 
+		lua.Config.GetGlobal("mysqlPass").String(), 
+		lua.Config.GetGlobal("mysqlHost").String(), 
+		lua.Config.GetGlobal("mysqlPort").String(),
+		lua.Config.GetGlobal("mysqlDatabase").String(),
+		""); err != nil {
 		util.Logger.Logger.Fatalf("Cannot connect to MySQL database: %v", err)
 	}
 }

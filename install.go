@@ -544,9 +544,10 @@ func installApplication(location string) error {
 	}
 
 	// Connect to database
-	conn, err := database.Open(
-		lua.Config.GetGlobal("mysqlUser").String(),
-		lua.Config.GetGlobal("mysqlPass").String(),
+	conn, err := database.Open(lua.Config.GetGlobal("mysqlUser").String(), 
+		lua.Config.GetGlobal("mysqlPass").String(), 
+		lua.Config.GetGlobal("mysqlHost").String(), 
+		lua.Config.GetGlobal("mysqlPort").String(),
 		lua.Config.GetGlobal("mysqlDatabase").String(),
 		"&multiStatements=true",
 	)
