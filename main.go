@@ -21,7 +21,7 @@ import (
 	"github.com/ulule/limiter"
 	"github.com/ulule/limiter/drivers/store/memory"
 	"github.com/urfave/negroni"
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 	"golang.org/x/crypto/acme/autocert"
 )
 

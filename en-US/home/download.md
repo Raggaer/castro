@@ -22,14 +22,9 @@ Building castro from source is a very easy process. You will need to have **Go**
 
 ### Installing Go
 
-Make sure you have [Go](https://golang.org/) installed. More information about this topic can be found [here](https://golang.org/doc/install/source). You will need to set-up `GOPATH` and `GOROOT` variables on your system.
-
-### Getting castro
-
-First get `dep` using `go get -u github.com/golang/dep/cmd/dep`; the version control tool Castro uses. 
-
-After installing `dep` download the latest stable source from the releases page. Run `dep ensure` to populate your `vendor` directory.
+Make sure you have [Go](https://golang.org/) installed. More information about this topic can be found [here](https://golang.org/doc/install/source).
 
 ### Building
 
-You need to run `go build github.com/raggaer/castro`. This will compile and create a castro artifact. Just drop it on your castro directory and you are ready to go.
+You need to run `go build` inside the Castro directory. This will compile and create a castro artifact. Its important to note that you need to execute the artifact inside the directory
+(using /path/to/castro-artifact wont work!).
