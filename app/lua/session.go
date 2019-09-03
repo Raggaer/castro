@@ -303,6 +303,8 @@ func IsLogged(L *lua.LState) int {
 
 // GetFlash gets a flash value from the user session
 func GetFlash(L *lua.LState) int {
+	// Get session data from the user data field
+	session := getSessionData(L)
 
 	// Get flash key
 	key := L.Get(2)
@@ -314,34 +316,10 @@ func GetFlash(L *lua.LState) int {
 		return 0
 	}
 
-	// Get session data from the user data field
-	session := getSessionData(L)
+	// Get value from the flash map
+	v, ok := session[key.String()].(string)
 
-	// Get element from session
-	val := session[key.String()]
-
-	// Push element depending on the Go type
-	switch val.(type) {
-	case float64:
-
-		// Push element as number
-		L.Push(lua.LNumber(val.(float64)))
-	case string:
-
-		// Push element as string
-		L.Push(lua.LString(val.(string)))
-	case bool:
-
-		// Push element as boolean
-		L.Push(lua.LBool(val.(bool)))
-	case map[string]interface{}:
-
-		// Convert map to lua table
-		tble := MapToTable(val.(map[string]interface{}))
-
-		// Push element as table
-		L.Push(tble)
-	default:
+	if !ok {
 		L.Push(lua.LNil)
 		return 1
 	}
@@ -352,12 +330,18 @@ func GetFlash(L *lua.LState) int {
 	// Update session data
 	updateSessionData(L)
 
+	// Push value to stack
+	L.Push(lua.LString(v))
+
 	return 1
 }
 
 // SetFlash sets a flash value to the user session
 func SetFlash(L *lua.LState) int {
-	
+
+	// Get session data from the user data field
+	session := getSessionData(L)
+
 	// Get flash key
 	key := L.Get(2)
 
@@ -368,37 +352,18 @@ func SetFlash(L *lua.LState) int {
 		return 0
 	}
 
-	// Get session data from the user data field
-	session := getSessionData(L)
+	// Get flash data
+	content := L.Get(3)
 
-	// Get value
-	val := L.Get(3)
+	// Check for valid content
+	if content.Type() != lua.LTString {
 
-	// Transform value to Go type
-	switch lv := val.(type) {
-	case lua.LString:
-
-		// Assign element as string
-		session[key.String()] = string(lv)
-
-	case lua.LNumber:
-
-		// Assign element as float64
-		session[key.String()] = float64(lv)
-
-	case lua.LBool:
-
-		// Assign element as bool
-		session[key.String()] = bool(lv)
-
-	case *lua.LTable:
-
-		// Convert table to map
-		m := TableToMap(val.(*lua.LTable))
-
-		// Assign element as map
-		session[key.String()] = m
+		L.ArgError(1, "Invalid flash content. Expected string")
+		return 0
 	}
+
+	// Set flash value
+	session[key.String()] = content.String()
 
 	// Update session data
 	updateSessionData(L)
