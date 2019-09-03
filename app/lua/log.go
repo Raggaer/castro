@@ -2,7 +2,7 @@ package lua
 
 import (
 	"github.com/raggaer/castro/app/util"
-	"github.com/yuin/gopher-lua"
+	lua "github.com/yuin/gopher-lua"
 )
 
 // SetLogMetaTable sets the log metatable for the given state
