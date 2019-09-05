@@ -248,7 +248,12 @@ func GetSessionData(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Get element from session
-	val := session[key.String()]
+	val, ok := session[key.String()]
+
+	if !ok {
+		L.Push(lua.LNil)
+		return 1
+	}
 
 	// Push element depending on the Go type
 	switch val.(type) {
@@ -309,7 +314,6 @@ func GetFlash(L *lua.LState) int {
 
 	// Check for valid key
 	if key.Type() != lua.LTString {
-
 		L.ArgError(1, "Invalid flash key. Expected string")
 		return 0
 	}
@@ -318,7 +322,12 @@ func GetFlash(L *lua.LState) int {
 	session := getSessionData(L)
 
 	// Get element from session
-	val := session[key.String()]
+	val, ok := session[key.String()]
+
+	if !ok {
+		L.Push(lua.LNil)
+		return 1
+	}
 
 	// Push element depending on the Go type
 	switch val.(type) {
