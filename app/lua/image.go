@@ -3,8 +3,8 @@ package lua
 import (
 	"bytes"
 
+	"github.com/joseluis2g/goimage"
 	"github.com/lucasb-eyer/go-colorful"
-	"github.com/raggaer/goimage"
 	"github.com/yuin/gopher-lua"
 )
 

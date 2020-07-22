@@ -3,8 +3,8 @@ package lua
 import (
 	"strconv"
 
+	"github.com/joseluis2g/gopaypal"
 	"github.com/raggaer/castro/app/util"
-	"github.com/raggaer/gopaypal"
 	"github.com/yuin/gopher-lua"
 )
 

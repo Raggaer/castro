@@ -12,6 +12,8 @@ require (
 	github.com/gorilla/securecookie v1.1.1
 	github.com/jinzhu/gorm v1.9.10
 	github.com/jmoiron/sqlx v1.2.0
+	github.com/joseluis2g/goimage v0.0.0-20200704010703-bd754a00fea3
+	github.com/joseluis2g/gopaypal v0.0.0-20200704010730-c7d244e03584
 	github.com/julienschmidt/httprouter v1.2.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/kataras/go-errors v0.0.3
@@ -22,8 +24,6 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.8.1 // indirect
-	github.com/raggaer/goimage v0.0.0-20181219215616-1230da9cbcec
-	github.com/raggaer/gopaypal v0.0.0-20170320150438-35c6d0cb52d5
 	github.com/raggaer/otmap v0.0.0-20170404205416-106b5485ec0f
 	github.com/sirupsen/logrus v1.4.2
 	github.com/skip2/go-qrcode v0.0.0-20190110000554-dc11ecdae0a9

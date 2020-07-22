@@ -68,6 +68,10 @@ github.com/jinzhu/inflection v1.0.0/go.mod h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkr
 github.com/jinzhu/now v1.0.1/go.mod h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8=
 github.com/jmoiron/sqlx v1.2.0 h1:41Ip0zITnmWNR/vHV+S4m+VoUivnWY5E4OJfLZjCJMA=
 github.com/jmoiron/sqlx v1.2.0/go.mod h1:1FEQNm3xlJgrMD+FBdI9+xvCksHtbpVBBw5dYhBSsks=
+github.com/joseluis2g/goimage v0.0.0-20200704010703-bd754a00fea3 h1:BCmB1+oDqguMKPhQsjDtzD0XFOx1S8Na5zk8Ni+1q9o=
+github.com/joseluis2g/goimage v0.0.0-20200704010703-bd754a00fea3/go.mod h1:61Amn/2quUQa8OUnw/IdotSm+bYNI1n/ohTY1P9nlGQ=
+github.com/joseluis2g/gopaypal v0.0.0-20200704010730-c7d244e03584 h1:RmR8eRjXcbjiz5ChrP5g7TDg0CfakTpOPpCVSHg6W9s=
+github.com/joseluis2g/gopaypal v0.0.0-20200704010730-c7d244e03584/go.mod h1:e4eYTguqq4aicam3ghXQnwfbywE9SNTO/d0zmOBIgD4=
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=
 github.com/julienschmidt/httprouter v1.2.0 h1:TDTW5Yz1mjftljbcKqRcrYhd4XeOoI98t+9HbQbYf7g=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
@@ -114,10 +118,6 @@ github.com/prometheus/client_model v0.0.0-20190115171406-56726106282f/go.mod h1:
 github.com/prometheus/common v0.2.0/go.mod h1:TNfzLD0ON7rHzMJeJkieUDPYmFC7Snx/y86RQel1bk4=
 github.com/prometheus/procfs v0.0.0-20181005140218-185b4288413d/go.mod h1:c3At6R/oaqEKCNdg8wHV1ftS6bRYblBhIjjI8uT2IGk=
 github.com/prometheus/procfs v0.0.0-20190117184657-bf6a532e95b1/go.mod h1:c3At6R/oaqEKCNdg8wHV1ftS6bRYblBhIjjI8uT2IGk=
-github.com/raggaer/goimage v0.0.0-20181219215616-1230da9cbcec h1:Dfd/8F+Grak1iwbEz7DMeMIOhOqeLCF4+9nqskcdirc=
-github.com/raggaer/goimage v0.0.0-20181219215616-1230da9cbcec/go.mod h1:/bmn6XJ2honkOFrk3Q89CLiqJrcOZHfNuN+6n/AUxMg=
-github.com/raggaer/gopaypal v0.0.0-20170320150438-35c6d0cb52d5 h1:hn4PvbL3AXg0KCHFtjnKIj0r1qNss3RtRR8jrOChqik=
-github.com/raggaer/gopaypal v0.0.0-20170320150438-35c6d0cb52d5/go.mod h1:FJWKR4jZV/9iCcAgfIDnu7Y4h3dv9qPrE1a4fB6TGKs=
 github.com/raggaer/otmap v0.0.0-20170404205416-106b5485ec0f h1:Meq+ktuk9HPtUXoOpP0vWS6vyjLrdXTVcKlKxRP4c0A=
 github.com/raggaer/otmap v0.0.0-20170404205416-106b5485ec0f/go.mod h1:aM4kUFMtvHujuDoJbltFLWl2QzQw4mfputelYeYveJE=
 github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
