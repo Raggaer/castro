@@ -103,8 +103,8 @@ var (
 				}
 
 				// Set load map settings
-				installationConfigFile.LoadMap = req.FormValue("map") == "map"
-				installationConfigFile.MapWatch.Enabled = req.FormValue("map") == "map"
+				installationConfigFile.LoadMap = req.FormValue("map") == "Load from map"
+				installationConfigFile.MapWatch.Enabled = req.FormValue("map") == "Load from map"
 				installationConfigFile.MapHouseFile = req.FormValue("housefile")
 
 				// Install database tables
