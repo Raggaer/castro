@@ -10,6 +10,7 @@ Provides access to file helper functions
 - [file:exists(filepath)](#exists)
 - [file:getFiles(fullpath)](#getfiles)
 - [file:getDirectories(fullpath)](#getdirectories)
+- [file:unzip(archive, fullpath)](#unzip)
 
 # mod
 
@@ -43,4 +44,15 @@ Returns a table with all the directories inside a directory.
 
 ```lua
 local files = file:getDirectories("/home/test")
+```
+
+# unzip
+
+Extracts a zip archive into the given directory.
+Returns true on success and nil, error on failure.
+
+```lua
+ok, err = file:unzip("archive.zip", "/home/test")
+-- ok == true
+-- err == nil
 ```

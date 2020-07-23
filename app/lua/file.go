@@ -1,8 +1,12 @@
 package lua
 
 import (
+	"archive/zip"
+	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/yuin/gopher-lua"
 )
@@ -117,4 +121,87 @@ func CreateDirectory(L *lua.LState) int {
 	}
 
 	return 0
+}
+
+// Unzip will decompress a zip archive, moving all files and folders
+// within the zip file to the given directory
+func UnzipFile(L *lua.LState) int {
+
+	var filenames []string
+	dest := L.ToString(3)
+
+	// Open zip archive
+	r, err := zip.OpenReader(L.ToString(2))
+	if err != nil {
+		L.RaiseError("Cannot open file to unzip: %v", err)
+	}
+
+	defer r.Close()
+
+	for _, f := range r.File {
+
+		// Store filename/path
+		fpath := filepath.Join(dest, f.Name)
+
+		// Check for ZipSlip. https://snyk.io/research/zip-slip-vulnerability#go
+		if !strings.HasPrefix(fpath, filepath.Clean(dest) + string(os.PathSeparator)) {
+			// Push nil + error
+			L.Push(lua.LNil)
+			L.Push(lua.LString("Illegal file path"))
+			return 2
+		}
+
+		filenames = append(filenames, fpath)
+
+		if f.FileInfo().IsDir() {
+			// Create folder
+			os.MkdirAll(fpath, os.ModePerm)
+			continue
+		}
+
+		// Create directories
+		if err = os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
+			// Push nil + error
+			L.Push(lua.LNil)
+			L.Push(lua.LString(err.Error()))
+			return 2
+		}
+
+		// Open output file in write mode
+		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		if err != nil {
+			// Push nil + error
+			L.Push(lua.LNil)
+			L.Push(lua.LString(err.Error()))
+			return 2
+		}
+
+		// Open source file
+		rc, err := f.Open()
+		if err != nil {
+			// Push nil + error
+			L.Push(lua.LNil)
+			L.Push(lua.LString(err.Error()))
+			return 2
+		}
+
+		// Copy file contents
+		_, err = io.Copy(outFile, rc)
+
+		// Close the file without defer to close before next iteration of loop
+		outFile.Close()
+		rc.Close()
+
+		if err != nil {
+			// Push nil + error
+			L.Push(lua.LNil)
+			L.Push(lua.LString(err.Error()))
+			return 2
+		}
+	}
+
+	// Push success
+	L.Push(lua.LBool(true))
+
+	return 1
 }

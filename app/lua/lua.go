@@ -205,6 +205,7 @@ var (
 		"getDirectories":  GetDirectories,
 		"getFiles":        GetFiles,
 		"createDirectory": CreateDirectory,
+		"unzip":           UnzipFile,
 	}
 	envMethods = map[string]glua.LGFunction{
 		"set": SetEnvVariable,
