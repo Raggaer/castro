@@ -11,7 +11,7 @@
         <a href="{{ $contributor.html_url }}">
             <img src="{{ $contributor.avatar_url }}" class="img-fluid img-thumbnail rounded">
             <br />
-            {{ $contributor.login }} <span class="label label-info">{{ $contributor.contributions }}</span>
+            {{ $contributor.login }} <span class="badge badge-info">{{ $contributor.contributions }}</span>
         </a>
     </div>
     {{ end }}
