@@ -116,7 +116,7 @@ func CreateDirectory(L *lua.LState) int {
 	path := L.ToString(2)
 
 	// Create any missing directory
-	if err := os.MkdirAll(path, os.ModeDir); err != nil {
+	if err := os.MkdirAll(path, os.ModePerm); err != nil {
 		L.RaiseError("Cannot create missing directories: %v", err)
 	}
 
