@@ -283,18 +283,18 @@ var (
 				},
 				Script: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
-					SRC:     []string{"https://ajax.googleapis.com", "https://assets.fortumo.com", "https://www.google.com", "https://code.jquery.com", "https://cdn.datatables.net", "https://www.gstatic.com"},
+					SRC:     []string{"https://stackpath.bootstrapcdn.com", "https://ajax.googleapis.com", "https://assets.fortumo.com", "https://www.google.com", "https://code.jquery.com", "https://cdn.datatables.net", "https://www.gstatic.com"},
 				},
 				Font: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
-					SRC:     []string{"http://fonts.gstatic.com", "http://fonts.googleapis.com"},
+					SRC:     []string{"https://use.fontawesome.com", "http://fonts.gstatic.com", "http://fonts.googleapis.com"},
 				},
 				Connect: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
 				},
 				Style: util.ContentSecurityPolicyType{
 					Default: []string{"unsafe-inline", "self"},
-					SRC:     []string{"https://assets.fortumo.com", "http://fonts.googleapis.com", "https://cdn.datatables.net"},
+					SRC:     []string{"https://use.fontawesome.com", "https://stackpath.bootstrapcdn.com", "https://assets.fortumo.com", "http://fonts.googleapis.com", "https://cdn.datatables.net"},
 				},
 				Image: util.ContentSecurityPolicyType{
 					Default: []string{"self"},
