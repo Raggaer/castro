@@ -85,8 +85,7 @@ local acocunt = session:loggedAccount()
 account.ID = 1
 account.Name = "xxxx"
 account.Password = "xxx"
-account.Premdays = 365
-account.Lastday = 1200000
+account.Premium_ends_at = 1200000
 account.Creation = 1200000
 account.Secret = "xx"
 

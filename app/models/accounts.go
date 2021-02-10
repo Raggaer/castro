@@ -8,14 +8,13 @@ import (
 
 // Account struct used for tfs accounts
 type Account struct {
-	ID       int64
-	Name     string
-	Premdays int
-	Password string
-	Email    string
-	Lastday  int64
-	Creation int64
-	Secret   sql.NullString
+	ID              int64
+	Name            string
+	Premium_ends_at int64
+	Password        string
+	Email           string
+	Creation        int64
+	Secret          sql.NullString
 }
 
 // CastroAccount struct used for castro custom accounts
@@ -33,7 +32,7 @@ func GetAccountByName(name string) (Account, CastroAccount, error) {
 	castroAccount := CastroAccount{}
 
 	// Get account from database
-	if err := database.DB.Get(&account, "SELECT id, name, password, premdays, email, lastday, creation, secret FROM accounts WHERE name = ?", name); err != nil {
+	if err := database.DB.Get(&account, "SELECT id, name, password, premium_ends_at, email, creation, secret FROM accounts WHERE name = ?", name); err != nil {
 		return account, castroAccount, err
 	}
 

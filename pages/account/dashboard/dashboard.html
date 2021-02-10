@@ -53,7 +53,7 @@
         <th>Account type</th>
         {{ if .account.IsPremium }}
         <td>
-            Premium account ({{ .account.Premdays }} days remaining)
+            Premium account
         </td>
         {{ else }}
         <td>
@@ -61,13 +61,15 @@
         </td>
         {{ end }}
     </tr>
+    {{ if .account.IsPremium }}
+    <tr>
+        <th>Expires</th>
+        <td>{{ .account.PremiumEnds.Result }} ({{ .account.PremiumDays }} days remaining)</td>
+    </tr>
+    {{ end }}
     <tr>
         <th>Creation date</th>
         <td>{{ .account.Creation.Result }}</td>
-    </tr>
-    <tr>
-        <th>Last login</th>
-        <td>{{ .account.Lastday.Result }}</td>
     </tr>
     <tr>
         <th></th>

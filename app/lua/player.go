@@ -275,14 +275,48 @@ func GetPlayerPremiumDays(L *lua.LState) int {
 	// Get player struct
 	player := getPlayerObject(L)
 
-	premDays, err := player.GetPremiumDays()
+	premiumDays, err := player.GetPremiumDays()
 	if err != nil {
 		L.RaiseError("Unable to get player premium days: %v", err)
 		return 0
 	}
 
 	// Push days as number
-	L.Push(lua.LNumber(premDays))
+	L.Push(lua.LNumber(premiumDays))
+
+	return 1
+}
+
+// GetPlayerPremiumTime gets the player remaining premium time
+func GetPlayerPremiumTime(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	premiumTime, err := player.GetPremiumTime()
+	if err != nil {
+		L.RaiseError("Unable to get player premium time: %v", err)
+		return 0
+	}
+
+	// Push time as number
+	L.Push(lua.LNumber(premiumTime))
+
+	return 1
+}
+
+// GetPlayerPremiumEndsAt gets the player premium ends at
+func GetPlayerPremiumEndsAt(L *lua.LState) int {
+	// Get player struct
+	player := getPlayerObject(L)
+
+	premiumEndsAt, err := player.GetPremiumEndsAt()
+	if err != nil {
+		L.RaiseError("Unable to get player premium ends at: %v", err)
+		return 0
+	}
+
+	// Push timestamp as number
+	L.Push(lua.LNumber(premiumEndsAt))
 
 	return 1
 }

@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/raggaer/castro/app/database"
 )
 
@@ -95,17 +97,45 @@ func (p *Player) SetStorageValue(key, value int) error {
 	return err
 }
 
-// GetPremiumDays returns the player premium days
-func (p *Player) GetPremiumDays() (int, error) {
-	// Premium days holder
-	days := 0
+// GetPremiumTime returns the player premium time end
+func (p *Player) GetPremiumEndsAt() (int, error) {
+	// Premium time holder
+	endsAt := 0
 
-	// Get premium days
-	if err := database.DB.Get(&days, "SELECT premdays FROM accounts WHERE id = ?", p.Account_id); err != nil {
+	// Get premium time
+	if err := database.DB.Get(&endsAt, "SELECT premium_ends_at FROM accounts WHERE id = ?", p.Account_id); err != nil {
 		return 0, err
 	}
 
-	return days, nil
+	return endsAt, nil
+}
+
+// GetPremiumTime returns the player premium time end
+func (p *Player) GetPremiumTime() (int, error) {
+	// End time holder
+	endsAt, err := p.GetPremiumEndsAt()
+	if err != nil {
+		return 0, err
+	}
+
+	// Calculate remaining time (seconds)
+	timeLeft := time.Unix(int64(endsAt), 0).Sub(time.Now()).Seconds()
+	if timeLeft <= 0 {
+		return 0, nil
+	}
+
+	return int(timeLeft), nil
+}
+
+// GetPremiumDays returns the player premium days
+func (p *Player) GetPremiumDays() (int, error) {
+	// Premium time holder
+	timeLeft, err := p.GetPremiumTime()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(timeLeft / 86400), nil
 }
 
 // GetExperience returns the player
