@@ -86,10 +86,10 @@ function get()
     cache = false
 
     if allVocations then
-        data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FROM players ORDER BY value DESC LIMIT ?, ?", data.paginator.offset, data.paginator.limit, true)
+        data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FROM players WHERE group_id < ? ORDER BY value DESC LIMIT ?, ?", app.Custom.HighscoreIgnoreGroup, data.paginator.offset, data.paginator.limit, true)
         data.voc = { Name = "All Vocations" }
     else
-        data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FROM players WHERE vocation = ? ORDER BY value DESC LIMIT ?, ?", data.vocType, data.paginator.offset, data.paginator.limit, true)
+        data.list, cache = db:query("SELECT name, vocation, " .. query .. " AS value FROM players WHERE group_id < ? AND vocation = ? ORDER BY value DESC LIMIT ?, ?", app.Custom.HighscoreIgnoreGroup, data.vocType, data.paginator.offset, data.paginator.limit, true)
         data.voc = xml:vocationByID(data.vocType)
     end
 
