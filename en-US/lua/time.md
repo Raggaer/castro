@@ -68,7 +68,7 @@ parsed.Result = Fri Feb 24 23:08:30
 
 Parses the given duration string and returns the duration seconds.
 
-Duration strings can contain `s,m,h,x,d,y` for example `1h35m`
+Valid time units are `ns`, `us` (or `µs`), `ms`, `s`, `m`, `h`. For example `1h35m`.
 
 ```lua
 local seconds = time:parseDuration("1h")
