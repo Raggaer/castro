@@ -86,19 +86,19 @@
 {{ end }}
 <div id="guild-tabs">
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#members" aria-controls="members" role="tab" data-toggle="tab">Members</a></li>
-        <li role="presentation"><a href="#invitations" aria-controls="invitations" role="tab" data-toggle="tab">Invitations</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link active" href="#members" aria-controls="members" role="tab" data-toggle="tab">Members</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#invitations" aria-controls="invitations" role="tab" data-toggle="tab">Invitations</a></li>
         {{ if .owner }}
-        <li role="presentation"><a href="#motd" aria-controls="motd" role="tab" data-toggle="tab">Motd</a></li>
-        <li role="presentation"><a href="#ranks" aria-controls="ranks" role="tab" data-toggle="tab">Ranks</a></li>
-        <li role="presentation"><a href="#invite" aria-controls="invite" role="tab" data-toggle="tab">Invite</a></li>
-        <li role="presentation"><a href="#wars" aria-controls="wars" role="tab" data-toggle="tab">Wars</a></li>
-        <li role="presentation"><a href="#leadership" aria-controls="leadership" role="tab" data-toggle="tab">Leadership</a></li>
-        <li role="presentation"><a href="#logo" aria-controls="leadership" role="tab" data-toggle="tab">Logo</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#motd" aria-controls="motd" role="tab" data-toggle="tab">Motd</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#ranks" aria-controls="ranks" role="tab" data-toggle="tab">Ranks</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#invite" aria-controls="invite" role="tab" data-toggle="tab">Invite</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#wars" aria-controls="wars" role="tab" data-toggle="tab">Wars</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#leadership" aria-controls="leadership" role="tab" data-toggle="tab">Leadership</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#logo" aria-controls="leadership" role="tab" data-toggle="tab">Logo</a></li>
         {{ end }}
         {{ if not .owner }}
             {{ if .myGuildCharacters }}
-            <li role="presentation"><a href="#leave" aria-controls="leave" role="tab" data-toggle="tab">Leave guild</a></li>
+            <li role="presentation" class="nav-item"><a class="nav-link" href="#leave" aria-controls="leave" role="tab" data-toggle="tab">Leave guild</a></li>
             {{ end }}
         {{ end }}
     </ul>

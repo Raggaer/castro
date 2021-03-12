@@ -8,9 +8,9 @@
 {{ end }}
 <div id="offer-tabs">
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">General</a></li>
-        <li role="presentation"><a href="#item" aria-controls="offer" role="tab" data-toggle="tab">Item</a></li>
-        <li role="presentation"><a href="#container" aria-controls="container" role="tab" data-toggle="tab">Container</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link active" href="#general" aria-controls="general" role="tab" data-toggle="tab">General</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#item" aria-controls="offer" role="tab" data-toggle="tab">Item</a></li>
+        <li role="presentation" class="nav-item"><a class="nav-link" href="#container" aria-controls="container" role="tab" data-toggle="tab">Container</a></li>
     </ul>
     <form enctype="multipart/form-data" method="post" action="{{ url "subtopic" "admin" "shop" "offer" "new" }}">
         <div class="tab-content">
