@@ -77,15 +77,14 @@
         </tr>
     </thead>
     <tbody>
-        {{ range $index, $element := .stages.stages.stage }}
+        {{ range $index, $element := .stages }}
         <tr>
-            {{ $maxlevel := index $element "-maxlevel" }}
-            {{ if $maxlevel }}
-            <th>From level {{ index $element "-minlevel" }} to level {{ $maxlevel }}</th>
+            {{ if $element.maxlevel }}
+            <th>From level {{ $element.minlevel }} to level {{ $element.maxlevel }}</th>
             {{ else }}
-            <th>From level {{ index $element "-minlevel" }} ~</th>
+            <th>From level {{ $element.minlevel }} ~</th>
             {{ end }}
-            <td>x{{ index $element "-multiplier" }}</td>
+            <td>x{{ $element.multiplier }}</td>
         </tr>
         {{ end }}
     </tbody>

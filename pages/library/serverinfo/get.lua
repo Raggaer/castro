@@ -9,13 +9,23 @@ function get()
     data.redskull = config:get("killsToRedSkull")
     data.blackskull = config:get("killsToBlackSkull")
     data.worldType = config:get("worldType")
-    data.timeToDecreaseFrags = time:newDuration(config:get("timeToDecreaseFrags") * math.pow(10, 6))
-    data.whiteSkullTime = time:newDuration(config:get("whiteSkullTime") * math.pow(10, 6))
+    data.timeToDecreaseFrags = time:newDuration(config:get("timeToDecreaseFrags") * math.pow(10, 9))
+    data.whiteSkullTime = time:newDuration(config:get("whiteSkullTime") * math.pow(10, 9))
+    data.stages = config:get("experienceStages")
 
-    local stages = xml:unmarshalFile(serverPath .. "/data/XML/stages.xml")
+    if data.stages == nil then
+        local stages = xml:unmarshalFile(serverPath .. "/data/XML/stages.xml")
 
-    if stages.stages.config["-enabled"] == "1" then
-        data.stages = stages
+        if stages.stages.config["-enabled"] == "1" then
+            data.stages = {}
+            for i, stage in ipairs(stages.stages.stage) do
+                data.stages[i] = {
+                    maxlevel = stage["-maxlevel"],
+                    minlevel = stage["-minlevel"],
+                    multiplier = stage["-multiplier"]
+                }
+            end
+        end
     end
 
     http:render("serverinfo.html", data)
