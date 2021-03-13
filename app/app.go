@@ -30,7 +30,7 @@ func Start() {
 	wait := &sync.WaitGroup{}
 
 	// Wait for all tasks
-	wait.Add(11)
+	wait.Add(10)
 
 	// Load application logger
 	loadAppLogger()
@@ -62,13 +62,15 @@ func Start() {
 	// Create application cache
 	createCache()
 
+	// Load local config files
+	overwriteConfigFile()
+
 	go loadLanguageFiles(wait)
 	go loadWidgetList(wait)
 	go appTemplates(wait)
 	go widgetTemplates(wait)
 	go loadSubtopics(wait)
 	go loadWidgets(wait)
-	go overwriteConfigFile(wait)
 
 	loadExtensionStaticResources(wait)
 
@@ -105,14 +107,11 @@ func loadLanguageFiles(wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func overwriteConfigFile(wg *sync.WaitGroup) {
+func overwriteConfigFile() {
 	// Overwrite config file
 	if err := lua.OverwriteConfigFile(); err != nil {
 		util.Logger.Logger.Fatalf("Cannot overwrite config file: %v", err)
 	}
-
-	// Finish task
-	wg.Done()
 }
 
 func loadExtensionStaticResources(wg *sync.WaitGroup) {
