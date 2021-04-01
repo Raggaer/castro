@@ -52,7 +52,7 @@ func CreateLogFile() (*os.File, time.Time, error) {
 
 	// Create logs folder if needed
 	if _, err := os.Stat("logs"); os.IsNotExist(err) {
-		if err := os.Mkdir("logs", os.ModeDir); err != nil {
+		if err := os.Mkdir("logs", os.ModePerm); err != nil {
 			return nil, t, err
 		}
 	}
