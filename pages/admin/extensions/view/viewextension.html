@@ -59,7 +59,10 @@
 <p>{{ nl2br .info.Description }}</p>
 <hr>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col">
+        <a role="button" href="{{ url "subtopic" "admin" "extensions" "install" }}" class="btn btn-danger">
+            <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back
+        </a>
         {{ if .info.Market }}
         <a role="button" href="{{ .info.URL }}" class="btn btn-info">Download</a>
         {{ else }}
@@ -67,13 +70,10 @@
             <a role="button" href="#" class="btn btn-info">Purchase</a>
             {{ else }}
             <a role="button" href="{{ url "subtopic" "admin" "extensions" "download" }}?id={{ .info.ID }}" class="btn btn-success">
-                <i class="fa fa-cloud-download" aria-hidden="true"></i> Download
+                <i class="fa fa-cloud-download-alt" aria-hidden="true"></i> Download
             </a>
             {{ end }}
         {{ end }}
-    </div>
-    <div class="col-md-2 pull-right">
-        <a role="button" href="{{ url "subtopic" "admin" "extensions" }}" class="btn btn-danger">Back</a>
     </div>
 </div>
 {{ template "footer.html" . }}
