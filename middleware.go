@@ -110,9 +110,6 @@ func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, ne
 		util.Cache.Set("nonce", nonce, time.Minute*20)
 	}
 
-	// Set nonce header value
-	util.Config.Configuration.Security.CSP.Script.Default = append(util.Config.Configuration.Security.CSP.Script.Default, "nonce-"+nonce.(string))
-
 	// Create new context with cookie value
 	ctx := context.WithValue(req.Context(), "nonce", nonce)
 
@@ -145,7 +142,7 @@ func (s *securityHandler) ServeHTTP(w http.ResponseWriter, req *http.Request, ne
 		// Set Content-Security-Policy header
 		w.Header().Set(
 			"Content-Security-Policy",
-			util.Config.Configuration.CSP(),
+			util.Config.Configuration.CSP(nonce.(string)),
 		)
 	}
 

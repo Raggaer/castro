@@ -234,7 +234,7 @@ func (c Configuration) IsLog() bool {
 }
 
 // CSP returns a valid Content-Security-Policy header value
-func (c Configuration) CSP() string {
+func (c Configuration) CSP(nonce string) string {
 	// Set default-src field
 	buff := getCSPField("default-src", c.Security.CSP.Default, nil)
 
@@ -242,7 +242,7 @@ func (c Configuration) CSP() string {
 	buff += getCSPField("frame-src", c.Security.CSP.Frame.Default, c.Security.CSP.Frame.SRC)
 
 	// Set script-src field
-	buff += getCSPField("script-src", c.Security.CSP.Script.Default, c.Security.CSP.Script.SRC)
+	buff += getCSPField("script-src", append(c.Security.CSP.Script.Default, "nonce-"+nonce), c.Security.CSP.Script.SRC)
 
 	// Set font-src field
 	buff += getCSPField("font-src", c.Security.CSP.Font.Default, c.Security.CSP.Font.SRC)
