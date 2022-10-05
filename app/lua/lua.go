@@ -241,6 +241,9 @@ var (
 	i18nMethods = map[string]glua.LGFunction{
 		"get": GetLanguageIndex,
 	}
+	socketMethods = map[string]glua.LGFunction{
+		"get":	GetSocket,
+	}
 )
 
 // CompileLua reads the passed lua file from disk and compiles it.
@@ -414,6 +417,9 @@ func GetApplicationState(luaState *glua.LState) {
 
 	// Create json metatable
 	SetJSONMetaTable(luaState)
+
+	// Create socket metatable
+	SetSocketMetaTable(luaState)
 
 	// Loop global functions map
 	for funcName, luaFunc := range globalFuncList {

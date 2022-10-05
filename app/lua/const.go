@@ -129,4 +129,7 @@ const (
 
 	// HTTPMetaTableBodyName the field name of the http body
 	HTTPMetaTableBodyName = "body"
+
+	// SocketMetatableName the name of the socket metatable
+	SocketMetatableName = "socket"
 )
