@@ -17,9 +17,11 @@ function get()
     if data.commits then
         data.commits = json:unmarshal(data.commits).object
         for i, commit in pairs(data.commits) do
-            if commit.commit.message:len() > 45 then
-                data.commits[i].commit.message = commit.commit.message:sub(0, 45) .. "..."
+            local message = commit.commit.message:sub(0, commit.commit.message:find("\n\n", 1))
+            if message:len() > 45 then
+                message = message:sub(0, 45) .. "..."
             end
+            data.commits[i].commit.message = message
         end
     end
 
