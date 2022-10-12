@@ -32,6 +32,7 @@ type Monster struct {
 	Race         string              `xml:"race,attr"`
 	Experience   int                 `xml:"experience,attr"`
 	Speed        int                 `xml:"speed,attr"`
+	ManaCost     int                 `xml:"manacost,attr"`
 	Health       MonsterHealth       `xml:"health"`
 	Look         MonsterLook         `xml:"look"`
 	TargetChange MonsterTargetChange `xml:"targetchange"`
@@ -40,6 +41,23 @@ type Monster struct {
 	Voices       MonsterVoiceList    `xml:"voices"`
 	Loot         MonsterLootList     `xml:"loot"`
 	Elements     MonsterElements     `xml:"elements>element"`
+	Immunities   MonsterImmunities   `xml:"immunities>immunity"`
+	Flags        MonsterFlagList     `xml:"flags>flag"`
+}
+
+type MonsterFlagList struct {
+	Summonable       int `xml:"summonable,attr"`
+	Attackable       int `xml:"attackable,attr"`
+	Hostile          int `xml:"hostile,attr"`
+	Illusionable     int `xml:"illusionable,attr"`
+	Convinceable     int `xml:"convinceable,attr"`
+	Pushable         int `xml:"pushable,attr"`
+	CanPushItems     int `xml:"canpushitems,attr"`
+	CanPushCreatures int `xml:"canpushcreatures,attr"`
+	TargetDistance   int `xml:"targetdistance,attr"`
+	StaticAttack     int `xml:"staticattack,attr"`
+	RunonHealth      int `xml:"runonhealth,attr"`
+	IsBoss           int `xml:"isboss,attr"`
 }
 
 type MonsterElements struct {
@@ -50,6 +68,17 @@ type MonsterElements struct {
 	Holy     int `xml:"holyPercent,attr"`
 	Physical int `xml:"physicalPercent,attr"`
 	Death    int `xml:"deathPercent,attr"`
+}
+
+type MonsterImmunities struct {
+	Ice      int `xml:"ice,attr"`
+	Earth    int `xml:"earth,attr"`
+	Energy   int `xml:"energy,attr"`
+	Fire     int `xml:"fire,attr"`
+	Holy     int `xml:"holy,attr"`
+	Physical int `xml:"physical,attr"`
+	Death    int `xml:"death,attr"`
+	Drown    int `xml:"drown,attr"`
 }
 
 // MonsterHealth defines the monster health values
@@ -63,6 +92,11 @@ type MonsterHealth struct {
 type MonsterLook struct {
 	XMLName xml.Name `xml:"look"`
 	Type    int      `xml:"type,attr"`
+	Addons  int      `xml:"addons,attr"`
+	Head    int      `xml:"head,attr"`
+	Body    int      `xml:"body,attr"`
+	Legs    int      `xml:"legs,attr"`
+	Feet    int      `xml:"feet,attr"`
 	Corpse  int      `xml:"corpse,attr"`
 }
 
@@ -125,6 +159,7 @@ type MonsterVoiceList struct {
 type MonsterVoice struct {
 	XMLName  xml.Name `xml:"voice"`
 	Sentence string   `xml:"sentence,attr"`
+	Yell     int      `xml:"yell,attr"`
 }
 
 // MonsterLootList defines a list of monster lootable items

@@ -27,7 +27,6 @@ func MonsterList(L *lua.LState) int {
 	tbl := L.NewTable()
 	for _, m := range util.MonstersList {
 		monsterTbl := StructToTable(m)
-		monsterTbl.RawSetString("Look", StructToTable(&m.Look))
 
 		// Generate monster loot table
 		lootTable := L.NewTable()
@@ -35,8 +34,37 @@ func MonsterList(L *lua.LState) int {
 			lootTable.Append(StructToTable(&l))
 		}
 
-		monsterTbl.RawSetString("Loot", lootTable)
+		// Generate monster attacks table
+		attacksTable := L.NewTable()
+		for _, a := range m.Attacks.Attacks {
+			attacksTable.Append(StructToTable(&a))
+		}
+
+		// Generate monster defenses table
+		defensesTable := StructToTable(&m.Defenses)
+		defenseListTable := L.NewTable()
+		for _, d := range m.Defenses.Defenses {
+			defenseListTable.Append(StructToTable(&d))
+		}
+		defensesTable.RawSetString("Defenses", defenseListTable)
+
+		// Generate monster voices table
+		voicesTable := StructToTable(&m.Voices)
+		voicesListTable := L.NewTable()
+		for _, v := range m.Voices.Voices {
+			voicesListTable.Append(StructToTable(&v))
+		}
+		voicesTable.RawSetString("Voices", voicesListTable)
+
+		monsterTbl.RawSetString("Attacks", attacksTable)
+		monsterTbl.RawSetString("Defenses", defensesTable)
+		monsterTbl.RawSetString("Elements", StructToTable(&m.Elements))
+		monsterTbl.RawSetString("Flags", StructToTable(&m.Flags))
 		monsterTbl.RawSetString("Health", StructToTable(&m.Health))
+		monsterTbl.RawSetString("Immunities", StructToTable(&m.Immunities))
+		monsterTbl.RawSetString("Loot", lootTable)
+		monsterTbl.RawSetString("Look", StructToTable(&m.Look))
+		monsterTbl.RawSetString("Voices", voicesTable)
 		tbl.Append(monsterTbl)
 	}
 	L.Push(tbl)
@@ -64,16 +92,42 @@ func MonsterByName(L *lua.LState) int {
 				monsterTbl.RawSetString("_forth", lua.LNil)
 			}
 
-			monsterTbl.RawSetString("Look", StructToTable(&m.Look))
-
 			// Generate monster loot table
 			lootTable := L.NewTable()
 			for _, l := range m.Loot.Loot {
 				lootTable.Append(StructToTable(&l))
 			}
 
-			monsterTbl.RawSetString("Loot", lootTable)
+			attacksTable := L.NewTable()
+			for _, a := range m.Attacks.Attacks {
+				attacksTable.Append(StructToTable(&a))
+			}
+
+			defensesTable := StructToTable(&m.Defenses)
+			defenseListTable := L.NewTable()
+			for _, d := range m.Defenses.Defenses {
+				defenseListTable.Append(StructToTable(&d))
+			}
+			defensesTable.RawSetString("Defenses", defenseListTable)
+
+			// Generate monster voices table
+			voicesTable := StructToTable(&m.Voices)
+			voicesListTable := L.NewTable()
+			for _, v := range m.Voices.Voices {
+				voicesListTable.Append(StructToTable(&v))
+			}
+			voicesTable.RawSetString("Voices", voicesListTable)
+
+			monsterTbl.RawSetString("Attacks", attacksTable)
+			monsterTbl.RawSetString("Defenses", defensesTable)
+			monsterTbl.RawSetString("Elements", StructToTable(&m.Elements))
+			monsterTbl.RawSetString("Flags", StructToTable(&m.Flags))
 			monsterTbl.RawSetString("Health", StructToTable(&m.Health))
+			monsterTbl.RawSetString("Immunities", StructToTable(&m.Immunities))
+			monsterTbl.RawSetString("Look", StructToTable(&m.Look))
+			monsterTbl.RawSetString("Loot", lootTable)
+			monsterTbl.RawSetString("Voices", voicesTable)
+
 			L.Push(monsterTbl)
 			return 1
 		}
