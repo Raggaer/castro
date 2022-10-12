@@ -255,3 +255,7 @@ tr.skills {
     padding-top: 6px;
     padding-bottom: 6px;
 }
+
+.widgets > .card {
+    padding: 0px;
+}

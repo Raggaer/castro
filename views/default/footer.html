@@ -1,7 +1,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col widgets">
                 {{ widget .widgets "account" }}
                 {{ widget .widgets "toplevel" }}
                 {{ widget .widgets "admin" }}
@@ -15,7 +15,7 @@
     <div class="footer">
         {{ if isDev }} <b>Development mode</b> |
         Page generated in {{ .microtime }} | {{ end }} {{ serverName }} - Engine by <a href="{{ url "subtopic" "credits" }}">Castro</a>
-    
+
         {{ template "footer" . }}
     </div>
 </div> <!-- /container -->
