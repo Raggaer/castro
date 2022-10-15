@@ -34,13 +34,13 @@
 </table>
 <ul class="pagination pagination-sm">
     {{ if .paginator.prev }}
-    <li><a href="{{ url "subtopic" "account" "paygol" }}?page={{ .paginator.firstpage.num }}">First</a></li>
-    <li><a href="{{ url "subtopic" "account" "paygol" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "account" "paygol" }}?page={{ .paginator.firstpage.num }}">First</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "account" "paygol" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
     {{ end }}
     </li>
     {{ if $.paginator.last }}
-    <li><a href="{{ url "subtopic" "account" "paygol" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
-    <li><a href="{{ url "subtopic" "account" "paygol" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "account" "paygol" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "account" "paygol" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
     {{ end }}
 </ul>
 {{ else }}

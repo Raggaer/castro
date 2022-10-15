@@ -44,12 +44,12 @@
 
 <ul class="pagination pagination-sm">
     {{ if .paginator.prev }}
-    <li><a href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.firstpage.num }}">First</a></li>
-    <li><a href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.firstpage.num }}">First</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.prevnumber }}">&lt;</a></li>
     {{ end }}
     {{ if $.paginator.last }}
-    <li><a href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
-    <li><a href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.lastnumber }}">&gt;</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "admin" "articles" "list" }}?page={{ .paginator.lastpage.num }}">Last</a></li>
     {{ end }}
 </ul>
 {{ template "footer.html" . }}

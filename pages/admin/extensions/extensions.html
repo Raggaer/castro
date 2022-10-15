@@ -2,7 +2,7 @@
 <h3>
     Extension list
 </h3>
-<hr> 
+<hr>
 {{ if .error }}
 <div class="alert alert-danger" role="alert">
     <strong>Error!</strong> {{ .error }}
@@ -22,7 +22,7 @@
     </div>
     <button type="submit" class="btn btn-success">Search</button>
 </form>
-<hr> 
+<hr>
 {{ if .list.List }}
 <table class="table table-striped table-hover">
     <thead class="thead-inverse">
@@ -56,16 +56,16 @@
 </table>
 <ul class="pagination pagination-sm">
     {{ if .list.Prev }}
-    <li><a href="{{ url "subtopic" "admin" "extensions" }}?page={{ .list.PrevPage }}">Prev</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "admin" "extensions" }}?page={{ .list.PrevPage }}">Prev</a></li>
     {{ end }}
     </li>
     {{ if .list.Next }}
-    <li><a href="{{ url " subtopic" "admin" "extensions" }}?page={{ .list.NextPage }}">Next</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url " subtopic" "admin" "extensions" }}?page={{ .list.NextPage }}">Next</a></li>
     {{ end }}
 </ul>
 {{ else }}
 <p>
     No plugins
 </p>
-{{ end }} 
+{{ end }}
 {{ template "footer.html" . }}

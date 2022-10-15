@@ -65,13 +65,13 @@
 </table>
 <ul class="pagination pagination-sm">
     {{ if .paginator.prev }}
-    <li><a href="{{ url "subtopic" "community" "highscores" }}?page={{ .paginator.firstpage.num }}&order={{ .orderType }}&voc={{ .vocType }}">First</a></li>
-    <li><a href="{{ url "subtopic" "community" "highscores" }}?page={{ .paginator.prevnumber }}&order={{ .orderType }}&voc={{ .vocType }}">&lt;</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "community" "highscores" }}?page={{ .paginator.firstpage.num }}&order={{ .orderType }}&voc={{ .vocType }}">First</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "community" "highscores" }}?page={{ .paginator.prevnumber }}&order={{ .orderType }}&voc={{ .vocType }}">&lt;</a></li>
     {{ end }}
     </li>
     {{ if $.paginator.last }}
-    <li><a href="{{ url "subtopic" "community" "highscores" }}?page={{ .paginator.lastnumber }}&order={{ .orderType }}&voc={{ .vocType }}">&gt;</a></li>
-    <li><a href="{{ url "subtopic" "community" "highscores" }}?page={{ .paginator.lastpage.num }}&order={{ .orderType }}&voc={{ .vocType }}">Last</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "community" "highscores" }}?page={{ .paginator.lastnumber }}&order={{ .orderType }}&voc={{ .vocType }}">&gt;</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url "subtopic" "community" "highscores" }}?page={{ .paginator.lastpage.num }}&order={{ .orderType }}&voc={{ .vocType }}">Last</a></li>
     {{ end }}
 </ul>
 {{ template "footer.html" . }}
